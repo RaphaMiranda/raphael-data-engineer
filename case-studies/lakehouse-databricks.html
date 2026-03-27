@@ -1,0 +1,318 @@
+<!DOCTYPE html>
+
+<html class="dark" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Case Study: Modern Data Lakehouse Architecture with Databricks</title>
+<link href="https://fonts.googleapis.com" rel="preconnect"/>
+<link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&amp;family=Inter:wght@300;400;500;600;700&amp;family=JetBrains+Mono:wght@400;500&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<script id="tailwind-config">
+      tailwind.config = {
+        darkMode: "class",
+        theme: {
+          extend: {
+            colors: {
+              "on-secondary": "#00363e",
+              "primary-container": "#8083ff",
+              "inverse-surface": "#dae2fd",
+              "inverse-on-surface": "#283044",
+              "inverse-primary": "#494bd6",
+              "secondary-fixed-dim": "#2fd9f4",
+              "outline": "#908fa0",
+              "on-primary": "#1000a9",
+              "on-error-container": "#ffdad6",
+              "primary-fixed": "#e1e0ff",
+              "on-surface": "#dae2fd",
+              "error": "#ffb4ab",
+              "on-secondary-fixed": "#001f25",
+              "on-primary-fixed": "#07006c",
+              "on-tertiary-container": "#000703",
+              "on-surface-variant": "#c7c4d7",
+              "on-primary-container": "#0d0096",
+              "surface-container-lowest": "#060e20",
+              "surface-dim": "#0b1326",
+              "secondary": "#5de6ff",
+              "on-primary-fixed-variant": "#2f2ebe",
+              "on-error": "#690005",
+              "surface": "#0b1326",
+              "surface-bright": "#31394d",
+              "on-tertiary-fixed": "#002113",
+              "surface-container-highest": "#2d3449",
+              "primary": "#c0c1ff",
+              "surface-container-low": "#131b2e",
+              "background": "#0b1326",
+              "on-tertiary-fixed-variant": "#005236",
+              "surface-container-high": "#222a3d",
+              "tertiary": "#4edea3",
+              "on-secondary-fixed-variant": "#004e5a",
+              "secondary-fixed": "#a2eeff",
+              "tertiary-container": "#00885d",
+              "tertiary-fixed": "#6ffbbe",
+              "error-container": "#93000a",
+              "surface-tint": "#c0c1ff",
+              "tertiary-fixed-dim": "#4edea3",
+              "surface-variant": "#2d3449",
+              "secondary-container": "#00cbe6",
+              "on-secondary-container": "#00515d",
+              "primary-fixed-dim": "#c0c1ff",
+              "on-background": "#dae2fd",
+              "outline-variant": "#464554",
+              "surface-container": "#171f33",
+              "on-tertiary": "#003824"
+            },
+            fontFamily: {
+              "headline": ["Space Grotesk"],
+              "body": ["Inter"],
+              "label": ["Inter"],
+              "mono": ["JetBrains Mono"]
+            },
+            borderRadius: {"DEFAULT": "0.25rem", "lg": "0.5rem", "xl": "0.75rem", "full": "9999px"},
+          },
+        },
+      }
+    </script>
+<style>
+        body { background-color: #0b1326; color: #dae2fd; font-family: 'Inter', sans-serif; }
+        .headline-font { font-family: 'Space Grotesk', sans-serif; }
+        .mono-font { font-family: 'JetBrains Mono', monospace; }
+        .glass-panel { backdrop-filter: blur(12px); background: rgba(45, 52, 73, 0.8); }
+        .blueprint-grid { background-image: radial-gradient(#464554 1px, transparent 1px); background-size: 24px 24px; }
+        .gradient-text { background: linear-gradient(135deg, #c0c1ff 0%, #8083ff 100%); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
+        .gradient-bg { background: linear-gradient(135deg, #c0c1ff 0%, #8083ff 100%); }
+    </style>
+</head>
+<body class="selection:bg-primary/30">
+<!-- Site Nav -->
+<header class="bg-slate-950/80 backdrop-blur-xl fixed top-0 w-full z-50 border-b border-white/10 shadow-[0_8px_32px_0_rgba(99,102,241,0.06)]">
+<nav class="flex justify-between items-center max-w-7xl mx-auto px-8 h-16">
+<a href="/" class="text-xl font-bold bg-gradient-to-br from-indigo-300 to-indigo-500 bg-clip-text text-transparent font-headline tracking-tight">DataArchitect.io</a>
+<a href="/#case-studies" class="flex items-center gap-2 text-slate-400 hover:text-slate-200 transition-colors text-sm font-headline"><span class="material-symbols-outlined text-base">arrow_back</span> All Case Studies</a>
+</nav>
+</header>
+<!-- TopAppBar -->
+<header class="fixed top-0 w-full z-50 bg-slate-950/80 backdrop-blur-xl border-b border-white/10 shadow-[0_8px_32px_0_rgba(99,102,241,0.06)]">
+<nav class="flex justify-between items-center max-w-7xl mx-auto px-8 h-20">
+<a class="text-2xl font-bold bg-gradient-to-br from-indigo-300 to-indigo-500 bg-clip-text text-transparent font-['Space_Grotesk'] tracking-tight" href="#">DataArchitect.io</a>
+<div class="hidden md:flex items-center gap-8">
+<a class="text-slate-400 font-medium hover:text-slate-200 transition-colors" href="#">Home</a>
+<a class="text-indigo-400 font-bold border-b-2 border-indigo-400 pb-1" href="#">Case Studies</a>
+<a class="text-slate-400 font-medium hover:text-slate-200 transition-colors" href="#">Skills</a>
+<a class="text-slate-400 font-medium hover:text-slate-200 transition-colors" href="#">Timeline</a>
+</div>
+<button class="bg-gradient-to-br from-primary to-primary-container text-on-primary px-6 py-2.5 rounded-lg font-bold hover:scale-105 active:scale-95 transition-all">Get in Touch</button>
+</nav>
+</header>
+<main class="pt-32 pb-24">
+<!-- Hero Section -->
+<section class="max-w-7xl mx-auto px-8 mb-24">
+<div class="flex flex-col gap-6">
+<span class="mono-font text-secondary tracking-widest text-sm uppercase">Case Study // Q4 2023</span>
+<h1 class="headline-font text-6xl md:text-8xl font-bold tracking-tight max-w-5xl leading-[1.1]">
+                    Modern Data <span class="gradient-text">Lakehouse</span> Architecture with Databricks
+                </h1>
+<div class="flex flex-wrap gap-12 mt-8 items-start">
+<div class="flex flex-col gap-2">
+<span class="text-outline text-xs uppercase tracking-widest font-bold">Duration</span>
+<span class="text-on-surface text-lg">6 Months End-to-End</span>
+</div>
+<div class="flex flex-col gap-2">
+<span class="text-outline text-xs uppercase tracking-widest font-bold">Core Stack</span>
+<div class="flex gap-4">
+<span class="flex items-center gap-2 bg-surface-container-high px-3 py-1 rounded-md text-sm">
+<span class="material-symbols-outlined text-sm" style="font-variation-settings: 'FILL' 1;">dataset</span> Databricks
+                            </span>
+<span class="flex items-center gap-2 bg-surface-container-high px-3 py-1 rounded-md text-sm">
+<span class="material-symbols-outlined text-sm">water_drop</span> Delta Lake
+                            </span>
+<span class="flex items-center gap-2 bg-surface-container-high px-3 py-1 rounded-md text-sm">
+<span class="material-symbols-outlined text-sm">bolt</span> Apache Spark
+                            </span>
+</div>
+</div>
+</div>
+</div>
+</section>
+<!-- Challenge Section: Intentional Asymmetry -->
+<section class="max-w-7xl mx-auto px-8 mb-32 grid md:grid-cols-12 gap-16 items-center">
+<div class="md:col-span-7 flex flex-col gap-8">
+<h2 class="headline-font text-4xl font-bold">The Challenge</h2>
+<p class="text-on-surface-variant text-lg leading-relaxed">
+                    The client faced a critical failure point: their legacy Hadoop-based infrastructure could no longer handle the <span class="text-primary">300% YoY data volume growth</span>. ETL pipelines were brittle, and the separation between their data lake (for ML) and data warehouse (for BI) created massive consistency silos.
+                </p>
+<div class="grid grid-cols-2 gap-8">
+<div class="p-6 bg-surface-container-low rounded-xl border-l-4 border-error/50">
+<h4 class="font-bold text-error mb-2 uppercase text-xs tracking-tighter">Legacy Debt</h4>
+<p class="text-sm opacity-80">Manual schema management and frequent job failures leading to 48hr data freshness delays.</p>
+</div>
+<div class="p-6 bg-surface-container-low rounded-xl border-l-4 border-tertiary/50">
+<h4 class="font-bold text-tertiary mb-2 uppercase text-xs tracking-tighter">Modern Req</h4>
+<p class="text-sm opacity-80">Real-time ingestion with ACID compliance and unified governance across all personas.</p>
+</div>
+</div>
+</div>
+<div class="md:col-span-5 relative aspect-square rounded-2xl overflow-hidden shadow-2xl">
+<img alt="Server room with blue lighting" class="w-full h-full object-cover grayscale hover:grayscale-0 transition-all duration-700" data-alt="abstract close up of high-tech server racks with glowing blue fiber optic cables and atmospheric dark lighting" src="https://lh3.googleusercontent.com/aida-public/AB6AXuBt7prOCRTPebLCAmctwHfgJKWWz5ogeG5Llf3gR77-aHXmSFYARLnZBmi-UAhH57CUZIPo4xzGbbMCx_U809GbYvkQfi7g-KAJWo0BBgefCwmJ-gsRS3fBhWaIGGm3PAW50vVapzoNPtXfW6HMu8XUUjuEQcmMvmlAqp0XVurdkgT0rgv1SVJx4zkSC2_dwvCRV-n-SXrMTg3jkEneYW4_tBWxuCU1SCXJRc1nTBlq2iMifMmvSO2OTlqBfeMOxGt7nWrJ4JkVM-I"/>
+<div class="absolute inset-0 bg-gradient-to-t from-surface to-transparent"></div>
+</div>
+</section>
+<!-- Architecture Diagram: Blueprint Orchestrator -->
+<section class="w-full bg-surface-container-lowest py-24 blueprint-grid overflow-hidden">
+<div class="max-w-7xl mx-auto px-8">
+<div class="mb-16 text-center">
+<h2 class="headline-font text-4xl font-bold mb-4">Medallion Architecture</h2>
+<p class="text-outline mono-font">Systemic Flow: Ingestion → Curated → Aggregated</p>
+</div>
+<div class="relative flex flex-col md:flex-row gap-8 justify-between items-center">
+<!-- Bronze -->
+<div class="w-full md:w-1/4 p-8 glass-panel border border-white/5 rounded-2xl flex flex-col items-center text-center gap-4 group hover:border-primary/30 transition-all">
+<div class="w-16 h-16 rounded-full bg-slate-700/50 flex items-center justify-center mb-2">
+<span class="material-symbols-outlined text-3xl text-slate-400">raw_on</span>
+</div>
+<h3 class="font-bold text-xl">Bronze Layer</h3>
+<p class="text-xs text-on-surface-variant font-mono">RAW INGESTION</p>
+<p class="text-sm opacity-60">Landing zone for raw events. Parquet files with historical fidelity preserved.</p>
+</div>
+<span class="material-symbols-outlined text-primary text-4xl hidden md:block">double_arrow</span>
+<!-- Silver -->
+<div class="w-full md:w-1/4 p-8 glass-panel border border-white/5 rounded-2xl flex flex-col items-center text-center gap-4 group hover:border-primary/30 transition-all">
+<div class="w-16 h-16 rounded-full bg-slate-400/30 flex items-center justify-center mb-2">
+<span class="material-symbols-outlined text-3xl text-slate-300">cleaning_services</span>
+</div>
+<h3 class="font-bold text-xl">Silver Layer</h3>
+<p class="text-xs text-on-surface-variant font-mono">CURATED &amp; CLEANED</p>
+<p class="text-sm opacity-60">Schema enforcement, deduplication, and referential integrity via Delta Live Tables.</p>
+</div>
+<span class="material-symbols-outlined text-primary text-4xl hidden md:block">double_arrow</span>
+<!-- Gold -->
+<div class="w-full md:w-1/4 p-8 glass-panel border border-white/5 rounded-2xl flex flex-col items-center text-center gap-4 group border-primary/40 shadow-[0_0_30px_-10px_rgba(192,193,255,0.4)] transition-all">
+<div class="w-16 h-16 rounded-full bg-primary/20 flex items-center justify-center mb-2">
+<span class="material-symbols-outlined text-3xl text-primary" style="font-variation-settings: 'FILL' 1;">workspace_premium</span>
+</div>
+<h3 class="font-bold text-xl">Gold Layer</h3>
+<p class="text-xs text-primary font-mono">BUSINESS READY</p>
+<p class="text-sm opacity-60">Optimized aggregates and semantic views for PowerBI and ML feature stores.</p>
+</div>
+</div>
+</div>
+</section>
+<!-- Trade-offs & Tech Snippets -->
+<section class="max-w-7xl mx-auto px-8 py-32 grid md:grid-cols-2 gap-24">
+<div>
+<h2 class="headline-font text-4xl font-bold mb-8">Strategic Trade-offs</h2>
+<div class="space-y-8">
+<div class="flex gap-6">
+<div class="flex-shrink-0 w-12 h-12 rounded-lg bg-secondary/10 flex items-center justify-center text-secondary">
+<span class="material-symbols-outlined">compare_arrows</span>
+</div>
+<div>
+<h4 class="font-bold mb-2 text-lg">Databricks vs. Snowflake</h4>
+<p class="text-on-surface-variant leading-relaxed">While Snowflake offers unmatched ease for pure SQL workloads, the client’s heavy reliance on unstructured image data and Spark-based ML models made Databricks the superior architectural choice for a <span class="italic text-secondary">true</span> unified platform.</p>
+</div>
+</div>
+<div class="flex gap-6">
+<div class="flex-shrink-0 w-12 h-12 rounded-lg bg-secondary/10 flex items-center justify-center text-secondary">
+<span class="material-symbols-outlined">account_tree</span>
+</div>
+<div>
+<h4 class="font-bold mb-2 text-lg">Serverless Compute</h4>
+<p class="text-on-surface-variant leading-relaxed">Adopted Databricks SQL Serverless to eliminate cluster startup latency for BI users, trading off slightly higher unit costs for massive productivity gains.</p>
+</div>
+</div>
+</div>
+</div>
+<div class="bg-surface-container-low rounded-2xl p-1 border border-white/5 shadow-inner">
+<div class="bg-surface-container-lowest rounded-xl p-8 h-full">
+<div class="flex justify-between items-center mb-6">
+<div class="flex gap-2">
+<div class="w-3 h-3 rounded-full bg-error/50"></div>
+<div class="w-3 h-3 rounded-full bg-secondary/50"></div>
+<div class="w-3 h-3 rounded-full bg-tertiary/50"></div>
+</div>
+<span class="text-xs mono-font opacity-40 uppercase tracking-widest">pipeline_definition.py</span>
+</div>
+<pre class="mono-font text-sm leading-relaxed text-on-surface-variant"><span class="text-primary">import</span> dlt
+<span class="text-primary">from</span> pyspark.sql.functions <span class="text-primary">import</span> *
+
+<span class="text-secondary">@dlt.table</span>
+<span class="text-primary">def</span> silver_user_events():
+  <span class="text-tertiary"># Apply schema enforcement</span>
+  <span class="text-primary">return</span> (
+    dlt.read_stream(<span class="text-secondary">"bronze_raw"</span>)
+      .filter(col(<span class="text-secondary">"valid"</span>) == <span class="text-primary">True</span>)
+      .dropDuplicates([<span class="text-secondary">"event_id"</span>])
+  )
+
+<span class="text-secondary">@dlt.table</span>
+<span class="text-primary">def</span> gold_daily_active():
+  <span class="text-primary">return</span> (
+    dlt.read(<span class="text-secondary">"silver_user_events"</span>)
+      .groupBy(window(<span class="text-secondary">"ts"</span>, <span class="text-secondary">"1 day"</span>))
+      .count()
+  )
+                    </pre>
+</div>
+</div>
+</section>
+<!-- Key Outcomes: Bento Grid -->
+<section class="max-w-7xl mx-auto px-8 mb-32">
+<h2 class="headline-font text-4xl font-bold mb-12 text-center">Quantifiable Impact</h2>
+<div class="grid grid-cols-1 md:grid-cols-4 md:grid-rows-2 gap-6 h-auto md:h-[500px]">
+<div class="md:col-span-2 md:row-span-2 bg-gradient-to-br from-primary/10 to-surface-container-high rounded-3xl p-10 flex flex-col justify-end border border-primary/20 relative overflow-hidden group">
+<div class="absolute top-10 right-10 text-primary opacity-20 group-hover:opacity-100 transition-opacity">
+<span class="material-symbols-outlined text-8xl" style="font-variation-settings: 'FILL' 1;">speed</span>
+</div>
+<span class="text-6xl font-bold headline-font mb-4">40%</span>
+<h3 class="text-2xl font-bold mb-2">Query Latency Reduction</h3>
+<p class="text-on-surface-variant">Optimized Z-Order indexing and Photon engine implementation drastically cut down dashboard load times.</p>
+</div>
+<div class="md:col-span-2 bg-surface-container-high rounded-3xl p-8 border border-white/5 flex items-center gap-6">
+<div class="w-20 h-20 rounded-2xl bg-tertiary/20 flex items-center justify-center flex-shrink-0">
+<span class="material-symbols-outlined text-4xl text-tertiary">check_circle</span>
+</div>
+<div>
+<h3 class="text-xl font-bold mb-1">Automated CI/CD</h3>
+<p class="text-on-surface-variant text-sm">Zero-touch deployments using Terraform and Asset Bundles across dev, stage, and prod.</p>
+</div>
+</div>
+<div class="bg-surface-container-high rounded-3xl p-8 border border-white/5 flex flex-col justify-center text-center">
+<span class="text-4xl font-bold text-secondary mb-1">99.9%</span>
+<p class="text-xs uppercase tracking-widest font-mono opacity-50">Data Reliability</p>
+</div>
+<div class="bg-surface-container-high rounded-3xl p-8 border border-white/5 flex flex-col justify-center text-center">
+<span class="text-4xl font-bold text-secondary mb-1">0</span>
+<p class="text-xs uppercase tracking-widest font-mono opacity-50">Manual ETL Fixes</p>
+</div>
+</div>
+</section>
+<!-- Final Call to Action -->
+<section class="max-w-7xl mx-auto px-8 mb-32">
+<div class="rounded-3xl p-16 gradient-bg flex flex-col items-center text-center text-on-primary">
+<h2 class="headline-font text-5xl font-bold mb-6">Scale your infrastructure reliably.</h2>
+<p class="text-lg mb-10 max-w-2xl opacity-90">Ready to migrate your legacy data stack to a modern lakehouse architecture? Let's discuss your technical roadmap.</p>
+<div class="flex gap-4">
+<button class="bg-on-primary text-primary-container px-8 py-4 rounded-xl font-bold hover:shadow-2xl transition-all">Start Project</button>
+<button class="border border-on-primary/30 px-8 py-4 rounded-xl font-bold hover:bg-on-primary/10 transition-all">View Github</button>
+</div>
+</div>
+</section>
+</main>
+<!-- Footer -->
+<footer class="bg-slate-950 w-full py-12 px-8 border-t border-white/5">
+<div class="flex flex-col md:flex-row justify-between items-center max-w-7xl mx-auto gap-8">
+<div class="flex flex-col gap-4">
+<span class="text-lg font-bold text-slate-200 font-['Space_Grotesk']">Architectural Precision</span>
+<p class="text-slate-500 font-['Inter'] text-sm tracking-wide">© 2024 Architectural Precision. Built with Spark &amp; Obsidian Logic.</p>
+</div>
+<div class="flex gap-8">
+<a class="text-slate-500 hover:text-indigo-300 transition-colors font-['Inter'] text-sm underline decoration-indigo-500/30 underline-offset-4 hover:translate-x-1 duration-200" href="#">LinkedIn</a>
+<a class="text-slate-500 hover:text-indigo-300 transition-colors font-['Inter'] text-sm underline decoration-indigo-500/30 underline-offset-4 hover:translate-x-1 duration-200" href="#">GitHub</a>
+<a class="text-slate-500 hover:text-indigo-300 transition-colors font-['Inter'] text-sm underline decoration-indigo-500/30 underline-offset-4 hover:translate-x-1 duration-200" href="#">Technical Blog</a>
+<a class="text-slate-500 hover:text-indigo-300 transition-colors font-['Inter'] text-sm underline decoration-indigo-500/30 underline-offset-4 hover:translate-x-1 duration-200" href="#">Newsletter</a>
+</div>
+</div>
+</footer>
+</body></html>
