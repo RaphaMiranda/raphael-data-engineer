@@ -1,332 +1,288 @@
 <!DOCTYPE html>
+<html class="dark" lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="description" content="Case Study: ISO 27001 certification and enterprise data governance using Azure Purview and Unity Catalog — by Raphael Mata." />
+  <title>Governance at Scale | Raphael Mata</title>
 
-<html class="dark" lang="en"><head>
-<meta charset="utf-8"/>
-<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
-<title>Case Study: Data Governance &amp; Security Compliance | DataArchitect.io</title>
-<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
-<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&amp;family=Inter:wght@300;400;500;600&amp;family=JetBrains+Mono:wght@400;500&amp;display=swap" rel="stylesheet"/>
-<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
-<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
-<script id="tailwind-config">
-        tailwind.config = {
-            darkMode: "class",
-            theme: {
-                extend: {
-                    colors: {
-                        "on-secondary": "#00363e",
-                        "primary-container": "#8083ff",
-                        "inverse-surface": "#dae2fd",
-                        "inverse-on-surface": "#283044",
-                        "inverse-primary": "#494bd6",
-                        "secondary-fixed-dim": "#2fd9f4",
-                        "outline": "#908fa0",
-                        "on-primary": "#1000a9",
-                        "on-error-container": "#ffdad6",
-                        "primary-fixed": "#e1e0ff",
-                        "on-surface": "#dae2fd",
-                        "error": "#ffb4ab",
-                        "on-secondary-fixed": "#001f25",
-                        "on-primary-fixed": "#07006c",
-                        "on-tertiary-container": "#000703",
-                        "on-surface-variant": "#c7c4d7",
-                        "on-primary-container": "#0d0096",
-                        "surface-container-lowest": "#060e20",
-                        "surface-dim": "#0b1326",
-                        "secondary": "#5de6ff",
-                        "on-primary-fixed-variant": "#2f2ebe",
-                        "on-error": "#690005",
-                        "surface": "#0b1326",
-                        "surface-bright": "#31394d",
-                        "on-tertiary-fixed": "#002113",
-                        "surface-container-highest": "#2d3449",
-                        "primary": "#c0c1ff",
-                        "surface-container-low": "#131b2e",
-                        "background": "#0b1326",
-                        "on-tertiary-fixed-variant": "#005236",
-                        "surface-container-high": "#222a3d",
-                        "tertiary": "#4edea3",
-                        "on-secondary-fixed-variant": "#004e5a",
-                        "secondary-fixed": "#a2eeff",
-                        "tertiary-container": "#00885d",
-                        "tertiary-fixed": "#6ffbbe",
-                        "error-container": "#93000a",
-                        "surface-tint": "#c0c1ff",
-                        "tertiary-fixed-dim": "#4edea3",
-                        "surface-variant": "#2d3449",
-                        "secondary-container": "#00cbe6",
-                        "on-secondary-container": "#00515d",
-                        "primary-fixed-dim": "#c0c1ff",
-                        "on-background": "#dae2fd",
-                        "outline-variant": "#464554",
-                        "surface-container": "#171f33",
-                        "on-tertiary": "#003824"
-                    },
-                    fontFamily: {
-                        "headline": ["Space Grotesk"],
-                        "body": ["Inter"],
-                        "label": ["Inter"],
-                        "mono": ["JetBrains Mono"]
-                    },
-                    borderRadius: { "DEFAULT": "0.25rem", "lg": "0.5rem", "xl": "0.75rem", "full": "9999px" },
-                },
-            },
-        }
-    </script>
-<style>
-        .material-symbols-outlined {
-            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
-        }
-        .grid-overlay {
-            background-image: radial-gradient(circle, #464554 1px, transparent 1px);
-            background-size: 24px 24px;
-            opacity: 0.1;
-        }
-        .glass-beveled {
-            border-top: 1px solid rgba(70, 69, 84, 0.15);
-            border-left: 1px solid rgba(70, 69, 84, 0.15);
-        }
-        .status-pulse {
-            position: relative;
-        }
-        .status-pulse::after {
-            content: '';
-            position: absolute;
-            inset: -4px;
-            border: 2px solid #4edea3;
-            border-radius: 50%;
-            opacity: 0.5;
-        }
-    </style>
+  <!-- Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&family=Inter:wght@300;400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet" />
+  <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet" />
+
+  <!-- Tailwind CDN + shared config -->
+  <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+  <script src="/assets/js/tailwind.config.js"></script>
+
+  <!-- Custom styles -->
+  <link rel="stylesheet" href="/assets/css/styles.css" />
 </head>
+
 <body class="bg-background text-on-surface font-body selection:bg-primary/30">
-<!-- Site Nav -->
-<header class="bg-slate-950/80 backdrop-blur-xl fixed top-0 w-full z-50 border-b border-white/10 shadow-[0_8px_32px_0_rgba(99,102,241,0.06)]">
-<nav class="flex justify-between items-center max-w-7xl mx-auto px-8 h-16">
-<a href="/" class="text-xl font-bold bg-gradient-to-br from-indigo-300 to-indigo-500 bg-clip-text text-transparent font-headline tracking-tight">DataArchitect.io</a>
-<a href="/#case-studies" class="flex items-center gap-2 text-slate-400 hover:text-slate-200 transition-colors text-sm font-headline"><span class="material-symbols-outlined text-base">arrow_back</span> All Case Studies</a>
-</nav>
-</header>
-<!-- TopAppBar -->
-<nav class="bg-slate-950/80 backdrop-blur-xl border-b border-white/10 fixed top-0 w-full z-50 shadow-[0_8px_32px_0_rgba(99,102,241,0.06)]">
-<div class="flex justify-between items-center max-w-7xl mx-auto px-8 h-20">
-<div class="text-2xl font-bold bg-gradient-to-br from-indigo-300 to-indigo-500 bg-clip-text text-transparent font-['Space_Grotesk'] tracking-tight">
-                DataArchitect.io
-            </div>
-<div class="hidden md:flex items-center gap-8">
-<a class="text-slate-400 font-medium hover:text-slate-200 transition-colors hover:bg-white/5 rounded-lg px-3 py-2 transition-all" href="#">Home</a>
-<a class="text-indigo-400 font-bold border-b-2 border-indigo-400 pb-1 hover:bg-white/5 rounded-lg px-3 py-1 transition-all" href="#">Case Studies</a>
-<a class="text-slate-400 font-medium hover:text-slate-200 transition-colors hover:bg-white/5 rounded-lg px-3 py-2 transition-all" href="#">Skills</a>
-<a class="text-slate-400 font-medium hover:text-slate-200 transition-colors hover:bg-white/5 rounded-lg px-3 py-2 transition-all" href="#">Timeline</a>
-<button class="ml-4 bg-gradient-to-br from-primary to-primary-container text-on-primary px-6 py-2.5 rounded-lg font-bold hover:scale-[1.02] active:scale-95 transition-all">
-                    Get in Touch
-                </button>
-</div>
-</div>
-</nav>
-<main class="pt-32 pb-20 px-6 max-w-7xl mx-auto overflow-hidden relative">
-<!-- Grid Background Decor -->
-<div class="absolute inset-0 grid-overlay -z-10 pointer-events-none"></div>
-<!-- Hero Section -->
-<header class="mb-24 relative">
-<div class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-tertiary/10 border border-tertiary/20 text-tertiary text-xs font-mono uppercase tracking-widest mb-6">
-<span class="status-pulse w-2 h-2 rounded-full bg-tertiary"></span>
-                Security Protocol Active
-            </div>
-<h1 class="text-6xl md:text-8xl font-headline font-bold text-on-surface tracking-tighter leading-none mb-8 max-w-4xl">
-                Governance at <span class="bg-gradient-to-r from-secondary to-tertiary bg-clip-text text-transparent">Scale.</span>
-</h1>
-<p class="text-xl text-on-surface-variant max-w-2xl leading-relaxed">
-                Transforming a fragmented "Wild West" data ecosystem into an ISO 27001 compliant, enterprise-grade environment without sacrificing developer velocity.
-            </p>
-</header>
-<!-- Metrics Bento Grid -->
-<section class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-24">
-<div class="md:col-span-1 bg-surface-container-high p-8 rounded-xl glass-beveled flex flex-col justify-between">
-<span class="text-secondary font-mono text-sm uppercase tracking-widest mb-4">Compliance Rating</span>
-<div class="text-6xl font-headline font-bold text-on-surface">100%</div>
-<p class="text-on-surface-variant text-sm mt-4">Audit pass rate achieved across all ISO 27001 control requirements.</p>
-</div>
-<div class="md:col-span-1 bg-surface-container-high p-8 rounded-xl glass-beveled flex flex-col justify-between">
-<span class="text-tertiary font-mono text-sm uppercase tracking-widest mb-4">User Adoption</span>
-<div class="text-6xl font-headline font-bold text-on-surface">500+</div>
-<p class="text-on-surface-variant text-sm mt-4">Unified data catalog users accessing governed datasets daily.</p>
-</div>
-<div class="md:col-span-1 bg-surface-container-high p-8 rounded-xl glass-beveled flex flex-col justify-between">
-<span class="text-secondary font-mono text-sm uppercase tracking-widest mb-4">Security Incidents</span>
-<div class="text-6xl font-headline font-bold text-on-surface">0</div>
-<p class="text-on-surface-variant text-sm mt-4">Zero unauthorized data breaches recorded post-deployment.</p>
-</div>
-</section>
-<!-- Technical Content: The Story & Architecture -->
-<div class="grid grid-cols-1 lg:grid-cols-12 gap-12 items-start">
-<!-- Left Column: The Narrative -->
-<div class="lg:col-span-5 space-y-12">
-<section>
-<h2 class="text-3xl font-headline font-bold text-primary mb-6">The Challenge</h2>
-<p class="text-on-surface-variant leading-relaxed mb-4">
-                        A rapidly scaling fintech enterprise faced a critical crossroads: their data access patterns were ungoverned, with manual SQL permissions and zero visibility into PII (Personally Identifiable Information) exposure.
-                    </p>
-<p class="text-on-surface-variant leading-relaxed">
-                        The goal was to move from "reactive security" to "proactive governance"—enabling automated auditing while maintaining the agility of 12 internal data teams.
-                    </p>
-</section>
-<section>
-<h2 class="text-3xl font-headline font-bold text-secondary mb-6">The Tech Stack</h2>
-<div class="flex flex-wrap gap-3">
-<span class="px-4 py-2 bg-surface-container-highest rounded-lg border border-outline-variant/30 font-mono text-sm">Azure Purview</span>
-<span class="px-4 py-2 bg-surface-container-highest rounded-lg border border-outline-variant/30 font-mono text-sm">Unity Catalog</span>
-<span class="px-4 py-2 bg-surface-container-highest rounded-lg border border-outline-variant/30 font-mono text-sm">Terraform</span>
-<span class="px-4 py-2 bg-surface-container-highest rounded-lg border border-outline-variant/30 font-mono text-sm">Azure DevOps</span>
-<span class="px-4 py-2 bg-surface-container-highest rounded-lg border border-outline-variant/30 font-mono text-sm">Python SDK</span>
-</div>
-</section>
-<section class="bg-surface-container-lowest p-6 rounded-xl border-l-4 border-secondary font-mono text-sm">
-<div class="flex justify-between items-center mb-4 text-outline">
-<span>governance_policy.tf</span>
-<span class="material-symbols-outlined text-sm">content_copy</span>
-</div>
-<pre class="text-secondary-fixed-dim"><code>resource "unity_catalog_privilege" "read_only" {
+
+  <!-- ╔══════════════════════════════════════╗ -->
+  <!-- ║  Navigation                          ║ -->
+  <!-- ╚══════════════════════════════════════╝ -->
+  <header class="bg-slate-950/80 backdrop-blur-xl fixed top-0 w-full z-50 border-b border-white/10 shadow-[0_8px_32px_0_rgba(99,102,241,0.06)]">
+    <nav class="flex justify-between items-center max-w-7xl mx-auto px-8 h-20">
+      <a href="/" class="text-2xl font-bold bg-gradient-to-br from-indigo-300 to-indigo-500 bg-clip-text text-transparent font-headline tracking-tight">
+        Raphael Mata
+      </a>
+      <div class="hidden md:flex items-center gap-8">
+        <a data-nav href="/" class="text-slate-400 font-medium hover:text-slate-200 transition-colors font-headline">Home</a>
+        <a data-nav href="/#case-studies" class="text-indigo-400 font-bold border-b-2 border-indigo-400 pb-1 font-headline">Case Studies</a>
+        <a data-nav href="/#skills" class="text-slate-400 font-medium hover:text-slate-200 transition-colors font-headline">Skills</a>
+        <a data-nav href="/#timeline" class="text-slate-400 font-medium hover:text-slate-200 transition-colors font-headline">Timeline</a>
+        <button data-contact-cta class="bg-gradient-to-br from-primary to-primary-container text-on-primary px-6 py-2.5 rounded-lg font-bold hover:scale-105 active:scale-95 transition-all">Get in Touch</button>
+      </div>
+      <a href="/#case-studies" class="md:hidden flex items-center gap-2 text-slate-400 hover:text-slate-200 transition-colors text-sm font-headline">
+        <span class="material-symbols-outlined text-base">arrow_back</span> Back
+      </a>
+    </nav>
+  </header>
+
+  <main class="pt-32 pb-20 px-6 max-w-7xl mx-auto overflow-hidden relative">
+    <!-- Grid background -->
+    <div class="absolute inset-0 grid-overlay opacity-10 -z-10 pointer-events-none"></div>
+
+    <!-- ╔══════════════════════════════════════╗ -->
+    <!-- ║  Hero                                ║ -->
+    <!-- ╚══════════════════════════════════════╝ -->
+    <header class="mb-24 relative">
+      <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-tertiary/10 border border-tertiary/20 text-tertiary text-xs font-mono uppercase tracking-widest mb-6">
+        <span class="status-pulse w-2 h-2 rounded-full bg-tertiary"></span>
+        ISO 27001 Certified Environment
+      </div>
+      <h1 class="text-6xl md:text-8xl font-headline font-bold text-on-surface tracking-tighter leading-none mb-8 max-w-4xl">
+        Governance at <span class="bg-gradient-to-r from-secondary to-tertiary bg-clip-text text-transparent">Scale.</span>
+      </h1>
+      <p class="text-xl text-on-surface-variant max-w-2xl leading-relaxed">
+        Transforming a fragmented data ecosystem into an ISO&nbsp;27001 compliant, enterprise-grade environment — contributing to certification as both a Data Engineer and ISMS committee member — without sacrificing developer velocity.
+      </p>
+    </header>
+
+    <!-- ╔══════════════════════════════════════╗ -->
+    <!-- ║  Metrics Bento                       ║ -->
+    <!-- ╚══════════════════════════════════════╝ -->
+    <section class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-24">
+      <div class="bg-surface-container-high p-8 rounded-xl glass-beveled flex flex-col justify-between">
+        <span class="text-secondary font-mono text-sm uppercase tracking-widest mb-4">Compliance Rating</span>
+        <div class="text-6xl font-headline font-bold text-on-surface">100%</div>
+        <p class="text-on-surface-variant text-sm mt-4">Audit pass rate achieved across all ISO&nbsp;27001 control requirements.</p>
+      </div>
+      <div class="bg-surface-container-high p-8 rounded-xl glass-beveled flex flex-col justify-between">
+        <span class="text-tertiary font-mono text-sm uppercase tracking-widest mb-4">Catalog Users</span>
+        <div class="text-6xl font-headline font-bold text-on-surface">500+</div>
+        <p class="text-on-surface-variant text-sm mt-4">Users accessing governed, discoverable datasets through the unified catalog daily.</p>
+      </div>
+      <div class="bg-surface-container-high p-8 rounded-xl glass-beveled flex flex-col justify-between">
+        <span class="text-secondary font-mono text-sm uppercase tracking-widest mb-4">Security Incidents</span>
+        <div class="text-6xl font-headline font-bold text-on-surface">0</div>
+        <p class="text-on-surface-variant text-sm mt-4">Zero unauthorised data breaches recorded post-deployment.</p>
+      </div>
+    </section>
+
+    <!-- ╔══════════════════════════════════════╗ -->
+    <!-- ║  Technical Content                   ║ -->
+    <!-- ╚══════════════════════════════════════╝ -->
+    <div class="grid grid-cols-1 lg:grid-cols-12 gap-12 items-start">
+
+      <!-- Left: Narrative -->
+      <div class="lg:col-span-5 space-y-12">
+
+        <section>
+          <h2 class="text-3xl font-headline font-bold text-primary mb-6">The Challenge</h2>
+          <p class="text-on-surface-variant leading-relaxed mb-4">
+            A rapidly scaling organisation (aged care &amp; fintech) faced a critical crossroads: data access was ungoverned, with manual SQL permissions and zero visibility into PII (Personally Identifiable Information) exposure across their Azure data estate.
+          </p>
+          <p class="text-on-surface-variant leading-relaxed">
+            The engineering goal was to move from "reactive security" to "proactive governance" — automating access enforcement and audit trails while maintaining agility for multiple internal data teams. Additionally, ISO&nbsp;27001 certification required formal ISMS policies, evidence of security controls, and cross-functional committee review.
+          </p>
+        </section>
+
+        <section>
+          <h2 class="text-3xl font-headline font-bold text-secondary mb-6">The Tech Stack</h2>
+          <div class="flex flex-wrap gap-3">
+            <span class="px-4 py-2 bg-surface-container-highest rounded-lg border border-outline-variant/30 font-mono text-sm">Azure Purview</span>
+            <span class="px-4 py-2 bg-surface-container-highest rounded-lg border border-outline-variant/30 font-mono text-sm">Unity Catalog</span>
+            <span class="px-4 py-2 bg-surface-container-highest rounded-lg border border-outline-variant/30 font-mono text-sm">Azure Databricks</span>
+            <span class="px-4 py-2 bg-surface-container-highest rounded-lg border border-outline-variant/30 font-mono text-sm">Azure DevOps</span>
+            <span class="px-4 py-2 bg-surface-container-highest rounded-lg border border-outline-variant/30 font-mono text-sm">Python SDK</span>
+            <span class="px-4 py-2 bg-surface-container-highest rounded-lg border border-outline-variant/30 font-mono text-sm">Pulumi (IaC)</span>
+          </div>
+        </section>
+
+        <!-- Code snippet -->
+        <section class="bg-surface-container-lowest p-6 rounded-xl border-l-4 border-secondary font-mono text-sm">
+          <div class="flex justify-between items-center mb-4 text-outline">
+            <span>governance_policy.tf</span>
+            <span class="material-symbols-outlined text-sm">content_copy</span>
+          </div>
+          <pre class="text-secondary-fixed-dim"><code><span class="text-tertiary"># Unity Catalog: role-based access</span>
+resource "databricks_grants" "analyst_read" {
   table = "finance.transactions"
-  privilege = "SELECT"
-  principal = "data_analysts_group"
+  grant {
+    principal  = "data_analysts_group"
+    privileges = ["SELECT"]
+  }
 }
 
-# Automated PII Redaction Mask
-resource "databricks_masking_policy" "ssn" {
-  expression = "CASE WHEN is_account_group('HR') 
-                THEN ssn ELSE 'XXX-XX-XXXX' END"
+<span class="text-tertiary"># Automated PII masking via policy</span>
+resource "databricks_sql_table" "patients_masked" {
+  column_mask {
+    column_name      = "ssn"
+    mask_function_name = "mask_ssn_by_role"
+  }
 }</code></pre>
-</section>
-</div>
-<!-- Right Column: Architecture Diagram / Visuals -->
-<div class="lg:col-span-7 space-y-8">
-<div class="bg-surface-container-low p-8 rounded-2xl glass-beveled relative overflow-hidden">
-<h3 class="text-xl font-headline font-bold mb-8 flex items-center gap-2">
-<span class="material-symbols-outlined text-secondary">security</span>
-                        Governed Architecture Blueprint
-                    </h3>
-<!-- Diagram Simulation -->
-<div class="space-y-6 relative z-10">
-<!-- Layer 1: Access -->
-<div class="flex items-center gap-6">
-<div class="w-24 h-24 rounded-xl bg-surface-container-highest border border-outline-variant/50 flex flex-col items-center justify-center text-center p-2">
-<span class="material-symbols-outlined text-primary mb-1">group</span>
-<span class="text-[10px] font-mono uppercase">End Users</span>
-</div>
-<div class="flex-1 h-px bg-gradient-to-r from-primary/50 to-secondary/50 relative">
-<div class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 bg-surface-container-low px-3 py-1 text-[10px] font-mono border border-secondary/30 rounded-full">RBAC Auth</div>
-</div>
-<div class="w-48 h-24 rounded-xl bg-secondary/10 border border-secondary/30 flex flex-col items-center justify-center text-center p-2">
-<span class="material-symbols-outlined text-secondary mb-1">lock</span>
-<span class="text-xs font-bold uppercase tracking-tight">Access Control</span>
-<span class="text-[10px] text-on-surface-variant">Active Directory Sync</span>
-</div>
-</div>
-<!-- Vertical Connect -->
-<div class="ml-12 w-px h-12 bg-gradient-to-b from-secondary/50 to-tertiary/50"></div>
-<!-- Layer 2: Redaction -->
-<div class="flex items-center gap-6">
-<div class="w-full h-32 rounded-xl bg-surface-container-highest border border-tertiary/20 relative flex flex-col items-center justify-center gap-4">
-<div class="absolute top-2 left-4 text-[10px] font-mono text-tertiary">ENFORCEMENT LAYER</div>
-<div class="flex gap-4">
-<div class="px-4 py-2 bg-surface-container-low border border-outline-variant/20 rounded-lg flex flex-col items-center">
-<span class="material-symbols-outlined text-sm mb-1">visibility_off</span>
-<span class="text-[10px] font-mono uppercase">PII Redaction</span>
-</div>
-<div class="px-4 py-2 bg-surface-container-low border border-outline-variant/20 rounded-lg flex flex-col items-center">
-<span class="material-symbols-outlined text-sm mb-1">masks</span>
-<span class="text-[10px] font-mono uppercase">Data Masking</span>
-</div>
-<div class="px-4 py-2 bg-surface-container-low border border-outline-variant/20 rounded-lg flex flex-col items-center">
-<span class="material-symbols-outlined text-sm mb-1">history_edu</span>
-<span class="text-[10px] font-mono uppercase">Audit Log</span>
-</div>
-</div>
-</div>
-</div>
-<!-- Layer 3: Catalog -->
-<div class="flex items-center gap-6 pt-4">
-<div class="flex-1 p-6 rounded-xl bg-primary-container/10 border border-primary-container/30 flex items-center justify-between">
-<div>
-<h4 class="text-sm font-bold text-primary">Unity Catalog</h4>
-<p class="text-[10px] text-on-surface-variant">Centralized metadata &amp; lineage</p>
-</div>
-<span class="material-symbols-outlined text-3xl text-primary opacity-50">database</span>
-</div>
-</div>
-</div>
-<!-- Ambient Glow -->
-<div class="absolute -bottom-24 -right-24 w-64 h-64 bg-secondary/10 blur-[80px] rounded-full"></div>
-</div>
-<div class="grid grid-cols-2 gap-4">
-<div class="bg-surface-container-high rounded-xl p-4 flex gap-4 items-start">
-<div class="w-10 h-10 rounded-lg bg-tertiary/20 flex items-center justify-center shrink-0">
-<span class="material-symbols-outlined text-tertiary">check_circle</span>
-</div>
-<div>
-<span class="block text-sm font-bold">Policy as Code</span>
-<span class="text-xs text-on-surface-variant">Version-controlled compliance definitions.</span>
-</div>
-</div>
-<div class="bg-surface-container-high rounded-xl p-4 flex gap-4 items-start">
-<div class="w-10 h-10 rounded-lg bg-secondary/20 flex items-center justify-center shrink-0">
-<span class="material-symbols-outlined text-secondary">explore</span>
-</div>
-<div>
-<span class="block text-sm font-bold">Data Lineage</span>
-<span class="text-xs text-on-surface-variant">Trace sensitive data from source to report.</span>
-</div>
-</div>
-</div>
-</div>
-</div>
-<!-- Outcome Section -->
-<section class="mt-32 pt-20 border-t border-outline-variant/20">
-<h2 class="text-4xl font-headline font-bold mb-12 text-center">Business <span class="text-primary italic">Impact</span></h2>
-<div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
-<div class="text-center">
-<div class="text-3xl font-headline font-bold text-secondary mb-2">90%</div>
-<p class="text-sm text-on-surface-variant">Reduction in manual ticket requests for data access.</p>
-</div>
-<div class="text-center">
-<div class="text-3xl font-headline font-bold text-secondary mb-2">2 Hours</div>
-<p class="text-sm text-on-surface-variant">Time to fulfill new compliant data environment requests.</p>
-</div>
-<div class="text-center">
-<div class="text-3xl font-headline font-bold text-secondary mb-2">Clean</div>
-<p class="text-sm text-on-surface-variant">Annual SOC2 and ISO 27001 audit results.</p>
-</div>
-<div class="text-center">
-<div class="text-3xl font-headline font-bold text-secondary mb-2">Global</div>
-<p class="text-sm text-on-surface-variant">Consistent governance across 4 global AWS/Azure regions.</p>
-</div>
-</div>
-</section>
-<!-- CTA Section -->
-<section class="mt-32 bg-gradient-to-br from-primary/10 to-secondary/10 p-12 rounded-3xl border border-white/5 text-center">
-<h3 class="text-3xl font-headline font-bold mb-6">Need to secure your infrastructure?</h3>
-<p class="text-on-surface-variant mb-10 max-w-xl mx-auto">
-                I specialize in architecting secure, scalable data foundations that meet the highest regulatory standards while empowering developers.
-            </p>
-<button class="bg-gradient-to-br from-primary to-primary-container text-on-primary px-10 py-4 rounded-full font-bold hover:shadow-[0_0_24px_rgba(192,193,255,0.4)] transition-all">
-                Let's Talk Architecture
-            </button>
-</section>
-</main>
-<!-- Footer -->
-<footer class="bg-slate-950 border-t border-white/5 w-full py-12 px-8">
-<div class="flex flex-col md:flex-row justify-between items-center max-w-7xl mx-auto gap-8">
-<div class="text-lg font-bold text-slate-200">Architectural Precision</div>
-<div class="flex gap-8">
-<a class="text-slate-500 hover:text-indigo-300 transition-colors underline decoration-indigo-500/30 underline-offset-4 font-['Inter'] text-sm tracking-wide" href="#">LinkedIn</a>
-<a class="text-slate-500 hover:text-indigo-300 transition-colors underline decoration-indigo-500/30 underline-offset-4 font-['Inter'] text-sm tracking-wide" href="#">GitHub</a>
-<a class="text-slate-500 hover:text-indigo-300 transition-colors underline decoration-indigo-500/30 underline-offset-4 font-['Inter'] text-sm tracking-wide" href="#">Technical Blog</a>
-<a class="text-slate-500 hover:text-indigo-300 transition-colors underline decoration-indigo-500/30 underline-offset-4 font-['Inter'] text-sm tracking-wide" href="#">Newsletter</a>
-</div>
-<div class="text-slate-500 font-['Inter'] text-sm tracking-wide">
-                © 2024 Architectural Precision. Built with Spark &amp; Obsidian Logic.
+        </section>
+
+      </div>
+
+      <!-- Right: Architecture diagram -->
+      <div class="lg:col-span-7 space-y-8">
+        <div class="bg-surface-container-low p-8 rounded-2xl glass-beveled relative overflow-hidden">
+          <h3 class="text-xl font-headline font-bold mb-8 flex items-center gap-2">
+            <span class="material-symbols-outlined text-secondary">security</span>
+            Governed Architecture Blueprint
+          </h3>
+
+          <div class="space-y-6 relative z-10">
+            <!-- Layer 1: Access -->
+            <div class="flex items-center gap-6">
+              <div class="w-24 h-24 rounded-xl bg-surface-container-highest border border-outline-variant/50 flex flex-col items-center justify-center text-center p-2">
+                <span class="material-symbols-outlined text-primary mb-1">group</span>
+                <span class="text-[10px] font-mono uppercase">End Users</span>
+              </div>
+              <div class="flex-1 h-px bg-gradient-to-r from-primary/50 to-secondary/50 relative">
+                <div class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 bg-surface-container-low px-3 py-1 text-[10px] font-mono border border-secondary/30 rounded-full">RBAC Auth</div>
+              </div>
+              <div class="w-48 h-24 rounded-xl bg-secondary/10 border border-secondary/30 flex flex-col items-center justify-center text-center p-2">
+                <span class="material-symbols-outlined text-secondary mb-1">lock</span>
+                <span class="text-xs font-bold uppercase tracking-tight">Access Control</span>
+                <span class="text-[10px] text-on-surface-variant">Azure AD Sync</span>
+              </div>
             </div>
-</div>
-</footer>
-</body></html>
+
+            <!-- Vertical connector -->
+            <div class="ml-12 w-px h-12 bg-gradient-to-b from-secondary/50 to-tertiary/50"></div>
+
+            <!-- Layer 2: Enforcement -->
+            <div class="flex items-center gap-6">
+              <div class="w-full h-32 rounded-xl bg-surface-container-highest border border-tertiary/20 relative flex flex-col items-center justify-center gap-4">
+                <div class="absolute top-2 left-4 text-[10px] font-mono text-tertiary">ENFORCEMENT LAYER</div>
+                <div class="flex gap-4">
+                  <div class="px-4 py-2 bg-surface-container-low border border-outline-variant/20 rounded-lg flex flex-col items-center">
+                    <span class="material-symbols-outlined text-sm mb-1">visibility_off</span>
+                    <span class="text-[10px] font-mono uppercase">PII Redaction</span>
+                  </div>
+                  <div class="px-4 py-2 bg-surface-container-low border border-outline-variant/20 rounded-lg flex flex-col items-center">
+                    <span class="material-symbols-outlined text-sm mb-1">masks</span>
+                    <span class="text-[10px] font-mono uppercase">Data Masking</span>
+                  </div>
+                  <div class="px-4 py-2 bg-surface-container-low border border-outline-variant/20 rounded-lg flex flex-col items-center">
+                    <span class="material-symbols-outlined text-sm mb-1">history_edu</span>
+                    <span class="text-[10px] font-mono uppercase">Audit Log</span>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <!-- Layer 3: Catalog -->
+            <div class="flex items-center gap-6 pt-4">
+              <div class="flex-1 p-6 rounded-xl bg-primary-container/10 border border-primary-container/30 flex items-center justify-between">
+                <div>
+                  <h4 class="text-sm font-bold text-primary">Unity Catalog + Azure Purview</h4>
+                  <p class="text-[10px] text-on-surface-variant">Centralised metadata, lineage &amp; discoverability</p>
+                </div>
+                <span class="material-symbols-outlined text-3xl text-primary opacity-50">database</span>
+              </div>
+            </div>
+          </div>
+
+          <!-- Ambient glow -->
+          <div class="absolute -bottom-24 -right-24 w-64 h-64 bg-secondary/10 blur-[80px] rounded-full pointer-events-none"></div>
+        </div>
+
+        <div class="grid grid-cols-2 gap-4">
+          <div class="bg-surface-container-high rounded-xl p-4 flex gap-4 items-start">
+            <div class="w-10 h-10 rounded-lg bg-tertiary/20 flex items-center justify-center shrink-0">
+              <span class="material-symbols-outlined text-tertiary">check_circle</span>
+            </div>
+            <div>
+              <span class="block text-sm font-bold">Policy as Code</span>
+              <span class="text-xs text-on-surface-variant">Version-controlled compliance definitions via IaC.</span>
+            </div>
+          </div>
+          <div class="bg-surface-container-high rounded-xl p-4 flex gap-4 items-start">
+            <div class="w-10 h-10 rounded-lg bg-secondary/20 flex items-center justify-center shrink-0">
+              <span class="material-symbols-outlined text-secondary">explore</span>
+            </div>
+            <div>
+              <span class="block text-sm font-bold">Data Lineage</span>
+              <span class="text-xs text-on-surface-variant">Trace sensitive data from raw source to report.</span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+    </div>
+
+    <!-- ╔══════════════════════════════════════╗ -->
+    <!-- ║  Business Impact                     ║ -->
+    <!-- ╚══════════════════════════════════════╝ -->
+    <section class="mt-32 pt-20 border-t border-outline-variant/20">
+      <h2 class="text-4xl font-headline font-bold mb-12 text-center">Business <span class="text-primary italic">Impact</span></h2>
+      <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
+        <div class="text-center">
+          <div class="text-3xl font-headline font-bold text-secondary mb-2">90%</div>
+          <p class="text-sm text-on-surface-variant">Reduction in manual access request tickets for data provisioning.</p>
+        </div>
+        <div class="text-center">
+          <div class="text-3xl font-headline font-bold text-secondary mb-2">2 Hours</div>
+          <p class="text-sm text-on-surface-variant">Average time to fulfil new compliant environment requests, down from days.</p>
+        </div>
+        <div class="text-center">
+          <div class="text-3xl font-headline font-bold text-secondary mb-2">ISO&nbsp;27001</div>
+          <p class="text-sm text-on-surface-variant">Successfully certified with clean audit results — first time for the organisation.</p>
+        </div>
+        <div class="text-center">
+          <div class="text-3xl font-headline font-bold text-secondary mb-2">Multi-Region</div>
+          <p class="text-sm text-on-surface-variant">Consistent governance enforced across Azure and AWS deployment regions.</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- ╔══════════════════════════════════════╗ -->
+    <!-- ║  CTA                                 ║ -->
+    <!-- ╚══════════════════════════════════════╝ -->
+    <section class="mt-32 bg-gradient-to-br from-primary/10 to-secondary/10 p-12 rounded-3xl border border-white/5 text-center">
+      <h3 class="text-3xl font-headline font-bold mb-6">Need to secure your data infrastructure?</h3>
+      <p class="text-on-surface-variant mb-10 max-w-xl mx-auto">
+        I specialise in architecting secure, governed data foundations that meet the highest regulatory standards while empowering data teams to move fast.
+      </p>
+      <a href="/#contact" class="inline-block bg-gradient-to-br from-primary to-primary-container text-on-primary px-10 py-4 rounded-full font-bold hover:shadow-[0_0_24px_rgba(192,193,255,0.4)] transition-all">
+        Let's Talk Architecture
+      </a>
+    </section>
+
+  </main>
+
+  <!-- ╔══════════════════════════════════════╗ -->
+  <!-- ║  Footer                              ║ -->
+  <!-- ╚══════════════════════════════════════╝ -->
+  <footer class="bg-slate-950 border-t border-white/5 w-full py-12 px-8">
+    <div class="flex flex-col md:flex-row justify-between items-center max-w-7xl mx-auto gap-8">
+      <div class="text-lg font-bold text-slate-200 font-headline">© 2025 Raphael Mata · Data Engineer</div>
+      <div class="flex gap-8">
+        <a href="https://linkedin.com/in/raphaelmata" target="_blank" rel="noopener" class="text-slate-500 hover:text-indigo-300 transition-colors text-sm underline decoration-indigo-500/30 underline-offset-4">LinkedIn</a>
+        <a href="https://github.com/RaphaMiranda" target="_blank" rel="noopener" class="text-slate-500 hover:text-indigo-300 transition-colors text-sm underline decoration-indigo-500/30 underline-offset-4">GitHub</a>
+        <a href="/#case-studies" class="text-slate-500 hover:text-indigo-300 transition-colors text-sm underline decoration-indigo-500/30 underline-offset-4">Case Studies</a>
+      </div>
+    </div>
+  </footer>
+
+  <script src="/assets/js/main.js"></script>
+</body>
+</html>

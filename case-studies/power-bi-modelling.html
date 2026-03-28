@@ -1,309 +1,274 @@
 <!DOCTYPE html>
+<html class="dark" lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="description" content="Case Study: Enterprise Power BI Modelling Maturity — star-schema re-engineering, DAX optimisation, and self-service analytics at scale — by Raphael Mata." />
+  <title>Enterprise Power BI Maturity | Raphael Mata</title>
 
-<html class="dark" lang="en"><head>
-<meta charset="utf-8"/>
-<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
-<title>Case Study: Enterprise Power BI Modelling | DataArchitect.io</title>
-<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
-<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&amp;family=Inter:wght@300;400;500;600;700&amp;family=JetBrains+Mono:wght@400;500&amp;display=swap" rel="stylesheet"/>
-<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
-<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
-<script id="tailwind-config">
-      tailwind.config = {
-        darkMode: "class",
-        theme: {
-          extend: {
-            colors: {
-              "on-secondary": "#00363e",
-              "primary-container": "#8083ff",
-              "inverse-surface": "#dae2fd",
-              "inverse-on-surface": "#283044",
-              "inverse-primary": "#494bd6",
-              "secondary-fixed-dim": "#2fd9f4",
-              "outline": "#908fa0",
-              "on-primary": "#1000a9",
-              "on-error-container": "#ffdad6",
-              "primary-fixed": "#e1e0ff",
-              "on-surface": "#dae2fd",
-              "error": "#ffb4ab",
-              "on-secondary-fixed": "#001f25",
-              "on-primary-fixed": "#07006c",
-              "on-tertiary-container": "#000703",
-              "on-surface-variant": "#c7c4d7",
-              "on-primary-container": "#0d0096",
-              "surface-container-lowest": "#060e20",
-              "surface-dim": "#0b1326",
-              "secondary": "#5de6ff",
-              "on-primary-fixed-variant": "#2f2ebe",
-              "on-error": "#690005",
-              "surface": "#0b1326",
-              "surface-bright": "#31394d",
-              "on-tertiary-fixed": "#002113",
-              "surface-container-highest": "#2d3449",
-              "primary": "#c0c1ff",
-              "surface-container-low": "#131b2e",
-              "background": "#0b1326",
-              "on-tertiary-fixed-variant": "#005236",
-              "surface-container-high": "#222a3d",
-              "tertiary": "#4edea3",
-              "on-secondary-fixed-variant": "#004e5a",
-              "secondary-fixed": "#a2eeff",
-              "tertiary-container": "#00885d",
-              "tertiary-fixed": "#6ffbbe",
-              "error-container": "#93000a",
-              "surface-tint": "#c0c1ff",
-              "tertiary-fixed-dim": "#4edea3",
-              "surface-variant": "#2d3449",
-              "secondary-container": "#00cbe6",
-              "on-secondary-container": "#00515d",
-              "primary-fixed-dim": "#c0c1ff",
-              "on-background": "#dae2fd",
-              "outline-variant": "#464554",
-              "surface-container": "#171f33",
-              "on-tertiary": "#003824"
-            },
-            fontFamily: {
-              "headline": ["Space Grotesk"],
-              "body": ["Inter"],
-              "label": ["Inter"],
-              "mono": ["JetBrains Mono"]
-            },
-            borderRadius: {"DEFAULT": "0.25rem", "lg": "0.5rem", "xl": "0.75rem", "full": "9999px"},
-          },
-        },
-      }
-    </script>
-<style>
-      body { font-family: 'Inter', sans-serif; }
-      h1, h2, h3 { font-family: 'Space Grotesk', sans-serif; }
-      .material-symbols-outlined { font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24; }
-      .glass-panel { backdrop-filter: blur(12px); }
-      .grid-pattern {
-        background-image: radial-gradient(circle, #464554 1px, transparent 1px);
-        background-size: 24px 24px;
-        opacity: 0.15;
-      }
-    </style>
+  <!-- Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet" />
+  <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet" />
+
+  <!-- Tailwind CDN + shared config -->
+  <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+  <script src="/assets/js/tailwind.config.js"></script>
+
+  <!-- Custom styles -->
+  <link rel="stylesheet" href="/assets/css/styles.css" />
 </head>
-<body class="bg-background text-on-surface selection:bg-primary-container selection:text-on-primary-container">
-<!-- Site Nav -->
-<header class="bg-slate-950/80 backdrop-blur-xl fixed top-0 w-full z-50 border-b border-white/10 shadow-[0_8px_32px_0_rgba(99,102,241,0.06)]">
-<nav class="flex justify-between items-center max-w-7xl mx-auto px-8 h-16">
-<a href="/" class="text-xl font-bold bg-gradient-to-br from-indigo-300 to-indigo-500 bg-clip-text text-transparent font-headline tracking-tight">DataArchitect.io</a>
-<a href="/#case-studies" class="flex items-center gap-2 text-slate-400 hover:text-slate-200 transition-colors text-sm font-headline"><span class="material-symbols-outlined text-base">arrow_back</span> All Case Studies</a>
-</nav>
-</header>
-<!-- TopAppBar -->
-<nav class="bg-slate-950/80 backdrop-blur-xl border-b border-white/10 fixed top-0 w-full z-50 shadow-[0_8px_32px_0_rgba(99,102,241,0.06)]">
-<div class="flex justify-between items-center max-w-7xl mx-auto px-8 h-20">
-<div class="text-2xl font-bold bg-gradient-to-br from-indigo-300 to-indigo-500 bg-clip-text text-transparent font-['Space_Grotesk'] tracking-tight">
-                DataArchitect.io
+
+<body class="bg-background text-on-surface font-body selection:bg-primary-container selection:text-on-primary-container">
+
+  <!-- ╔══════════════════════════════════════╗ -->
+  <!-- ║  Navigation                          ║ -->
+  <!-- ╚══════════════════════════════════════╝ -->
+  <header class="bg-slate-950/80 backdrop-blur-xl fixed top-0 w-full z-50 border-b border-white/10 shadow-[0_8px_32px_0_rgba(99,102,241,0.06)]">
+    <nav class="flex justify-between items-center max-w-7xl mx-auto px-8 h-20">
+      <a href="/" class="text-2xl font-bold bg-gradient-to-br from-indigo-300 to-indigo-500 bg-clip-text text-transparent font-headline tracking-tight">
+        Raphael Mata
+      </a>
+      <div class="hidden md:flex items-center gap-8">
+        <a data-nav href="/" class="text-slate-400 font-medium hover:text-slate-200 transition-colors font-headline">Home</a>
+        <a data-nav href="/#case-studies" class="text-indigo-400 font-bold border-b-2 border-indigo-400 pb-1 font-headline">Case Studies</a>
+        <a data-nav href="/#skills" class="text-slate-400 font-medium hover:text-slate-200 transition-colors font-headline">Skills</a>
+        <a data-nav href="/#timeline" class="text-slate-400 font-medium hover:text-slate-200 transition-colors font-headline">Timeline</a>
+        <button data-contact-cta class="bg-gradient-to-br from-primary to-primary-container text-on-primary font-bold px-6 py-2.5 rounded-lg active:scale-95 duration-150 transition-all">
+          Get in Touch
+        </button>
+      </div>
+      <a href="/#case-studies" class="md:hidden flex items-center gap-2 text-slate-400 hover:text-slate-200 transition-colors text-sm font-headline">
+        <span class="material-symbols-outlined text-base">arrow_back</span> Back
+      </a>
+    </nav>
+  </header>
+
+  <main class="pt-32 pb-24">
+
+    <!-- ╔══════════════════════════════════════╗ -->
+    <!-- ║  Hero                                ║ -->
+    <!-- ╚══════════════════════════════════════╝ -->
+    <section class="max-w-7xl mx-auto px-8 mb-24">
+      <div class="relative overflow-hidden rounded-xl bg-surface-container-low p-12 lg:p-20 border-l border-t border-outline-variant/15">
+        <div class="absolute inset-0 grid-overlay opacity-15 pointer-events-none"></div>
+        <div class="relative z-10 max-w-3xl">
+          <span class="inline-block px-3 py-1 bg-primary/10 text-primary text-xs font-mono uppercase tracking-[0.2em] rounded mb-6 border border-primary/20">
+            Analytics Engineering Case Study · Akross · 2023
+          </span>
+          <h1 class="text-5xl lg:text-7xl font-bold text-on-surface leading-tight mb-8">
+            Enterprise Power BI<br />
+            <span class="bg-gradient-to-r from-secondary to-primary bg-clip-text text-transparent">Modelling Maturity</span>
+          </h1>
+          <p class="text-on-surface-variant text-xl leading-relaxed mb-10 max-w-2xl">
+            Solving the "slow dashboard" crisis for a large-scale AWS-backed analytics environment by rebuilding the entire data model from the ground up — integrating Athena and Redshift with Power BI through rigorous star-schema re-engineering.
+          </p>
+          <div class="flex flex-wrap gap-4">
+            <div class="flex items-center gap-2 bg-surface-container-highest px-4 py-2 rounded-full border border-outline-variant/20">
+              <span class="material-symbols-outlined text-secondary text-sm">database</span>
+              <span class="text-sm font-mono text-on-surface">AWS Redshift + Athena</span>
             </div>
-<div class="hidden md:flex items-center gap-8">
-<a class="text-slate-400 font-medium hover:text-slate-200 transition-colors hover:bg-white/5 rounded-lg px-3 py-2" href="#">Home</a>
-<a class="text-indigo-400 font-bold border-b-2 border-indigo-400 pb-1 hover:bg-white/5 rounded-lg px-3 py-2" href="#">Case Studies</a>
-<a class="text-slate-400 font-medium hover:text-slate-200 transition-colors hover:bg-white/5 rounded-lg px-3 py-2" href="#">Skills</a>
-<a class="text-slate-400 font-medium hover:text-slate-200 transition-colors hover:bg-white/5 rounded-lg px-3 py-2" href="#">Timeline</a>
-</div>
-<button class="bg-gradient-to-br from-primary to-primary-container text-on-primary font-bold px-6 py-2.5 rounded-lg active:scale-95 duration-150 transition-all">
-                Get in Touch
-            </button>
-</div>
-</nav>
-<main class="pt-32 pb-24">
-<!-- Hero Section -->
-<section class="max-w-7xl mx-auto px-8 mb-24">
-<div class="relative overflow-hidden rounded-xl bg-surface-container-low p-12 lg:p-20 border-l border-t border-outline-variant/15">
-<div class="grid-pattern absolute inset-0 pointer-events-none"></div>
-<div class="relative z-10 max-w-3xl">
-<span class="inline-block px-3 py-1 bg-primary/10 text-primary text-xs font-mono uppercase tracking-[0.2em] rounded mb-6 border border-primary/20">Enterprise Architecture Case #042</span>
-<h1 class="text-5xl lg:text-7xl font-bold text-on-surface leading-tight mb-8">
-                        Enterprise Power BI <br/>
-<span class="bg-gradient-to-r from-secondary to-primary bg-clip-text text-transparent">Modelling Maturity</span>
-</h1>
-<p class="text-on-surface-variant text-xl leading-relaxed mb-10 max-w-2xl">
-                        Optimizing a massive Power BI tenant for multi-departmental scale, solving the "Slow Dashboard" crisis through rigorous re-engineering of the underlying Tabular models.
-                    </p>
-<div class="flex flex-wrap gap-4">
-<div class="flex items-center gap-2 bg-surface-container-highest px-4 py-2 rounded-full border border-outline-variant/20">
-<span class="material-symbols-outlined text-secondary text-sm">database</span>
-<span class="text-sm font-mono text-on-surface">Synapse Analytics</span>
-</div>
-<div class="flex items-center gap-2 bg-surface-container-highest px-4 py-2 rounded-full border border-outline-variant/20">
-<span class="material-symbols-outlined text-secondary text-sm">settings_input_component</span>
-<span class="text-sm font-mono text-on-surface">DAX &amp; Tabular Editor</span>
-</div>
-<div class="flex items-center gap-2 bg-surface-container-highest px-4 py-2 rounded-full border border-outline-variant/20">
-<span class="material-symbols-outlined text-secondary text-sm">monitoring</span>
-<span class="text-sm font-mono text-on-surface">Power BI Service</span>
-</div>
-</div>
-</div>
-</div>
-</section>
-<!-- Metrics Bento Grid -->
-<section class="max-w-7xl mx-auto px-8 mb-32">
-<div class="grid grid-cols-1 md:grid-cols-3 gap-8">
-<div class="md:col-span-2 bg-surface-container-high rounded-xl p-8 border-t border-l border-outline-variant/15 flex flex-col justify-between overflow-hidden relative group">
-<div class="relative z-10">
-<h3 class="text-on-surface-variant font-mono text-xs uppercase tracking-widest mb-4">Metric / Efficiency</h3>
-<div class="text-6xl font-bold text-tertiary mb-2">75% Faster</div>
-<p class="text-on-surface-variant text-lg">Reduction in report visual loading times across 200+ global dashboards.</p>
-</div>
-<div class="mt-12 h-32 w-full flex items-end gap-1 opacity-50 group-hover:opacity-100 transition-opacity">
-<!-- Mock Chart Bars -->
-<div class="bg-outline-variant/20 w-full h-[80%] rounded-t-sm"></div>
-<div class="bg-outline-variant/20 w-full h-[70%] rounded-t-sm"></div>
-<div class="bg-outline-variant/20 w-full h-[90%] rounded-t-sm"></div>
-<div class="bg-outline-variant/20 w-full h-[85%] rounded-t-sm"></div>
-<div class="bg-outline-variant/20 w-full h-[60%] rounded-t-sm"></div>
-<div class="bg-tertiary w-full h-[15%] rounded-t-sm"></div>
-<div class="bg-tertiary w-full h-[10%] rounded-t-sm"></div>
-<div class="bg-tertiary w-full h-[8%] rounded-t-sm"></div>
-</div>
-</div>
-<div class="bg-surface-container-high rounded-xl p-8 border-t border-l border-outline-variant/15 flex flex-col justify-between">
-<div>
-<h3 class="text-on-surface-variant font-mono text-xs uppercase tracking-widest mb-4">Metric / Growth</h3>
-<div class="text-6xl font-bold text-secondary mb-2">120%</div>
-<p class="text-on-surface-variant text-lg">Increase in monthly active users as trust in data reliability stabilized.</p>
-</div>
-<div class="flex items-center gap-4 text-secondary/40">
-<span class="material-symbols-outlined text-4xl" style="font-variation-settings: 'FILL' 1;">trending_up</span>
-<div class="h-[2px] flex-1 bg-outline-variant/20"></div>
-</div>
-</div>
-</div>
-</section>
-<!-- The Problem & Solution -->
-<section class="max-w-7xl mx-auto px-8 mb-32 grid lg:grid-cols-12 gap-16 items-start">
-<div class="lg:col-span-5">
-<h2 class="text-3xl font-bold text-on-surface mb-8">The "Slow Dashboard" Crisis</h2>
-<div class="space-y-8 text-on-surface-variant leading-relaxed">
-<p>
-                        The organization was facing a "Data Trust Deficit." Business users were abandoning reports due to 30-second refresh times and inconsistent metric definitions across different departments.
-                    </p>
-<div class="p-6 rounded-lg bg-surface-container-lowest border border-error/10">
-<h4 class="text-error font-mono text-xs uppercase mb-4 flex items-center gap-2">
-<span class="material-symbols-outlined text-sm">warning</span> 
-                            Legacy Architecture Flaws
-                        </h4>
-<ul class="space-y-3 text-sm font-mono">
-<li class="flex gap-2"><span>&gt;</span> Snowflake schemas with 40+ joins per visual</li>
-<li class="flex gap-2"><span>&gt;</span> Row-by-Row iterative DAX measures (FILTER/SUMX)</li>
-<li class="flex gap-2"><span>&gt;</span> Excessive calculated columns inflating memory</li>
-</ul>
-</div>
-</div>
-</div>
-<div class="lg:col-span-7 bg-surface-container-low rounded-xl p-2 overflow-hidden border border-outline-variant/10">
-<div class="bg-surface rounded-lg p-8 h-full relative">
-<div class="absolute top-4 right-6 flex gap-2">
-<div class="w-2 h-2 rounded-full bg-outline-variant/40"></div>
-<div class="w-2 h-2 rounded-full bg-outline-variant/40"></div>
-<div class="w-2 h-2 rounded-full bg-outline-variant/40"></div>
-</div>
-<h3 class="font-mono text-sm text-on-surface-variant mb-12">Visualizing the Star-Schema Transformation</h3>
-<!-- Schema Visualization -->
-<div class="grid grid-cols-3 gap-8 items-center">
-<div class="col-span-1 space-y-4">
-<div class="h-16 bg-surface-container-highest border border-outline-variant/30 rounded flex items-center justify-center text-xs font-mono text-secondary">Dim_Calendar</div>
-<div class="h-16 bg-surface-container-highest border border-outline-variant/30 rounded flex items-center justify-center text-xs font-mono text-secondary">Dim_Product</div>
-<div class="h-16 bg-surface-container-highest border border-outline-variant/30 rounded flex items-center justify-center text-xs font-mono text-secondary">Dim_Geography</div>
-</div>
-<div class="col-span-1 relative flex justify-center">
-<div class="absolute inset-0 flex items-center justify-center">
-<div class="w-full h-[1px] bg-gradient-to-r from-transparent via-secondary/20 to-transparent"></div>
-<div class="w-[1px] h-full bg-gradient-to-b from-transparent via-secondary/20 to-transparent"></div>
-</div>
-<div class="w-32 h-32 rounded-lg bg-primary-container/20 border-2 border-primary-container shadow-[0_0_30px_rgba(128,131,255,0.3)] flex items-center justify-center z-10">
-<span class="font-mono font-bold text-on-primary-container">Fact_Sales</span>
-</div>
-</div>
-<div class="col-span-1 space-y-4">
-<div class="h-16 bg-surface-container-highest border border-outline-variant/30 rounded flex items-center justify-center text-xs font-mono text-secondary">Dim_Employee</div>
-<div class="h-16 bg-surface-container-highest border border-outline-variant/30 rounded flex items-center justify-center text-xs font-mono text-secondary">Dim_Store</div>
-</div>
-</div>
-<div class="mt-12 p-4 bg-surface-container-lowest rounded border-l-2 border-secondary font-mono text-[11px] text-on-surface-variant leading-relaxed">
-                        -- Optimized Measure: Year-to-Date Growth<br/>
-                        CALCULATE(<br/>
-                          [Total Sales],<br/>
-                          DATESYTD('Dim_Calendar'[Date])<br/>
-                        )
-                    </div>
-</div>
-</div>
-</section>
-<!-- The Execution Strategy -->
-<section class="max-w-7xl mx-auto px-8 mb-32">
-<h2 class="text-3xl font-bold text-on-surface mb-16 text-center">Engineering the Solution</h2>
-<div class="grid md:grid-cols-3 gap-12">
-<div class="space-y-6">
-<div class="w-12 h-12 bg-primary/10 rounded-lg flex items-center justify-center">
-<span class="material-symbols-outlined text-primary">hub</span>
-</div>
-<h4 class="text-xl font-bold text-on-surface">Data Denormalization</h4>
-<p class="text-on-surface-variant leading-relaxed">Collapsed complex relational structures in Synapse into high-performance analytical star schemas, reducing the query engine burden by 60%.</p>
-</div>
-<div class="space-y-6">
-<div class="w-12 h-12 bg-secondary/10 rounded-lg flex items-center justify-center">
-<span class="material-symbols-outlined text-secondary">speed</span>
-</div>
-<h4 class="text-xl font-bold text-on-surface">DAX Tuning</h4>
-<p class="text-on-surface-variant leading-relaxed">Replaced heavy, row-context DAX with set-based logic and utilized Variables (VAR) to prevent redundant calculation sub-steps.</p>
-</div>
-<div class="space-y-6">
-<div class="w-12 h-12 bg-tertiary/10 rounded-lg flex items-center justify-center">
-<span class="material-symbols-outlined text-tertiary">verified</span>
-</div>
-<h4 class="text-xl font-bold text-on-surface">Governance Framework</h4>
-<p class="text-on-surface-variant leading-relaxed">Implemented a 'Certified Dataset' tier, ensuring one central source of truth for critical KPIs like 'Adjusted Net Revenue'.</p>
-</div>
-</div>
-</section>
-<!-- Final Outcomes Visual -->
-<section class="max-w-7xl mx-auto px-8">
-<div class="bg-surface-container-low rounded-2xl p-12 lg:p-16 border border-outline-variant/10 text-center">
-<h2 class="text-3xl font-bold text-on-surface mb-12">The Impact Statement</h2>
-<div class="grid grid-cols-1 md:grid-cols-3 gap-12 max-w-5xl mx-auto">
-<div>
-<div class="text-4xl font-bold text-on-surface mb-2 font-mono">1.2M+</div>
-<div class="text-sm font-mono text-primary uppercase tracking-widest">Rows Processed/Sec</div>
-</div>
-<div class="border-y md:border-y-0 md:border-x border-outline-variant/20 py-8 md:py-0">
-<div class="text-4xl font-bold text-on-surface mb-2 font-mono">&lt; 3s</div>
-<div class="text-sm font-mono text-secondary uppercase tracking-widest">Avg. Load Time</div>
-</div>
-<div>
-<div class="text-4xl font-bold text-on-surface mb-2 font-mono">Zero</div>
-<div class="text-sm font-mono text-tertiary uppercase tracking-widest">Metric Discrepancy</div>
-</div>
-</div>
-<div class="mt-16 flex justify-center">
-<button class="bg-surface-container-highest hover:bg-surface-bright border border-outline-variant/30 text-on-surface font-bold py-4 px-10 rounded-xl flex items-center gap-3 transition-all active:scale-95">
-<span class="material-symbols-outlined">description</span>
-                        View Full Technical Documentation
-                    </button>
-</div>
-</div>
-</section>
-</main>
-<!-- Footer -->
-<footer class="bg-slate-950 border-t border-white/5 w-full py-12 px-8">
-<div class="flex flex-col md:flex-row justify-between items-center max-w-7xl mx-auto gap-8">
-<div class="text-lg font-bold text-slate-200 font-['Inter'] tracking-wide">
-                Architectural Precision
+            <div class="flex items-center gap-2 bg-surface-container-highest px-4 py-2 rounded-full border border-outline-variant/20">
+              <span class="material-symbols-outlined text-secondary text-sm">settings_input_component</span>
+              <span class="text-sm font-mono text-on-surface">DAX &amp; Tabular Editor</span>
             </div>
-<div class="flex flex-wrap justify-center gap-8">
-<a class="text-slate-500 hover:text-indigo-300 transition-colors text-sm underline decoration-indigo-500/30 underline-offset-4 hover:translate-x-1 duration-200" href="#">LinkedIn</a>
-<a class="text-slate-500 hover:text-indigo-300 transition-colors text-sm underline decoration-indigo-500/30 underline-offset-4 hover:translate-x-1 duration-200" href="#">GitHub</a>
-<a class="text-slate-500 hover:text-indigo-300 transition-colors text-sm underline decoration-indigo-500/30 underline-offset-4 hover:translate-x-1 duration-200" href="#">Technical Blog</a>
-<a class="text-slate-500 hover:text-indigo-300 transition-colors text-sm underline decoration-indigo-500/30 underline-offset-4 hover:translate-x-1 duration-200" href="#">Newsletter</a>
-</div>
-<div class="text-slate-500 text-sm font-mono">
-                © 2024 Architectural Precision. Built with Spark &amp; Obsidian Logic.
+            <div class="flex items-center gap-2 bg-surface-container-highest px-4 py-2 rounded-full border border-outline-variant/20">
+              <span class="material-symbols-outlined text-secondary text-sm">monitoring</span>
+              <span class="text-sm font-mono text-on-surface">Power BI Service</span>
             </div>
-</div>
-</footer>
-</body></html>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ╔══════════════════════════════════════╗ -->
+    <!-- ║  Metrics Bento                       ║ -->
+    <!-- ╚══════════════════════════════════════╝ -->
+    <section class="max-w-7xl mx-auto px-8 mb-32">
+      <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+
+        <div class="md:col-span-2 bg-surface-container-high rounded-xl p-8 border-t border-l border-outline-variant/15 flex flex-col justify-between overflow-hidden relative group">
+          <div class="relative z-10">
+            <h3 class="text-on-surface-variant font-mono text-xs uppercase tracking-widest mb-4">Metric / Efficiency</h3>
+            <div class="text-6xl font-bold text-tertiary mb-2">75% Faster</div>
+            <p class="text-on-surface-variant text-lg">Reduction in report visual loading times across 200+ global dashboards.</p>
+          </div>
+          <div class="mt-12 h-32 w-full flex items-end gap-1 opacity-50 group-hover:opacity-100 transition-opacity">
+            <div class="bg-outline-variant/20 w-full h-[80%] rounded-t-sm"></div>
+            <div class="bg-outline-variant/20 w-full h-[70%] rounded-t-sm"></div>
+            <div class="bg-outline-variant/20 w-full h-[90%] rounded-t-sm"></div>
+            <div class="bg-outline-variant/20 w-full h-[85%] rounded-t-sm"></div>
+            <div class="bg-outline-variant/20 w-full h-[60%] rounded-t-sm"></div>
+            <div class="bg-tertiary w-full h-[15%] rounded-t-sm"></div>
+            <div class="bg-tertiary w-full h-[10%] rounded-t-sm"></div>
+            <div class="bg-tertiary w-full h-[8%] rounded-t-sm"></div>
+          </div>
+        </div>
+
+        <div class="bg-surface-container-high rounded-xl p-8 border-t border-l border-outline-variant/15 flex flex-col justify-between">
+          <div>
+            <h3 class="text-on-surface-variant font-mono text-xs uppercase tracking-widest mb-4">Metric / Growth</h3>
+            <div class="text-6xl font-bold text-secondary mb-2">120%</div>
+            <p class="text-on-surface-variant text-lg">Increase in monthly active users as trust in data reliability stabilised.</p>
+          </div>
+          <div class="flex items-center gap-4 text-secondary/40">
+            <span class="material-symbols-outlined text-4xl" style="font-variation-settings:'FILL' 1;">trending_up</span>
+            <div class="h-[2px] flex-1 bg-outline-variant/20"></div>
+          </div>
+        </div>
+
+      </div>
+    </section>
+
+    <!-- ╔══════════════════════════════════════╗ -->
+    <!-- ║  Problem + Star Schema               ║ -->
+    <!-- ╚══════════════════════════════════════╝ -->
+    <section class="max-w-7xl mx-auto px-8 mb-32 grid lg:grid-cols-12 gap-16 items-start">
+
+      <div class="lg:col-span-5">
+        <h2 class="text-3xl font-bold text-on-surface mb-8">The "Slow Dashboard" Crisis</h2>
+        <div class="space-y-8 text-on-surface-variant leading-relaxed">
+          <p>
+            Business users were abandoning reports due to 30-second refresh times and inconsistent metric definitions across departments. The underlying Redshift + Athena models were structurally unfit for Power BI's in-memory VertiPaq engine.
+          </p>
+          <div class="p-6 rounded-lg bg-surface-container-lowest border border-error/10">
+            <h4 class="text-error font-mono text-xs uppercase mb-4 flex items-center gap-2">
+              <span class="material-symbols-outlined text-sm">warning</span>
+              Legacy Architecture Flaws
+            </h4>
+            <ul class="space-y-3 text-sm font-mono">
+              <li class="flex gap-2"><span>&gt;</span> Snowflake schemas with 40+ joins per visual</li>
+              <li class="flex gap-2"><span>&gt;</span> Row-by-row iterative DAX measures (FILTER/SUMX)</li>
+              <li class="flex gap-2"><span>&gt;</span> Excessive calculated columns inflating in-memory footprint</li>
+              <li class="flex gap-2"><span>&gt;</span> No certified dataset tier — every team had their own KPI definitions</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+
+      <div class="lg:col-span-7 bg-surface-container-low rounded-xl p-2 overflow-hidden border border-outline-variant/10">
+        <div class="bg-surface rounded-lg p-8 h-full relative">
+          <div class="absolute top-4 right-6 flex gap-2">
+            <div class="w-2 h-2 rounded-full bg-outline-variant/40"></div>
+            <div class="w-2 h-2 rounded-full bg-outline-variant/40"></div>
+            <div class="w-2 h-2 rounded-full bg-outline-variant/40"></div>
+          </div>
+          <h3 class="font-mono text-sm text-on-surface-variant mb-12">Star-Schema Transformation (Redshift → Power BI)</h3>
+
+          <div class="grid grid-cols-3 gap-8 items-center">
+            <div class="col-span-1 space-y-4">
+              <div class="h-16 bg-surface-container-highest border border-outline-variant/30 rounded flex items-center justify-center text-xs font-mono text-secondary">Dim_Date</div>
+              <div class="h-16 bg-surface-container-highest border border-outline-variant/30 rounded flex items-center justify-center text-xs font-mono text-secondary">Dim_Client</div>
+              <div class="h-16 bg-surface-container-highest border border-outline-variant/30 rounded flex items-center justify-center text-xs font-mono text-secondary">Dim_Region</div>
+            </div>
+            <div class="col-span-1 relative flex justify-center">
+              <div class="absolute inset-0 flex items-center justify-center">
+                <div class="w-full h-[1px] bg-gradient-to-r from-transparent via-secondary/20 to-transparent"></div>
+                <div class="w-[1px] h-full bg-gradient-to-b from-transparent via-secondary/20 to-transparent"></div>
+              </div>
+              <div class="w-32 h-32 rounded-lg bg-primary-container/20 border-2 border-primary-container shadow-[0_0_30px_rgba(128,131,255,0.3)] flex items-center justify-center z-10">
+                <span class="font-mono font-bold text-on-primary-container text-center text-sm">Fact_Analytics</span>
+              </div>
+            </div>
+            <div class="col-span-1 space-y-4">
+              <div class="h-16 bg-surface-container-highest border border-outline-variant/30 rounded flex items-center justify-center text-xs font-mono text-secondary">Dim_Product</div>
+              <div class="h-16 bg-surface-container-highest border border-outline-variant/30 rounded flex items-center justify-center text-xs font-mono text-secondary">Dim_Provider</div>
+            </div>
+          </div>
+
+          <div class="mt-12 p-4 bg-surface-container-lowest rounded border-l-2 border-secondary font-mono text-[11px] text-on-surface-variant leading-relaxed">
+            -- Optimised: Year-to-Date Revenue (set-based DAX)<br />
+            YTD Revenue :=<br />
+            &nbsp;&nbsp;CALCULATE(<br />
+            &nbsp;&nbsp;&nbsp;&nbsp;[Total Revenue],<br />
+            &nbsp;&nbsp;&nbsp;&nbsp;DATESYTD('Dim_Date'[Date])<br />
+            &nbsp;&nbsp;)
+          </div>
+        </div>
+      </div>
+
+    </section>
+
+    <!-- ╔══════════════════════════════════════╗ -->
+    <!-- ║  Engineering Strategy                ║ -->
+    <!-- ╚══════════════════════════════════════╝ -->
+    <section class="max-w-7xl mx-auto px-8 mb-32">
+      <h2 class="text-3xl font-bold text-on-surface mb-16 text-center">Engineering the Solution</h2>
+      <div class="grid md:grid-cols-3 gap-12">
+
+        <div class="space-y-6">
+          <div class="w-12 h-12 bg-primary/10 rounded-lg flex items-center justify-center">
+            <span class="material-symbols-outlined text-primary">hub</span>
+          </div>
+          <h4 class="text-xl font-bold text-on-surface">Data Denormalisation</h4>
+          <p class="text-on-surface-variant leading-relaxed">Collapsed complex relational schemas in Redshift into high-performance star schemas. Reduced the VertiPaq engine cardinality burden by 60% and eliminated all multi-join fanout queries.</p>
+        </div>
+
+        <div class="space-y-6">
+          <div class="w-12 h-12 bg-secondary/10 rounded-lg flex items-center justify-center">
+            <span class="material-symbols-outlined text-secondary">speed</span>
+          </div>
+          <h4 class="text-xl font-bold text-on-surface">DAX Tuning</h4>
+          <p class="text-on-surface-variant leading-relaxed">Replaced heavy row-context DAX (FILTER / SUMX) with set-based logic and Variables (VAR) to eliminate redundant sub-calculations. All measures reviewed with Tabular Editor and DAX Studio.</p>
+        </div>
+
+        <div class="space-y-6">
+          <div class="w-12 h-12 bg-tertiary/10 rounded-lg flex items-center justify-center">
+            <span class="material-symbols-outlined text-tertiary">verified</span>
+          </div>
+          <h4 class="text-xl font-bold text-on-surface">Certified Dataset Tier</h4>
+          <p class="text-on-surface-variant leading-relaxed">Established a "Certified Dataset" governance framework ensuring one central source of truth for critical KPIs like "Adjusted Net Revenue" — eliminating metric fragmentation across 12 departments.</p>
+        </div>
+
+      </div>
+    </section>
+
+    <!-- ╔══════════════════════════════════════╗ -->
+    <!-- ║  Impact Statement                    ║ -->
+    <!-- ╚══════════════════════════════════════╝ -->
+    <section class="max-w-7xl mx-auto px-8">
+      <div class="bg-surface-container-low rounded-2xl p-12 lg:p-16 border border-outline-variant/10 text-center">
+        <h2 class="text-3xl font-bold text-on-surface mb-12">The Impact Statement</h2>
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-12 max-w-5xl mx-auto">
+          <div>
+            <div class="text-4xl font-bold text-on-surface mb-2 font-mono">1.2M+</div>
+            <div class="text-sm font-mono text-primary uppercase tracking-widest">Rows Processed/Sec</div>
+          </div>
+          <div class="border-y md:border-y-0 md:border-x border-outline-variant/20 py-8 md:py-0">
+            <div class="text-4xl font-bold text-on-surface mb-2 font-mono">&lt;&nbsp;3s</div>
+            <div class="text-sm font-mono text-secondary uppercase tracking-widest">Avg. Dashboard Load</div>
+          </div>
+          <div>
+            <div class="text-4xl font-bold text-on-surface mb-2 font-mono">Zero</div>
+            <div class="text-sm font-mono text-tertiary uppercase tracking-widest">Metric Discrepancy</div>
+          </div>
+        </div>
+        <div class="mt-16 flex justify-center">
+          <a href="/#contact" class="bg-surface-container-highest hover:bg-surface-bright border border-outline-variant/30 text-on-surface font-bold py-4 px-10 rounded-xl flex items-center gap-3 transition-all active:scale-95">
+            <span class="material-symbols-outlined">chat</span>
+            Discuss a Similar Project
+          </a>
+        </div>
+      </div>
+    </section>
+
+  </main>
+
+  <!-- ╔══════════════════════════════════════╗ -->
+  <!-- ║  Footer                              ║ -->
+  <!-- ╚══════════════════════════════════════╝ -->
+  <footer class="bg-slate-950 border-t border-white/5 w-full py-12 px-8">
+    <div class="flex flex-col md:flex-row justify-between items-center max-w-7xl mx-auto gap-8">
+      <div class="text-lg font-bold text-slate-200 font-headline">© 2025 Raphael Mata · Data Engineer</div>
+      <div class="flex flex-wrap justify-center gap-8">
+        <a href="https://linkedin.com/in/raphaelmata" target="_blank" rel="noopener" class="text-slate-500 hover:text-indigo-300 transition-colors text-sm underline decoration-indigo-500/30 underline-offset-4">LinkedIn</a>
+        <a href="https://github.com/RaphaMiranda" target="_blank" rel="noopener" class="text-slate-500 hover:text-indigo-300 transition-colors text-sm underline decoration-indigo-500/30 underline-offset-4">GitHub</a>
+        <a href="/#case-studies" class="text-slate-500 hover:text-indigo-300 transition-colors text-sm underline decoration-indigo-500/30 underline-offset-4">Case Studies</a>
+      </div>
+    </div>
+  </footer>
+
+  <script src="/assets/js/main.js"></script>
+</body>
+</html>

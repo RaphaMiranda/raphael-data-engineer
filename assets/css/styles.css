@@ -1,0 +1,91 @@
+/*
+ * Global custom styles — supplements Tailwind utility classes.
+ * Organised by: base → layout → components → utilities
+ */
+
+/* ─────────────────────────────────────────
+   Base
+───────────────────────────────────────── */
+
+/* Material Symbols rendering */
+.material-symbols-outlined {
+  font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+}
+
+/* Smooth scroll for anchor links */
+html {
+  scroll-behavior: smooth;
+}
+
+/* ─────────────────────────────────────────
+   Layout Decorations
+───────────────────────────────────────── */
+
+/* Dot-grid background overlay used in hero and architecture sections */
+.grid-overlay {
+  background-image: radial-gradient(circle, #464554 1px, transparent 1px);
+  background-size: 24px 24px;
+}
+
+/* ─────────────────────────────────────────
+   Components
+───────────────────────────────────────── */
+
+/* Frosted-glass surface used in code panels and diagram cards */
+.glass-panel {
+  backdrop-filter: blur(12px);
+  background: rgba(45, 52, 73, 0.8);
+}
+
+/* Subtle bevelled border used on metric cards */
+.glass-beveled {
+  border-top:  1px solid rgba(70, 69, 84, 0.15);
+  border-left: 1px solid rgba(70, 69, 84, 0.15);
+}
+
+/* ─────────────────────────────────────────
+   Case-Study Specific
+───────────────────────────────────────── */
+
+/* Gradient text utility used on case-study headlines */
+.gradient-text {
+  background: linear-gradient(135deg, #c0c1ff 0%, #8083ff 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+/* Gradient background used on case-study CTA banners */
+.gradient-bg {
+  background: linear-gradient(135deg, #c0c1ff 0%, #8083ff 100%);
+}
+
+/* Animated pulse ring around status indicators */
+.status-pulse {
+  position: relative;
+}
+.status-pulse::after {
+  content: '';
+  position: absolute;
+  inset: -4px;
+  border: 2px solid #4edea3;
+  border-radius: 50%;
+  opacity: 0.5;
+  animation: pulse-ring 2s ease-in-out infinite;
+}
+
+@keyframes pulse-ring {
+  0%, 100% { opacity: 0.5; transform: scale(1); }
+  50%       { opacity: 0.2; transform: scale(1.15); }
+}
+
+/* ─────────────────────────────────────────
+   Mobile Navigation Overlay
+───────────────────────────────────────── */
+
+#mobile-menu {
+  transition: opacity 0.2s ease, transform 0.2s ease;
+}
+#mobile-menu.hidden {
+  display: none;
+}
