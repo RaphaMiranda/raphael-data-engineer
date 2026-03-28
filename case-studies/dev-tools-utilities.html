@@ -1,0 +1,414 @@
+<!DOCTYPE html>
+<html class="dark" lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="description" content="Dev Tools & Utilities — Raphael Miranda's personal programming toolbox: editors, containers, API testing, diagramming, and more." />
+  <title>Dev Tools & Utilities | Raphael Miranda</title>
+
+  <!-- Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet" />
+  <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet" />
+
+  <!-- Tailwind CDN + shared config -->
+  <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+  <script src="/assets/js/tailwind.config.js"></script>
+
+  <!-- Custom styles -->
+  <link rel="stylesheet" href="/assets/css/styles.css" />
+</head>
+
+<body class="bg-background text-on-surface font-body selection:bg-primary/30">
+
+  <!-- ╔══════════════════════════════════════╗ -->
+  <!-- ║  Navigation                          ║ -->
+  <!-- ╚══════════════════════════════════════╝ -->
+  <header class="bg-slate-950/80 backdrop-blur-xl fixed top-0 w-full z-50 border-b border-white/10 shadow-[0_8px_32px_0_rgba(99,102,241,0.06)]">
+    <nav class="flex justify-between items-center max-w-7xl mx-auto px-8 h-20">
+      <a href="/" class="text-2xl font-bold bg-gradient-to-br from-indigo-300 to-indigo-500 bg-clip-text text-transparent font-headline tracking-tight">
+        Raphael Miranda
+      </a>
+      <div class="hidden md:flex items-center gap-8">
+        <a data-nav href="/" class="text-slate-400 font-medium hover:text-slate-200 transition-colors font-headline">Home</a>
+        <a data-nav href="/#case-studies" class="text-indigo-400 font-bold border-b-2 border-indigo-400 pb-1 font-headline">Case Studies</a>
+        <a data-nav href="/#skills" class="text-slate-400 font-medium hover:text-slate-200 transition-colors font-headline">Skills</a>
+        <a data-nav href="/#timeline" class="text-slate-400 font-medium hover:text-slate-200 transition-colors font-headline">Timeline</a>
+        <button data-contact-cta class="bg-gradient-to-br from-primary to-primary-container text-on-primary px-6 py-2.5 rounded-lg font-bold hover:scale-105 active:scale-95 transition-all">Get in Touch</button>
+      </div>
+      <a href="/#case-studies" class="md:hidden flex items-center gap-2 text-slate-400 hover:text-slate-200 transition-colors text-sm font-headline">
+        <span class="material-symbols-outlined text-base">arrow_back</span> Back
+      </a>
+    </nav>
+  </header>
+
+  <main class="pt-32 pb-24">
+
+    <!-- ╔══════════════════════════════════════╗ -->
+    <!-- ║  Hero                                ║ -->
+    <!-- ╚══════════════════════════════════════╝ -->
+    <section class="max-w-7xl mx-auto px-8 mb-24">
+      <div class="flex flex-col gap-6">
+        <span class="font-mono text-secondary tracking-widest text-sm uppercase">Toolbox // Personal Stack · Ongoing</span>
+        <h1 class="font-headline text-6xl md:text-8xl font-bold tracking-tight max-w-5xl leading-[1.1]">
+          Dev Tools &amp; <span class="gradient-text">Utilities</span>
+        </h1>
+        <p class="text-on-surface-variant text-xl max-w-2xl leading-relaxed mt-4">
+          My personal reference for everyday programming tools — the things that keep me productive across data engineering, scripting, and general development. Not stack-specific, just what works.
+        </p>
+        <div class="flex flex-wrap gap-12 mt-6 items-start">
+          <div class="flex flex-col gap-2">
+            <span class="text-outline text-xs uppercase tracking-widest font-bold">Type</span>
+            <span class="text-on-surface text-lg">Personal Toolbox</span>
+          </div>
+          <div class="flex flex-col gap-2">
+            <span class="text-outline text-xs uppercase tracking-widest font-bold">Categories</span>
+            <div class="flex flex-wrap gap-3">
+              <span class="flex items-center gap-2 bg-surface-container-high px-3 py-1 rounded-md text-sm">
+                <span class="material-symbols-outlined text-sm">code</span> Editors
+              </span>
+              <span class="flex items-center gap-2 bg-surface-container-high px-3 py-1 rounded-md text-sm">
+                <span class="material-symbols-outlined text-sm">deployed_code</span> Containers
+              </span>
+              <span class="flex items-center gap-2 bg-surface-container-high px-3 py-1 rounded-md text-sm">
+                <span class="material-symbols-outlined text-sm">api</span> API & DB
+              </span>
+              <span class="flex items-center gap-2 bg-surface-container-high px-3 py-1 rounded-md text-sm">
+                <span class="material-symbols-outlined text-sm">draw</span> Diagrams
+              </span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ╔══════════════════════════════════════╗ -->
+    <!-- ║  Tool Grid                           ║ -->
+    <!-- ╚══════════════════════════════════════╝ -->
+    <section class="w-full bg-surface-container-lowest py-24 grid-overlay overflow-hidden">
+      <div class="max-w-7xl mx-auto px-8">
+        <div class="mb-16 text-center">
+          <h2 class="font-headline text-4xl font-bold mb-4">The Stack</h2>
+          <p class="text-outline font-mono">Organised by workflow category</p>
+        </div>
+
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+
+          <!-- Editors & IDEs -->
+          <div class="glass-panel border border-white/5 rounded-2xl p-8 hover:border-secondary/30 transition-all flex flex-col gap-6">
+            <div class="flex items-center gap-4">
+              <div class="w-12 h-12 rounded-xl bg-secondary/10 flex items-center justify-center">
+                <span class="material-symbols-outlined text-2xl text-secondary">code</span>
+              </div>
+              <div>
+                <h3 class="font-bold text-lg">Editors & IDEs</h3>
+                <p class="text-xs font-mono text-on-surface-variant uppercase tracking-widest">Where code gets written</p>
+              </div>
+            </div>
+            <div class="space-y-3">
+              <div class="flex items-start gap-3">
+                <span class="w-2 h-2 rounded-full bg-secondary mt-2 flex-shrink-0"></span>
+                <div>
+                  <p class="font-semibold text-sm">VS Code</p>
+                  <p class="text-xs text-on-surface-variant">Primary editor. Extensions: Pylance, Remote - SSH, GitLens, Rainbow CSV, Docker.</p>
+                </div>
+              </div>
+              <div class="flex items-start gap-3">
+                <span class="w-2 h-2 rounded-full bg-secondary/50 mt-2 flex-shrink-0"></span>
+                <div>
+                  <p class="font-semibold text-sm">Jupyter Lab</p>
+                  <p class="text-xs text-on-surface-variant">Exploratory data analysis, profiling, and notebook-driven prototyping.</p>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Containers & Infra -->
+          <div class="glass-panel border border-white/5 rounded-2xl p-8 hover:border-tertiary/30 transition-all flex flex-col gap-6">
+            <div class="flex items-center gap-4">
+              <div class="w-12 h-12 rounded-xl bg-tertiary/10 flex items-center justify-center">
+                <span class="material-symbols-outlined text-2xl text-tertiary">deployed_code</span>
+              </div>
+              <div>
+                <h3 class="font-bold text-lg">Containers & Infra</h3>
+                <p class="text-xs font-mono text-on-surface-variant uppercase tracking-widest">Run anything, anywhere</p>
+              </div>
+            </div>
+            <div class="space-y-3">
+              <div class="flex items-start gap-3">
+                <span class="w-2 h-2 rounded-full bg-tertiary mt-2 flex-shrink-0"></span>
+                <div>
+                  <p class="font-semibold text-sm">Docker + Compose</p>
+                  <p class="text-xs text-on-surface-variant">Local orchestration for pipelines, databases, and services during development.</p>
+                </div>
+              </div>
+              <div class="flex items-start gap-3">
+                <span class="w-2 h-2 rounded-full bg-tertiary/50 mt-2 flex-shrink-0"></span>
+                <div>
+                  <p class="font-semibold text-sm">Pulumi</p>
+                  <p class="text-xs text-on-surface-variant">Infrastructure-as-Code using Python and TypeScript for Azure and AWS provisioning with state management.</p>
+                </div>
+              </div>
+              <div class="flex items-start gap-3">
+                <span class="w-2 h-2 rounded-full bg-tertiary/50 mt-2 flex-shrink-0"></span>
+                <div>
+                  <p class="font-semibold text-sm">GitHub Actions</p>
+                  <p class="text-xs text-on-surface-variant">CI/CD pipelines for data pipelines, IaC deployments, and automated testing.</p>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- API & Database -->
+          <div class="glass-panel border border-white/5 rounded-2xl p-8 hover:border-primary/30 transition-all flex flex-col gap-6">
+            <div class="flex items-center gap-4">
+              <div class="w-12 h-12 rounded-xl bg-primary/10 flex items-center justify-center">
+                <span class="material-symbols-outlined text-2xl text-primary">api</span>
+              </div>
+              <div>
+                <h3 class="font-bold text-lg">API & Database</h3>
+                <p class="text-xs font-mono text-on-surface-variant uppercase tracking-widest">Query, test, explore</p>
+              </div>
+            </div>
+            <div class="space-y-3">
+              <div class="flex items-start gap-3">
+                <span class="w-2 h-2 rounded-full bg-primary mt-2 flex-shrink-0"></span>
+                <div>
+                  <p class="font-semibold text-sm">Postman</p>
+                  <p class="text-xs text-on-surface-variant">REST and GraphQL API testing. Collections for Databricks REST API, ADF triggers, and Azure management.</p>
+                </div>
+              </div>
+              <div class="flex items-start gap-3">
+                <span class="w-2 h-2 rounded-full bg-primary/50 mt-2 flex-shrink-0"></span>
+                <div>
+                  <p class="font-semibold text-sm">DBeaver</p>
+                  <p class="text-xs text-on-surface-variant">Universal DB client. Connects to Snowflake, PostgreSQL, SQL Server, Synapse, and Hive in one place.</p>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Version Control -->
+          <div class="glass-panel border border-white/5 rounded-2xl p-8 hover:border-secondary/30 transition-all flex flex-col gap-6">
+            <div class="flex items-center gap-4">
+              <div class="w-12 h-12 rounded-xl bg-secondary/10 flex items-center justify-center">
+                <span class="material-symbols-outlined text-2xl text-secondary">merge_type</span>
+              </div>
+              <div>
+                <h3 class="font-bold text-lg">Version Control</h3>
+                <p class="text-xs font-mono text-on-surface-variant uppercase tracking-widest">Source of truth</p>
+              </div>
+            </div>
+            <div class="space-y-3">
+              <div class="flex items-start gap-3">
+                <span class="w-2 h-2 rounded-full bg-secondary mt-2 flex-shrink-0"></span>
+                <div>
+                  <p class="font-semibold text-sm">Git + GitHub</p>
+                  <p class="text-xs text-on-surface-variant">Branch-based workflows, PR reviews, and protected main branches across all data projects.</p>
+                </div>
+              </div>
+              <div class="flex items-start gap-3">
+                <span class="w-2 h-2 rounded-full bg-secondary/50 mt-2 flex-shrink-0"></span>
+                <div>
+                  <p class="font-semibold text-sm">Bitbucket</p>
+                  <p class="text-xs text-on-surface-variant">Git hosting for team projects with Jira integration, pipeline triggers, and branch permissions.</p>
+                </div>
+              </div>
+              <div class="flex items-start gap-3">
+                <span class="w-2 h-2 rounded-full bg-secondary/50 mt-2 flex-shrink-0"></span>
+                <div>
+                  <p class="font-semibold text-sm">pre-commit</p>
+                  <p class="text-xs text-on-surface-variant">Automated hooks for linting, formatting (Black, isort, SQLFluff), and secret scanning before every commit.</p>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Diagramming & Docs -->
+          <div class="glass-panel border border-white/5 rounded-2xl p-8 hover:border-tertiary/30 transition-all flex flex-col gap-6">
+            <div class="flex items-center gap-4">
+              <div class="w-12 h-12 rounded-xl bg-tertiary/10 flex items-center justify-center">
+                <span class="material-symbols-outlined text-2xl text-tertiary">draw</span>
+              </div>
+              <div>
+                <h3 class="font-bold text-lg">Diagramming & Docs</h3>
+                <p class="text-xs font-mono text-on-surface-variant uppercase tracking-widest">Architecture & communication</p>
+              </div>
+            </div>
+            <div class="space-y-3">
+              <div class="flex items-start gap-3">
+                <span class="w-2 h-2 rounded-full bg-tertiary mt-2 flex-shrink-0"></span>
+                <div>
+                  <p class="font-semibold text-sm">Excalidraw</p>
+                  <p class="text-xs text-on-surface-variant">Fast, hand-drawn style architecture diagrams for data flows, lakehouse layers, and infrastructure proposals.</p>
+                </div>
+              </div>
+              <div class="flex items-start gap-3">
+                <span class="w-2 h-2 rounded-full bg-tertiary/50 mt-2 flex-shrink-0"></span>
+                <div>
+                  <p class="font-semibold text-sm">Notion</p>
+                  <p class="text-xs text-on-surface-variant">Project documentation, runbooks, and post-mortems. Single source of truth for technical decisions.</p>
+                </div>
+              </div>
+              <div class="flex items-start gap-3">
+                <span class="w-2 h-2 rounded-full bg-tertiary/50 mt-2 flex-shrink-0"></span>
+                <div>
+                  <p class="font-semibold text-sm">dbdocs.io</p>
+                  <p class="text-xs text-on-surface-variant">DBML-based schema documentation. Publish data model docs as shareable web pages for stakeholders.</p>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Monitoring & Observability -->
+          <div class="glass-panel border border-white/5 rounded-2xl p-8 hover:border-primary/30 transition-all flex flex-col gap-6">
+            <div class="flex items-center gap-4">
+              <div class="w-12 h-12 rounded-xl bg-primary/10 flex items-center justify-center">
+                <span class="material-symbols-outlined text-2xl text-primary">monitoring</span>
+              </div>
+              <div>
+                <h3 class="font-bold text-lg">Monitoring & Observability</h3>
+                <p class="text-xs font-mono text-on-surface-variant uppercase tracking-widest">Know what's happening</p>
+              </div>
+            </div>
+            <div class="space-y-3">
+              <div class="flex items-start gap-3">
+                <span class="w-2 h-2 rounded-full bg-primary mt-2 flex-shrink-0"></span>
+                <div>
+                  <p class="font-semibold text-sm">Azure Monitor + Log Analytics</p>
+                  <p class="text-xs text-on-surface-variant">Pipeline health, ADF run alerts, and KQL queries for cost attribution and failure triage.</p>
+                </div>
+              </div>
+              <div class="flex items-start gap-3">
+                <span class="w-2 h-2 rounded-full bg-primary/50 mt-2 flex-shrink-0"></span>
+                <div>
+                  <p class="font-semibold text-sm">Great Expectations</p>
+                  <p class="text-xs text-on-surface-variant">Data quality validation with automated expectation suites and HTML data docs generation.</p>
+                </div>
+              </div>
+              <div class="flex items-start gap-3">
+                <span class="w-2 h-2 rounded-full bg-primary/50 mt-2 flex-shrink-0"></span>
+                <div>
+                  <p class="font-semibold text-sm">CloudWatch</p>
+                  <p class="text-xs text-on-surface-variant">AWS-native monitoring for Lambda, Glue, and S3 events — log insights, alarms, and cost dashboards.</p>
+                </div>
+              </div>
+            </div>
+          </div>
+
+        </div>
+      </div>
+    </section>
+
+    <!-- ╔══════════════════════════════════════╗ -->
+    <!-- ║  Useful URLs                         ║ -->
+    <!-- ╚══════════════════════════════════════╝ -->
+    <section class="max-w-7xl mx-auto px-8 py-24">
+      <div class="mb-12">
+        <h2 class="font-headline text-4xl font-bold mb-3">Other Useful URLs</h2>
+        <p class="text-on-surface-variant font-mono text-sm">Handy references I keep coming back to.</p>
+      </div>
+
+      <div class="flex flex-col divide-y divide-white/5">
+
+        <a href="https://regex101.com/" target="_blank" rel="noopener"
+           class="group flex items-start gap-6 py-6 hover:bg-surface-container-low rounded-xl px-4 -mx-4 transition-all">
+          <span class="material-symbols-outlined text-secondary mt-0.5 flex-shrink-0">manage_search</span>
+          <div class="flex-1 min-w-0">
+            <div class="flex items-center gap-3 flex-wrap">
+              <span class="font-semibold text-on-surface group-hover:text-secondary transition-colors">regex101</span>
+              <span class="text-xs font-mono text-outline truncate">regex101.com</span>
+            </div>
+            <p class="text-sm text-on-surface-variant mt-1">Interactive regex tester with real-time highlighting, match groups, and explanation panel. Supports PCRE, Python, JS, and more.</p>
+          </div>
+          <span class="material-symbols-outlined text-outline group-hover:text-secondary transition-colors flex-shrink-0 text-base mt-1">open_in_new</span>
+        </a>
+
+        <a href="https://www.revisitclass.com/teradata/" target="_blank" rel="noopener"
+           class="group flex items-start gap-6 py-6 hover:bg-surface-container-low rounded-xl px-4 -mx-4 transition-all">
+          <span class="material-symbols-outlined text-secondary mt-0.5 flex-shrink-0">storage</span>
+          <div class="flex-1 min-w-0">
+            <div class="flex items-center gap-3 flex-wrap">
+              <span class="font-semibold text-on-surface group-hover:text-secondary transition-colors">Revisit Class — Teradata</span>
+              <span class="text-xs font-mono text-outline truncate">revisitclass.com</span>
+            </div>
+            <p class="text-sm text-on-surface-variant mt-1">Concise Teradata SQL and BTEQ reference — syntax examples, data types, and utility macros organised for quick lookup.</p>
+          </div>
+          <span class="material-symbols-outlined text-outline group-hover:text-secondary transition-colors flex-shrink-0 text-base mt-1">open_in_new</span>
+        </a>
+
+        <a href="https://www.computerhope.com/unix/used.htm" target="_blank" rel="noopener"
+           class="group flex items-start gap-6 py-6 hover:bg-surface-container-low rounded-xl px-4 -mx-4 transition-all">
+          <span class="material-symbols-outlined text-secondary mt-0.5 flex-shrink-0">terminal</span>
+          <div class="flex-1 min-w-0">
+            <div class="flex items-center gap-3 flex-wrap">
+              <span class="font-semibold text-on-surface group-hover:text-secondary transition-colors">Unix <code class="text-xs bg-surface-container-high px-1 py-0.5 rounded font-mono">sed</code> Reference</span>
+              <span class="text-xs font-mono text-outline truncate">computerhope.com</span>
+            </div>
+            <p class="text-sm text-on-surface-variant mt-1">Complete <code class="text-xs bg-surface-container-high px-1 py-0.5 rounded font-mono">sed</code> command reference with flags, addresses, and practical examples for stream editing in shell scripts and pipelines.</p>
+          </div>
+          <span class="material-symbols-outlined text-outline group-hover:text-secondary transition-colors flex-shrink-0 text-base mt-1">open_in_new</span>
+        </a>
+
+        <a href="https://www.etti.unibw.de/labalive/search/" target="_blank" rel="noopener"
+           class="group flex items-start gap-6 py-6 hover:bg-surface-container-low rounded-xl px-4 -mx-4 transition-all">
+          <span class="material-symbols-outlined text-secondary mt-0.5 flex-shrink-0">search</span>
+          <div class="flex-1 min-w-0">
+            <div class="flex items-center gap-3 flex-wrap">
+              <span class="font-semibold text-on-surface group-hover:text-secondary transition-colors">LabAlive Search</span>
+              <span class="text-xs font-mono text-outline truncate">etti.unibw.de</span>
+            </div>
+            <p class="text-sm text-on-surface-variant mt-1">Academic search tool from UniBw Munich's lab — useful for finding technical documentation and engineering references beyond standard search engines.</p>
+          </div>
+          <span class="material-symbols-outlined text-outline group-hover:text-secondary transition-colors flex-shrink-0 text-base mt-1">open_in_new</span>
+        </a>
+
+        <a href="https://romannurik.github.io/SlidesCodeHighlighter/" target="_blank" rel="noopener"
+           class="group flex items-start gap-6 py-6 hover:bg-surface-container-low rounded-xl px-4 -mx-4 transition-all">
+          <span class="material-symbols-outlined text-secondary mt-0.5 flex-shrink-0">present_to_all</span>
+          <div class="flex-1 min-w-0">
+            <div class="flex items-center gap-3 flex-wrap">
+              <span class="font-semibold text-on-surface group-hover:text-secondary transition-colors">Slides Code Highlighter</span>
+              <span class="text-xs font-mono text-outline truncate">romannurik.github.io</span>
+            </div>
+            <p class="text-sm text-on-surface-variant mt-1">Paste code, pick a theme, copy RTF-formatted output directly into Google Slides or PowerPoint — beautiful syntax highlighting without screenshots.</p>
+          </div>
+          <span class="material-symbols-outlined text-outline group-hover:text-secondary transition-colors flex-shrink-0 text-base mt-1">open_in_new</span>
+        </a>
+
+        <a href="https://support.teradata.com/community?id=community_home_v2" target="_blank" rel="noopener"
+           class="group flex items-start gap-6 py-6 hover:bg-surface-container-low rounded-xl px-4 -mx-4 transition-all">
+          <span class="material-symbols-outlined text-secondary mt-0.5 flex-shrink-0">forum</span>
+          <div class="flex-1 min-w-0">
+            <div class="flex items-center gap-3 flex-wrap">
+              <span class="font-semibold text-on-surface group-hover:text-secondary transition-colors">Teradata Community</span>
+              <span class="text-xs font-mono text-outline truncate">support.teradata.com</span>
+            </div>
+            <p class="text-sm text-on-surface-variant mt-1">Official Teradata support community — Q&amp;A, knowledge articles, and discussions on BTEQ, TPT, performance tuning, and platform-specific issues.</p>
+          </div>
+          <span class="material-symbols-outlined text-outline group-hover:text-secondary transition-colors flex-shrink-0 text-base mt-1">open_in_new</span>
+        </a>
+
+      </div>
+    </section>
+
+  </main>
+
+  <!-- ╔══════════════════════════════════════╗ -->
+  <!-- ║  Footer                              ║ -->
+  <!-- ╚══════════════════════════════════════╝ -->
+  <footer class="bg-slate-950 w-full py-12 px-8 border-t border-white/5 mt-24">
+    <div class="flex flex-col md:flex-row justify-between items-center max-w-7xl mx-auto gap-8">
+      <div class="text-lg font-bold text-slate-200 font-headline">© 2025 Raphael Miranda · Data Engineer</div>
+      <div class="flex gap-8">
+        <a href="https://linkedin.com/in/raphaelmiranda0" target="_blank" rel="noopener" class="text-slate-500 hover:text-indigo-300 transition-colors text-sm underline decoration-indigo-500/30 underline-offset-4">LinkedIn</a>
+        <a href="https://github.com/RaphaMiranda" target="_blank" rel="noopener" class="text-slate-500 hover:text-indigo-300 transition-colors text-sm underline decoration-indigo-500/30 underline-offset-4">GitHub</a>
+        <a href="/#case-studies" class="text-slate-500 hover:text-indigo-300 transition-colors text-sm underline decoration-indigo-500/30 underline-offset-4">Case Studies</a>
+      </div>
+    </div>
+  </footer>
+
+  <script src="/assets/js/main.js"></script>
+</body>
+</html>

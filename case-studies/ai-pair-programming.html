@@ -1,0 +1,326 @@
+<!DOCTYPE html>
+<html class="dark" lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="description" content="AI Pair Programming for Data Engineering — Raphael Miranda's approach using Claude Code, Codex, and Antigravity to accelerate data platform development." />
+  <title>AI Pair Programming | Raphael Miranda</title>
+
+  <!-- Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet" />
+  <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet" />
+
+  <!-- Tailwind CDN + shared config -->
+  <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+  <script src="/assets/js/tailwind.config.js"></script>
+
+  <!-- Custom styles -->
+  <link rel="stylesheet" href="/assets/css/styles.css" />
+</head>
+
+<body class="bg-background text-on-surface font-body selection:bg-primary/30">
+
+  <!-- ╔══════════════════════════════════════╗ -->
+  <!-- ║  Navigation                          ║ -->
+  <!-- ╚══════════════════════════════════════╝ -->
+  <header class="bg-slate-950/80 backdrop-blur-xl fixed top-0 w-full z-50 border-b border-white/10 shadow-[0_8px_32px_0_rgba(99,102,241,0.06)]">
+    <nav class="flex justify-between items-center max-w-7xl mx-auto px-8 h-20">
+      <a href="/" class="text-2xl font-bold bg-gradient-to-br from-indigo-300 to-indigo-500 bg-clip-text text-transparent font-headline tracking-tight">
+        Raphael Miranda
+      </a>
+      <div class="hidden md:flex items-center gap-8">
+        <a data-nav href="/" class="text-slate-400 font-medium hover:text-slate-200 transition-colors font-headline">Home</a>
+        <a data-nav href="/#case-studies" class="text-indigo-400 font-bold border-b-2 border-indigo-400 pb-1 font-headline">Case Studies</a>
+        <a data-nav href="/#skills" class="text-slate-400 font-medium hover:text-slate-200 transition-colors font-headline">Skills</a>
+        <a data-nav href="/#timeline" class="text-slate-400 font-medium hover:text-slate-200 transition-colors font-headline">Timeline</a>
+        <button data-contact-cta class="bg-gradient-to-br from-primary to-primary-container text-on-primary px-6 py-2.5 rounded-lg font-bold hover:scale-105 active:scale-95 transition-all">Get in Touch</button>
+      </div>
+      <a href="/#case-studies" class="md:hidden flex items-center gap-2 text-slate-400 hover:text-slate-200 transition-colors text-sm font-headline">
+        <span class="material-symbols-outlined text-base">arrow_back</span> Back
+      </a>
+    </nav>
+  </header>
+
+  <main class="pt-32 pb-24">
+
+    <!-- ╔══════════════════════════════════════╗ -->
+    <!-- ║  Hero                                ║ -->
+    <!-- ╚══════════════════════════════════════╝ -->
+    <section class="max-w-7xl mx-auto px-8 mb-24">
+      <div class="flex flex-col gap-6">
+        <span class="font-mono text-tertiary tracking-widest text-sm uppercase">AI Strategy // Data Engineering · Ongoing</span>
+        <h1 class="font-headline text-6xl md:text-8xl font-bold tracking-tight max-w-5xl leading-[1.1]">
+          AI Pair <span class="bg-gradient-to-r from-tertiary via-secondary to-primary bg-clip-text text-transparent">Programming</span>
+        </h1>
+        <p class="text-on-surface-variant text-xl max-w-2xl leading-relaxed mt-4">
+          How I integrate agentic AI systems into data engineering workflows — from pipeline scaffolding to architecture decisions — using Claude Code, Codex, and Antigravity as active collaborators, not just autocomplete.
+        </p>
+        <div class="flex flex-wrap gap-12 mt-6 items-start">
+          <div class="flex flex-col gap-2">
+            <span class="text-outline text-xs uppercase tracking-widest font-bold">Mode</span>
+            <span class="text-on-surface text-lg">Agentic Development</span>
+          </div>
+          <div class="flex flex-col gap-2">
+            <span class="text-outline text-xs uppercase tracking-widest font-bold">Core Tools</span>
+            <div class="flex flex-wrap gap-3">
+              <span class="flex items-center gap-2 bg-surface-container-high px-3 py-1 rounded-md text-sm">
+                <span class="material-symbols-outlined text-sm" style="font-variation-settings:'FILL' 1;">smart_toy</span> Claude Code
+              </span>
+              <span class="flex items-center gap-2 bg-surface-container-high px-3 py-1 rounded-md text-sm">
+                <span class="material-symbols-outlined text-sm">terminal</span> Codex CLI
+              </span>
+              <span class="flex items-center gap-2 bg-surface-container-high px-3 py-1 rounded-md text-sm">
+                <span class="material-symbols-outlined text-sm">rocket_launch</span> Antigravity
+              </span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ╔══════════════════════════════════════╗ -->
+    <!-- ║  Philosophy                          ║ -->
+    <!-- ╚══════════════════════════════════════╝ -->
+    <section class="max-w-7xl mx-auto px-8 mb-32 grid md:grid-cols-12 gap-16 items-start">
+      <div class="md:col-span-7 flex flex-col gap-8">
+        <h2 class="font-headline text-4xl font-bold">The Approach</h2>
+        <p class="text-on-surface-variant text-lg leading-relaxed">
+          AI pair programming in data engineering isn't about generating boilerplate — it's about maintaining <span class="text-primary">architectural intent</span> at speed. The goal is to stay in the decision-making layer while the AI handles the mechanical translation of intent into code, tests, and documentation.
+        </p>
+        <p class="text-on-surface-variant text-lg leading-relaxed">
+          Each tool has a distinct role: <span class="text-tertiary">Claude Code</span> excels at multi-file reasoning across a codebase, <span class="text-secondary">Codex</span> handles terminal-native task execution and scripting, and <span class="text-primary">Antigravity</span> accelerates context-heavy refactoring and exploratory sessions.
+        </p>
+        <div class="grid grid-cols-2 gap-8">
+          <div class="p-6 bg-surface-container-low rounded-xl border-l-4 border-tertiary/50">
+            <h4 class="font-bold text-tertiary mb-2 uppercase text-xs tracking-tighter">Key Principle</h4>
+            <p class="text-sm opacity-80">AI is a force multiplier, not a replacement for architectural thinking. Every AI-generated pattern is reviewed for correctness, performance, and fit within the existing data model.</p>
+          </div>
+          <div class="p-6 bg-surface-container-low rounded-xl border-l-4 border-primary/50">
+            <h4 class="font-bold text-primary mb-2 uppercase text-xs tracking-tighter">Where It Shines</h4>
+            <p class="text-sm opacity-80">Pipeline scaffolding, schema migrations, test case generation, SQL optimisation, and documentation — tasks that are high-effort but low-ambiguity.</p>
+          </div>
+        </div>
+      </div>
+      <div class="md:col-span-5 flex flex-col gap-4">
+        <div class="bg-surface-container-low rounded-2xl p-1 border border-white/5 shadow-inner">
+          <div class="bg-surface-container-lowest rounded-xl p-8">
+            <div class="flex justify-between items-center mb-6">
+              <div class="flex gap-2">
+                <div class="w-3 h-3 rounded-full bg-error/50"></div>
+                <div class="w-3 h-3 rounded-full bg-secondary/50"></div>
+                <div class="w-3 h-3 rounded-full bg-tertiary/50"></div>
+              </div>
+              <span class="text-xs font-mono opacity-40 uppercase tracking-widest">claude-session</span>
+            </div>
+            <pre class="font-mono text-sm leading-relaxed text-on-surface-variant"><span class="text-tertiary"># Scaffold a new Iceberg table pipeline</span>
+<span class="text-primary">$</span> claude "Create a Bronze-to-Silver
+  PySpark job for the patients table.
+  Use SCD Type 2 with Iceberg MERGE.
+  Add Great Expectations suite.
+  Follow the existing medallion pattern
+  in src/pipelines/."
+
+<span class="text-secondary">✓</span> Reading 4 pipeline files...
+<span class="text-secondary">✓</span> Writing patients_silver.py
+<span class="text-secondary">✓</span> Writing ge_suite_patients.json
+<span class="text-secondary">✓</span> Writing test_patients_silver.py
+<span class="text-tertiary"># 3 files, consistent with codebase style</span></pre>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ╔══════════════════════════════════════╗ -->
+    <!-- ║  Tool Deep Dives                     ║ -->
+    <!-- ╚══════════════════════════════════════╝ -->
+    <section class="w-full bg-surface-container-lowest py-24 grid-overlay overflow-hidden">
+      <div class="max-w-7xl mx-auto px-8">
+        <div class="mb-16 text-center">
+          <h2 class="font-headline text-4xl font-bold mb-4">Tools in Practice</h2>
+          <p class="text-outline font-mono">How each AI system fits into the data engineering workflow</p>
+        </div>
+
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+
+          <!-- Claude Code -->
+          <div class="glass-panel border border-tertiary/20 shadow-[0_0_30px_-10px_rgba(78,222,163,0.3)] rounded-2xl p-8 flex flex-col gap-6">
+            <div class="flex items-center gap-4">
+              <div class="w-14 h-14 rounded-xl bg-tertiary/10 flex items-center justify-center">
+                <span class="material-symbols-outlined text-3xl text-tertiary" style="font-variation-settings:'FILL' 1;">smart_toy</span>
+              </div>
+              <div>
+                <h3 class="font-bold text-xl">Claude Code</h3>
+                <p class="text-xs font-mono text-tertiary uppercase tracking-widest">Anthropic CLI</p>
+              </div>
+            </div>
+            <p class="text-on-surface-variant text-sm leading-relaxed">
+              The go-to for multi-file tasks across a data repo. Claude Code understands the full project context — pipeline structure, naming conventions, and existing patterns — and applies changes consistently across files.
+            </p>
+            <div class="space-y-2">
+              <p class="text-xs font-mono text-on-surface-variant uppercase tracking-widest mb-3">Use Cases</p>
+              <div class="flex items-center gap-2 text-sm">
+                <span class="material-symbols-outlined text-tertiary text-base">check_circle</span>
+                Scaffolding new pipeline layers from existing patterns
+              </div>
+              <div class="flex items-center gap-2 text-sm">
+                <span class="material-symbols-outlined text-tertiary text-base">check_circle</span>
+                Refactoring Spark jobs with schema evolution
+              </div>
+              <div class="flex items-center gap-2 text-sm">
+                <span class="material-symbols-outlined text-tertiary text-base">check_circle</span>
+                Generating dbt models and tests from SQL specs
+              </div>
+              <div class="flex items-center gap-2 text-sm">
+                <span class="material-symbols-outlined text-tertiary text-base">check_circle</span>
+                Writing IaC (Terraform) from architecture diagrams
+              </div>
+            </div>
+          </div>
+
+          <!-- Codex -->
+          <div class="glass-panel border border-secondary/20 shadow-[0_0_30px_-10px_rgba(192,193,255,0.2)] rounded-2xl p-8 flex flex-col gap-6">
+            <div class="flex items-center gap-4">
+              <div class="w-14 h-14 rounded-xl bg-secondary/10 flex items-center justify-center">
+                <span class="material-symbols-outlined text-3xl text-secondary">terminal</span>
+              </div>
+              <div>
+                <h3 class="font-bold text-xl">Codex CLI</h3>
+                <p class="text-xs font-mono text-secondary uppercase tracking-widest">OpenAI CLI Agent</p>
+              </div>
+            </div>
+            <p class="text-on-surface-variant text-sm leading-relaxed">
+              Terminal-native agent for scripting, automation, and task execution. Codex excels at shell-level data engineering tasks — running migrations, profiling datasets, and executing multi-step workflows directly from the command line.
+            </p>
+            <div class="space-y-2">
+              <p class="text-xs font-mono text-on-surface-variant uppercase tracking-widest mb-3">Use Cases</p>
+              <div class="flex items-center gap-2 text-sm">
+                <span class="material-symbols-outlined text-secondary text-base">check_circle</span>
+                Schema inspection and profiling scripts
+              </div>
+              <div class="flex items-center gap-2 text-sm">
+                <span class="material-symbols-outlined text-secondary text-base">check_circle</span>
+                One-off data migration and cleanup scripts
+              </div>
+              <div class="flex items-center gap-2 text-sm">
+                <span class="material-symbols-outlined text-secondary text-base">check_circle</span>
+                Generating SQL from natural language prompts
+              </div>
+              <div class="flex items-center gap-2 text-sm">
+                <span class="material-symbols-outlined text-secondary text-base">check_circle</span>
+                Automating repetitive pipeline scaffolding tasks
+              </div>
+            </div>
+          </div>
+
+          <!-- Antigravity -->
+          <div class="glass-panel border border-primary/20 shadow-[0_0_30px_-10px_rgba(192,193,255,0.15)] rounded-2xl p-8 flex flex-col gap-6">
+            <div class="flex items-center gap-4">
+              <div class="w-14 h-14 rounded-xl bg-primary/10 flex items-center justify-center">
+                <span class="material-symbols-outlined text-3xl text-primary">rocket_launch</span>
+              </div>
+              <div>
+                <h3 class="font-bold text-xl">Antigravity</h3>
+                <p class="text-xs font-mono text-primary uppercase tracking-widest">AI Dev Environment</p>
+              </div>
+            </div>
+            <p class="text-on-surface-variant text-sm leading-relaxed">
+              Used for context-heavy exploratory sessions where fast iteration matters — reviewing large codebases, comparing architecture options, and generating spike implementations for new pipeline patterns before committing to a design direction.
+            </p>
+            <div class="space-y-2">
+              <p class="text-xs font-mono text-on-surface-variant uppercase tracking-widest mb-3">Use Cases</p>
+              <div class="flex items-center gap-2 text-sm">
+                <span class="material-symbols-outlined text-primary text-base">check_circle</span>
+                Architecture option comparison and trade-off analysis
+              </div>
+              <div class="flex items-center gap-2 text-sm">
+                <span class="material-symbols-outlined text-primary text-base">check_circle</span>
+                Spike implementations for new ingestion patterns
+              </div>
+              <div class="flex items-center gap-2 text-sm">
+                <span class="material-symbols-outlined text-primary text-base">check_circle</span>
+                Onboarding into unfamiliar codebases quickly
+              </div>
+              <div class="flex items-center gap-2 text-sm">
+                <span class="material-symbols-outlined text-primary text-base">check_circle</span>
+                Debugging complex PySpark or dbt compilation issues
+              </div>
+            </div>
+          </div>
+
+        </div>
+      </div>
+    </section>
+
+    <!-- ╔══════════════════════════════════════╗ -->
+    <!-- ║  Workflow Overview                   ║ -->
+    <!-- ╚══════════════════════════════════════╝ -->
+    <section class="max-w-7xl mx-auto px-8 py-32">
+      <h2 class="font-headline text-4xl font-bold mb-12 text-center">AI-Assisted Pipeline Workflow</h2>
+      <div class="grid grid-cols-1 md:grid-cols-4 gap-6">
+
+        <div class="bg-surface-container-low rounded-2xl p-8 border border-white/5 flex flex-col gap-4">
+          <div class="w-10 h-10 rounded-full bg-primary/20 flex items-center justify-center text-primary font-bold font-mono">01</div>
+          <h3 class="font-bold text-lg">Define Intent</h3>
+          <p class="text-on-surface-variant text-sm leading-relaxed">Write a clear natural-language spec for the pipeline: source, target, transformation rules, SLA, and any existing patterns to follow.</p>
+          <span class="text-xs font-mono text-outline">Human-led</span>
+        </div>
+
+        <div class="bg-surface-container-low rounded-2xl p-8 border border-white/5 flex flex-col gap-4">
+          <div class="w-10 h-10 rounded-full bg-secondary/20 flex items-center justify-center text-secondary font-bold font-mono">02</div>
+          <h3 class="font-bold text-lg">AI Scaffolding</h3>
+          <p class="text-on-surface-variant text-sm leading-relaxed">Claude Code or Codex generates the pipeline skeleton, data quality suite, and unit tests — following existing patterns in the repo.</p>
+          <span class="text-xs font-mono text-secondary">Claude Code / Codex</span>
+        </div>
+
+        <div class="bg-surface-container-low rounded-2xl p-8 border border-white/5 flex flex-col gap-4">
+          <div class="w-10 h-10 rounded-full bg-tertiary/20 flex items-center justify-center text-tertiary font-bold font-mono">03</div>
+          <h3 class="font-bold text-lg">Review & Refine</h3>
+          <p class="text-on-surface-variant text-sm leading-relaxed">Engineer reviews generated code for correctness, edge cases, and performance. Iterates with the AI on specific sections using targeted prompts.</p>
+          <span class="text-xs font-mono text-outline">Human-led + AI-assisted</span>
+        </div>
+
+        <div class="bg-surface-container-low rounded-2xl p-8 border border-primary/20 shadow-[0_0_20px_-5px_rgba(192,193,255,0.2)] flex flex-col gap-4">
+          <div class="w-10 h-10 rounded-full bg-primary/20 flex items-center justify-center text-primary font-bold font-mono">04</div>
+          <h3 class="font-bold text-lg">Deploy & Document</h3>
+          <p class="text-on-surface-variant text-sm leading-relaxed">AI generates PR descriptions, runbooks, and lineage documentation from the final implementation. CI/CD handles the rest.</p>
+          <span class="text-xs font-mono text-primary">All three tools</span>
+        </div>
+
+      </div>
+    </section>
+
+    <!-- ╔══════════════════════════════════════╗ -->
+    <!-- ║  CTA                                 ║ -->
+    <!-- ╚══════════════════════════════════════╝ -->
+    <section class="max-w-7xl mx-auto px-8">
+      <div class="rounded-3xl p-16 gradient-bg flex flex-col items-center text-center text-on-primary">
+        <h2 class="font-headline text-5xl font-bold mb-6">Build faster with AI-assisted data engineering.</h2>
+        <p class="text-lg mb-10 max-w-2xl opacity-90">Interested in how agentic AI workflows can accelerate your data platform delivery? Let's talk.</p>
+        <div class="flex gap-4 flex-wrap justify-center">
+          <a href="/#contact" class="bg-on-primary text-primary-container px-8 py-4 rounded-xl font-bold hover:shadow-2xl transition-all">Get in Touch</a>
+          <a href="/#case-studies" class="border border-on-primary/30 px-8 py-4 rounded-xl font-bold hover:bg-on-primary/10 transition-all">More Case Studies</a>
+        </div>
+      </div>
+    </section>
+
+  </main>
+
+  <!-- ╔══════════════════════════════════════╗ -->
+  <!-- ║  Footer                              ║ -->
+  <!-- ╚══════════════════════════════════════╝ -->
+  <footer class="bg-slate-950 w-full py-12 px-8 border-t border-white/5 mt-24">
+    <div class="flex flex-col md:flex-row justify-between items-center max-w-7xl mx-auto gap-8">
+      <div class="text-lg font-bold text-slate-200 font-headline">© 2025 Raphael Miranda · Data Engineer</div>
+      <div class="flex gap-8">
+        <a href="https://linkedin.com/in/raphaelmiranda0" target="_blank" rel="noopener" class="text-slate-500 hover:text-indigo-300 transition-colors text-sm underline decoration-indigo-500/30 underline-offset-4">LinkedIn</a>
+        <a href="https://github.com/RaphaMiranda" target="_blank" rel="noopener" class="text-slate-500 hover:text-indigo-300 transition-colors text-sm underline decoration-indigo-500/30 underline-offset-4">GitHub</a>
+        <a href="/#case-studies" class="text-slate-500 hover:text-indigo-300 transition-colors text-sm underline decoration-indigo-500/30 underline-offset-4">Case Studies</a>
+      </div>
+    </div>
+  </footer>
+
+  <script src="/assets/js/main.js"></script>
+</body>
+</html>
