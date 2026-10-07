@@ -10,7 +10,8 @@
     next: document.getElementById("next"), count: document.getElementById("slide-count"),
     section: document.getElementById("section-name"), progress: document.getElementById("progress-bar"),
     overview: document.getElementById("topic-overview"), overviewToggle: document.getElementById("overview-toggle"),
-    overviewClose: document.getElementById("overview-close"), topicList: document.getElementById("topic-list")
+    overviewClose: document.getElementById("overview-close"), topicList: document.getElementById("topic-list"),
+    scrim: document.getElementById("topic-scrim")
   };
 
   function escapeHtml(value) {
@@ -228,7 +229,8 @@
 
   function renderOverview() {
     elements.topicList.innerHTML = state.slides.map(function (slide, index) {
-      return "<button class=\"topic-button\" type=\"button\" data-slide-index=\"" + index + "\"><small>" + escapeHtml(slide.section) + "</small><span>" + escapeHtml(slide.title) + "</span></button>";
+      const summary = (slide.paragraphs[0] || slide.listItems[0]?.text || "Open this slide for its study notes.").replace(/\s+/g, " ").trim();
+      return "<button class=\"topic-button\" type=\"button\" data-slide-index=\"" + index + "\"><small>" + escapeHtml(slide.section) + "</small><strong class=\"topic-title\">" + escapeHtml(slide.title) + "</strong><span class=\"topic-summary\">" + escapeHtml(summary) + "</span></button>";
     }).join("");
     elements.topicList.querySelectorAll("[data-slide-index]").forEach(function (button) {
       button.addEventListener("click", function () { goTo(Number(button.dataset.slideIndex)); toggleOverview(false); });
@@ -244,13 +246,16 @@
   function goTo(index) { state.index = Math.max(0, Math.min(index, state.slides.length - 1)); renderSlide(); }
 
   function toggleOverview(shouldOpen) {
-    elements.overview.hidden = !shouldOpen;
+    elements.overview.classList.toggle("is-open", shouldOpen);
+    elements.overview.setAttribute("aria-hidden", String(!shouldOpen));
     elements.overviewToggle.setAttribute("aria-expanded", String(shouldOpen));
+    elements.scrim.classList.toggle("is-visible", shouldOpen);
+    elements.scrim.setAttribute("aria-hidden", String(!shouldOpen));
     if (shouldOpen) elements.overviewClose.focus(); else elements.overviewToggle.focus();
   }
 
   function trapOverviewFocus(event) {
-    if (event.key !== "Tab" || elements.overview.hidden) return;
+    if (event.key !== "Tab" || !elements.overview.classList.contains("is-open")) return;
     const focusable = Array.from(elements.overview.querySelectorAll("button:not([disabled])"));
     const first = focusable[0];
     const last = focusable[focusable.length - 1];
@@ -261,13 +266,14 @@
   function bindEvents() {
     elements.previous.addEventListener("click", function () { goTo(state.index - 1); });
     elements.next.addEventListener("click", function () { if (state.index < state.slides.length - 1) goTo(state.index + 1); });
-    elements.overviewToggle.addEventListener("click", function () { toggleOverview(elements.overview.hidden); });
+    elements.overviewToggle.addEventListener("click", function () { toggleOverview(!elements.overview.classList.contains("is-open")); });
     elements.overviewClose.addEventListener("click", function () { toggleOverview(false); });
+    elements.scrim.addEventListener("click", function () { toggleOverview(false); });
     document.addEventListener("keydown", function (event) {
       trapOverviewFocus(event);
-      if (event.key === "Escape" && !elements.overview.hidden) { toggleOverview(false); return; }
+      if (event.key === "Escape" && elements.overview.classList.contains("is-open")) { toggleOverview(false); return; }
       if (event.target.closest("button, .study-diagram") && (event.key === "ArrowLeft" || event.key === "ArrowRight")) return;
-      if (!elements.overview.hidden) return;
+      if (elements.overview.classList.contains("is-open")) return;
       if (event.key === "ArrowRight") goTo(state.index + 1);
       if (event.key === "ArrowLeft") goTo(state.index - 1);
       if (event.key.toLowerCase() === "o") toggleOverview(true);

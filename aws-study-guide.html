@@ -29,16 +29,17 @@
       </div>
     </section>
 
-    <section class="topic-overview" id="topic-overview" hidden role="dialog" aria-modal="true" aria-labelledby="overview-heading">
+    <aside class="topic-sidebar" id="topic-overview" role="dialog" aria-modal="true" aria-hidden="true" aria-labelledby="overview-heading">
       <div class="overview-heading">
         <div>
-          <p class="eyebrow">Jump to a topic</p>
-          <h2 id="overview-heading">Study map</h2>
+          <p class="eyebrow">Slide summaries</p>
+          <h2 id="overview-heading">Study navigation</h2>
         </div>
         <button class="close-overview" id="overview-close" type="button">Close</button>
       </div>
       <div class="topic-list" id="topic-list"></div>
-    </section>
+    </aside>
+    <button class="topic-scrim" id="topic-scrim" type="button" aria-label="Close study navigation" aria-hidden="true" tabindex="-1"></button>
 
     <footer class="study-controls">
       <div class="progress-group">

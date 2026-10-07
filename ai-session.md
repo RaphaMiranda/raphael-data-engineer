@@ -17,3 +17,11 @@
 - **Review:** Independent review identified and resolved keyboard conflict, accessible diagram fallback, and diagram initialisation-order issues.
 - **Verification:** Both study scripts pass `node --check`; local HTTP checks returned 200 for the page, visual registry, and image asset; GoJS CDN is pinned to `4.0.5`. Browser rendering could not be exercised because this environment has no accessible browser surface or browser automation executable.
 - **Commit:** `feat: add GoJS study visual framework`.
+
+## 2026-10-07 — Study navigation sidebar
+
+- **Branch:** `feature/study-deck-sidebar`
+- **Goal:** Replace the full-screen topic map with a hideable lateral navigation menu containing slide-summary previews.
+- **Changes:** Replaced the full-screen topic map with a left-side drawer opened from Topics. Each navigable slide now shows its section, title, and a two-line source-note summary; Close, Escape, and the overlay hide the drawer.
+- **Verification:** `node --check assets/js/aws-study-guide.js`; local HTTP checks returned 200 for the deck, stylesheet, and script; scoped `git diff --check` passed. Browser rendering could not be exercised because this environment has no accessible browser surface or browser automation executable.
+- **Commit:** `feat: add study navigation sidebar`.
