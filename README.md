@@ -12,6 +12,12 @@ A static portfolio for Raphael Miranda, with case studies and a focused AWS Cert
 
 The AWS deck keeps the Markdown document as its source of truth. It turns every heading into a slide, retains unfinished source topics as prompts for future study, and supports Previous/Next controls, arrow keys, and a topic map (`O`). The notes are a personal study aid; validate exam-critical details against current AWS documentation.
 
+### Visuals and diagrams
+
+`assets/js/aws-study-visuals.js` is a title-keyed visual registry. Add an `image` entry for a root-relative image path, or a `diagram` entry with its node/link data. The first working GoJS example is attached to the **DynamoDB Streams** slide.
+
+GoJS is loaded from a version-pinned CDN and is proprietary. Its current non-commercial terms allow personal learning use but retain a watermark; commercial or organisation use requires an appropriate GoJS licence. See the [GoJS deployment guidance](https://gojs.net/latest/learn/deployment).
+
 ## Local preview
 
 This repository has no build step. Open the folder in VS Code with Live Server, or serve it from the repository root:

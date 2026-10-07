@@ -3,7 +3,8 @@
   "use strict";
 
   const sourcePath = "/docs/aws-data-eng-associate.md";
-  const state = { slides: [], index: 0 };
+  const state = { slides: [], index: 0, diagram: null, diagramObserver: null };
+  const visualsByTitle = window.studyVisuals || {};
   const elements = {
     slide: document.getElementById("slide"), previous: document.getElementById("previous"),
     next: document.getElementById("next"), count: document.getElementById("slide-count"),
@@ -110,17 +111,97 @@
     };
   }
 
+  function renderVisual(slide) {
+    const visual = visualsByTitle[slide.title];
+    if (!visual) return "";
+    if (visual.type === "image") {
+      return "<figure class=\"slide-visual\"><img src=\"" + escapeHtml(visual.src) + "\" alt=\"" + escapeHtml(visual.alt) + "\" width=\"1200\" height=\"675\" loading=\"lazy\"><figcaption>" + escapeHtml(visual.caption) + "</figcaption></figure>";
+    }
+    if (visual.type === "diagram") {
+      const accessibleFlow = visual.nodes.map(function (node) { return node.text + ": " + node.detail; }).join(". ");
+      const relationships = visual.links.map(function (link) {
+        const from = visual.nodes.find(function (node) { return node.key === link.from; });
+        const to = visual.nodes.find(function (node) { return node.key === link.to; });
+        return (from ? from.text : link.from) + " sends " + link.label + " to " + (to ? to.text : link.to) + ".";
+      }).join(" ");
+      return "<figure class=\"slide-visual\"><div class=\"visual-toolbar\"><p class=\"visual-label\">Diagram · mouse pan / wheel zoom</p><button class=\"diagram-button\" type=\"button\" data-diagram-fit=\"" + escapeHtml(visual.id) + "\">Fit diagram</button></div><p class=\"sr-only\">" + escapeHtml(visual.label + ". " + visual.caption + " " + accessibleFlow + " " + relationships) + "</p><div class=\"study-diagram\" id=\"" + escapeHtml(visual.id) + "\" aria-hidden=\"true\"></div><p class=\"diagram-fallback\" data-diagram-fallback hidden>Diagram unavailable. Study the text flow in the slide notes and caption instead.</p><figcaption>" + escapeHtml(visual.caption) + " Drag the canvas to pan; use the mouse wheel over the diagram to zoom.</figcaption></figure>";
+    }
+    return "";
+  }
+
+  function disposeDiagram() {
+    if (state.diagramObserver) { state.diagramObserver.disconnect(); state.diagramObserver = null; }
+    if (state.diagram) { state.diagram.div = null; state.diagram = null; }
+  }
+
+  function initializeDiagram(slide) {
+    const visual = visualsByTitle[slide.title];
+    if (!visual || visual.type !== "diagram") return;
+    const host = document.getElementById(visual.id);
+    const fallback = elements.slide.querySelector("[data-diagram-fallback]");
+    if (!host) return;
+    if (!window.go) {
+      host.hidden = true;
+      if (fallback) fallback.hidden = false;
+      return;
+    }
+
+    const $ = go.GraphObject.make;
+    const reduceMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+    const diagram = $(go.Diagram, host, {
+      layout: $(go.LayeredDigraphLayout, { direction: 0, layerSpacing: 48, columnSpacing: 28 }),
+      initialAutoScale: go.AutoScale.Uniform,
+      contentAlignment: go.Spot.Center,
+      isReadOnly: true,
+      allowSelect: false,
+      allowMove: false,
+      allowCopy: false,
+      allowDelete: false,
+      allowInsert: false,
+      allowLink: false,
+      allowRelink: false,
+      "animationManager.isEnabled": !reduceMotion,
+      "toolManager.mouseWheelBehavior": go.WheelMode.Zoom
+    });
+
+    diagram.nodeTemplate = $(go.Node, "Auto", { selectable: false, cursor: "default" },
+      $(go.Shape, "RoundedRectangle", { parameter1: 12, stroke: "#464554", strokeWidth: 1.3 }, new go.Binding("fill", "fill")),
+      $(go.Panel, "Vertical", { margin: 12, defaultAlignment: go.Spot.Left },
+        $(go.TextBlock, { font: "600 13px 'Space Grotesk', sans-serif", stroke: "#dae2fd", maxSize: new go.Size(150, NaN), wrap: go.Wrap.Fit }, new go.Binding("text", "text")),
+        $(go.TextBlock, { margin: new go.Margin(5, 0, 0, 0), font: "10px 'JetBrains Mono', monospace", stroke: "#c7c4d7", maxSize: new go.Size(150, NaN), wrap: go.Wrap.Fit }, new go.Binding("text", "detail"))
+      )
+    );
+    diagram.linkTemplate = $(go.Link, { routing: go.Routing.AvoidsNodes, corner: 10, selectable: false },
+      $(go.Shape, { stroke: "#5de6ff", strokeWidth: 2 }),
+      $(go.Shape, { toArrow: "Standard", fill: "#5de6ff", stroke: null, scale: .8 }),
+      $(go.TextBlock, { segmentOffset: new go.Point(0, -12), font: "10px 'JetBrains Mono', monospace", stroke: "#c7c4d7" }, new go.Binding("text", "label"))
+    );
+    diagram.addDiagramListener("InitialLayoutCompleted", function () { diagram.commandHandler.zoomToFit(); });
+    diagram.model = new go.GraphLinksModel(visual.nodes, visual.links);
+    host.tabIndex = -1;
+    state.diagram = diagram;
+
+    const fitButton = elements.slide.querySelector("[data-diagram-fit]");
+    if (fitButton) fitButton.addEventListener("click", function () { diagram.commandHandler.zoomToFit(); });
+    if (window.ResizeObserver) {
+      state.diagramObserver = new ResizeObserver(function () { diagram.requestUpdate(); });
+      state.diagramObserver.observe(host);
+    }
+  }
+
   function renderSlide() {
     const current = state.slides[state.index];
     const isTitle = current.isTitle;
     const section = current.section;
     const titleTag = isTitle ? "h1" : "h2";
     const notes = current.listItems.length ? renderList(current.listItems) : "";
+    const visual = renderVisual(current);
     const code = current.code.map(function (snippet) { return "<pre class=\"code-block\"><code>" + escapeHtml(snippet) + "</code></pre>"; }).join("");
     const empty = !isTitle && !notes && !current.paragraphs.length && !code
       ? "<p class=\"empty-note\">This topic is marked in the source notes but has not been expanded yet. Use it as a prompt for deeper study.</p>" : "";
     const titleStats = isTitle ? "<div class=\"title-stats\"><span>" + current.topicCount + " note topics</span><span>" + current.sectionCount + " study sections</span><span>Keyboard ready</span></div>" : "";
 
+    disposeDiagram();
     elements.slide.classList.remove("entering");
     void elements.slide.offsetWidth;
     elements.slide.innerHTML = "<div class=\"" + (isTitle ? "title-slide" : "") + "\">"
@@ -128,7 +209,7 @@
       + "<p class=\"slide-section\">" + escapeHtml(section) + "</p>"
       + "<" + titleTag + ">" + (isTitle ? "AWS Data Engineer <span class=\"accent\">Associate</span>" : escapeHtml(current.title)) + "</" + titleTag + ">"
       + "<p class=\"slide-lede\">" + formatText(current.paragraphs[0] || (isTitle ? current.paragraphs[0] : "Key notes from your source document.")) + "</p>"
-      + notes
+      + visual + notes
       + (current.paragraphs.length > 1 ? "<p class=\"detail-note\">" + formatText(current.paragraphs.slice(1).join(" ")) + "</p>" : "")
       + code + empty + titleStats + "</div>";
     elements.slide.classList.add("entering");
@@ -141,6 +222,7 @@
     elements.next.setAttribute("aria-disabled", String(elements.next.disabled));
     elements.next.textContent = state.index === state.slides.length - 1 ? "Complete" : "Next";
     updateOverviewSelection();
+    initializeDiagram(current);
     elements.slide.focus({ preventScroll: true });
   }
 
@@ -184,7 +266,7 @@
     document.addEventListener("keydown", function (event) {
       trapOverviewFocus(event);
       if (event.key === "Escape" && !elements.overview.hidden) { toggleOverview(false); return; }
-      if (event.target.closest("button") && (event.key === "ArrowLeft" || event.key === "ArrowRight")) return;
+      if (event.target.closest("button, .study-diagram") && (event.key === "ArrowLeft" || event.key === "ArrowRight")) return;
       if (!elements.overview.hidden) return;
       if (event.key === "ArrowRight") goTo(state.index + 1);
       if (event.key === "ArrowLeft") goTo(state.index - 1);
