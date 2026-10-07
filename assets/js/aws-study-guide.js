@@ -10,7 +10,7 @@
     next: document.getElementById("next"), count: document.getElementById("slide-count"),
     section: document.getElementById("section-name"), progress: document.getElementById("progress-bar"),
     overview: document.getElementById("topic-overview"), overviewToggle: document.getElementById("overview-toggle"),
-    overviewClose: document.getElementById("overview-close"), topicList: document.getElementById("topic-list"),
+    topicList: document.getElementById("topic-list"),
     workspace: document.getElementById("study-workspace")
   };
 
@@ -258,7 +258,6 @@
     elements.previous.addEventListener("click", function () { goTo(state.index - 1); });
     elements.next.addEventListener("click", function () { if (state.index < state.slides.length - 1) goTo(state.index + 1); });
     elements.overviewToggle.addEventListener("click", function () { toggleOverview(elements.workspace.classList.contains("sidebar-hidden")); });
-    elements.overviewClose.addEventListener("click", function () { toggleOverview(false); });
     document.addEventListener("keydown", function (event) {
       if (event.key === "Escape" && !elements.workspace.classList.contains("sidebar-hidden")) { toggleOverview(false); return; }
       if (event.target.closest("button, .study-diagram") && (event.key === "ArrowLeft" || event.key === "ArrowRight")) return;

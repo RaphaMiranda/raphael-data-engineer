@@ -33,3 +33,11 @@
 - **Changes:** Reworked the topic menu as an in-page sidebar. It is visible beside the slide on desktop and above it on narrow screens; Hide topics / Show topics collapses or restores it without an overlay or separate window.
 - **Verification:** `node --check assets/js/aws-study-guide.js`; local HTTP checks returned 200 for the deck, stylesheet, and script; scoped `git diff --check` passed. Browser rendering could not be exercised because this environment has no accessible browser surface or browser automation executable.
 - **Commit:** `feat: keep study navigation beside slides`.
+
+## 2026-10-08 — Scrollable topic sidebar
+
+- **Branch:** `feature/scrollable-topic-sidebar`
+- **Goal:** Position the sidebar to the right of the slide, make its topic list independently scrollable, and move its show/hide control to the slide/sidebar boundary.
+- **Changes:** Repositioned the topic menu as a right-side panel beside the slide, constrained its topic cards to an independent vertical scroll area, and moved the Hide topics / Show topics control to the divider between the slide and panel. The visual design remains consistent with the existing study deck.
+- **Verification:** `node --check assets/js/aws-study-guide.js`; local HTTP checks returned 200 for the deck, stylesheet, and script; scoped `git diff --check` passed. Browser rendering could not be exercised because this environment has no accessible browser surface or browser automation executable.
+- **Commit:** `feat: add scrollable topic sidebar`.
