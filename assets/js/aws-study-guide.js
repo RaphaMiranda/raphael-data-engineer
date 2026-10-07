@@ -11,7 +11,7 @@
     section: document.getElementById("section-name"), progress: document.getElementById("progress-bar"),
     overview: document.getElementById("topic-overview"), overviewToggle: document.getElementById("overview-toggle"),
     overviewClose: document.getElementById("overview-close"), topicList: document.getElementById("topic-list"),
-    scrim: document.getElementById("topic-scrim")
+    workspace: document.getElementById("study-workspace")
   };
 
   function escapeHtml(value) {
@@ -233,7 +233,7 @@
       return "<button class=\"topic-button\" type=\"button\" data-slide-index=\"" + index + "\"><small>" + escapeHtml(slide.section) + "</small><strong class=\"topic-title\">" + escapeHtml(slide.title) + "</strong><span class=\"topic-summary\">" + escapeHtml(summary) + "</span></button>";
     }).join("");
     elements.topicList.querySelectorAll("[data-slide-index]").forEach(function (button) {
-      button.addEventListener("click", function () { goTo(Number(button.dataset.slideIndex)); toggleOverview(false); });
+      button.addEventListener("click", function () { goTo(Number(button.dataset.slideIndex)); });
     });
   }
 
@@ -246,37 +246,25 @@
   function goTo(index) { state.index = Math.max(0, Math.min(index, state.slides.length - 1)); renderSlide(); }
 
   function toggleOverview(shouldOpen) {
-    elements.overview.classList.toggle("is-open", shouldOpen);
+    elements.workspace.classList.toggle("sidebar-hidden", !shouldOpen);
     elements.overview.setAttribute("aria-hidden", String(!shouldOpen));
+    elements.overview.inert = !shouldOpen;
     elements.overviewToggle.setAttribute("aria-expanded", String(shouldOpen));
-    elements.scrim.classList.toggle("is-visible", shouldOpen);
-    elements.scrim.setAttribute("aria-hidden", String(!shouldOpen));
-    if (shouldOpen) elements.overviewClose.focus(); else elements.overviewToggle.focus();
-  }
-
-  function trapOverviewFocus(event) {
-    if (event.key !== "Tab" || !elements.overview.classList.contains("is-open")) return;
-    const focusable = Array.from(elements.overview.querySelectorAll("button:not([disabled])"));
-    const first = focusable[0];
-    const last = focusable[focusable.length - 1];
-    if (event.shiftKey && document.activeElement === first) { event.preventDefault(); last.focus(); }
-    if (!event.shiftKey && document.activeElement === last) { event.preventDefault(); first.focus(); }
+    elements.overviewToggle.textContent = shouldOpen ? "Hide topics" : "Show topics";
+    if (!shouldOpen) elements.overviewToggle.focus();
   }
 
   function bindEvents() {
     elements.previous.addEventListener("click", function () { goTo(state.index - 1); });
     elements.next.addEventListener("click", function () { if (state.index < state.slides.length - 1) goTo(state.index + 1); });
-    elements.overviewToggle.addEventListener("click", function () { toggleOverview(!elements.overview.classList.contains("is-open")); });
+    elements.overviewToggle.addEventListener("click", function () { toggleOverview(elements.workspace.classList.contains("sidebar-hidden")); });
     elements.overviewClose.addEventListener("click", function () { toggleOverview(false); });
-    elements.scrim.addEventListener("click", function () { toggleOverview(false); });
     document.addEventListener("keydown", function (event) {
-      trapOverviewFocus(event);
-      if (event.key === "Escape" && elements.overview.classList.contains("is-open")) { toggleOverview(false); return; }
+      if (event.key === "Escape" && !elements.workspace.classList.contains("sidebar-hidden")) { toggleOverview(false); return; }
       if (event.target.closest("button, .study-diagram") && (event.key === "ArrowLeft" || event.key === "ArrowRight")) return;
-      if (elements.overview.classList.contains("is-open")) return;
       if (event.key === "ArrowRight") goTo(state.index + 1);
       if (event.key === "ArrowLeft") goTo(state.index - 1);
-      if (event.key.toLowerCase() === "o") toggleOverview(true);
+      if (event.key.toLowerCase() === "o") toggleOverview(elements.workspace.classList.contains("sidebar-hidden"));
     });
   }
 

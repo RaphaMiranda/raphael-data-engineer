@@ -25,3 +25,11 @@
 - **Changes:** Replaced the full-screen topic map with a left-side drawer opened from Topics. Each navigable slide now shows its section, title, and a two-line source-note summary; Close, Escape, and the overlay hide the drawer.
 - **Verification:** `node --check assets/js/aws-study-guide.js`; local HTTP checks returned 200 for the deck, stylesheet, and script; scoped `git diff --check` passed. Browser rendering could not be exercised because this environment has no accessible browser surface or browser automation executable.
 - **Commit:** `feat: add study navigation sidebar`.
+
+## 2026-10-07 — Persistent study sidebar
+
+- **Branch:** `feature/persistent-study-sidebar`
+- **Goal:** Keep the study navigation in the same page, beside the slide, with a control to collapse it.
+- **Changes:** Reworked the topic menu as an in-page sidebar. It is visible beside the slide on desktop and above it on narrow screens; Hide topics / Show topics collapses or restores it without an overlay or separate window.
+- **Verification:** `node --check assets/js/aws-study-guide.js`; local HTTP checks returned 200 for the deck, stylesheet, and script; scoped `git diff --check` passed. Browser rendering could not be exercised because this environment has no accessible browser surface or browser automation executable.
+- **Commit:** `feat: keep study navigation beside slides`.

@@ -19,27 +19,28 @@
         <span class="eyebrow">AWS Certified Data Engineer – Associate</span>
         <span class="source-label">Source: personal study notes</span>
       </div>
-      <button class="overview-button" id="overview-toggle" type="button" aria-expanded="false" aria-controls="topic-overview">Topics</button>
+      <button class="overview-button" id="overview-toggle" type="button" aria-expanded="true" aria-controls="topic-overview">Hide topics</button>
     </header>
 
-    <section class="study-stage" aria-label="Study slide">
-      <div class="ambient-grid" aria-hidden="true"></div>
-      <div class="slide" id="slide" tabindex="-1" aria-live="polite" aria-atomic="true">
-        <p class="loading">Loading the study notes…</p>
-      </div>
-    </section>
-
-    <aside class="topic-sidebar" id="topic-overview" role="dialog" aria-modal="true" aria-hidden="true" aria-labelledby="overview-heading">
-      <div class="overview-heading">
-        <div>
-          <p class="eyebrow">Slide summaries</p>
-          <h2 id="overview-heading">Study navigation</h2>
+    <div class="study-workspace" id="study-workspace">
+      <aside class="topic-sidebar" id="topic-overview" aria-hidden="false" aria-labelledby="overview-heading">
+        <div class="overview-heading">
+          <div>
+            <p class="eyebrow">Slide summaries</p>
+            <h2 id="overview-heading">Study navigation</h2>
+          </div>
+          <button class="close-overview" id="overview-close" type="button">Hide</button>
         </div>
-        <button class="close-overview" id="overview-close" type="button">Close</button>
-      </div>
-      <div class="topic-list" id="topic-list"></div>
-    </aside>
-    <button class="topic-scrim" id="topic-scrim" type="button" aria-label="Close study navigation" aria-hidden="true" tabindex="-1"></button>
+        <div class="topic-list" id="topic-list"></div>
+      </aside>
+
+      <section class="study-stage" aria-label="Study slide">
+        <div class="ambient-grid" aria-hidden="true"></div>
+        <div class="slide" id="slide" tabindex="-1" aria-live="polite" aria-atomic="true">
+          <p class="loading">Loading the study notes…</p>
+        </div>
+      </section>
+    </div>
 
     <footer class="study-controls">
       <div class="progress-group">
