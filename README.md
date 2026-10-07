@@ -1,37 +1,34 @@
-## Welcome to GitHub Pages
+# Raphael Miranda — Data Engineer portfolio
 
-You can use the [editor on GitHub](https://github.com/RaphaMiranda/personalweb/edit/main/README.md) to maintain and preview the content for your website in Markdown files.
+A static portfolio for Raphael Miranda, with case studies and a focused AWS Certified Data Engineer – Associate study deck.
 
-Whenever you commit to this repository, GitHub Pages will run [Jekyll](https://jekyllrb.com/) to rebuild the pages in your site, from the content in your Markdown files.
+## Pages
 
-### Markdown
+- `/` — portfolio, professional timeline, skills, and case studies.
+- `/case-studies/*.html` — individual project case studies.
+- `/aws-study-guide.html` — interactive, keyboard-friendly study deck generated from the notes in `docs/aws-data-eng-associate.md`.
 
-Markdown is a lightweight and easy-to-use syntax for styling your writing. It includes conventions for
+## Study deck
 
-```markdown
-Syntax highlighted code block
+The AWS deck keeps the Markdown document as its source of truth. It turns every heading into a slide, retains unfinished source topics as prompts for future study, and supports Previous/Next controls, arrow keys, and a topic map (`O`). The notes are a personal study aid; validate exam-critical details against current AWS documentation.
 
-# Header 1
-## Header 2
-### Header 3
+## Local preview
 
-- Bulleted
-- List
+This repository has no build step. Open the folder in VS Code with Live Server, or serve it from the repository root:
 
-1. Numbered
-2. List
-
-**Bold** and _Italic_ and `Code` text
-
-[Link](url) and ![Image](src)
+```powershell
+npx serve .
 ```
 
-For more details see [GitHub Flavored Markdown](https://guides.github.com/features/mastering-markdown/).
+Then open the local address printed by the server. Serving the folder is needed for the study deck to load its Markdown source.
 
-### Jekyll Themes
+## Conventions
 
-Your Pages site will use the layout and styles from the Jekyll theme you have selected in your [repository settings](https://github.com/RaphaMiranda/personalweb/settings). The name of this theme is saved in the Jekyll `_config.yml` configuration file.
+- Plain HTML, CSS, and vanilla JavaScript only.
+- Shared styles belong in `assets/css/styles.css`; shared behaviour belongs in `assets/js/main.js`.
+- Page-specific code uses descriptive sibling files in `assets/css` and `assets/js`.
+- Design guidance lives in [design/DESIGN.md](design/DESIGN.md); contributor guidance is in [AGENTS.md](AGENTS.md).
 
-### Support or Contact
+## Deployment
 
-Having trouble with Pages? Check out our [documentation](https://docs.github.com/categories/github-pages-basics/) or [contact support](https://support.github.com/contact) and we’ll help you sort it out.
+`vercel.json` configures clean static URLs for Vercel. Deploy the repository as a static site; no dependency installation or build command is required.

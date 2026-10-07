@@ -1,0 +1,10 @@
+# AI session log
+
+## 2026-10-07 — AWS Data Engineer Associate study deck
+
+- **Branch:** `feature/aws-data-engineer-study-guide`
+- **Goal:** Create a vanilla HTML/CSS/JavaScript interactive reference deck from `docs/aws-data-eng-associate.md`.
+- **Changes:** Added a Markdown-backed study deck, page-specific styling and interactions, repository guidance, and accurate project documentation. Linked the new deck from the portfolio navigation. The deck parses all 76 Markdown headings, preserves ordered/nested study notes, and marks source TODOs instead of inventing material.
+- **Review:** Repository structure and source-document outlines were independently reviewed; a final deck review identified and resolved section-context, list-structure, and topic-map accessibility issues.
+- **Verification:** `node --check assets/js/aws-study-guide.js`; static-server HTTP checks returned 200 for the deck, Markdown source, and script; `git diff --check` passed. A visual browser check could not run because no browser surface or `agent-browser` executable is available in this environment.
+- **Commit:** `feat: add interactive AWS data engineer study deck`.

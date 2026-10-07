@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html class="dark" lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="description" content="An interactive, topic-by-topic study guide for the AWS Certified Data Engineer – Associate exam." />
+  <title>AWS Data Engineer Associate | Study Deck</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&family=Space+Grotesk:wght@500;600;700&display=swap" rel="stylesheet" />
+  <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='14' fill='%230b1326'/%3E%3Cpath d='M14 43 25 19l8 16 6-10 11 18' fill='none' stroke='%235de6ff' stroke-width='5' stroke-linecap='round' stroke-linejoin='round'/%3E%3Ccircle cx='25' cy='19' r='4' fill='%234edea3'/%3E%3C/svg%3E" />
+  <link rel="stylesheet" href="/assets/css/aws-study-guide.css" />
+</head>
+<body>
+  <main class="study-shell">
+    <header class="study-header">
+      <a class="brand" href="/" aria-label="Return to Raphael Miranda portfolio">RM<span> / </span>Study</a>
+      <div class="header-copy">
+        <span class="eyebrow">AWS Certified Data Engineer – Associate</span>
+        <span class="source-label">Source: personal study notes</span>
+      </div>
+      <button class="overview-button" id="overview-toggle" type="button" aria-expanded="false" aria-controls="topic-overview">Topics</button>
+    </header>
+
+    <section class="study-stage" aria-label="Study slide">
+      <div class="ambient-grid" aria-hidden="true"></div>
+      <div class="slide" id="slide" tabindex="-1" aria-live="polite" aria-atomic="true">
+        <p class="loading">Loading the study notes…</p>
+      </div>
+    </section>
+
+    <section class="topic-overview" id="topic-overview" hidden role="dialog" aria-modal="true" aria-labelledby="overview-heading">
+      <div class="overview-heading">
+        <div>
+          <p class="eyebrow">Jump to a topic</p>
+          <h2 id="overview-heading">Study map</h2>
+        </div>
+        <button class="close-overview" id="overview-close" type="button">Close</button>
+      </div>
+      <div class="topic-list" id="topic-list"></div>
+    </section>
+
+    <footer class="study-controls">
+      <div class="progress-group">
+        <p id="section-name">Preparing guide</p>
+        <div class="progress-track" aria-hidden="true"><span id="progress-bar"></span></div>
+        <p class="slide-count" id="slide-count">0 / 0</p>
+      </div>
+      <div class="control-group" aria-label="Slide controls">
+        <button class="control-button" id="previous" type="button">Previous</button>
+        <button class="control-button primary-control" id="next" type="button">Next</button>
+      </div>
+      <p class="keyboard-hint"><kbd>←</kbd><kbd>→</kbd> navigate <kbd>O</kbd> topics</p>
+    </footer>
+  </main>
+  <script src="/assets/js/aws-study-guide.js"></script>
+</body>
+</html>
