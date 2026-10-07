@@ -41,3 +41,11 @@
 - **Changes:** Repositioned the topic menu as a right-side panel beside the slide, constrained its topic cards to an independent vertical scroll area, and moved the Hide topics / Show topics control to the divider between the slide and panel. The visual design remains consistent with the existing study deck.
 - **Verification:** `node --check assets/js/aws-study-guide.js`; local HTTP checks returned 200 for the deck, stylesheet, and script; scoped `git diff --check` passed. Browser rendering could not be exercised because this environment has no accessible browser surface or browser automation executable.
 - **Commit:** `feat: add scrollable topic sidebar`.
+
+## 2026-10-08 — Larger slides and arrow toggle
+
+- **Branch:** `feature/larger-slides-toggle-arrows`
+- **Goal:** Increase the slide proportion and replace the topic-panel text control with directional arrows.
+- **Changes:** Increased the primary slide area by reducing the sidebar width, enlarging the slide surface, and tightening outer stage spacing. Replaced Hide topics / Show topics with `>` / `<` controls and retained accessible labels.
+- **Verification:** `node --check assets/js/aws-study-guide.js`; local HTTP checks returned 200 for the deck, stylesheet, and script; `git diff --check` passed. Browser rendering could not be exercised because this environment has no accessible browser surface or browser automation executable.
+- **Commit:** `feat: enlarge study slides and use arrow toggle`.

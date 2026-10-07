@@ -250,7 +250,8 @@
     elements.overview.setAttribute("aria-hidden", String(!shouldOpen));
     elements.overview.inert = !shouldOpen;
     elements.overviewToggle.setAttribute("aria-expanded", String(shouldOpen));
-    elements.overviewToggle.textContent = shouldOpen ? "Hide topics" : "Show topics";
+    elements.overviewToggle.textContent = shouldOpen ? ">" : "<";
+    elements.overviewToggle.setAttribute("aria-label", shouldOpen ? "Hide topic list" : "Show topic list");
     if (!shouldOpen) elements.overviewToggle.focus();
   }
 

@@ -604,7 +604,38 @@ stream:
 - Automatic scaling with aurora Serverless
 - vpc network isolation, at-rest with kms (data, backup, snapshots, replicas)
 - Costs 20% more on RDS (Cost efficient)
+- Backtrack: restore data at any point of time without using backups
+- Automated maintence
 
 #### High Availability and Read Scaling
-- 
+- Aurora by default: 6 copies of your data across 3AZ
+- It need 4 copies out of 6 for writes, 3 copies out of 6 need for reads
+- self healing with peer-to-peer replication
+- Storage is striped across 1000s of volumes
+- Shared Storage Volume (replication+self healing+auto expading)
+- One Aurora instance takes writes (master)
+- In case of failover for master another one assumes the position in less than 30 secs
+
+#### Aurora DB Cluster
+- 1. Writer Endpoint - Pointing to the master instance
+- 2. Reader Endpoint - connection load balancing between read instances
+
+## DocumentDB (MongoDB) NoSQL
+- MongoDB is used to store, query, and index JSON data
+- Similar ''deployment concepts as Aurorara
+- Fully Managed Highly Available 3AZ
+- Auto Scales to workloads with millions of requests per seconds
+
+## MemoryDB for Redis
+- Redis-comaptible, durable, in-memory database service
+- Durable in-memory data storage
+- mobile apps, online gamming, media streaming
 -
+
+## Amazon Keyspaces (For Apache Cassandra) NoSQL
+- Apache Cassandra is an open-source NoSQL distributed database
+- With keyspaces you get a managed Apacha Cassadra-compatible database service
+- Using Cassandra Query Language
+- use cases: IoT decvices info, time-series data
+
+## Amazon Neptune
