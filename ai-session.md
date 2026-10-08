@@ -1,5 +1,15 @@
 # AI session log
 
+## 2026-10-08 — Expanded notebook on large screens
+
+- **Branch:** `feature/aws-explorer-embedded-notebook`.
+- **Goal:** Increase notebook width further at screen widths of 1050px and above.
+- **Changed files:** `assets/css/aws-service-explorer.css`, `ai-session.md`.
+- **Changes:** Increased the desktop notebook column to `clamp(480px, 42vw, 720px)` and moved the intermediate breakpoint to 1049px so the larger sizing starts at exactly 1050px.
+- **Verification:** Chrome layout checks passed at 1049, 1050, 1440, 1920 and 375px, with no horizontal overflow or notebook/map overlap. Notebook widths measured 464px at 1050px, 589px at 1440px and 704px at 1920px. Inspected screenshots at 1050 and 1920px. Real Enter activation expanded full notes with visible focus; no browser runtime errors. Scoped staged `git diff --check` passed.
+- **Preserved work:** Existing user edits in `docs/aws-data-eng-associate.md` remain untouched and excluded from the commit.
+- **Commit:** `style: expand notebook on large screens`.
+
 ## 2026-10-08 — Wider notebook and all relationships by default
 
 - **Branch:** `feature/aws-explorer-embedded-notebook`.
