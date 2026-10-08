@@ -1,5 +1,15 @@
 # AI session log
 
+## 2026-10-08 — Service-first explorer layout
+
+- **Branch:** `feature/aws-service-explorer`.
+- **Goal:** Give available services more focus, place the system map next, and group search and related tools below the diagram.
+- **Changed files:** `aws-study-guide/service-explorer.html`, `assets/css/aws-service-explorer.css`, `docs/aws-service-explorer.md`, `ai-session.md`.
+- **Changes:** Moved the service picker to a highlighted first panel with a larger heading; tightened the introduction; placed the map directly after the list; grouped search, filters, zoom, relationship selection and examples below it. Added keyboard-accessible jump links between the picker and search tools and corrected map/notebook direction labels. Retained the desktop notebook and mobile stacking.
+- **Verification:** All 11 Node tests pass using `node --test --test-isolation=none tests/aws-explorer.test.js`. Chrome checks at 1440×1000 and 375×812 passed all 24 existing interaction/layout assertions at each width, including all 75 service cards. Verified rendered list → map → tools order, unique IDs, valid jump-link targets, real Tab/Enter service selection, visible keyboard focus and search-jump focus. Inspected desktop and mobile screenshots, including the lower tools panel; no browser runtime errors or horizontal overflow. Local explorer HTTP returned 200; scoped staged `git diff --check` passed.
+- **Preserved work:** Existing user changes in `docs/aws-data-eng-associate.md` remain untouched and excluded from this commit.
+- **Commit:** `style: prioritize available services in AWS explorer`.
+
 ## 2026-10-08 — AWS service relationship explorer
 
 - **Branch:** `feature/aws-service-explorer`.

@@ -15,6 +15,8 @@ Scope retrieved **8 October 2026** from the [official DEA-C01 service list](http
 
 ## Learning interactions
 
+The workspace leads with the available service list, followed by the system map. Service search, category/domain filters, relationship selection, zoom controls and example connections are grouped below the diagram. Jump links connect the picker and search tools; the study notebook stays beside the workspace on desktop and follows it on narrow screens.
+
 Search accepts service names, aliases and capability terms. Category and exam-domain filters combine. List buttons and SVG nodes toggle the same working set. Chips remove one service; Clear all restores the starting state. Filter changes preserve selections and keep selected services on the map.
 
 One selection opens its flashcard, including a native keyboard-accessible answer disclosure. Two or more selections show all-selected matches first, then a clearly labeled subset section. A match can require additional participants; each card identifies them and supporting prerequisites. Unverified combinations show an honest empty state.

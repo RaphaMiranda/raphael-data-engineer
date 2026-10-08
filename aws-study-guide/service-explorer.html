@@ -30,33 +30,42 @@
       <button id="clear-selection" type="button" disabled>Clear all</button>
       <a class="small" href="#details-heading">View notebook ↓</a>
     </section>
-    <div class="examples" aria-label="Example selections"><span class="muted">Try a connection</span><button type="button" data-preset="s3,redshift">S3 + Redshift</button><button type="button" data-preset="rds,redshift,s3">RDS + Redshift + S3</button><button type="button" data-preset="kinesis,firehose,s3">Stream → lake</button><button type="button" data-preset="s3,glue,athena,lakeformation">Governed lake</button></div>
     <div class="workspace">
-      <section class="map-panel" aria-labelledby="map-heading">
-        <div class="panel-heading"><div><p class="eyebrow">System map</p><h2 id="map-heading">Service relationships</h2></div><span class="mono" id="graph-count"></span></div>
-        <div class="filters">
-          <label class="search-label">Search services<input id="service-search" type="search" placeholder="S3, CDC, Kafka…" autocomplete="off" /></label>
-          <label>AWS category<select id="category-filter"><option value="">All categories</option></select></label>
-          <label>Exam domain<select id="domain-filter"><option value="">All domains</option></select></label>
-          <button id="reset-filters" type="button">Reset filters</button>
-        </div>
-        <div class="graph-toolbar" aria-label="Graph controls">
-          <button id="zoom-out" type="button" aria-label="Zoom out">−</button><output id="zoom-level" aria-label="Graph zoom">100%</output><button id="zoom-in" type="button" aria-label="Zoom in">+</button><button id="fit-graph" type="button">Fit view</button>
-          <label class="check-label"><input id="focus-neighborhood" type="checkbox" checked /> Focus neighborhood</label>
-        </div>
-        <label class="pattern-label">Map relationship<select id="graph-pattern"><option value="">Relevant relationships</option></select></label>
-        <div id="graph-viewport" class="graph-viewport" tabindex="0" aria-label="Service map. Arrow keys pan; plus and minus zoom; zero fits. Use the service list below for all selections." aria-describedby="graph-help">
-          <svg id="service-graph" xmlns="http://www.w3.org/2000/svg" role="group" aria-label="Selectable AWS services and relationship junctions"><defs><marker id="arrow-data" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse"><path d="M0 0 L10 5 L0 10z" fill="#5de6ff" /></marker></defs><g id="graph-world"></g></svg>
-          <p id="graph-empty" class="graph-empty" hidden>No services match these filters. Reset filters to explore again.</p>
-        </div>
-        <p id="graph-help" class="map-help">The full map opens at a readable scale; pan or filter to explore. Fit view shows the overview. Drag the background to pan; use + / − to zoom. Select with click, Enter or Space. Junctions represent whole relationships; they do not imply every service pair integrates.</p>
-        <div class="legend"><span>● Selected service</span><span>◇ Relationship junction</span><span>→ Data flow</span><span>┄ Control / metadata</span></div>
-        <div class="list-heading"><h3>Accessible service list</h3><span id="list-count" class="mono"></span></div>
-        <p class="muted small">The list and map share selections. Filters never remove your working set.</p>
-        <div id="service-list" class="service-list" tabindex="-1" aria-label="Services matching filters"></div>
-      </section>
+      <div class="map-panel">
+        <section class="service-picker" aria-labelledby="services-heading">
+          <div class="panel-heading"><div><p class="eyebrow">Choose your working set</p><h2 id="services-heading">Available services</h2></div><span id="list-count" class="mono"></span></div>
+          <p class="muted small">Choose a service to open its study card. Select more to explore how they connect.</p>
+          <div id="service-list" class="service-list" tabindex="-1" aria-label="Services matching filters"></div>
+          <a class="small picker-search-link" href="#service-search">Find a service with search & filters ↓</a>
+        </section>
+        <section class="system-map" aria-labelledby="map-heading">
+          <div class="panel-heading"><div><p class="eyebrow">System map</p><h2 id="map-heading">Service relationships</h2></div><span class="mono" id="graph-count"></span></div>
+          <div id="graph-viewport" class="graph-viewport" tabindex="0" aria-label="Service map. Arrow keys pan; plus and minus zoom; zero fits. Use the service list above for all selections." aria-describedby="graph-help">
+            <svg id="service-graph" xmlns="http://www.w3.org/2000/svg" role="group" aria-label="Selectable AWS services and relationship junctions"><defs><marker id="arrow-data" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse"><path d="M0 0 L10 5 L0 10z" fill="#5de6ff" /></marker></defs><g id="graph-world"></g></svg>
+            <p id="graph-empty" class="graph-empty" hidden>No services match these filters. Reset filters to explore again.</p>
+          </div>
+          <p id="graph-help" class="map-help">The full map opens at a readable scale; pan or filter to explore. Fit view shows the overview. Drag the background to pan; use + / − to zoom. Select with click, Enter or Space. Junctions represent whole relationships; they do not imply every service pair integrates.</p>
+          <div class="legend"><span>● Selected service</span><span>◇ Relationship junction</span><span>→ Data flow</span><span>┄ Control / metadata</span></div>
+        </section>
+        <section class="exploration-tools" aria-labelledby="tools-heading">
+          <div class="panel-heading"><div><p class="eyebrow">Refine your exploration</p><h2 id="tools-heading">Service search & map tools</h2></div><a class="small" href="#service-list">Back to services ↑</a></div>
+          <p class="muted small">Search and filters update the list and map together. Your selected services stay in the working set.</p>
+          <div class="filters">
+            <label class="search-label">Search services<input id="service-search" type="search" placeholder="S3, CDC, Kafka…" autocomplete="off" /></label>
+            <label>AWS category<select id="category-filter"><option value="">All categories</option></select></label>
+            <label>Exam domain<select id="domain-filter"><option value="">All domains</option></select></label>
+            <button id="reset-filters" type="button">Reset filters</button>
+          </div>
+          <div class="graph-toolbar" aria-label="Graph controls">
+            <button id="zoom-out" type="button" aria-label="Zoom out">−</button><output id="zoom-level" aria-label="Graph zoom">100%</output><button id="zoom-in" type="button" aria-label="Zoom in">+</button><button id="fit-graph" type="button">Fit view</button>
+            <label class="check-label"><input id="focus-neighborhood" type="checkbox" checked /> Focus neighborhood</label>
+          </div>
+          <label class="pattern-label">Map relationship<select id="graph-pattern"><option value="">Relevant relationships</option></select></label>
+          <div class="examples" aria-label="Example selections"><span class="muted">Try a connection</span><button type="button" data-preset="s3,redshift">S3 + Redshift</button><button type="button" data-preset="rds,redshift,s3">RDS + Redshift + S3</button><button type="button" data-preset="kinesis,firehose,s3">Stream → lake</button><button type="button" data-preset="s3,glue,athena,lakeformation">Governed lake</button></div>
+        </section>
+      </div>
       <aside class="details-panel" aria-labelledby="details-heading">
-        <div class="panel-heading"><div><p class="eyebrow">Study notebook</p><h2 id="details-heading">Explore a service</h2></div><a class="small" href="#service-list">Choose services ↓</a></div>
+        <div class="panel-heading"><div><p class="eyebrow">Study notebook</p><h2 id="details-heading">Explore a service</h2></div><a class="small" href="#service-list">Choose services ↑</a></div>
         <div id="study-details"><p>Select a service in the list or map to begin.</p></div>
       </aside>
     </div>
