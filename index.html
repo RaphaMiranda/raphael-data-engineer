@@ -25,44 +25,32 @@
   <!-- ╔══════════════════════════════════════╗ -->
   <!-- ║  Navigation                          ║ -->
   <!-- ╚══════════════════════════════════════╝ -->
-  <header class="bg-slate-950/80 backdrop-blur-xl fixed top-0 w-full z-50 border-b border-white/10 shadow-[0_8px_32px_0_rgba(99,102,241,0.06)]">
-    <nav class="flex justify-between items-center max-w-7xl mx-auto px-8 h-20">
-
-      <!-- Brand -->
-      <a href="/" class="text-2xl font-bold bg-gradient-to-br from-indigo-300 to-indigo-500 bg-clip-text text-transparent font-headline tracking-tight">
-        Raphael Miranda
-      </a>
-
-      <!-- Desktop links -->
-      <div class="hidden md:flex items-center space-x-8">
-        <a data-nav href="/" class="text-indigo-400 font-bold border-b-2 border-indigo-400 pb-1 font-headline">Home</a>
-        <a data-nav href="#timeline" class="text-slate-400 font-medium hover:text-slate-200 transition-colors font-headline">Timeline</a>
-        <a data-nav href="#skills" class="text-slate-400 font-medium hover:text-slate-200 transition-colors font-headline">Skills</a>
-        <a data-nav href="#case-studies" class="text-slate-400 font-medium hover:text-slate-200 transition-colors font-headline">Case Studies</a>
-        <a href="/aws-study-guide.html" class="text-slate-400 font-medium hover:text-slate-200 transition-colors font-headline">AWS Study Guide</a>
-        <button data-contact-cta class="bg-gradient-to-br from-primary to-primary-container text-on-primary font-bold py-2 px-6 rounded-lg active:scale-95 duration-150 transition-all">
-          Get in Touch
-        </button>
+  <header class="site-header site-header--fixed">
+    <nav class="site-nav" aria-label="Primary navigation">
+      <a class="site-brand" href="/">Raphael Miranda</a>
+      <div class="site-links">
+        <a data-nav href="/" aria-current="page">Home</a>
+        <a data-nav href="/#timeline">Timeline</a>
+        <a data-nav href="/#skills">Skills</a>
+        <a data-nav href="/#case-studies">Case Studies</a>
+        <a data-nav href="/aws-study-guide.html">AWS Study Guide</a>
+        <a data-nav href="/aws-study-guide/service-explorer.html">Service Explorer</a>
+        <a class="site-contact" href="/#contact">Get in Touch</a>
       </div>
-
-      <!-- Mobile hamburger -->
-      <button id="menu-toggle" class="md:hidden p-2 rounded-lg hover:bg-white/5 transition-colors" aria-label="Toggle menu">
-        <span id="menu-icon-open" class="material-symbols-outlined text-on-surface">menu</span>
-        <span id="menu-icon-close" class="material-symbols-outlined text-on-surface hidden">close</span>
+      <button class="site-menu-toggle" id="menu-toggle" type="button" aria-label="Open navigation menu" aria-expanded="false" aria-controls="mobile-menu">
+        <svg id="menu-icon-open" viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="M4 6h16M4 12h16M4 18h16" /></svg>
+        <svg id="menu-icon-close" viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true" hidden><path d="m6 6 12 12M6 18 18 6" /></svg>
       </button>
     </nav>
-
-    <!-- Mobile dropdown -->
-    <div id="mobile-menu" class="hidden md:hidden bg-slate-950/95 border-t border-white/10 px-8 py-6 space-y-4">
-      <a href="/" class="block text-indigo-400 font-bold font-headline">Home</a>
-      <a href="#timeline" class="block text-slate-400 hover:text-slate-200 font-headline">Timeline</a>
-      <a href="#skills" class="block text-slate-400 hover:text-slate-200 font-headline">Skills</a>
-      <a href="#case-studies" class="block text-slate-400 hover:text-slate-200 font-headline">Case Studies</a>
-      <a href="/aws-study-guide.html" class="block text-slate-400 hover:text-slate-200 font-headline">AWS Study Guide</a>
-      <a href="#contact" class="block w-full text-center bg-gradient-to-br from-primary to-primary-container text-on-primary font-bold py-3 px-6 rounded-lg">
-        Get in Touch
-      </a>
-    </div>
+    <nav id="mobile-menu" class="site-mobile" aria-label="Mobile navigation" hidden>
+        <a data-nav href="/" aria-current="page">Home</a>
+        <a data-nav href="/#timeline">Timeline</a>
+        <a data-nav href="/#skills">Skills</a>
+        <a data-nav href="/#case-studies">Case Studies</a>
+        <a data-nav href="/aws-study-guide.html">AWS Study Guide</a>
+        <a data-nav href="/aws-study-guide/service-explorer.html">Service Explorer</a>
+      <a class="site-contact" href="/#contact">Get in Touch</a>
+    </nav>
   </header>
 
   <main class="pt-16">

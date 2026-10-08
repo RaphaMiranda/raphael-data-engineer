@@ -18,10 +18,6 @@ p { margin: .65rem 0 1rem; }
 .mono { font: .68rem/1.6 var(--font-mono); color: var(--muted); }
 .muted { color: var(--muted); }
 .small { font-size: .75rem; }
-.explorer-header { padding: 1.1rem clamp(1rem, 4vw, 4rem); display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 1rem; background: #0e172b; }
-.brand { font: 700 1rem var(--font-heading); color: var(--text); text-decoration: none; }
-nav { display: flex; flex-wrap: wrap; gap: 1.4rem; font-size: .8rem; }
-nav [aria-current] { color: var(--primary); }
 .explorer-shell { max-width: 1800px; margin: auto; padding: 2rem clamp(1rem, 4vw, 4rem); }
 .intro { display: flex; align-items: end; justify-content: space-between; gap: 1rem; margin-bottom: 1.5rem; }
 .lede { margin: .5rem 0 0; color: var(--muted); font-size: .85rem; }

@@ -31,6 +31,28 @@ html {
    Components
 ───────────────────────────────────────── */
 
+/* Shared navigation for portfolio, case studies, study deck and explorer. */
+.site-header { position: relative; z-index: 50; width: 100%; background: rgba(6, 14, 32, .94); backdrop-filter: blur(14px); }
+.site-header--fixed { position: fixed; inset: 0 0 auto; }
+.site-nav { display: flex; align-items: center; justify-content: space-between; gap: 1.5rem; min-height: 80px; max-width: 1440px; margin: auto; padding: 0 clamp(1rem, 3vw, 2rem); }
+.site-header .site-brand { flex-shrink: 0; font: 700 1.5rem/1.2 'Space Grotesk', sans-serif; letter-spacing: -.04em; text-decoration: none; color: #c0c1ff; background: linear-gradient(135deg, #c0c1ff, #8083ff); background-clip: text; -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
+.site-links { display: flex; align-items: center; gap: 1.1rem; }
+.site-header a[data-nav] { display: inline-flex; align-items: center; min-height: 44px; color: #aebad3; font: 500 .875rem/1.4 'Space Grotesk', sans-serif; text-decoration: none; }
+.site-header a[data-nav]:hover { color: #dae2fd; }
+.site-header a[aria-current] { color: #c0c1ff; font-weight: 700; }
+.site-header .site-contact { display: inline-flex; align-items: center; justify-content: center; min-height: 44px; padding: .6rem 1rem; border-radius: .75rem; color: #1000a9; background: linear-gradient(135deg, #c0c1ff, #8083ff); font: 700 .8rem/1.4 Inter, sans-serif; text-decoration: none; }
+.site-header .site-contact:hover { background: linear-gradient(135deg, #e1e0ff, #8083ff); }
+.site-header .site-menu-toggle { display: none; align-items: center; justify-content: center; width: 44px; height: 44px; padding: .6rem; border: 0; border-radius: .75rem; background: #222a3d; color: #dae2fd; cursor: pointer; }
+.site-header :focus-visible { outline: 3px solid #5de6ff; outline-offset: 3px; }
+.site-mobile { max-width: 1440px; margin: auto; padding: .5rem clamp(1rem, 3vw, 2rem) 1.25rem; }
+.site-mobile a { width: 100%; }
+.site-mobile .site-contact { margin-top: .5rem; }
+.site-header [hidden] { display: none !important; }
+@media (max-width: 1099px) { .site-links { display: none; } .site-header .site-menu-toggle { display: inline-flex; } }
+@media (min-width: 1100px) { .site-mobile { display: none; } }
+@media (max-width: 430px) { .site-header .site-brand { font-size: 1.25rem; } }
+@media (prefers-reduced-motion: reduce) { html { scroll-behavior: auto; } }
+
 /* Frosted-glass surface used in code panels and diagram cards */
 .glass-panel {
   backdrop-filter: blur(12px);

@@ -1,5 +1,17 @@
 # AI session log
 
+## 2026-10-08 - Shared navigation and compact study topics
+
+- **Branch:** `feature/consistent-site-navigation`.
+- **Goal:** Normalize navigation across the portfolio, case studies, study deck and explorer; simplify the study topic list and prevent clipping of its show/hide arrow.
+- **Changed files:** `index.html`, `aws-study-guide.html`, `aws-study-guide/service-explorer.html`, all five `case-studies/*.html` pages, `assets/css/styles.css`, `assets/css/aws-study-guide.css`, `assets/css/aws-service-explorer.css`, `assets/js/main.js`, `assets/js/aws-study-guide.js`, `tests/site-navigation-browser.js`, `ai-session.md`.
+- **Changes:** Added one shared header design and menu order across all eight pages, with root-relative destinations, current-page indicators, visible keyboard focus and accessible mobile toggles. Mobile navigation closes on Escape, outside click and desktop resize. Study topics now contain only section and title in tighter rows; the entire 44px sidebar arrow sits inside its stage with dedicated space. Header keyboard actions preserve the study sidebar state. No dependencies or source notes changed.
+- **Verification:** JavaScript syntax checks and all 11 Node explorer tests pass. Chrome navigation checks passed on all eight pages at 1440x1000 and 375x812, plus the explorer at the 1100px menu breakpoint. Study checks verified compact rows, correct slide navigation, 44px targets and the unclipped arrow in both sidebar states. Real Enter/Escape actions and visible focus passed. All 24 existing explorer browser checks passed, including all 75 service cards. Desktop/mobile screenshots inspected and all local header/asset links resolved. Scoped staged diff checks passed.
+- **Existing limitation:** The lakehouse and AI pair-programming case-study bodies overflow horizontally by 210px and 75px at 375px. Identical overflow was reproduced using their committed versions before this change; all shared headers fit within the viewport.
+- **Preserved work:** User edits in `docs/aws-data-eng-associate.md` remain untouched and excluded from the commit.
+- **Pull request:** Publishing to main remains pending the earlier prerequisite-commit scope clarification; no branch has been pushed and no PR created.
+- **Commit:** `feat: unify site navigation and compact study topics`.
+
 ## 2026-10-08 — Prepared pull request to main; scope pending
 
 - **Branch:** `feature/aws-explorer-embedded-notebook`.

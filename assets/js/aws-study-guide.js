@@ -229,8 +229,7 @@
 
   function renderOverview() {
     elements.topicList.innerHTML = state.slides.map(function (slide, index) {
-      const summary = (slide.paragraphs[0] || slide.listItems[0]?.text || "Open this slide for its study notes.").replace(/\s+/g, " ").trim();
-      return "<button class=\"topic-button\" type=\"button\" data-slide-index=\"" + index + "\"><small>" + escapeHtml(slide.section) + "</small><strong class=\"topic-title\">" + escapeHtml(slide.title) + "</strong><span class=\"topic-summary\">" + escapeHtml(summary) + "</span></button>";
+      return "<button class=\"topic-button\" type=\"button\" data-slide-index=\"" + index + "\"><small>" + escapeHtml(slide.section) + "</small><strong class=\"topic-title\">" + escapeHtml(slide.title) + "</strong></button>";
     }).join("");
     elements.topicList.querySelectorAll("[data-slide-index]").forEach(function (button) {
       button.addEventListener("click", function () { goTo(Number(button.dataset.slideIndex)); });
@@ -260,6 +259,7 @@
     elements.next.addEventListener("click", function () { if (state.index < state.slides.length - 1) goTo(state.index + 1); });
     elements.overviewToggle.addEventListener("click", function () { toggleOverview(elements.workspace.classList.contains("sidebar-hidden")); });
     document.addEventListener("keydown", function (event) {
+      if (event.defaultPrevented || event.target.closest(".site-header")) return;
       if (event.key === "Escape" && !elements.workspace.classList.contains("sidebar-hidden")) { toggleOverview(false); return; }
       if (event.target.closest("button, .study-diagram") && (event.key === "ArrowLeft" || event.key === "ArrowRight")) return;
       if (event.key === "ArrowRight") goTo(state.index + 1);

@@ -14,48 +14,51 @@
   const menuIconClose = document.getElementById("menu-icon-close");
 
   if (menuToggle && mobileMenu) {
-    menuToggle.addEventListener("click", function () {
-      const isOpen = !mobileMenu.classList.contains("hidden");
-
-      if (isOpen) {
-        mobileMenu.classList.add("hidden");
-        menuIconOpen  && menuIconOpen.classList.remove("hidden");
-        menuIconClose && menuIconClose.classList.add("hidden");
-      } else {
-        mobileMenu.classList.remove("hidden");
-        menuIconOpen  && menuIconOpen.classList.add("hidden");
-        menuIconClose && menuIconClose.classList.remove("hidden");
-      }
-    });
+    function setMenu(open) {
+      mobileMenu.hidden = !open;
+      menuToggle.setAttribute("aria-expanded", String(open));
+      menuToggle.setAttribute("aria-label", open ? "Close navigation menu" : "Open navigation menu");
+      if (menuIconOpen) menuIconOpen.toggleAttribute("hidden", open);
+      if (menuIconClose) menuIconClose.toggleAttribute("hidden", !open);
+    }
+    menuToggle.addEventListener("click", function () { setMenu(mobileMenu.hidden); });
 
     // Close menu on nav link click
     mobileMenu.querySelectorAll("a").forEach(function (link) {
       link.addEventListener("click", function () {
-        mobileMenu.classList.add("hidden");
-        menuIconOpen  && menuIconOpen.classList.remove("hidden");
-        menuIconClose && menuIconClose.classList.add("hidden");
+        setMenu(false);
       });
+    });
+    document.addEventListener("keydown", function (event) {
+      if (event.key === "Escape" && !mobileMenu.hidden) {
+        event.preventDefault();
+        setMenu(false);
+        menuToggle.focus();
+      }
+    });
+    document.addEventListener("click", function (event) {
+      if (!mobileMenu.hidden && !event.target.closest(".site-header")) setMenu(false);
+    });
+    window.matchMedia("(min-width: 1100px)").addEventListener("change", function (event) {
+      if (event.matches) setMenu(false);
     });
   }
 
   /* ─── Active Nav Link Highlighting ──────────────────────── */
 
-  const currentPath = window.location.pathname;
-
-  document.querySelectorAll("nav a[data-nav]").forEach(function (link) {
-    const href = link.getAttribute("href");
-    if (!href) return;
-
-    // Exact match for home, prefix match for sub-sections
-    const isActive =
-      href === currentPath ||
-      (href !== "/" && currentPath.startsWith(href));
-
-    if (isActive) {
-      link.classList.add("text-primary", "font-bold", "border-b-2", "border-primary", "pb-1");
-      link.classList.remove("text-slate-400");
-    }
-  });
+  function updateNavigation() {
+    const currentPath = window.location.pathname.replace(/\.html$/, "").replace(/\/$/, "") || "/";
+    document.querySelectorAll(".site-header a[data-nav]").forEach(function (link) {
+      const url = new URL(link.href);
+      const linkPath = url.pathname.replace(/\.html$/, "").replace(/\/$/, "") || "/";
+      const active = linkPath === currentPath && url.hash === window.location.hash ||
+        url.hash === "#case-studies" && currentPath.startsWith("/case-studies/");
+      if (active) link.setAttribute("aria-current", url.hash ? "location" : "page");
+      else link.removeAttribute("aria-current");
+    });
+  }
+  updateNavigation();
+  window.addEventListener("hashchange", updateNavigation);
 
   /* ─── "Get in Touch" CTA scroll ─────────────────────────── */
 
@@ -63,7 +66,7 @@
     btn.addEventListener("click", function () {
       const target = document.getElementById("contact");
       if (target) {
-        target.scrollIntoView({ behavior: "smooth" });
+        target.scrollIntoView({ behavior: window.matchMedia("(prefers-reduced-motion: reduce)").matches ? "auto" : "smooth" });
       } else {
         // Fall back to navigating to the contact anchor on the homepage
         window.location.href = "/#contact";

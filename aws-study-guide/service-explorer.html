@@ -8,17 +8,42 @@
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&family=Space+Grotesk:wght@500;600;700&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="/assets/css/styles.css" />
   <link rel="stylesheet" href="/assets/css/aws-service-explorer.css" />
   <script defer src="/assets/js/aws-explorer-data.js"></script>
   <script defer src="/assets/js/aws-explorer-sources.js"></script>
   <script defer src="/assets/js/aws-explorer-core.js"></script>
   <script defer src="/assets/js/aws-service-explorer.js"></script>
+  <script defer src="/assets/js/main.js"></script>
 </head>
 <body>
   <a class="skip-link" href="#service-search">Skip to service search</a>
-  <header class="explorer-header">
-    <a class="brand" href="/">Raphael Miranda</a>
-    <nav aria-label="Study guide"><a href="/aws-study-guide.html">← Study deck</a><a href="/aws-study-guide/service-explorer.html" aria-current="page">Service explorer</a></nav>
+  <header class="site-header">
+    <nav class="site-nav" aria-label="Primary navigation">
+      <a class="site-brand" href="/">Raphael Miranda</a>
+      <div class="site-links">
+        <a data-nav href="/">Home</a>
+        <a data-nav href="/#timeline">Timeline</a>
+        <a data-nav href="/#skills">Skills</a>
+        <a data-nav href="/#case-studies">Case Studies</a>
+        <a data-nav href="/aws-study-guide.html">AWS Study Guide</a>
+        <a data-nav href="/aws-study-guide/service-explorer.html" aria-current="page">Service Explorer</a>
+        <a class="site-contact" href="/#contact">Get in Touch</a>
+      </div>
+      <button class="site-menu-toggle" id="menu-toggle" type="button" aria-label="Open navigation menu" aria-expanded="false" aria-controls="mobile-menu">
+        <svg id="menu-icon-open" viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="M4 6h16M4 12h16M4 18h16" /></svg>
+        <svg id="menu-icon-close" viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true" hidden><path d="m6 6 12 12M6 18 18 6" /></svg>
+      </button>
+    </nav>
+    <nav id="mobile-menu" class="site-mobile" aria-label="Mobile navigation" hidden>
+        <a data-nav href="/">Home</a>
+        <a data-nav href="/#timeline">Timeline</a>
+        <a data-nav href="/#skills">Skills</a>
+        <a data-nav href="/#case-studies">Case Studies</a>
+        <a data-nav href="/aws-study-guide.html">AWS Study Guide</a>
+        <a data-nav href="/aws-study-guide/service-explorer.html" aria-current="page">Service Explorer</a>
+      <a class="site-contact" href="/#contact">Get in Touch</a>
+    </nav>
   </header>
   <main class="explorer-shell">
     <section class="intro" aria-labelledby="page-title">
