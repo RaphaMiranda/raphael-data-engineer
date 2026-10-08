@@ -1,6 +1,6 @@
 # AWS service relationship explorer
 
-Open `/aws-study-guide/service-explorer.html` from **Service explorer** in the AWS study deck. Serve the repository root; there is no build step or runtime package dependency.
+Choose **Service Explorer** in the site menu to open `/aws-study-guide/explorer.html`, then use **Start Explorer** to enter the tool at `/aws-study-guide/service-explorer.html`. The tool address also remains available for direct access. Serve the repository root; there is no build step or runtime package dependency.
 
 ## Coverage and provenance
 

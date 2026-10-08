@@ -7,6 +7,7 @@ A static portfolio for Raphael Miranda, with case studies and a focused AWS Cert
 - `/` — portfolio, professional timeline, skills, and case studies.
 - `/case-studies/*.html` — individual project case studies.
 - `/aws-study-guide.html` — interactive, keyboard-friendly study deck generated from the notes in `docs/aws-data-eng-associate.md`.
+- `/aws-study-guide/explorer.html` - explorer introduction with a hero and **Start Explorer** link into the workspace.
 - `/aws-study-guide/service-explorer.html` — source-backed AWS service flashcards and an interactive relationship map. Covers 75 distinct entries from the retrieved DEA-C01 scope and 63 curated relationships. See [coverage and maintenance notes](docs/aws-service-explorer.md).
 
 ## Study deck

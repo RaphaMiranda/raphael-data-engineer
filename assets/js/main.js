@@ -52,6 +52,7 @@
       const url = new URL(link.href);
       const linkPath = url.pathname.replace(/\.html$/, "").replace(/\/$/, "") || "/";
       const active = linkPath === currentPath && url.hash === window.location.hash ||
+        linkPath === "/aws-study-guide/explorer" && currentPath === "/aws-study-guide/service-explorer" ||
         url.hash === "#case-studies" && currentPath.startsWith("/case-studies/");
       if (active) link.setAttribute("aria-current", url.hash ? "location" : "page");
       else link.removeAttribute("aria-current");

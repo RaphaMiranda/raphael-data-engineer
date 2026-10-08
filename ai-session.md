@@ -1,5 +1,16 @@
 # AI session log
 
+## 2026-10-08 - AWS Explorer hero landing page
+
+- **Branch:** `feature/aws-explorer-landing`.
+- **Goal:** Introduce the AWS Explorer with a large headline, hero background and Start Explorer entry button.
+- **Changed files:** `aws-study-guide/explorer.html`, `assets/css/aws-explorer-landing.css`, `assets/images/aws-explorer-hero.svg`, `assets/js/main.js`, `index.html`, `aws-study-guide.html`, `aws-study-guide/service-explorer.html`, all five `case-studies/*.html` pages, `tests/aws-explorer.test.js`, `README.md`, `docs/aws-service-explorer.md`, `ai-session.md`.
+- **Changes:** Added a full-height navy hero with oversized typography, a decorative static infrastructure schematic and a single Start Explorer link styled as the primary button. Shared menus now open the landing page; the existing tool address remains available directly. The Service Explorer menu remains active inside the tool. The landing page loads only shared navigation JavaScript and works without JavaScript; the explorer data and map load after entry. No new dependencies or AWS factual claims were added.
+- **Verification:** All 11 Node tests and shared JavaScript syntax checks pass. Chrome navigation checks passed on the landing page at 1440x1000 (9 checks) and 375x812 (13 checks), and on the tool at 375px (13 checks). Desktop/mobile screenshots inspected; no hero or header overflow. Start Explorer activated with real Enter at both widths, with a visible focus outline and 56px target. A fresh desktop tool session rendered all 75 service cards and opened the S3 notebook; no runtime errors reported. All local assets/links and two landing menu destinations per page resolve across all nine pages. Scoped diff checks passed.
+- **Verification limitation:** The optional full explorer interaction sweep lost the browser daemon connection; focused entry, navigation, card-count and notebook checks passed in a fresh session. Explorer rendering and interaction code were unchanged.
+- **Preserved work:** User edits in `docs/aws-data-eng-associate.md` remain untouched and excluded from the commit. The earlier PR scope clarification remains pending.
+- **Commit:** `feat: add AWS Explorer hero landing page`.
+
 ## 2026-10-08 - Shared navigation and compact study topics
 
 - **Branch:** `feature/consistent-site-navigation`.

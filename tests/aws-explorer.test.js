@@ -113,7 +113,9 @@ test('all declared sources have a substantive successful retrieval without unres
 });
 
 test('new page and study navigation use local root-relative assets that exist', () => {
-  const html = fs.readFileSync(path.join(__dirname, '../aws-study-guide/service-explorer.html'), 'utf8');
-  for (const match of html.matchAll(/(?:src|href)="(\/[^"#]+)"/g)) assert.ok(fs.existsSync(path.join(__dirname, '..', match[1])), match[1]);
-  assert.ok(fs.readFileSync(path.join(__dirname, '../aws-study-guide.html'), 'utf8').includes('/aws-study-guide/service-explorer.html'));
+  for (const page of ['explorer.html', 'service-explorer.html']) {
+    const html = fs.readFileSync(path.join(__dirname, '../aws-study-guide', page), 'utf8');
+    for (const match of html.matchAll(/(?:src|href)="(\/[^"#]+)"/g)) assert.ok(fs.existsSync(path.join(__dirname, '..', match[1])), match[1]);
+  }
+  assert.ok(fs.readFileSync(path.join(__dirname, '../aws-study-guide.html'), 'utf8').includes('/aws-study-guide/explorer.html'));
 });

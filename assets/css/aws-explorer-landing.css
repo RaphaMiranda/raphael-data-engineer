@@ -1,0 +1,25 @@
+:root { color-scheme: dark; }
+* { box-sizing: border-box; }
+body { margin: 0; background: #0b1326; color: #dae2fd; font-family: Inter, sans-serif; }
+.explorer-hero { position: relative; isolation: isolate; overflow: hidden; min-height: calc(100svh - 80px); display: flex; align-items: center; background: #080f20; }
+.explorer-hero::before { content: ""; position: absolute; z-index: -2; inset: 0; background: radial-gradient(ellipse at 80% 40%, #243654 0, transparent 65%), url('/assets/images/aws-explorer-hero.svg') right center / auto 110% no-repeat; background-blend-mode: screen; }
+.explorer-hero::after { content: ""; position: absolute; z-index: -1; inset: 0; background: linear-gradient(90deg, #080f20 0%, rgba(8, 15, 32, .94) 30%, rgba(8, 15, 32, .28) 75%), linear-gradient(0deg, #0b1326, transparent 30%); }
+.hero-content { width: 100%; max-width: 1440px; margin: auto; padding: clamp(4rem, 8vw, 8rem) clamp(1.25rem, 6vw, 6rem); }
+.hero-eyebrow { margin: 0 0 2rem; color: #5de6ff; font: 500 .75rem/1.6 'JetBrains Mono', monospace; letter-spacing: .14em; text-transform: uppercase; }
+.explorer-hero h1 { max-width: 10ch; margin: 0; font: 700 clamp(3.5rem, 7.7vw, 7.5rem)/.98 'Space Grotesk', sans-serif; letter-spacing: -.055em; }
+.explorer-hero h1 span { display: block; color: #c0c1ff; background: linear-gradient(135deg, #c0c1ff, #8083ff); background-clip: text; -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
+.hero-description { max-width: 35rem; margin: 2rem 0 2.5rem; color: #aebad3; font-size: clamp(1rem, 1.5vw, 1.2rem); line-height: 1.75; }
+.start-explorer { display: inline-flex; align-items: center; justify-content: center; gap: 1.5rem; min-height: 56px; padding: 1rem 1.5rem; border-radius: .75rem; background: linear-gradient(135deg, #c0c1ff, #8083ff); color: #1000a9; font-weight: 700; text-decoration: none; transition: background .2s ease; }
+.start-explorer:hover { background: linear-gradient(135deg, #e1e0ff, #8083ff); }
+.start-explorer:focus-visible, .hero-skip:focus-visible { outline: 3px solid #5de6ff; outline-offset: 5px; }
+.hero-caption { margin: 2.5rem 0 0; color: #aebad3; font: 400 .7rem/1.8 'JetBrains Mono', monospace; }
+.hero-skip { position: absolute; z-index: 100; top: .75rem; left: 1rem; padding: .75rem 1rem; border-radius: .75rem; background: #222b40; color: #dae2fd; transform: translateY(-200%); }
+.hero-skip:focus { transform: translateY(0); }
+@media (max-width: 720px) {
+  .explorer-hero::before { background-position: center, 65% center; background-size: auto, auto 100%; opacity: .65; }
+  .explorer-hero::after { background: linear-gradient(90deg, rgba(8, 15, 32, .94), rgba(8, 15, 32, .65)), linear-gradient(0deg, #0b1326, transparent 50%); }
+  .hero-content { padding-block: 4rem; }
+  .hero-eyebrow { font-size: .65rem; margin-bottom: 1.5rem; }
+  .hero-description { margin-top: 1.5rem; }
+}
+@media (prefers-reduced-motion: reduce) { .start-explorer { transition: none; } }

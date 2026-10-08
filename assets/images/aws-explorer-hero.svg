@@ -1,0 +1,28 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="1000" viewBox="0 0 1200 1000" fill="none">
+  <defs>
+    <pattern id="dots" width="32" height="32" patternUnits="userSpaceOnUse"><circle cx="1" cy="1" r="1" fill="#7887ac" opacity=".2" /></pattern>
+    <linearGradient id="flow" x1="300" y1="800" x2="1100" y2="200" gradientUnits="userSpaceOnUse"><stop stop-color="#8083ff" stop-opacity=".1"/><stop offset=".6" stop-color="#5de6ff" stop-opacity=".65"/><stop offset="1" stop-color="#4edea3" stop-opacity=".25"/></linearGradient>
+    <linearGradient id="tile" x1="-60" y1="-60" x2="60" y2="60" gradientUnits="userSpaceOnUse"><stop stop-color="#35456b"/><stop offset="1" stop-color="#172138"/></linearGradient>
+    <g id="node"><path d="M0-48 64-16V16L0 48-64 16V-16Z" fill="#0b1326"/><path d="m0-48 64 32L0 16-64-16Z" fill="url(#tile)"/><path d="M0 16V48M-64-16 0 16 64-16" stroke="#8083ff" stroke-opacity=".4"/><path d="m-14-18 14-7 14 7-14 7Z" fill="#5de6ff" fill-opacity=".8"/></g>
+  </defs>
+  <path fill="url(#dots)" d="M0 0h1200v1000H0z"/>
+  <g stroke="url(#flow)" stroke-width="2">
+    <path d="m180 770 200-100 180 90 180-90 180 90 200-100"/>
+    <path d="m380 670 180-90V380l180-90 180 90v380"/>
+    <path d="m200 480 180 90 180-90 180 90 180-90 180 90"/>
+    <path d="m380 570 180-90 180-90V190l180-90"/>
+    <path d="m560 760 180-90V570l180-90 200 100"/>
+    <path d="m560 380 180 90 180-90 200 100"/>
+    <path d="m740 290 180-90 200 100" stroke-dasharray="6 8"/>
+    <path d="m560 580 180 90 180-90" stroke-dasharray="6 8"/>
+  </g>
+  <g opacity=".9">
+    <use href="#node" x="380" y="670"/><use href="#node" x="560" y="580"/>
+    <use href="#node" x="740" y="670"/><use href="#node" x="920" y="760"/>
+    <use href="#node" x="560" y="380"/><use href="#node" x="740" y="290"/>
+    <use href="#node" x="920" y="380"/><use href="#node" x="740" y="570"/>
+    <use href="#node" x="920" y="480"/><use href="#node" x="740" y="190"/>
+    <use href="#node" x="1120" y="300"/><use href="#node" x="1120" y="660"/>
+  </g>
+  <g fill="#4edea3"><circle cx="740" cy="390" r="4"/><circle cx="560" cy="480" r="4"/><circle cx="920" cy="200" r="4"/></g>
+</svg>
