@@ -1,5 +1,17 @@
 # AI session log
 
+## 2026-10-08 — AWS service relationship explorer
+
+- **Branch:** `feature/aws-service-explorer`.
+- **Goal:** Build and fully validate a source-backed child page of the AWS Study Guide for DEA-C01 service selection, flashcards and documented relationships.
+- **Changed files:** `.gitignore`, `README.md`, `ai-session.md`, `aws-study-guide.html`, `aws-study-guide/service-explorer.html`, `assets/css/aws-study-guide.css`, `assets/css/aws-service-explorer.css`, `assets/js/aws-explorer-data.js`, `assets/js/aws-explorer-core.js`, `assets/js/aws-explorer-sources.js`, `assets/js/aws-service-explorer.js`, `docs/aws-explorer-source-audit.json`, `docs/aws-service-explorer.md`, `scripts/verify-aws-explorer-sources.py`, `tests/aws-explorer.test.js`, `tests/aws-explorer-browser.js`, `tests/aws-explorer-relationships-browser.js`.
+- **Coverage:** Retrieved the official scope and four domain/task pages on 8 October 2026. Deduplicated 77 listed entries into 75 services/features, retaining aliases and both SageMaker categories. Added complete service cards and 63 documented features, integrations and architecture patterns, with directed flows, whole participant sets, prerequisites, tradeoffs, editorial task mappings and source dates. Both required Redshift examples distinguish Spectrum, COPY, UNLOAD and PostgreSQL/MySQL federation. Retained current availability notes for historical scope entries. Audited 148 substantive official documentation URLs, resolved moved links and verified exam task anchors.
+- **Interactions:** Shared graph/list selection, multiple chips, individual removal, clear-all, name/alias/capability search, combined filters, zoom/pan/fit, focused neighborhoods, relationship focus, recall disclosures, honest all-selected/subset/empty results, keyboard controls, visible focus and responsive notebook navigation. The full map opens at a readable scale; relationship junctions preserve multi-service patterns. No runtime dependency or build tooling was added.
+- **Verification:** All 11 Node built-in tests pass; all JavaScript syntax checks pass. Isolated Chrome checks at 1440×1000 and 375×812 exercised all 75 service cards, all 63 relationship cards and 24 interaction/layout assertions at each width. All relationship-card sweeps took approximately 1.3 seconds per viewport. Desktop/mobile screenshots inspected and connector routing improved. Real Enter activation and pointer dragging passed; keyboard focus remained visible; reduced motion was verified; study-deck navigation worked; browser reported no runtime errors. HTTP checks returned 200 for all 13 local pages/assets/documentation paths tested. Scoped staged `git diff --check` passed.
+- **Preserved work:** Existing user edits in `docs/aws-data-eng-associate.md` were left untouched and excluded from the commit.
+- **Boundaries:** AWS's scope is non-exhaustive. Relationships are curated exam-relevant coverage, not every theoretical combination; unsupported pairs remain explicit empty states. Browser checks do not constitute a full assistive-technology audit.
+- **Commit:** `feat: add source-backed AWS service relationship explorer`.
+
 ## 2026-10-07 — AWS Data Engineer Associate study deck
 
 - **Branch:** `feature/aws-data-engineer-study-guide`

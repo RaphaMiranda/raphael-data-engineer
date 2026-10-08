@@ -7,6 +7,7 @@ A static portfolio for Raphael Miranda, with case studies and a focused AWS Cert
 - `/` — portfolio, professional timeline, skills, and case studies.
 - `/case-studies/*.html` — individual project case studies.
 - `/aws-study-guide.html` — interactive, keyboard-friendly study deck generated from the notes in `docs/aws-data-eng-associate.md`.
+- `/aws-study-guide/service-explorer.html` — source-backed AWS service flashcards and an interactive relationship map. Covers 75 distinct entries from the retrieved DEA-C01 scope and 63 curated relationships. See [coverage and maintenance notes](docs/aws-service-explorer.md).
 
 ## Study deck
 
@@ -29,6 +30,8 @@ npx serve .
 Then open the local address printed by the server. Serving the folder is needed for the study deck to load its Markdown source.
 
 ## Conventions
+
+Explorer checks use Node's built-in runner: `node --test tests/aws-explorer.test.js`. Browser interaction checks and official-source verification are documented in [the explorer guide](docs/aws-service-explorer.md).
 
 - Plain HTML, CSS, and vanilla JavaScript only.
 - Shared styles belong in `assets/css/styles.css`; shared behaviour belongs in `assets/js/main.js`.

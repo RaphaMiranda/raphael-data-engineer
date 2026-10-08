@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="description" content="Explore source-backed AWS service cards and data engineering relationships for DEA-C01." />
+  <title>AWS Service Explorer | AWS Study Guide</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&family=Space+Grotesk:wght@500;600;700&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="/assets/css/aws-service-explorer.css" />
+  <script defer src="/assets/js/aws-explorer-data.js"></script>
+  <script defer src="/assets/js/aws-explorer-sources.js"></script>
+  <script defer src="/assets/js/aws-explorer-core.js"></script>
+  <script defer src="/assets/js/aws-service-explorer.js"></script>
+</head>
+<body>
+  <a class="skip-link" href="#service-list">Skip to service list</a>
+  <header class="explorer-header">
+    <a class="brand" href="/">Raphael Miranda</a>
+    <nav aria-label="Study guide"><a href="/aws-study-guide.html">← Study deck</a><a href="/aws-study-guide/service-explorer.html" aria-current="page">Service explorer</a></nav>
+  </header>
+  <main class="explorer-shell">
+    <section class="intro" aria-labelledby="page-title">
+      <div><p class="eyebrow">DEA-C01 / Architecture lab</p><h1 id="page-title">Learn the services.<br /><span>Connect the system.</span></h1><p class="lede">Select one service for a study card. Combine services to uncover documented integrations and architecture patterns.</p></div>
+      <div class="scope-summary"><p class="eyebrow">Source-backed study material</p><p id="coverage">Loading coverage…</p><p>Scope retrieved <time datetime="2026-10-08">8 October 2026</time>. AWS’s list is non-exhaustive and subject to change.</p><a href="https://docs.aws.amazon.com/aws-certification/latest/data-engineer-associate-01/dea-01-in-scope-services.html">Official service scope ↗</a></div>
+    </section>
+    <section class="selection-bar" aria-label="Selected services">
+      <div><p class="eyebrow">Your working set</p><div id="selection-chips"><span class="muted">No services selected</span></div></div>
+      <button id="clear-selection" type="button" disabled>Clear all</button>
+      <a class="small" href="#details-heading">View notebook ↓</a>
+    </section>
+    <div class="examples" aria-label="Example selections"><span class="muted">Try a connection</span><button type="button" data-preset="s3,redshift">S3 + Redshift</button><button type="button" data-preset="rds,redshift,s3">RDS + Redshift + S3</button><button type="button" data-preset="kinesis,firehose,s3">Stream → lake</button><button type="button" data-preset="s3,glue,athena,lakeformation">Governed lake</button></div>
+    <div class="workspace">
+      <section class="map-panel" aria-labelledby="map-heading">
+        <div class="panel-heading"><div><p class="eyebrow">System map</p><h2 id="map-heading">Service relationships</h2></div><span class="mono" id="graph-count"></span></div>
+        <div class="filters">
+          <label class="search-label">Search services<input id="service-search" type="search" placeholder="S3, CDC, Kafka…" autocomplete="off" /></label>
+          <label>AWS category<select id="category-filter"><option value="">All categories</option></select></label>
+          <label>Exam domain<select id="domain-filter"><option value="">All domains</option></select></label>
+          <button id="reset-filters" type="button">Reset filters</button>
+        </div>
+        <div class="graph-toolbar" aria-label="Graph controls">
+          <button id="zoom-out" type="button" aria-label="Zoom out">−</button><output id="zoom-level" aria-label="Graph zoom">100%</output><button id="zoom-in" type="button" aria-label="Zoom in">+</button><button id="fit-graph" type="button">Fit view</button>
+          <label class="check-label"><input id="focus-neighborhood" type="checkbox" checked /> Focus neighborhood</label>
+        </div>
+        <label class="pattern-label">Map relationship<select id="graph-pattern"><option value="">Relevant relationships</option></select></label>
+        <div id="graph-viewport" class="graph-viewport" tabindex="0" aria-label="Service map. Arrow keys pan; plus and minus zoom; zero fits. Use the service list below for all selections." aria-describedby="graph-help">
+          <svg id="service-graph" xmlns="http://www.w3.org/2000/svg" role="group" aria-label="Selectable AWS services and relationship junctions"><defs><marker id="arrow-data" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse"><path d="M0 0 L10 5 L0 10z" fill="#5de6ff" /></marker></defs><g id="graph-world"></g></svg>
+          <p id="graph-empty" class="graph-empty" hidden>No services match these filters. Reset filters to explore again.</p>
+        </div>
+        <p id="graph-help" class="map-help">The full map opens at a readable scale; pan or filter to explore. Fit view shows the overview. Drag the background to pan; use + / − to zoom. Select with click, Enter or Space. Junctions represent whole relationships; they do not imply every service pair integrates.</p>
+        <div class="legend"><span>● Selected service</span><span>◇ Relationship junction</span><span>→ Data flow</span><span>┄ Control / metadata</span></div>
+        <div class="list-heading"><h3>Accessible service list</h3><span id="list-count" class="mono"></span></div>
+        <p class="muted small">The list and map share selections. Filters never remove your working set.</p>
+        <div id="service-list" class="service-list" tabindex="-1" aria-label="Services matching filters"></div>
+      </section>
+      <aside class="details-panel" aria-labelledby="details-heading">
+        <div class="panel-heading"><div><p class="eyebrow">Study notebook</p><h2 id="details-heading">Explore a service</h2></div><a class="small" href="#service-list">Choose services ↓</a></div>
+        <div id="study-details"><p>Select a service in the list or map to begin.</p></div>
+      </aside>
+    </div>
+    <p class="sr-only" id="selection-status" role="status" aria-live="polite"></p>
+    <footer class="explorer-footer"><p>Editorial study summaries verified against linked AWS sources. Exam mappings are study guidance. Coverage does not imply every possible exam topic or service combination.</p><a href="/docs/aws-explorer-source-audit.json">Source retrieval audit</a><a href="/docs/aws-service-explorer.md">Content & maintenance notes</a></footer>
+    <noscript><p>This interactive explorer requires JavaScript. Read the <a href="https://docs.aws.amazon.com/aws-certification/latest/data-engineer-associate-01/dea-01-in-scope-services.html">official AWS service list</a> and <a href="/docs/aws-service-explorer.md">coverage notes</a>.</p></noscript>
+  </main>
+</body>
+</html>
