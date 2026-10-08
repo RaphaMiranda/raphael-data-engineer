@@ -39,13 +39,19 @@
   }
   function renderDetails() {
     const panel = $('study-details');
-    $('details-heading').textContent = selected.length === 1 ? 'Service flashcard' : selected.length > 1 ? 'Connections notebook' : 'Explore a service';
+    $('notebook').hidden = !selected.length;
+    $('notebook-link').hidden = !selected.length;
+    $('map-stage').classList.toggle('has-notebook', !!selected.length);
     if (!selected.length) {
-      panel.innerHTML = `<div class="empty-state"><h3>Start with a question.</h3><p>What stores your data? What transforms it? What governs access?</p><p>Select one service for capabilities, tradeoffs and a recall question. Select more to compare documented connections.</p></div><section class="card-section"><h3>Four exam lenses</h3>${data.domains.map(d => `<p><a href="${d.source}">${d.id}. ${esc(d.name)}</a> <span class="mono">${d.weight}</span></p>`).join('')}</section><p class="small muted">Historical names remain searchable. SageMaker AI and S3 Tables appear more than once in the official list and are deduplicated here. Relationships are curated; absence of a result does not prove that integration is impossible.</p>`;
-    } else if (selected.length === 1) panel.innerHTML = serviceCard(byId.get(selected[0]));
-    else {
+      panel.replaceChildren();
+    } else if (selected.length === 1) {
+      const service = byId.get(selected[0]);
+      panel.innerHTML = `<div class="notebook-summary"><p class="eyebrow">${esc(service.categories.join(' / '))}</p><h3>${esc(service.name)}</h3><p>${esc(service.description)}</p><h4>Use it when…</h4><p>${esc(service.choose)}</p></div><details id="notebook-more" class="notebook-more"><summary>More details · notes, recall & sources</summary>${serviceCard(service)}</details>`;
+    } else {
       const matches = core.matchRelationships(data.relationships, selected);
-      panel.innerHTML = `<h3>Involving all ${selected.length} selected services</h3><p class="small muted">Results may need additional participants or supporting services, identified in each card.</p>${matches.all.length ? matches.all.map(relationshipCard).join('') : `<div class="empty-state"><p>No verified relationship involving all selected services is recorded in this dataset.</p><p>Try a smaller working set or review the official documentation. We do not infer connections from shared categories.</p></div>`}${matches.subset.length ? `<h3 class="subset-heading">Relationships involving a subset</h3><p class="small muted">These results include at least two of your selected services, but do not connect the entire working set.</p>${matches.subset.map(relationshipCard).join('')}` : ''}`;
+      const relationship = relevantRelationships().find(r => r.id === pattern) || matches.all[0] || matches.subset[0];
+      const summary = relationship ? `<p class="eyebrow">${matches.all.includes(relationship) ? 'Selected connection' : 'Subset of your selection'}</p><h3>${esc(relationship.name)}</h3><p>${esc(relationship.why)}</p>${relationship.participants.some(id => !selected.includes(id)) ? `<p class="additional">Also needs: ${relationship.participants.filter(id => !selected.includes(id)).map(id => esc(byId.get(id).name)).join(', ')}.</p>` : ''}<h4>How they connect</h4><ol class="flow-list">${relationship.flow.slice(0, 2).map(f => `<li>${esc(shortName(f.from))} → ${esc(shortName(f.to))}: ${esc(f.label)}${f.type === 'control' ? ' (control / metadata)' : ''}</li>`).join('')}</ol>${relationship.flow.length > 2 ? '<p class="small muted">Full flow in More details.</p>' : ''}<h4>Main tradeoffs</h4><p>${esc(relationship.tradeoffs)}</p>` : '<h3>No verified relationship</h3><p>Try fewer services or another combination. A missing result does not mean integration is impossible.</p>';
+      panel.innerHTML = `<div class="notebook-summary">${summary}<p class="small muted">${matches.all.length} whole-selection matches · ${matches.subset.length} subset matches. Use the relationship selector to explore another.</p></div><details id="notebook-more" class="notebook-more"><summary>More details · all matches & sources</summary><h3>Involving all ${selected.length} selected services</h3><p class="small muted">Results may need additional participants or supporting services, identified in each card.</p>${matches.all.length ? matches.all.map(relationshipCard).join('') : `<div class="empty-state"><p>No verified relationship involving all selected services is recorded in this dataset.</p><p>Try a smaller working set or review the official documentation. We do not infer connections from shared categories.</p></div>`}${matches.subset.length ? `<h3 class="subset-heading">Relationships involving a subset</h3><p class="small muted">These results include at least two of your selected services, but do not connect the entire working set.</p>${matches.subset.map(relationshipCard).join('')}` : ''}</details>`;
     }
     panel.parentElement.scrollTop = 0;
   }
@@ -55,7 +61,7 @@
     $('selection-status').textContent = selected.length ? `${selected.length} selected: ${selected.map(id => byId.get(id).name).join(', ')}. ${selected.length === 1 ? 'Service flashcard' : 'Relationships'} updated in study notebook.` : 'Selection cleared. Choose a service.';
     const relevant = relevantRelationships();
     if (!relevant.some(r => r.id === pattern)) pattern = '';
-    $('graph-pattern').innerHTML = '<option value="">Relevant relationships (up to 3)</option>' + relevant.map(r => `<option value="${r.id}">${esc(r.name)}</option>`).join('');
+    $('graph-pattern').innerHTML = '<option value="">Suggested relationship</option>' + relevant.map(r => `<option value="${r.id}">${esc(r.name)}</option>`).join('');
     $('graph-pattern').value = pattern;
     $('graph-pattern').disabled = !relevant.length;
     renderDetails();
@@ -70,6 +76,9 @@
     const active = document.activeElement;
     const listFocus = active?.closest('#service-list') ? active.dataset.service : null;
     const visible = core.filterServices(data.services, filters());
+    const activeFilters = [$('category-filter').value, $('domain-filter').value].filter(Boolean).length;
+    $('filter-indicator').textContent = activeFilters ? ` · ${activeFilters} active` : '';
+    $('filter-indicator').classList.toggle('sr-only', !activeFilters);
     $('list-count').textContent = `${visible.length} / ${data.services.length}`;
     $('service-list').innerHTML = visible.length ? visible.map(s => `<button class="service-option" type="button" data-service="${s.id}" aria-pressed="${selected.includes(s.id)}"><span>${esc(s.name)}</span><small>${esc(s.categories.join(' / '))}</small></button>`).join('') : '<p class="empty-state">No services match. Try another search or reset filters.</p>';
     renderGraph(visible);
@@ -94,7 +103,7 @@
     const world = $('graph-world');
     world.replaceChildren();
     const relevant = relevantRelationships();
-    const connections = pattern ? relevant.filter(r => r.id === pattern) : relevant.slice(0, 3);
+    const connections = pattern ? relevant.filter(r => r.id === pattern) : relevant.slice(0, 1);
     let visible = filtered;
     if (selected.length && $('focus-neighborhood').checked) {
       const neighbors = new Set(connections.flatMap(r => r.participants));
@@ -153,7 +162,7 @@
     const hiddenParticipants = new Set(connections.flatMap(r => r.participants).filter(id => !positions.has(id))).size;
     $('graph-count').textContent = `${visible.length} nodes · ${connections.length} junctions${hiddenParticipants ? ` · ${hiddenParticipants} filtered participants` : ''}`;
     fitGraph();
-    if (!selected.length && zoom < .72) { zoom = .72; pan = { x: 12, y: 12 }; transform(); }
+    if (!selected.length && zoom < .72) { zoom = .72; pan = { x: Math.max(12, (viewport.clientWidth - bounds.width * zoom) / 2), y: 12 }; transform(); }
     if (graphFocus) world.querySelector(`[data-service="${graphFocus}"]`)?.focus({ preventScroll: true });
   }
   function transform() {
@@ -193,9 +202,17 @@
     }
   });
   $('clear-selection').addEventListener('click', () => setSelection([], '#service-search'));
-  $('service-search').addEventListener('input', renderServices);
-  ['category-filter', 'domain-filter', 'focus-neighborhood'].forEach(id => $(id).addEventListener('change', renderServices));
-  $('graph-pattern').addEventListener('change', () => { pattern = $('graph-pattern').value; renderServices(); });
+  $('service-search').addEventListener('input', () => { $('service-picker').open = true; renderServices(); });
+  ['category-filter', 'domain-filter'].forEach(id => $(id).addEventListener('change', () => { $('service-picker').open = true; renderServices(); }));
+  $('focus-neighborhood').addEventListener('change', renderServices);
+  $('graph-pattern').addEventListener('change', () => { pattern = $('graph-pattern').value; renderDetails(); renderServices(); });
+  document.querySelector('a[href="#service-picker"]').addEventListener('click', event => {
+    event.preventDefault();
+    $('service-picker').open = true;
+    const summary = $('service-picker').querySelector('summary');
+    summary.focus();
+    summary.scrollIntoView({ block: 'nearest' });
+  });
   $('reset-filters').addEventListener('click', () => { $('service-search').value = ''; $('category-filter').value = ''; $('domain-filter').value = ''; renderServices(); });
   $('zoom-in').addEventListener('click', () => zoomBy(1.25));
   $('zoom-out').addEventListener('click', () => zoomBy(.8));

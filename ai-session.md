@@ -1,5 +1,15 @@
 # AI session log
 
+## 2026-10-08 — Simplified explorer with embedded notebook
+
+- **Branch:** `feature/aws-explorer-embedded-notebook`.
+- **Goal:** Simplify the explorer into one map workspace and embed a contextual notebook with full notes available on demand.
+- **Changed files:** `aws-study-guide/service-explorer.html`, `assets/css/aws-service-explorer.css`, `assets/js/aws-service-explorer.js`, `docs/aws-service-explorer.md`, `tests/aws-explorer-browser.js`, `tests/aws-explorer-relationships-browser.js`, `tests/aws-explorer-notebook-browser.js`, `ai-session.md`.
+- **Changes:** Replaced the large introduction and separate notebook column with a compact heading, search/filter toolbar, collapsible service picker and an embedded notebook card. Search/filter changes open the picker; active filter counts stay visible. Service cards lead with description and selection guidance; connection cards lead with one relationship, explicit flows and tradeoffs. More details retains complete notes, recall, all/subset matches and sources. The map suggests one relationship at a time and the selector updates its preview. The notebook reserves space on desktop and docks below the canvas on mobile. Optional examples, map settings and provenance start collapsed. Picker navigation explicitly opens and focuses its disclosure; notebook keys remain independent of map controls. No dependencies or study data were changed.
+- **Verification:** All 11 Node tests and changed JavaScript syntax checks pass. Chrome at 1440×1000 and 375×1000 passed all 24 interaction/layout assertions, all 75 service cards, and all 63 relationship cards/previews. Final notebook checks passed 20 assertions at 1440×1000 and 21 at 375×812, covering initial disclosure state, selection resets, one-relationship display, preview synchronization, filter indicators, reserved map space and picker focus. Desktop and mobile screenshots inspected; mobile graph readability improved by reducing simultaneous junctions. Real Tab/Enter service selection and full-notes disclosure passed with visible focus. Actual notebook picker navigation and study-deck navigation passed; IDs remained unique; browser reported no runtime errors. All five local page/asset/documentation HTTP checks returned 200. Scoped staged `git diff --check` passed.
+- **Preserved work:** User changes in `docs/aws-data-eng-associate.md` remain untouched and excluded from the commit.
+- **Commit:** `feat: simplify AWS explorer with embedded notebook`.
+
 ## 2026-10-08 — Service-first explorer layout
 
 - **Branch:** `feature/aws-service-explorer`.

@@ -9,6 +9,7 @@
   const change = (id, value, type = 'change') => { $(id).value = value; $(id).dispatchEvent(new Event(type, { bubbles: true })); };
   $('clear-selection').click();
   $('reset-filters').click();
+  $('service-picker').open = true;
   assert(document.querySelectorAll('#service-list button').length === 75, 'All 75 services render');
   for (const s of window.awsExplorerData.services) {
     clickService(s.id);
@@ -19,11 +20,12 @@
   }
   assert(true, 'Every service card renders with recall and synchronized selection');
   clickService('s3');
-  const summary = document.querySelector('#study-details summary');
+  $('notebook-more').open = true;
+  const summary = document.querySelector('#study-details .recall-box summary');
   summary.click();
-  assert(document.querySelector('#study-details details').open, 'Recall answer reveals');
+  assert(document.querySelector('#study-details .recall-box details').open, 'Recall answer reveals');
   summary.click();
-  assert(!document.querySelector('#study-details details').open, 'Recall answer hides');
+  assert(!document.querySelector('#study-details .recall-box details').open, 'Recall answer hides');
   clickService('redshift');
   assert(['Redshift Spectrum', 'COPY from S3', 'UNLOAD to S3'].every(t => details().includes(t)), 'Required S3 + Redshift mechanisms render');
   assert(document.querySelectorAll('#selection-chips button').length === 2, 'Multiple selection chips render');
@@ -68,6 +70,6 @@
   document.activeElement.dispatchEvent(new KeyboardEvent('keydown', { key: ' ', bubbles: true }));
   assert(!$('selection-chips').querySelector('button'), 'Graph keyboard deselection works');
   assert(document.documentElement.scrollWidth <= window.innerWidth, 'No horizontal page overflow');
-  assert([...document.querySelectorAll('button')].every(b => b.getBoundingClientRect().height >= 44), 'Button targets are at least 44px high');
+  assert([...document.querySelectorAll('button')].filter(b => b.getClientRects().length).every(b => b.getBoundingClientRect().height >= 44), 'Visible button targets are at least 44px high');
   return { viewport: [window.innerWidth, window.innerHeight], checks: results.length, results };
 })();

@@ -15,15 +15,15 @@ Scope retrieved **8 October 2026** from the [official DEA-C01 service list](http
 
 ## Learning interactions
 
-The workspace leads with the available service list, followed by the system map. Service search, category/domain filters, relationship selection, zoom controls and example connections are grouped below the diagram. Jump links connect the picker and search tools; the study notebook stays beside the workspace on desktop and follows it on narrow screens.
+The explorer is a single map workspace with a compact search/filter toolbar and a collapsible available-service list above it. Search and category/domain changes open the list automatically. Active category/domain filter counts remain visible when the filters collapse. Zoom and relationship selection sit directly below the diagram; optional map settings, example connections and scope notes start collapsed.
 
 Search accepts service names, aliases and capability terms. Category and exam-domain filters combine. List buttons and SVG nodes toggle the same working set. Chips remove one service; Clear all restores the starting state. Filter changes preserve selections and keep selected services on the map.
 
-One selection opens its flashcard, including a native keyboard-accessible answer disclosure. Two or more selections show all-selected matches first, then a clearly labeled subset section. A match can require additional participants; each card identifies them and supporting prerequisites. Unverified combinations show an honest empty state.
+Selection opens an embedded notebook card in the map surface. One service shows its description and selection guidance. Multiple services show one relationship, its first two explicit flow steps and tradeoffs; the relationship selector updates the graph and preview together. Subset previews and additional participants remain explicitly labeled. **More details** reveals the full service notes, recall disclosure and sources, or all-selected matches followed by a clearly labeled subset section. A new selection or relationship starts with the compact answer again. Unverified combinations show an honest empty state.
 
-The graph groups services by their primary AWS category. The full map opens at a readable scale for panning; Fit view provides the full overview. Once selected, it shows up to three relevant relationship junctions to limit clutter; the relationship dropdown can focus any recorded match. Narrow-screen relationships stack vertically. Multi-service relationships retain whole participant sets. Desktop spokes are numbered to match named junctions, with arrows indicating participant direction and dashed lines for control/metadata. Read the notebook for the exact service-to-service flow; a junction does not assert integration between every pair. Filters can hide unselected participants, while notebook cards always retain the full architecture.
+The graph groups services by their primary AWS category. The full map opens at a readable scale for panning; Fit view provides the full overview. Once selected, it shows one suggested relationship junction; the relationship dropdown can focus any recorded match. This keeps the graph aligned with the current relationship preview and reduces clutter on narrow screens. Narrow-screen relationships stack vertically. Multi-service relationships retain whole participant sets. Desktop spokes are numbered to match named junctions, with arrows indicating participant direction and dashed lines for control/metadata. Read the notebook for the exact service-to-service flow; a junction does not assert integration between every pair. Filters can hide unselected participants, while notebook cards always retain the full architecture.
 
-Drag the background to pan; use toolbar controls or `+`/`-` to zoom, `0` to fit, and arrow keys to pan while the map is focused. Ctrl/Command + wheel zooms. Enter/Space selects a focused graph node. The accessible list offers equivalent selection without graph navigation. On small screens the notebook follows the map/list; **View notebook** jumps directly to it. There is no required motion, and reduced-motion preferences are respected.
+Drag the background to pan; use toolbar controls or `+`/`-` to zoom, `0` to fit, and arrow keys to pan while the map is focused. Ctrl/Command + wheel zooms. Enter/Space selects a focused graph node. The accessible list offers equivalent selection without graph navigation. The notebook reserves space inside the map surface on desktop and docks below the canvas on small screens, so it does not cover nodes. **View notebook** jumps directly to its heading; **Choose services** reopens the picker. Notebook keyboard events do not pan the canvas. Clear all removes the notebook. There is no required motion, and reduced-motion preferences are respected.
 
 ## Required examples
 
@@ -53,17 +53,23 @@ python -m http.server 8765 --bind 127.0.0.1
 
 The source helper requires internet access. Node tests use the checked-in retrieval snapshot and no network. They check exact deduplicated scope, card/data completeness, source retrieval evidence, valid role/flow references, all/subset matching, unsupported-pair behavior, selection/filter behavior and both required examples.
 
-`tests/aws-explorer-browser.js` runs inside the rendered page and checks all 75 service cards plus 24 interaction/layout assertions. `tests/aws-explorer-relationships-browser.js` separately checks all 63 relationship cards and their complete roles. With the optional `agent-browser` testing CLI (kept outside project dependencies):
+`tests/aws-explorer-browser.js` checks all 75 service cards plus 24 interaction/layout assertions. `tests/aws-explorer-relationships-browser.js` checks all 63 relationship cards, roles and synchronized previews. `tests/aws-explorer-notebook-browser.js` checks the initial collapsed state, progressive disclosure, search opening, filter indicators and reserved map space (run on a fresh page). With the optional `agent-browser` testing CLI (kept outside project dependencies), fetch the scripts through the local server to avoid Windows command-length limits:
 
 ```powershell
 agent-browser --session aws-explorer open http://127.0.0.1:8765/aws-study-guide/service-explorer.html
-$checks = [Convert]::ToBase64String([IO.File]::ReadAllBytes((Join-Path (Get-Location) 'tests/aws-explorer-browser.js')))
-agent-browser --session aws-explorer eval -b $checks
-$relationships = [Convert]::ToBase64String([IO.File]::ReadAllBytes((Join-Path (Get-Location) 'tests/aws-explorer-relationships-browser.js')))
-agent-browser --session aws-explorer eval -b $relationships
+function Invoke-ExplorerCheck($name) {
+  $code = "fetch('/tests/$name').then(r => r.text()).then(code => eval(code))"
+  $encoded = [Convert]::ToBase64String([Text.Encoding]::UTF8.GetBytes($code))
+  agent-browser --session aws-explorer eval -b $encoded
+}
+Invoke-ExplorerCheck 'aws-explorer-notebook-browser.js'
+Invoke-ExplorerCheck 'aws-explorer-browser.js'
+Invoke-ExplorerCheck 'aws-explorer-relationships-browser.js'
 agent-browser --session aws-explorer set viewport 375 812
-agent-browser --session aws-explorer eval -b $checks
-agent-browser --session aws-explorer eval -b $relationships
+agent-browser --session aws-explorer open http://127.0.0.1:8765/aws-study-guide/service-explorer.html
+Invoke-ExplorerCheck 'aws-explorer-notebook-browser.js'
+Invoke-ExplorerCheck 'aws-explorer-browser.js'
+Invoke-ExplorerCheck 'aws-explorer-relationships-browser.js'
 agent-browser --session aws-explorer errors
 agent-browser --session aws-explorer close
 ```
