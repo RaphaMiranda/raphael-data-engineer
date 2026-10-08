@@ -60,8 +60,8 @@
     $('clear-selection').disabled = !selected.length;
     $('selection-status').textContent = selected.length ? `${selected.length} selected: ${selected.map(id => byId.get(id).name).join(', ')}. ${selected.length === 1 ? 'Service flashcard' : 'Relationships'} updated in study notebook.` : 'Selection cleared. Choose a service.';
     const relevant = relevantRelationships();
-    if (!relevant.some(r => r.id === pattern)) pattern = '';
-    $('graph-pattern').innerHTML = '<option value="">Suggested relationship</option>' + relevant.map(r => `<option value="${r.id}">${esc(r.name)}</option>`).join('');
+    if (!selected.length || (pattern !== 'suggested' && !relevant.some(r => r.id === pattern))) pattern = '';
+    $('graph-pattern').innerHTML = '<option value="">All relationships</option><option value="suggested">Suggested relationship</option>' + relevant.map(r => `<option value="${r.id}">${esc(r.name)}</option>`).join('');
     $('graph-pattern').value = pattern;
     $('graph-pattern').disabled = !relevant.length;
     renderDetails();
@@ -103,7 +103,7 @@
     const world = $('graph-world');
     world.replaceChildren();
     const relevant = relevantRelationships();
-    const connections = pattern ? relevant.filter(r => r.id === pattern) : relevant.slice(0, 1);
+    const connections = pattern === 'suggested' ? relevant.slice(0, 1) : pattern ? relevant.filter(r => r.id === pattern) : relevant;
     let visible = filtered;
     if (selected.length && $('focus-neighborhood').checked) {
       const neighbors = new Set(connections.flatMap(r => r.participants));
@@ -126,9 +126,9 @@
           const curve = compact ? `M${point.x},${y} C0,${y} 0,${junction.y} ${junction.x - 13},${junction.y}` : `M${point.x + 235},${y} C340,${y} 365,${junction.y} ${junction.x - 13},${junction.y}`;
           const path = svg('path', { d: curve, class: `edge${controls ? ' control' : ''}`, ...(outgoing.length ? { 'marker-end': 'url(#arrow-data)' } : {}), ...(incoming.length ? { 'marker-start': 'url(#arrow-data)' } : {}) });
           world.append(path);
-          // Full labels/roles are available in the notebook; numbered labels
-          // connect spokes to the matching junction without false pairwise links.
-          if (!compact) world.append(svg('text', { x: point.x + 250 + i * 28, y: y - 6, class: 'edge-label' }, `R${i + 1}`));
+          // Number focused spokes; large overviews keep labels at junctions.
+          // Full flows and roles remain available in the notebook.
+          if (!compact && connections.length <= 3) world.append(svg('text', { x: point.x + 250 + i * 28, y: y - 6, class: 'edge-label' }, `R${i + 1}`));
         });
         const group = svg('g', { class: 'junction' });
         group.append(svg('polygon', { points: `${junction.x},${junction.y - 13} ${junction.x + 13},${junction.y} ${junction.x},${junction.y + 13} ${junction.x - 13},${junction.y}` }));
@@ -162,7 +162,7 @@
     const hiddenParticipants = new Set(connections.flatMap(r => r.participants).filter(id => !positions.has(id))).size;
     $('graph-count').textContent = `${visible.length} nodes · ${connections.length} junctions${hiddenParticipants ? ` · ${hiddenParticipants} filtered participants` : ''}`;
     fitGraph();
-    if (!selected.length && zoom < .72) { zoom = .72; pan = { x: Math.max(12, (viewport.clientWidth - bounds.width * zoom) / 2), y: 12 }; transform(); }
+    if (zoom < .72) { zoom = .72; pan = { x: Math.max(12, (viewport.clientWidth - bounds.width * zoom) / 2), y: 12 }; transform(); }
     if (graphFocus) world.querySelector(`[data-service="${graphFocus}"]`)?.focus({ preventScroll: true });
   }
   function transform() {

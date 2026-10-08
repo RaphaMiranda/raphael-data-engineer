@@ -21,11 +21,19 @@
   assert(!$('notebook-more').open, 'Service selection starts with a short answer');
   const summary = () => document.querySelector('.notebook-summary').textContent;
   assert(summary().includes('Amazon S3') && summary().includes('Use it when'), 'Service preview includes selection guidance');
-  assert(document.querySelectorAll('.junction').length === 1, 'Map suggests one relationship at a time');
+  const s3Relationships = window.awsExplorerData.relationships.filter(r => r.participants.includes('s3')).length;
+  assert($('graph-pattern').value === '' && document.querySelectorAll('.junction').length === s3Relationships, 'Map shows all relevant relationships by default');
+  assert($('graph-pattern').options[0].text === 'All relationships' && $('graph-pattern').options[1].value === 'suggested', 'All relationships precedes the suggested option');
+  change('graph-pattern', 'suggested');
+  assert(document.querySelectorAll('.junction').length === 1, 'Suggested mode focuses one relationship');
+  change('graph-pattern', '');
+  assert(document.querySelectorAll('.junction').length === s3Relationships, 'All mode restores every relationship');
   $('notebook-more').open = true;
   assert(document.querySelector('.recall-box') && document.querySelector('#notebook-more .sources a'), 'Full service notes retain recall and official sources');
   $('reset-filters').click();
   choose('redshift');
+  const matching = window.awsExplorerCore.matchRelationships(window.awsExplorerData.relationships, ['s3', 'redshift']);
+  assert(document.querySelectorAll('.junction').length === matching.all.length + matching.subset.length, 'Default includes whole-selection and subset relationships');
   assert(!$('notebook-more').open, 'New selection closes previous full notes');
   change('graph-pattern', 'spectrum');
   assert(summary().includes('Spectrum'), 'Relationship selection updates notebook preview');
@@ -34,6 +42,7 @@
   const graph = $('graph-viewport').getBoundingClientRect(), note = $('notebook').getBoundingClientRect();
   assert(graph.right <= note.left + 1 || graph.bottom <= note.top + 1, 'Notebook never covers graph nodes');
   if (innerWidth <= 760) assert(note.top >= graph.bottom - 1, 'Mobile notebook docks below the canvas');
+  if (innerWidth > 1050) assert(note.width >= 364, 'Desktop notebook has more reading space');
   const transform = $('graph-world').getAttribute('transform');
   $('notebook-more').dispatchEvent(new KeyboardEvent('keydown', { key: 'ArrowRight', bubbles: true }));
   assert(transform === $('graph-world').getAttribute('transform'), 'Notebook keys do not pan the map');

@@ -55,7 +55,7 @@ summary:hover { background: var(--high); }
 #clear-selection { background: transparent; font-size: .75rem; }
 .panel-heading { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: .75rem; margin-bottom: .75rem; }
 .map-stage { display: grid; grid-template-columns: minmax(0, 1fr); align-items: start; border-radius: .8rem; background-color: #080f20; background-image: radial-gradient(#46455455 .8px, transparent .8px); background-size: 24px 24px; }
-.map-stage.has-notebook { grid-template-columns: minmax(0, 1fr) 340px; }
+.map-stage.has-notebook { grid-template-columns: minmax(0, 1fr) clamp(380px, 34vw, 520px); }
 .graph-viewport { height: 560px; position: relative; min-width: 0; overflow: hidden; border-radius: .8rem; touch-action: none; }
 #service-graph { width: 100%; height: 100%; display: block; cursor: grab; }
 #service-graph.dragging { cursor: grabbing; }
@@ -134,7 +134,7 @@ input[type="checkbox"] { accent-color: var(--cyan); width: 18px; height: 18px; }
 .skip-link { position: absolute; z-index: 10; top: -100px; left: 1rem; padding: .75rem; background: var(--high); }
 .skip-link:focus { top: 1rem; }
 [hidden] { display: none !important; }
-@media (max-width: 1050px) { .intro { align-items: start; flex-direction: column; } .service-list { grid-template-columns: repeat(3, minmax(0, 1fr)); } .map-stage.has-notebook { grid-template-columns: minmax(0, 1fr) 300px; } }
+@media (max-width: 1050px) { .intro { align-items: start; flex-direction: column; } .service-list { grid-template-columns: repeat(3, minmax(0, 1fr)); } .map-stage.has-notebook { grid-template-columns: minmax(0, 1fr) 360px; } }
 @media (max-width: 760px) { .explorer-shell { padding: 1.5rem 1rem; } .workspace { padding: 1rem; } .map-stage.has-notebook { grid-template-columns: minmax(0, 1fr); } .graph-viewport { height: 420px; } .details-panel { margin: 0 .75rem .75rem; max-height: 480px; } .service-list { grid-template-columns: repeat(2, minmax(0, 1fr)); } .search-label { min-width: 0; } .filter-disclosure[open] { flex-basis: 100%; } }
 @media (max-width: 430px) { .service-list, .filters { grid-template-columns: 1fr; } .graph-viewport { height: 360px; } .pattern-label { min-width: 0; flex-basis: 100%; } .details-panel { padding: .85rem; } #coverage { font-size: .6rem; white-space: normal; } #selection-chips { flex-basis: 100%; } }
 @media (prefers-reduced-motion: reduce) { *, *::before, *::after { scroll-behavior: auto !important; animation: none !important; transition: none !important; } }

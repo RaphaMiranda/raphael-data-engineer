@@ -1,5 +1,15 @@
 # AI session log
 
+## 2026-10-08 — Wider notebook and all relationships by default
+
+- **Branch:** `feature/aws-explorer-embedded-notebook`.
+- **Goal:** Increase notebook reading space on desktop and show all relevant relationships before the optional suggested mode.
+- **Changed files:** `assets/css/aws-service-explorer.css`, `assets/js/aws-service-explorer.js`, `aws-study-guide/service-explorer.html`, `tests/aws-explorer-notebook-browser.js`, `docs/aws-service-explorer.md`, `ai-session.md`.
+- **Changes:** Widened the desktop notebook column to a responsive 380–520px, with 360px at intermediate widths and the existing mobile dock. Added All relationships as the default selector option before Suggested relationship and individual matches. All mode renders every relevant whole-selection/subset junction; Suggested focuses one. Large maps open at a readable scale for panning, with Fit view available for the overview; dense views retain junction labels without crowded spoke numbers. Clear selection restores All mode.
+- **Verification:** All 11 Node tests and changed JavaScript syntax checks pass. Chrome at 1440×1000 and 375×1000 passed 25 notebook/mode/layout checks and 24 existing interaction checks at each width, including all 75 service cards and all 63 relationship cards/previews. Verified restoring all junctions after suggested mode, selector order, whole/subset coverage, desktop width and mobile docking. Inspected desktop and 375×812 mobile screenshots; desktop notebook measured approximately 474px versus the previous 324px. Real Home/ArrowDown switching between All and Suggested passed with visible focus. No browser runtime errors or horizontal overflow; local explorer HTTP returned 200. Scoped staged `git diff --check` passed.
+- **Preserved work:** User edits in `docs/aws-data-eng-associate.md` remain untouched and excluded from the commit.
+- **Commit:** `feat: widen notebook and show all AWS relationships by default`.
+
 ## 2026-10-08 — Simplified explorer with embedded notebook
 
 - **Branch:** `feature/aws-explorer-embedded-notebook`.
