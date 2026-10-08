@@ -1,5 +1,16 @@
 # AI session log
 
+## 2026-10-08 — Prepared pull request to main; scope pending
+
+- **Branch:** `feature/aws-explorer-embedded-notebook`.
+- **Goal:** Open a pull request to `main` for the latest notebook-width change (`8f912bb`).
+- **Changed files:** `ai-session.md`.
+- **Findings:** Fetched `origin/main`; it does not contain the study guide or explorer. The feature branch is 11 implementation commits ahead, with 23 changed files. The latest sizing commit modifies a stylesheet introduced by those earlier commits and cannot function independently on main.
+- **Preparation:** Verified GitHub API access through the existing Git credential manager without exposing credentials, found no open pull requests, verified branch push access with `git push --dry-run`, and prepared the full prerequisite PR description in ignored temporary storage.
+- **Pending:** Asked whether the PR should include the required earlier commits or be a draft limited to the latest commit. No branch was published and no pull request was created while that scope question remained unanswered.
+- **Preserved work:** User edits in `docs/aws-data-eng-associate.md` remain untouched and excluded.
+- **Commit:** `docs: record pending main pull request scope`.
+
 ## 2026-10-08 — Expanded notebook on large screens
 
 - **Branch:** `feature/aws-explorer-embedded-notebook`.
