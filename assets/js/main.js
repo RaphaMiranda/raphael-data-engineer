@@ -51,7 +51,10 @@
     document.querySelectorAll(".site-header a[data-nav]").forEach(function (link) {
       const url = new URL(link.href);
       const linkPath = url.pathname.replace(/\.html$/, "").replace(/\/$/, "") || "/";
-      const active = linkPath === currentPath && url.hash === window.location.hash ||
+      const samePage = linkPath === currentPath && (url.hash
+        ? url.hash === window.location.hash
+        : currentPath !== "/" || !window.location.hash);
+      const active = samePage ||
         linkPath === "/aws-study-guide/explorer" && currentPath === "/aws-study-guide/service-explorer" ||
         url.hash === "#case-studies" && currentPath.startsWith("/case-studies/");
       if (active) link.setAttribute("aria-current", url.hash ? "location" : "page");

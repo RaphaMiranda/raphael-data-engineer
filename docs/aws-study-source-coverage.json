@@ -1,0 +1,7045 @@
+{
+  "source": "AWSCertifiedDataEngineerSlides.pdf",
+  "authors": [
+    "Stephane Maarek",
+    "Frank Kane"
+  ],
+  "sourceMetadataDate": "2026-09-25",
+  "reviewDate": "2026-10-13",
+  "physicalPageRange": [
+    1,
+    765
+  ],
+  "excludedTail": [
+    766,
+    780
+  ],
+  "preservedHeadings": [
+    "# Section Fundamentals",
+    "# Types of Data",
+    "# Properties of Data",
+    "# Data Warehouse",
+    "# Data Lake",
+    "## Comparisons",
+    "## When to use datawarehouse:",
+    "# Data Lakehouses",
+    "# Data Mesh",
+    "# ETL Pipelines",
+    "## Extract",
+    "# Transform",
+    "# Load",
+    "# Managing ETL pipelines",
+    "# Data sources",
+    "## JDBC ",
+    "## ODBC",
+    "## OTher data sources",
+    "# Data Formats",
+    "## CSV : Text based format that represents data in tabular form where each line corresponds to a row and values are separeted by comma or similar separator",
+    "## Json",
+    "## AVRO",
+    "## Parquet",
+    "# Data Modelling",
+    "## Star Schema",
+    "## Snowflake",
+    "# Data Lineage",
+    "# schema evolution",
+    "# Database Performance Optimization",
+    "# Data Sampling Techniques",
+    "# Data Skew mechanisms",
+    "## Solutions ",
+    "# Data Validation and Profiling",
+    "# SQL Pivoting",
+    "# Add a topic about Data Cardinality",
+    "# Section Storage",
+    "## Buckets",
+    "### Security",
+    "### Replication ",
+    "### s3 Classes",
+    "### s3 Event Notifications",
+    "### s3 Performance",
+    "### Encryption",
+    "### Access Points",
+    "### S3 Tables",
+    "### Storage Lens",
+    "## EBS Elastic Block Store",
+    "## EFS Elastic file system",
+    "## AWS Backup",
+    "# Section Databases",
+    "## DynamoDB (NoSQL DBs)",
+    "### Basics",
+    "### Primary Keys",
+    "### DynamoDB use cases",
+    "### DynamoDB Anti Pattern",
+    "### Read Capacity Unit and Write Capacity Unit (RCU and WCU)",
+    "### Strongly Consistent Read vs Eventually Conssistent read",
+    "### Partitions Internal",
+    "### Throttling ",
+    "### R/W Capacity Modes - On-Demanda",
+    "### Basic APIs",
+    "### DynamoDB – PartiQL",
+    "### DynamoDB - Local Secondary Index",
+    "### DynamoDB - GLobal Secondary Indez",
+    "### DynamoDB Accelerator (DAX)",
+    "### Dax vs Elasticache",
+    "### DynamoDB Streams",
+    "### DynamoDB Streams & AWS Lambda",
+    "### DynamoDB – Time To Live (TTL)",
+    "### Use cases Large Objects Pattern / Indexing s3 Objects Metadata",
+    "### DynamoDB security and other features",
+    "## Amazon RDS - Hosted relational Database",
+    "### Lock command ",
+    "### RDS Operational guidelines",
+    "### Amazon Aurora",
+    "#### High Availability and Read Scaling",
+    "#### Aurora DB Cluster",
+    "## DocumentDB (MongoDB) NoSQL",
+    "## MemoryDB for Redis",
+    "## Amazon Keyspaces (For Apache Cassandra) NoSQL",
+    "## Amazon Neptune",
+    "##",
+    "##",
+    "## Amazon Redshift",
+    "### Redshift Spectrum",
+    "### Redshift Durability",
+    "### Resource Scaling in Redshift Serverless",
+    "### Redshift Serverless",
+    "###  Serverless Monitoring",
+    "### Redshift Materialized Views",
+    "### Data Sharing",
+    "### Redshift Lambda UDF",
+    "### Redshift Federated Queries",
+    "### Redshift System Tables and Views",
+    "### Redshift Data API",
+    "### Maximum for Data API: ",
+    "# Migration And Transfer",
+    "## AWS Database Migration Service",
+    "### AWS Schema Conversion Tool (SCT)",
+    "## AWS DataSync",
+    "## AWS Snow Family",
+    "## AWS Data Exchange",
+    "## AWS Transfer Family",
+    "# Computing",
+    "## EC2",
+    "## AWS Graviton",
+    "## AWS Lambda",
+    "### Lambda Architectures",
+    "### Lambda - File Systems Mounting",
+    "### Lambda - SAM",
+    "### AWS BATCH vs Glue",
+    "# Containers",
+    "## Docker",
+    "## AWS ECS",
+    "### ECS - IAM roles",
+    "### ECR",
+    "### EKS",
+    "# Analytics",
+    "## AWS Glue",
+    "## AWS Glue Transformations",
+    "## AWS Glue Modifying Data Catalog",
+    "## AWS Running Glue Jobs",
+    "## AWS Glue Cost Model",
+    "## AWS Glue Flex Jobs",
+    "## AWS Glue Studio",
+    "## AWS Glue Data Quality",
+    "## AWS Glue DataBrew",
+    "## Handling PII in DataBRew Transformations",
+    "## Glue Workflows",
+    "## AWS Lake Formation",
+    "## Data Permissions in Lake formation",
+    "## Data filters in Lake Formation",
+    "## Amazon Athena",
+    "## Athena + Glue",
+    "### Athena Workgroups",
+    "## Athena Security",
+    "## Athena ACID transactions",
+    "## Apache Spark",
+    "### Spark Structured Streaming",
+    "### Spark + Athena",
+    "### Athena Federated Queries",
+    "## AWS EMR",
+    "### EMR Usage",
+    "### EMR Storage",
+    "### AWS EMR Managed Scaling",
+    "### Hadoop",
+    "### EMR Serverless",
+    "### EMR On EKS",
+    "## Amazon Kinesis Data Streams",
+    "## Kinesis data streams security",
+    "## Kinesis Producers",
+    "### SDK ",
+    "### KPL (Kinesis Producer Library)",
+    "### Anti pattern:",
+    "### Kinesis Agent",
+    "## Kinesis Consumers - Classic",
+    "### Kinesis SDK",
+    "### Kinesis Client Library (KCL)",
+    "### Kinesis Connector Library",
+    "### Kinesis Firehose",
+    "### AWS Lambda",
+    "### Kinesis Enhanced Fan out",
+    "### Kinesis Operations - Adding Sharts",
+    "### Merging Sharts",
+    "### Out of order records after resahrding",
+    "### Kinesis Operations - Auto Scaling",
+    "### Kinesis Handling duplicates for Producers",
+    "### Kinesis Handling duplicates for consumers",
+    "## Kinesis Data Firehose",
+    "### Kinesis Firehose Buffer Sizing",
+    "### Kinesis Data Streams vs Firehose",
+    "### Troubleshooting Kinesis data stream producers",
+    "### Troubleshooting Kinesis data stream Consumers"
+  ],
+  "method": "All pages rendered and reviewed; study text normalized; original semantic diagrams; screenshot/table/code interpretation; selected current-claim corrections.",
+  "pages": [
+    {
+      "page": 1,
+      "section": "Course orientation",
+      "title": "Disclaimer: These slides are copyrighted and strictly for personal use only",
+      "visual": null,
+      "status": "non-study",
+      "reason": "Copyright and personal-use notice; attribution retained in guide introduction."
+    },
+    {
+      "page": 2,
+      "section": "Course orientation",
+      "title": "Table of Contents",
+      "visual": null,
+      "status": "non-study",
+      "reason": "Course logistics and download information; no study concept."
+    },
+    {
+      "page": 3,
+      "section": "Course orientation",
+      "title": "AWS Certified Data Engineer Associate Course",
+      "visual": null,
+      "status": "context",
+      "reason": "Chapter/topic divider; covered by the following study topics and section organization."
+    },
+    {
+      "page": 4,
+      "section": "Course orientation",
+      "title": "How to use this study guide",
+      "visual": null,
+      "status": "study",
+      "noteAnchor": "pdf-page-4",
+      "representation": "notes"
+    },
+    {
+      "page": 5,
+      "section": "Course orientation",
+      "title": "About me",
+      "visual": null,
+      "status": "non-study",
+      "reason": "Instructor biography; no study concept."
+    },
+    {
+      "page": 6,
+      "section": "Course orientation",
+      "title": "About me",
+      "visual": null,
+      "status": "non-study",
+      "reason": "Instructor biography; no study concept."
+    },
+    {
+      "page": 7,
+      "section": "Course orientation",
+      "title": "Service map: integration and analytics",
+      "visual": null,
+      "status": "study",
+      "noteAnchor": "pdf-page-7",
+      "representation": "notes"
+    },
+    {
+      "page": 8,
+      "section": "Course orientation",
+      "title": "Service map: compute, containers and databases",
+      "visual": null,
+      "status": "study",
+      "noteAnchor": "pdf-page-8",
+      "representation": "notes"
+    },
+    {
+      "page": 9,
+      "section": "Course orientation",
+      "title": "Service map: development and operations",
+      "visual": null,
+      "status": "study",
+      "noteAnchor": "pdf-page-9",
+      "representation": "notes"
+    },
+    {
+      "page": 10,
+      "section": "Course orientation",
+      "title": "Service map: migration, networks and security",
+      "visual": null,
+      "status": "study",
+      "noteAnchor": "pdf-page-10",
+      "representation": "notes"
+    },
+    {
+      "page": 11,
+      "section": "Course orientation",
+      "title": "Service map: storage",
+      "visual": null,
+      "status": "study",
+      "noteAnchor": "pdf-page-11",
+      "representation": "notes"
+    },
+    {
+      "page": 12,
+      "section": "Data engineering fundamentals",
+      "title": "Data Engineering Fundamentals",
+      "visual": null,
+      "status": "context",
+      "reason": "Chapter/topic divider; covered by the following study topics and section organization."
+    },
+    {
+      "page": 13,
+      "section": "Data engineering fundamentals",
+      "title": "Types of Data",
+      "visual": null,
+      "status": "study",
+      "noteAnchor": "pdf-page-13",
+      "representation": "notes"
+    },
+    {
+      "page": 14,
+      "section": "Data engineering fundamentals",
+      "title": "Structured Data",
+      "visual": null,
+      "status": "study",
+      "noteAnchor": "pdf-page-14",
+      "representation": "notes"
+    },
+    {
+      "page": 15,
+      "section": "Data engineering fundamentals",
+      "title": "Unstructured Data",
+      "visual": null,
+      "status": "study",
+      "noteAnchor": "pdf-page-15",
+      "representation": "notes"
+    },
+    {
+      "page": 16,
+      "section": "Data engineering fundamentals",
+      "title": "Semi-Structured Data",
+      "visual": null,
+      "status": "study",
+      "noteAnchor": "pdf-page-16",
+      "representation": "notes"
+    },
+    {
+      "page": 17,
+      "section": "Data engineering fundamentals",
+      "title": "Properties of Data",
+      "visual": null,
+      "status": "study",
+      "noteAnchor": "pdf-page-17",
+      "representation": "notes"
+    },
+    {
+      "page": 18,
+      "section": "Data engineering fundamentals",
+      "title": "Volume",
+      "visual": null,
+      "status": "study",
+      "noteAnchor": "pdf-page-18",
+      "representation": "notes"
+    },
+    {
+      "page": 19,
+      "section": "Data engineering fundamentals",
+      "title": "Velocity",
+      "visual": null,
+      "status": "study",
+      "noteAnchor": "pdf-page-19",
+      "representation": "notes"
+    },
+    {
+      "page": 20,
+      "section": "Data engineering fundamentals",
+      "title": "Variety",
+      "visual": null,
+      "status": "study",
+      "noteAnchor": "pdf-page-20",
+      "representation": "notes"
+    },
+    {
+      "page": 21,
+      "section": "Data engineering fundamentals",
+      "title": "Data Warehouses vs. Data Lakes",
+      "visual": null,
+      "status": "context",
+      "reason": "Chapter/topic divider; covered by the following study topics and section organization."
+    },
+    {
+      "page": 22,
+      "section": "Data engineering fundamentals",
+      "title": "Data Warehouse",
+      "visual": null,
+      "status": "study",
+      "noteAnchor": "pdf-page-22",
+      "representation": "notes"
+    },
+    {
+      "page": 23,
+      "section": "Data engineering fundamentals",
+      "title": "Data Warehouse example",
+      "visual": "pdf:23",
+      "status": "study",
+      "noteAnchor": "pdf-page-23",
+      "representation": "diagram + notes"
+    },
+    {
+      "page": 24,
+      "section": "Data engineering fundamentals",
+      "title": "Data Lake",
+      "visual": null,
+      "status": "study",
+      "noteAnchor": "pdf-page-24",
+      "representation": "notes"
+    },
+    {
+      "page": 25,
+      "section": "Data engineering fundamentals",
+      "title": "Comparing the two",
+      "visual": null,
+      "status": "study",
+      "noteAnchor": "pdf-page-25",
+      "representation": "notes"
+    },
+    {
+      "page": 26,
+      "section": "Data engineering fundamentals",
+      "title": "Choosing a Warehouse vs. a Lake",
+      "visual": null,
+      "status": "study",
+      "noteAnchor": "pdf-page-26",
+      "representation": "notes"
+    },
+    {
+      "page": 27,
+      "section": "Data engineering fundamentals",
+      "title": "Data Lakehouse",
+      "visual": null,
+      "status": "study",
+      "noteAnchor": "pdf-page-27",
+      "representation": "notes"
+    },
+    {
+      "page": 28,
+      "section": "Data engineering fundamentals",
+      "title": "Data Mesh",
+      "visual": "pdf:28",
+      "status": "study",
+      "noteAnchor": "pdf-page-28",
+      "representation": "diagram + notes"
+    },
+    {
+      "page": 29,
+      "section": "Data engineering fundamentals",
+      "title": "ETL Pipelines",
+      "visual": null,
+      "status": "study",
+      "noteAnchor": "pdf-page-29",
+      "representation": "notes"
+    },
+    {
+      "page": 30,
+      "section": "Data engineering fundamentals",
+      "title": "ETL Pipelines: Transform",
+      "visual": null,
+      "status": "study",
+      "noteAnchor": "pdf-page-30",
+      "representation": "notes"
+    },
+    {
+      "page": 31,
+      "section": "Data engineering fundamentals",
+      "title": "ETL Pipelines: Load",
+      "visual": null,
+      "status": "study",
+      "noteAnchor": "pdf-page-31",
+      "representation": "notes"
+    },
+    {
+      "page": 32,
+      "section": "Data engineering fundamentals",
+      "title": "Managing ETL Pipelines",
+      "visual": null,
+      "status": "study",
+      "noteAnchor": "pdf-page-32",
+      "representation": "notes"
+    },
+    {
+      "page": 33,
+      "section": "Data engineering fundamentals",
+      "title": "Data Sources",
+      "visual": "pdf:33",
+      "status": "study",
+      "noteAnchor": "pdf-page-33",
+      "representation": "diagram + notes"
+    },
+    {
+      "page": 34,
+      "section": "Data engineering fundamentals",
+      "title": "Common Data Formats",
+      "visual": null,
+      "status": "context",
+      "reason": "Chapter/topic divider; covered by the following study topics and section organization."
+    },
+    {
+      "page": 35,
+      "section": "Data engineering fundamentals",
+      "title": "CSV (Comma-Separated Values)",
+      "visual": null,
+      "status": "study",
+      "noteAnchor": "pdf-page-35",
+      "representation": "notes"
+    },
+    {
+      "page": 36,
+      "section": "Data engineering fundamentals",
+      "title": "JSON (JavaScript Object Notation)",
+      "visual": null,
+      "status": "study",
+      "noteAnchor": "pdf-page-36",
+      "representation": "notes"
+    },
+    {
+      "page": 37,
+      "section": "Data engineering fundamentals",
+      "title": "Avro",
+      "visual": null,
+      "status": "study",
+      "noteAnchor": "pdf-page-37",
+      "representation": "notes"
+    },
+    {
+      "page": 38,
+      "section": "Data engineering fundamentals",
+      "title": "Parquet",
+      "visual": null,
+      "status": "study",
+      "noteAnchor": "pdf-page-38",
+      "representation": "notes"
+    },
+    {
+      "page": 39,
+      "section": "Data engineering fundamentals",
+      "title": "A Very (intentionally) Incomplete Overview of Data Modeling",
+      "visual": "pdf:39",
+      "status": "study",
+      "noteAnchor": "pdf-page-39",
+      "representation": "diagram + notes"
+    },
+    {
+      "page": 40,
+      "section": "Data engineering fundamentals",
+      "title": "Data Lineage",
+      "visual": "pdf:40",
+      "status": "study",
+      "noteAnchor": "pdf-page-40",
+      "representation": "diagram + notes"
+    },
+    {
+      "page": 41,
+      "section": "Data engineering fundamentals",
+      "title": "Data Lineage",
+      "visual": "pdf:41",
+      "status": "study",
+      "noteAnchor": "pdf-page-41",
+      "representation": "diagram + notes"
+    },
+    {
+      "page": 42,
+      "section": "Data engineering fundamentals",
+      "title": "Schema Evolution",
+      "visual": null,
+      "status": "study",
+      "noteAnchor": "pdf-page-42",
+      "representation": "notes"
+    },
+    {
+      "page": 43,
+      "section": "Data engineering fundamentals",
+      "title": "Database Performance Optimization",
+      "visual": "pdf:43",
+      "status": "study",
+      "noteAnchor": "pdf-page-43",
+      "representation": "diagram + notes"
+    },
+    {
+      "page": 44,
+      "section": "Data engineering fundamentals",
+      "title": "Data Sampling Techniques",
+      "visual": "pdf:44",
+      "status": "study",
+      "noteAnchor": "pdf-page-44",
+      "representation": "diagram + notes"
+    },
+    {
+      "page": 45,
+      "section": "Data engineering fundamentals",
+      "title": "Random Sampling",
+      "visual": "pdf:45",
+      "status": "study",
+      "noteAnchor": "pdf-page-45",
+      "representation": "diagram + notes"
+    },
+    {
+      "page": 46,
+      "section": "Data engineering fundamentals",
+      "title": "Stratified Sampling",
+      "visual": "pdf:46",
+      "status": "study",
+      "noteAnchor": "pdf-page-46",
+      "representation": "diagram + notes"
+    },
+    {
+      "page": 47,
+      "section": "Data engineering fundamentals",
+      "title": "Systematic sampling",
+      "visual": "pdf:47",
+      "status": "study",
+      "noteAnchor": "pdf-page-47",
+      "representation": "diagram + notes"
+    },
+    {
+      "page": 48,
+      "section": "Data engineering fundamentals",
+      "title": "Data Skew Mechanisms",
+      "visual": "pdf:48",
+      "status": "study",
+      "noteAnchor": "pdf-page-48",
+      "representation": "diagram + notes"
+    },
+    {
+      "page": 49,
+      "section": "Data engineering fundamentals",
+      "title": "Addressing data skew",
+      "visual": null,
+      "status": "study",
+      "noteAnchor": "pdf-page-49",
+      "representation": "notes"
+    },
+    {
+      "page": 50,
+      "section": "Data engineering fundamentals",
+      "title": "Data validation and profiling",
+      "visual": null,
+      "status": "study",
+      "noteAnchor": "pdf-page-50",
+      "representation": "notes"
+    },
+    {
+      "page": 51,
+      "section": "SQL and Git",
+      "title": "SQL Review",
+      "visual": null,
+      "status": "context",
+      "reason": "Chapter/topic divider; covered by the following study topics and section organization."
+    },
+    {
+      "page": 52,
+      "section": "SQL and Git",
+      "title": "Aggregation",
+      "visual": null,
+      "status": "study",
+      "noteAnchor": "pdf-page-52",
+      "representation": "notes"
+    },
+    {
+      "page": 53,
+      "section": "SQL and Git",
+      "title": "Conditional aggregation with CASE",
+      "visual": null,
+      "status": "study",
+      "noteAnchor": "pdf-page-53",
+      "representation": "code + notes"
+    },
+    {
+      "page": 54,
+      "section": "SQL and Git",
+      "title": "Grouping",
+      "visual": null,
+      "status": "study",
+      "noteAnchor": "pdf-page-54",
+      "representation": "code + notes"
+    },
+    {
+      "page": 55,
+      "section": "SQL and Git",
+      "title": "Multiple grouping keys and sorting",
+      "visual": null,
+      "status": "study",
+      "noteAnchor": "pdf-page-55",
+      "representation": "code + notes"
+    },
+    {
+      "page": 56,
+      "section": "SQL and Git",
+      "title": "Pivoting rows into report columns",
+      "visual": null,
+      "status": "study",
+      "noteAnchor": "pdf-page-56",
+      "representation": "notes"
+    },
+    {
+      "page": 57,
+      "section": "SQL and Git",
+      "title": "Pivoting with conditional aggregation",
+      "visual": null,
+      "status": "study",
+      "noteAnchor": "pdf-page-57",
+      "representation": "code + notes"
+    },
+    {
+      "page": 58,
+      "section": "SQL and Git",
+      "title": "INNER JOIN",
+      "visual": "pdf:58",
+      "status": "study",
+      "noteAnchor": "pdf-page-58",
+      "representation": "diagram + notes"
+    },
+    {
+      "page": 59,
+      "section": "SQL and Git",
+      "title": "INNER JOIN worked example",
+      "visual": null,
+      "status": "study",
+      "noteAnchor": "pdf-page-59",
+      "representation": "code + notes"
+    },
+    {
+      "page": 60,
+      "section": "SQL and Git",
+      "title": "LEFT OUTER JOIN",
+      "visual": "pdf:60",
+      "status": "study",
+      "noteAnchor": "pdf-page-60",
+      "representation": "diagram + notes"
+    },
+    {
+      "page": 61,
+      "section": "SQL and Git",
+      "title": "LEFT JOIN worked example",
+      "visual": null,
+      "status": "study",
+      "noteAnchor": "pdf-page-61",
+      "representation": "code + notes"
+    },
+    {
+      "page": 62,
+      "section": "SQL and Git",
+      "title": "RIGHT OUTER JOIN",
+      "visual": "pdf:62",
+      "status": "study",
+      "noteAnchor": "pdf-page-62",
+      "representation": "diagram + notes"
+    },
+    {
+      "page": 63,
+      "section": "SQL and Git",
+      "title": "RIGHT JOIN worked example",
+      "visual": null,
+      "status": "study",
+      "noteAnchor": "pdf-page-63",
+      "representation": "code + notes"
+    },
+    {
+      "page": 64,
+      "section": "SQL and Git",
+      "title": "FULL OUTER JOIN",
+      "visual": "pdf:64",
+      "status": "study",
+      "noteAnchor": "pdf-page-64",
+      "representation": "diagram + notes"
+    },
+    {
+      "page": 65,
+      "section": "SQL and Git",
+      "title": "CROSS JOIN",
+      "visual": "pdf:65",
+      "status": "study",
+      "noteAnchor": "pdf-page-65",
+      "representation": "diagram + notes"
+    },
+    {
+      "page": 66,
+      "section": "SQL and Git",
+      "title": "CROSS JOIN worked example",
+      "visual": null,
+      "status": "study",
+      "noteAnchor": "pdf-page-66",
+      "representation": "code + notes"
+    },
+    {
+      "page": 67,
+      "section": "SQL and Git",
+      "title": "SQL Regular Expressions",
+      "visual": null,
+      "status": "study",
+      "noteAnchor": "pdf-page-67",
+      "representation": "notes"
+    },
+    {
+      "page": 68,
+      "section": "SQL and Git",
+      "title": "Git review",
+      "visual": "pdf:68",
+      "status": "study",
+      "noteAnchor": "pdf-page-68",
+      "representation": "diagram + notes"
+    },
+    {
+      "page": 69,
+      "section": "SQL and Git",
+      "title": "Common git commands",
+      "visual": null,
+      "status": "study",
+      "noteAnchor": "pdf-page-69",
+      "representation": "notes"
+    },
+    {
+      "page": 70,
+      "section": "SQL and Git",
+      "title": "Branching with git",
+      "visual": "pdf:70",
+      "status": "study",
+      "noteAnchor": "pdf-page-70",
+      "representation": "diagram + notes"
+    },
+    {
+      "page": 71,
+      "section": "SQL and Git",
+      "title": "Remote repositories",
+      "visual": null,
+      "status": "study",
+      "noteAnchor": "pdf-page-71",
+      "representation": "notes"
+    },
+    {
+      "page": 72,
+      "section": "SQL and Git",
+      "title": "Undoing changes",
+      "visual": null,
+      "status": "study",
+      "noteAnchor": "pdf-page-72",
+      "representation": "notes"
+    },
+    {
+      "page": 73,
+      "section": "SQL and Git",
+      "title": "Advanced git",
+      "visual": null,
+      "status": "study",
+      "noteAnchor": "pdf-page-73",
+      "representation": "notes"
+    },
+    {
+      "page": 74,
+      "section": "SQL and Git",
+      "title": "Git collaboration and inspection",
+      "visual": null,
+      "status": "study",
+      "noteAnchor": "pdf-page-74",
+      "representation": "notes"
+    },
+    {
+      "page": 75,
+      "section": "SQL and Git",
+      "title": "Git maintenance and data recovery",
+      "visual": null,
+      "status": "study",
+      "noteAnchor": "pdf-page-75",
+      "representation": "notes"
+    },
+    {
+      "page": 76,
+      "section": "Object and file storage",
+      "title": "Storage",
+      "visual": null,
+      "status": "context",
+      "reason": "Chapter/topic divider; covered by the following study topics and section organization."
+    },
+    {
+      "page": 77,
+      "section": "Object and file storage",
+      "title": "Amazon S3 Section",
+      "visual": null,
+      "status": "context",
+      "reason": "Chapter/topic divider; covered by the following study topics and section organization."
+    },
+    {
+      "page": 78,
+      "section": "Object and file storage",
+      "title": "Section introduction",
+      "visual": null,
+      "status": "study",
+      "noteAnchor": "pdf-page-78",
+      "representation": "notes"
+    },
+    {
+      "page": 79,
+      "section": "Object and file storage",
+      "title": "Amazon S3 Use cases",
+      "visual": null,
+      "status": "study",
+      "noteAnchor": "pdf-page-79",
+      "representation": "notes"
+    },
+    {
+      "page": 80,
+      "section": "Object and file storage",
+      "title": "Amazon S3 - Buckets",
+      "visual": null,
+      "status": "study",
+      "noteAnchor": "pdf-page-80",
+      "representation": "notes"
+    },
+    {
+      "page": 81,
+      "section": "Object and file storage",
+      "title": "Amazon S3 - Objects",
+      "visual": null,
+      "status": "study",
+      "noteAnchor": "pdf-page-81",
+      "representation": "notes"
+    },
+    {
+      "page": 82,
+      "section": "Object and file storage",
+      "title": "Amazon S3 – Objects (cont.)",
+      "visual": null,
+      "status": "study",
+      "noteAnchor": "pdf-page-82",
+      "representation": "notes"
+    },
+    {
+      "page": 83,
+      "section": "Object and file storage",
+      "title": "Amazon S3 – Security",
+      "visual": null,
+      "status": "study",
+      "noteAnchor": "pdf-page-83",
+      "representation": "notes"
+    },
+    {
+      "page": 84,
+      "section": "Object and file storage",
+      "title": "S3 Bucket Policies",
+      "visual": null,
+      "status": "study",
+      "noteAnchor": "pdf-page-84",
+      "representation": "notes"
+    },
+    {
+      "page": 85,
+      "section": "Object and file storage",
+      "title": "Example: Public Access - Use Bucket Policy",
+      "visual": "pdf:85",
+      "status": "study",
+      "noteAnchor": "pdf-page-85",
+      "representation": "diagram + notes"
+    },
+    {
+      "page": 86,
+      "section": "Object and file storage",
+      "title": "Example: User Access to S3 – IAM permissions",
+      "visual": "pdf:86",
+      "status": "study",
+      "noteAnchor": "pdf-page-86",
+      "representation": "diagram + notes"
+    },
+    {
+      "page": 87,
+      "section": "Object and file storage",
+      "title": "Example: EC2 instance access - Use IAM Roles",
+      "visual": "pdf:87",
+      "status": "study",
+      "noteAnchor": "pdf-page-87",
+      "representation": "diagram + notes"
+    },
+    {
+      "page": 88,
+      "section": "Object and file storage",
+      "title": "Advanced: Cross-Account Access – Use Bucket Policy",
+      "visual": "pdf:88",
+      "status": "study",
+      "noteAnchor": "pdf-page-88",
+      "representation": "diagram + notes"
+    },
+    {
+      "page": 89,
+      "section": "Object and file storage",
+      "title": "Bucket settings for Block Public Access",
+      "visual": null,
+      "status": "study",
+      "noteAnchor": "pdf-page-89",
+      "representation": "notes"
+    },
+    {
+      "page": 90,
+      "section": "Object and file storage",
+      "title": "Amazon S3 - Versioning",
+      "visual": "pdf:90",
+      "status": "study",
+      "noteAnchor": "pdf-page-90",
+      "representation": "diagram + notes"
+    },
+    {
+      "page": 91,
+      "section": "Object and file storage",
+      "title": "Amazon S3 – Replication (CRR & SRR)",
+      "visual": "pdf:91",
+      "status": "study",
+      "noteAnchor": "pdf-page-91",
+      "representation": "diagram + notes"
+    },
+    {
+      "page": 92,
+      "section": "Object and file storage",
+      "title": "Amazon S3 – Replication (Notes)",
+      "visual": null,
+      "status": "study",
+      "noteAnchor": "pdf-page-92",
+      "representation": "notes"
+    },
+    {
+      "page": 93,
+      "section": "Object and file storage",
+      "title": "Amazon S3 – Replication Time Control (RTC)",
+      "visual": null,
+      "status": "study",
+      "noteAnchor": "pdf-page-93",
+      "representation": "notes"
+    },
+    {
+      "page": 94,
+      "section": "Object and file storage",
+      "title": "S3 Storage Classes",
+      "visual": null,
+      "status": "study",
+      "noteAnchor": "pdf-page-94",
+      "representation": "notes"
+    },
+    {
+      "page": 95,
+      "section": "Object and file storage",
+      "title": "S3 Durability and Availability",
+      "visual": null,
+      "status": "study",
+      "noteAnchor": "pdf-page-95",
+      "representation": "notes"
+    },
+    {
+      "page": 96,
+      "section": "Object and file storage",
+      "title": "S3 Standard – General Purpose",
+      "visual": null,
+      "status": "study",
+      "noteAnchor": "pdf-page-96",
+      "representation": "notes"
+    },
+    {
+      "page": 97,
+      "section": "Object and file storage",
+      "title": "S3 Storage Classes – Infrequent Access",
+      "visual": null,
+      "status": "study",
+      "noteAnchor": "pdf-page-97",
+      "representation": "notes"
+    },
+    {
+      "page": 98,
+      "section": "Object and file storage",
+      "title": "Amazon S3 Glacier Storage Classes",
+      "visual": null,
+      "status": "study",
+      "noteAnchor": "pdf-page-98",
+      "representation": "notes"
+    },
+    {
+      "page": 99,
+      "section": "Object and file storage",
+      "title": "S3 Intelligent-Tiering",
+      "visual": null,
+      "status": "study",
+      "noteAnchor": "pdf-page-99",
+      "representation": "notes"
+    },
+    {
+      "page": 100,
+      "section": "Object and file storage",
+      "title": "S3 storage-class comparison",
+      "visual": null,
+      "status": "study",
+      "noteAnchor": "pdf-page-100",
+      "representation": "table + notes"
+    },
+    {
+      "page": 101,
+      "section": "Object and file storage",
+      "title": "S3 pricing: compare the complete workload",
+      "visual": null,
+      "status": "study",
+      "noteAnchor": "pdf-page-101",
+      "representation": "notes"
+    },
+    {
+      "page": 102,
+      "section": "Object and file storage",
+      "title": "S3 Express One Zone",
+      "visual": "pdf:102",
+      "status": "study",
+      "noteAnchor": "pdf-page-102",
+      "representation": "diagram + notes"
+    },
+    {
+      "page": 103,
+      "section": "Object and file storage",
+      "title": "Amazon S3 – Moving between Storage Classes",
+      "visual": "pdf:103",
+      "status": "study",
+      "noteAnchor": "pdf-page-103",
+      "representation": "diagram + notes"
+    },
+    {
+      "page": 104,
+      "section": "Object and file storage",
+      "title": "Amazon S3 – Lifecycle Rules",
+      "visual": null,
+      "status": "study",
+      "noteAnchor": "pdf-page-104",
+      "representation": "notes"
+    },
+    {
+      "page": 105,
+      "section": "Object and file storage",
+      "title": "Amazon S3 – Lifecycle Rules (Scenario 1)",
+      "visual": null,
+      "status": "study",
+      "noteAnchor": "pdf-page-105",
+      "representation": "notes"
+    },
+    {
+      "page": 106,
+      "section": "Object and file storage",
+      "title": "Amazon S3 – Lifecycle Rules (Scenario 2)",
+      "visual": null,
+      "status": "study",
+      "noteAnchor": "pdf-page-106",
+      "representation": "notes"
+    },
+    {
+      "page": 107,
+      "section": "Object and file storage",
+      "title": "Amazon S3 Analytics – Storage Class Analysis",
+      "visual": "pdf:107",
+      "status": "study",
+      "noteAnchor": "pdf-page-107",
+      "representation": "diagram + notes"
+    },
+    {
+      "page": 108,
+      "section": "Object and file storage",
+      "title": "S3 Event Notifications",
+      "visual": "pdf:108",
+      "status": "study",
+      "noteAnchor": "pdf-page-108",
+      "representation": "diagram + notes"
+    },
+    {
+      "page": 109,
+      "section": "Object and file storage",
+      "title": "S3 Event Notifications – IAM Permissions",
+      "visual": "pdf:109",
+      "status": "study",
+      "noteAnchor": "pdf-page-109",
+      "representation": "diagram + notes"
+    },
+    {
+      "page": 110,
+      "section": "Object and file storage",
+      "title": "S3 Event Notifications with Amazon EventBridge",
+      "visual": "pdf:110",
+      "status": "study",
+      "noteAnchor": "pdf-page-110",
+      "representation": "diagram + notes"
+    },
+    {
+      "page": 111,
+      "section": "Object and file storage",
+      "title": "S3 – Baseline Performance",
+      "visual": null,
+      "status": "study",
+      "noteAnchor": "pdf-page-111",
+      "representation": "notes"
+    },
+    {
+      "page": 112,
+      "section": "Object and file storage",
+      "title": "S3 Performance",
+      "visual": "pdf:112",
+      "status": "study",
+      "noteAnchor": "pdf-page-112",
+      "representation": "diagram + notes"
+    },
+    {
+      "page": 113,
+      "section": "Object and file storage",
+      "title": "S3 Performance – S3 Byte-Range Fetches",
+      "visual": "pdf:113",
+      "status": "study",
+      "noteAnchor": "pdf-page-113",
+      "representation": "diagram + notes"
+    },
+    {
+      "page": 114,
+      "section": "Object and file storage",
+      "title": "Amazon S3 – Object Encryption",
+      "visual": null,
+      "status": "study",
+      "noteAnchor": "pdf-page-114",
+      "representation": "notes"
+    },
+    {
+      "page": 115,
+      "section": "Object and file storage",
+      "title": "Amazon S3 Encryption – SSE-S3",
+      "visual": "pdf:115",
+      "status": "study",
+      "noteAnchor": "pdf-page-115",
+      "representation": "diagram + notes"
+    },
+    {
+      "page": 116,
+      "section": "Object and file storage",
+      "title": "Amazon S3 Encryption – SSE-KMS",
+      "visual": "pdf:116",
+      "status": "study",
+      "noteAnchor": "pdf-page-116",
+      "representation": "diagram + notes"
+    },
+    {
+      "page": 117,
+      "section": "Object and file storage",
+      "title": "SSE-KMS Limitation",
+      "visual": "pdf:117",
+      "status": "study",
+      "noteAnchor": "pdf-page-117",
+      "representation": "diagram + notes"
+    },
+    {
+      "page": 118,
+      "section": "Object and file storage",
+      "title": "Amazon S3 Encryption – DSSE-KMS",
+      "visual": "pdf:118",
+      "status": "study",
+      "noteAnchor": "pdf-page-118",
+      "representation": "diagram + notes"
+    },
+    {
+      "page": 119,
+      "section": "Object and file storage",
+      "title": "Amazon S3 Encryption – SSE-C",
+      "visual": "pdf:119",
+      "status": "study",
+      "noteAnchor": "pdf-page-119",
+      "representation": "diagram + notes"
+    },
+    {
+      "page": 120,
+      "section": "Object and file storage",
+      "title": "Amazon S3 Encryption – Client-Side Encryption",
+      "visual": "pdf:120",
+      "status": "study",
+      "noteAnchor": "pdf-page-120",
+      "representation": "diagram + notes"
+    },
+    {
+      "page": 121,
+      "section": "Object and file storage",
+      "title": "Amazon S3 – Encryption in transit (SSL/TLS)",
+      "visual": null,
+      "status": "study",
+      "noteAnchor": "pdf-page-121",
+      "representation": "notes"
+    },
+    {
+      "page": 122,
+      "section": "Object and file storage",
+      "title": "Amazon S3 – Force Encryption in Transit aws:SecureTransport",
+      "visual": "pdf:122",
+      "status": "study",
+      "noteAnchor": "pdf-page-122",
+      "representation": "diagram + notes"
+    },
+    {
+      "page": 123,
+      "section": "Object and file storage",
+      "title": "Amazon S3 – Default Encryption vs. Bucket Policies",
+      "visual": null,
+      "status": "study",
+      "noteAnchor": "pdf-page-123",
+      "representation": "notes"
+    },
+    {
+      "page": 124,
+      "section": "Object and file storage",
+      "title": "S3 – Access Points",
+      "visual": "pdf:124",
+      "status": "study",
+      "noteAnchor": "pdf-page-124",
+      "representation": "diagram + notes"
+    },
+    {
+      "page": 125,
+      "section": "Object and file storage",
+      "title": "S3 – Access Points – VPC Origin",
+      "visual": "pdf:125",
+      "status": "study",
+      "noteAnchor": "pdf-page-125",
+      "representation": "diagram + notes"
+    },
+    {
+      "page": 126,
+      "section": "Object and file storage",
+      "title": "S3 Tables",
+      "visual": null,
+      "status": "study",
+      "noteAnchor": "pdf-page-126",
+      "representation": "notes"
+    },
+    {
+      "page": 127,
+      "section": "Object and file storage",
+      "title": "Wait,what’s Iceberg?",
+      "visual": null,
+      "status": "study",
+      "noteAnchor": "pdf-page-127",
+      "representation": "notes"
+    },
+    {
+      "page": 128,
+      "section": "Object and file storage",
+      "title": "Iceberg means S3 Tables is compatible with a lot of stuff",
+      "visual": "pdf:128",
+      "status": "study",
+      "noteAnchor": "pdf-page-128",
+      "representation": "diagram + notes"
+    },
+    {
+      "page": 129,
+      "section": "Object and file storage",
+      "title": "Features of S3 Tables",
+      "visual": null,
+      "status": "study",
+      "noteAnchor": "pdf-page-129",
+      "representation": "notes"
+    },
+    {
+      "page": 130,
+      "section": "Object and file storage",
+      "title": "Table Buckets",
+      "visual": "pdf:130",
+      "status": "study",
+      "noteAnchor": "pdf-page-130",
+      "representation": "diagram + notes"
+    },
+    {
+      "page": 131,
+      "section": "Object and file storage",
+      "title": "S3 Tables Intelligent-Tiering",
+      "visual": "pdf:131",
+      "status": "study",
+      "noteAnchor": "pdf-page-131",
+      "representation": "diagram + notes"
+    },
+    {
+      "page": 132,
+      "section": "Object and file storage",
+      "title": "S3 Tables Replication",
+      "visual": "pdf:132",
+      "status": "study",
+      "noteAnchor": "pdf-page-132",
+      "representation": "diagram + notes"
+    },
+    {
+      "page": 133,
+      "section": "Object and file storage",
+      "title": "S3 Tables Security",
+      "visual": null,
+      "status": "study",
+      "noteAnchor": "pdf-page-133",
+      "representation": "notes"
+    },
+    {
+      "page": 134,
+      "section": "Object and file storage",
+      "title": "S3 – Storage Lens",
+      "visual": "pdf:134",
+      "status": "study",
+      "noteAnchor": "pdf-page-134",
+      "representation": "diagram + notes"
+    },
+    {
+      "page": 135,
+      "section": "Object and file storage",
+      "title": "Storage Lens – Default Dashboard",
+      "visual": null,
+      "status": "study",
+      "noteAnchor": "pdf-page-135",
+      "representation": "notes"
+    },
+    {
+      "page": 136,
+      "section": "Object and file storage",
+      "title": "Storage Lens – Metrics",
+      "visual": null,
+      "status": "study",
+      "noteAnchor": "pdf-page-136",
+      "representation": "notes"
+    },
+    {
+      "page": 137,
+      "section": "Object and file storage",
+      "title": "Storage Lens – Metrics",
+      "visual": null,
+      "status": "study",
+      "noteAnchor": "pdf-page-137",
+      "representation": "notes"
+    },
+    {
+      "page": 138,
+      "section": "Object and file storage",
+      "title": "Storage Lens – Metrics",
+      "visual": null,
+      "status": "study",
+      "noteAnchor": "pdf-page-138",
+      "representation": "notes"
+    },
+    {
+      "page": 139,
+      "section": "Object and file storage",
+      "title": "Storage Lens – Free vs. Paid",
+      "visual": null,
+      "status": "study",
+      "noteAnchor": "pdf-page-139",
+      "representation": "notes"
+    },
+    {
+      "page": 140,
+      "section": "Object and file storage",
+      "title": "EC2 Instance Storage Section",
+      "visual": null,
+      "status": "context",
+      "reason": "Chapter/topic divider; covered by the following study topics and section organization."
+    },
+    {
+      "page": 141,
+      "section": "Object and file storage",
+      "title": "What’s an EBS Volume?",
+      "visual": null,
+      "status": "study",
+      "noteAnchor": "pdf-page-141",
+      "representation": "notes"
+    },
+    {
+      "page": 142,
+      "section": "Object and file storage",
+      "title": "EBS Volume",
+      "visual": null,
+      "status": "study",
+      "noteAnchor": "pdf-page-142",
+      "representation": "notes"
+    },
+    {
+      "page": 143,
+      "section": "Object and file storage",
+      "title": "EBS Volume - Example",
+      "visual": "pdf:143",
+      "status": "study",
+      "noteAnchor": "pdf-page-143",
+      "representation": "diagram + notes"
+    },
+    {
+      "page": 144,
+      "section": "Object and file storage",
+      "title": "EBS – Delete on Termination attribute",
+      "visual": null,
+      "status": "study",
+      "noteAnchor": "pdf-page-144",
+      "representation": "notes"
+    },
+    {
+      "page": 145,
+      "section": "Object and file storage",
+      "title": "Amazon EBS Elastic Volumes",
+      "visual": null,
+      "status": "study",
+      "noteAnchor": "pdf-page-145",
+      "representation": "notes"
+    },
+    {
+      "page": 146,
+      "section": "Object and file storage",
+      "title": "Amazon EFS – Elastic File System",
+      "visual": "pdf:146",
+      "status": "study",
+      "noteAnchor": "pdf-page-146",
+      "representation": "diagram + notes"
+    },
+    {
+      "page": 147,
+      "section": "Object and file storage",
+      "title": "Amazon EFS – Elastic File System",
+      "visual": null,
+      "status": "study",
+      "noteAnchor": "pdf-page-147",
+      "representation": "notes"
+    },
+    {
+      "page": 148,
+      "section": "Object and file storage",
+      "title": "EFS – Performance & Storage Classes",
+      "visual": null,
+      "status": "study",
+      "noteAnchor": "pdf-page-148",
+      "representation": "notes"
+    },
+    {
+      "page": 149,
+      "section": "Object and file storage",
+      "title": "EFS – Storage Classes",
+      "visual": "pdf:149",
+      "status": "study",
+      "noteAnchor": "pdf-page-149",
+      "representation": "diagram + notes"
+    },
+    {
+      "page": 150,
+      "section": "Object and file storage",
+      "title": "EBS vs EFS – Elastic Block Storage",
+      "visual": "pdf:150",
+      "status": "study",
+      "noteAnchor": "pdf-page-150",
+      "representation": "diagram + notes"
+    },
+    {
+      "page": 151,
+      "section": "Object and file storage",
+      "title": "EBS vs EFS – Elastic File System",
+      "visual": "pdf:151",
+      "status": "study",
+      "noteAnchor": "pdf-page-151",
+      "representation": "diagram + notes"
+    },
+    {
+      "page": 152,
+      "section": "Object and file storage",
+      "title": "AWS Backup",
+      "visual": null,
+      "status": "study",
+      "noteAnchor": "pdf-page-152",
+      "representation": "notes"
+    },
+    {
+      "page": 153,
+      "section": "Object and file storage",
+      "title": "AWS Backup",
+      "visual": null,
+      "status": "study",
+      "noteAnchor": "pdf-page-153",
+      "representation": "notes"
+    },
+    {
+      "page": 154,
+      "section": "Object and file storage",
+      "title": "AWS Backup",
+      "visual": "pdf:154",
+      "status": "study",
+      "noteAnchor": "pdf-page-154",
+      "representation": "diagram + notes"
+    },
+    {
+      "page": 155,
+      "section": "Object and file storage",
+      "title": "AWS Backup Vault Lock",
+      "visual": "pdf:155",
+      "status": "study",
+      "noteAnchor": "pdf-page-155",
+      "representation": "diagram + notes"
+    },
+    {
+      "page": 156,
+      "section": "Databases and warehouses",
+      "title": "Database",
+      "visual": null,
+      "status": "context",
+      "reason": "Chapter/topic divider; covered by the following study topics and section organization."
+    },
+    {
+      "page": 157,
+      "section": "Databases and warehouses",
+      "title": "Amazon DynamoDB",
+      "visual": null,
+      "status": "context",
+      "reason": "Chapter/topic divider; covered by the following study topics and section organization."
+    },
+    {
+      "page": 158,
+      "section": "Databases and warehouses",
+      "title": "Traditional Architecture",
+      "visual": "pdf:158",
+      "status": "study",
+      "noteAnchor": "pdf-page-158",
+      "representation": "diagram + notes"
+    },
+    {
+      "page": 159,
+      "section": "Databases and warehouses",
+      "title": "NoSQL databases",
+      "visual": null,
+      "status": "study",
+      "noteAnchor": "pdf-page-159",
+      "representation": "notes"
+    },
+    {
+      "page": 160,
+      "section": "Databases and warehouses",
+      "title": "Amazon DynamoDB",
+      "visual": null,
+      "status": "study",
+      "noteAnchor": "pdf-page-160",
+      "representation": "notes"
+    },
+    {
+      "page": 161,
+      "section": "Databases and warehouses",
+      "title": "DynamoDB - Basics",
+      "visual": null,
+      "status": "study",
+      "noteAnchor": "pdf-page-161",
+      "representation": "notes"
+    },
+    {
+      "page": 162,
+      "section": "Databases and warehouses",
+      "title": "DynamoDB – Primary Keys",
+      "visual": "pdf:162",
+      "status": "study",
+      "noteAnchor": "pdf-page-162",
+      "representation": "diagram + notes"
+    },
+    {
+      "page": 163,
+      "section": "Databases and warehouses",
+      "title": "DynamoDB – Primary Keys",
+      "visual": "pdf:163",
+      "status": "study",
+      "noteAnchor": "pdf-page-163",
+      "representation": "diagram + notes"
+    },
+    {
+      "page": 164,
+      "section": "Databases and warehouses",
+      "title": "DynamoDB – Partition Keys (Exercise)",
+      "visual": null,
+      "status": "study",
+      "noteAnchor": "pdf-page-164",
+      "representation": "notes"
+    },
+    {
+      "page": 165,
+      "section": "Databases and warehouses",
+      "title": "DynamoDB in Big Data",
+      "visual": null,
+      "status": "study",
+      "noteAnchor": "pdf-page-165",
+      "representation": "notes"
+    },
+    {
+      "page": 166,
+      "section": "Databases and warehouses",
+      "title": "DynamoDB capacity modes",
+      "visual": null,
+      "status": "study",
+      "noteAnchor": "pdf-page-166",
+      "representation": "notes"
+    },
+    {
+      "page": 167,
+      "section": "Databases and warehouses",
+      "title": "R/W Capacity Modes – Provisioned",
+      "visual": null,
+      "status": "study",
+      "noteAnchor": "pdf-page-167",
+      "representation": "notes"
+    },
+    {
+      "page": 168,
+      "section": "Databases and warehouses",
+      "title": "DynamoDB – Write Capacity Units (WCU)",
+      "visual": "pdf:168",
+      "status": "study",
+      "noteAnchor": "pdf-page-168",
+      "representation": "diagram + notes"
+    },
+    {
+      "page": 169,
+      "section": "Databases and warehouses",
+      "title": "Strongly Consistent Read vs. Eventually Consistent Read",
+      "visual": "pdf:169",
+      "status": "study",
+      "noteAnchor": "pdf-page-169",
+      "representation": "diagram + notes"
+    },
+    {
+      "page": 170,
+      "section": "Databases and warehouses",
+      "title": "DynamoDB – Read Capacity Units (RCU)",
+      "visual": "pdf:170",
+      "status": "study",
+      "noteAnchor": "pdf-page-170",
+      "representation": "diagram + notes"
+    },
+    {
+      "page": 171,
+      "section": "Databases and warehouses",
+      "title": "DynamoDB – Partitions Internal",
+      "visual": "pdf:171",
+      "status": "study",
+      "noteAnchor": "pdf-page-171",
+      "representation": "diagram + notes"
+    },
+    {
+      "page": 172,
+      "section": "Databases and warehouses",
+      "title": "DynamoDB – Throttling",
+      "visual": null,
+      "status": "study",
+      "noteAnchor": "pdf-page-172",
+      "representation": "notes"
+    },
+    {
+      "page": 173,
+      "section": "Databases and warehouses",
+      "title": "DynamoDB on-demand: capacity still has limits",
+      "visual": null,
+      "status": "study",
+      "noteAnchor": "pdf-page-173",
+      "representation": "notes"
+    },
+    {
+      "page": 174,
+      "section": "Databases and warehouses",
+      "title": "DynamoDB – Writing Data",
+      "visual": null,
+      "status": "study",
+      "noteAnchor": "pdf-page-174",
+      "representation": "notes"
+    },
+    {
+      "page": 175,
+      "section": "Databases and warehouses",
+      "title": "DynamoDB – Reading Data",
+      "visual": null,
+      "status": "study",
+      "noteAnchor": "pdf-page-175",
+      "representation": "notes"
+    },
+    {
+      "page": 176,
+      "section": "Databases and warehouses",
+      "title": "DynamoDB – Reading Data (Query)",
+      "visual": null,
+      "status": "study",
+      "noteAnchor": "pdf-page-176",
+      "representation": "notes"
+    },
+    {
+      "page": 177,
+      "section": "Databases and warehouses",
+      "title": "DynamoDB – Reading Data (Scan)",
+      "visual": null,
+      "status": "study",
+      "noteAnchor": "pdf-page-177",
+      "representation": "notes"
+    },
+    {
+      "page": 178,
+      "section": "Databases and warehouses",
+      "title": "DynamoDB – Deleting Data",
+      "visual": null,
+      "status": "study",
+      "noteAnchor": "pdf-page-178",
+      "representation": "notes"
+    },
+    {
+      "page": 179,
+      "section": "Databases and warehouses",
+      "title": "DynamoDB – Batch Operations",
+      "visual": null,
+      "status": "study",
+      "noteAnchor": "pdf-page-179",
+      "representation": "notes"
+    },
+    {
+      "page": 180,
+      "section": "Databases and warehouses",
+      "title": "DynamoDB – PartiQL",
+      "visual": null,
+      "status": "study",
+      "noteAnchor": "pdf-page-180",
+      "representation": "notes"
+    },
+    {
+      "page": 181,
+      "section": "Databases and warehouses",
+      "title": "DynamoDB – Local Secondary Index (LSI)",
+      "visual": "pdf:181",
+      "status": "study",
+      "noteAnchor": "pdf-page-181",
+      "representation": "diagram + notes"
+    },
+    {
+      "page": 182,
+      "section": "Databases and warehouses",
+      "title": "DynamoDB – Global Secondary Index (GSI)",
+      "visual": "pdf:182",
+      "status": "study",
+      "noteAnchor": "pdf-page-182",
+      "representation": "diagram + notes"
+    },
+    {
+      "page": 183,
+      "section": "Databases and warehouses",
+      "title": "DynamoDB – Indexes and Throttling",
+      "visual": null,
+      "status": "study",
+      "noteAnchor": "pdf-page-183",
+      "representation": "notes"
+    },
+    {
+      "page": 184,
+      "section": "Databases and warehouses",
+      "title": "DynamoDB - PartiQL",
+      "visual": null,
+      "status": "study",
+      "noteAnchor": "pdf-page-184",
+      "representation": "notes"
+    },
+    {
+      "page": 185,
+      "section": "Databases and warehouses",
+      "title": "DynamoDB Accelerator (DAX)",
+      "visual": "pdf:185",
+      "status": "study",
+      "noteAnchor": "pdf-page-185",
+      "representation": "diagram + notes"
+    },
+    {
+      "page": 186,
+      "section": "Databases and warehouses",
+      "title": "DynamoDB Accelerator (DAX) vs. ElastiCache",
+      "visual": "pdf:186",
+      "status": "study",
+      "noteAnchor": "pdf-page-186",
+      "representation": "diagram + notes"
+    },
+    {
+      "page": 187,
+      "section": "Databases and warehouses",
+      "title": "DynamoDB Streams",
+      "visual": null,
+      "status": "study",
+      "noteAnchor": "pdf-page-187",
+      "representation": "notes"
+    },
+    {
+      "page": 188,
+      "section": "Databases and warehouses",
+      "title": "DynamoDB Streams",
+      "visual": "pdf:188",
+      "status": "study",
+      "noteAnchor": "pdf-page-188",
+      "representation": "diagram + notes"
+    },
+    {
+      "page": 189,
+      "section": "Databases and warehouses",
+      "title": "DynamoDB Streams",
+      "visual": null,
+      "status": "study",
+      "noteAnchor": "pdf-page-189",
+      "representation": "notes"
+    },
+    {
+      "page": 190,
+      "section": "Databases and warehouses",
+      "title": "DynamoDB Streams & AWS Lambda",
+      "visual": "pdf:190",
+      "status": "study",
+      "noteAnchor": "pdf-page-190",
+      "representation": "diagram + notes"
+    },
+    {
+      "page": 191,
+      "section": "Databases and warehouses",
+      "title": "DynamoDB – Time To Live (TTL)",
+      "visual": "pdf:191",
+      "status": "study",
+      "noteAnchor": "pdf-page-191",
+      "representation": "diagram + notes"
+    },
+    {
+      "page": 192,
+      "section": "Databases and warehouses",
+      "title": "DynamoDB – Large Objects Pattern",
+      "visual": "pdf:192",
+      "status": "study",
+      "noteAnchor": "pdf-page-192",
+      "representation": "diagram + notes"
+    },
+    {
+      "page": 193,
+      "section": "Databases and warehouses",
+      "title": "DynamoDB – Indexing S3 Objects Metadata",
+      "visual": "pdf:193",
+      "status": "study",
+      "noteAnchor": "pdf-page-193",
+      "representation": "diagram + notes"
+    },
+    {
+      "page": 194,
+      "section": "Databases and warehouses",
+      "title": "DynamoDB – Security & Other Features",
+      "visual": null,
+      "status": "study",
+      "noteAnchor": "pdf-page-194",
+      "representation": "notes"
+    },
+    {
+      "page": 195,
+      "section": "Databases and warehouses",
+      "title": "DynamoDB – Users Interact with DynamoDB Directly",
+      "visual": "pdf:195",
+      "status": "study",
+      "noteAnchor": "pdf-page-195",
+      "representation": "diagram + notes"
+    },
+    {
+      "page": 196,
+      "section": "Databases and warehouses",
+      "title": "DynamoDB – Fine-Grained Access Control",
+      "visual": null,
+      "status": "study",
+      "noteAnchor": "pdf-page-196",
+      "representation": "notes"
+    },
+    {
+      "page": 197,
+      "section": "Databases and warehouses",
+      "title": "Amazon RDS",
+      "visual": null,
+      "status": "context",
+      "reason": "Chapter/topic divider; covered by the following study topics and section organization."
+    },
+    {
+      "page": 198,
+      "section": "Databases and warehouses",
+      "title": "What is RDS?",
+      "visual": null,
+      "status": "study",
+      "noteAnchor": "pdf-page-198",
+      "representation": "notes"
+    },
+    {
+      "page": 199,
+      "section": "Databases and warehouses",
+      "title": "ACID",
+      "visual": null,
+      "status": "study",
+      "noteAnchor": "pdf-page-199",
+      "representation": "notes"
+    },
+    {
+      "page": 200,
+      "section": "Databases and warehouses",
+      "title": "Amazon Aurora",
+      "visual": null,
+      "status": "study",
+      "noteAnchor": "pdf-page-200",
+      "representation": "notes"
+    },
+    {
+      "page": 201,
+      "section": "Databases and warehouses",
+      "title": "Aurora Security",
+      "visual": null,
+      "status": "study",
+      "noteAnchor": "pdf-page-201",
+      "representation": "notes"
+    },
+    {
+      "page": 202,
+      "section": "Databases and warehouses",
+      "title": "Relational database concurrency and locks",
+      "visual": null,
+      "status": "study",
+      "noteAnchor": "pdf-page-202",
+      "representation": "notes"
+    },
+    {
+      "page": 203,
+      "section": "Databases and warehouses",
+      "title": "Database locks: engine-specific behavior",
+      "visual": null,
+      "status": "study",
+      "noteAnchor": "pdf-page-203",
+      "representation": "notes"
+    },
+    {
+      "page": 204,
+      "section": "Databases and warehouses",
+      "title": "RDS best practices: unexpanded source heading",
+      "visual": null,
+      "status": "study",
+      "noteAnchor": "pdf-page-204",
+      "representation": "notes"
+    },
+    {
+      "page": 205,
+      "section": "Databases and warehouses",
+      "title": "Amazon RDS operational guidelines",
+      "visual": null,
+      "status": "study",
+      "noteAnchor": "pdf-page-205",
+      "representation": "notes"
+    },
+    {
+      "page": 206,
+      "section": "Databases and warehouses",
+      "title": "Query optimization in RDS",
+      "visual": null,
+      "status": "study",
+      "noteAnchor": "pdf-page-206",
+      "representation": "notes"
+    },
+    {
+      "page": 207,
+      "section": "Databases and warehouses",
+      "title": "DB-specific tweaks",
+      "visual": null,
+      "status": "study",
+      "noteAnchor": "pdf-page-207",
+      "representation": "notes"
+    },
+    {
+      "page": 208,
+      "section": "Databases and warehouses",
+      "title": "DB-specific tweaks",
+      "visual": null,
+      "status": "study",
+      "noteAnchor": "pdf-page-208",
+      "representation": "notes"
+    },
+    {
+      "page": 209,
+      "section": "Databases and warehouses",
+      "title": "Amazon Aurora",
+      "visual": null,
+      "status": "study",
+      "noteAnchor": "pdf-page-209",
+      "representation": "notes"
+    },
+    {
+      "page": 210,
+      "section": "Databases and warehouses",
+      "title": "Aurora High Availability and Read Scaling",
+      "visual": "pdf:210",
+      "status": "study",
+      "noteAnchor": "pdf-page-210",
+      "representation": "diagram + notes"
+    },
+    {
+      "page": 211,
+      "section": "Databases and warehouses",
+      "title": "Aurora DB Cluster",
+      "visual": "pdf:211",
+      "status": "study",
+      "noteAnchor": "pdf-page-211",
+      "representation": "diagram + notes"
+    },
+    {
+      "page": 212,
+      "section": "Databases and warehouses",
+      "title": "Features of Aurora",
+      "visual": null,
+      "status": "study",
+      "noteAnchor": "pdf-page-212",
+      "representation": "notes"
+    },
+    {
+      "page": 213,
+      "section": "Databases and warehouses",
+      "title": "Amazon Aurora as a Vector Store",
+      "visual": "pdf:213",
+      "status": "study",
+      "noteAnchor": "pdf-page-213",
+      "representation": "diagram + notes"
+    },
+    {
+      "page": 214,
+      "section": "Databases and warehouses",
+      "title": "DocumentDB",
+      "visual": null,
+      "status": "study",
+      "noteAnchor": "pdf-page-214",
+      "representation": "notes"
+    },
+    {
+      "page": 215,
+      "section": "Databases and warehouses",
+      "title": "Amazon MemoryDB for Redis",
+      "visual": "pdf:215",
+      "status": "study",
+      "noteAnchor": "pdf-page-215",
+      "representation": "diagram + notes"
+    },
+    {
+      "page": 216,
+      "section": "Databases and warehouses",
+      "title": "Amazon Keyspaces (for Apache Cassandra)",
+      "visual": null,
+      "status": "study",
+      "noteAnchor": "pdf-page-216",
+      "representation": "notes"
+    },
+    {
+      "page": 217,
+      "section": "Databases and warehouses",
+      "title": "Amazon Neptune",
+      "visual": "pdf:217",
+      "status": "study",
+      "noteAnchor": "pdf-page-217",
+      "representation": "diagram + notes"
+    },
+    {
+      "page": 218,
+      "section": "Databases and warehouses",
+      "title": "Amazon Neptune – Query Languges",
+      "visual": "pdf:218",
+      "status": "study",
+      "noteAnchor": "pdf-page-218",
+      "representation": "diagram + notes"
+    },
+    {
+      "page": 219,
+      "section": "Databases and warehouses",
+      "title": "Amazon Timestream",
+      "visual": null,
+      "status": "study",
+      "noteAnchor": "pdf-page-219",
+      "representation": "notes"
+    },
+    {
+      "page": 220,
+      "section": "Databases and warehouses",
+      "title": "Amazon Timestream – Architecture",
+      "visual": "pdf:220",
+      "status": "study",
+      "noteAnchor": "pdf-page-220",
+      "representation": "diagram + notes"
+    },
+    {
+      "page": 221,
+      "section": "Databases and warehouses",
+      "title": "Amazon Redshift",
+      "visual": null,
+      "status": "context",
+      "reason": "Chapter/topic divider; covered by the following study topics and section organization."
+    },
+    {
+      "page": 222,
+      "section": "Databases and warehouses",
+      "title": "What is Redshift?",
+      "visual": null,
+      "status": "study",
+      "noteAnchor": "pdf-page-222",
+      "representation": "notes"
+    },
+    {
+      "page": 223,
+      "section": "Databases and warehouses",
+      "title": "Redshift Use-Cases",
+      "visual": null,
+      "status": "study",
+      "noteAnchor": "pdf-page-223",
+      "representation": "notes"
+    },
+    {
+      "page": 224,
+      "section": "Databases and warehouses",
+      "title": "Redshift architecture",
+      "visual": "pdf:224",
+      "status": "study",
+      "noteAnchor": "pdf-page-224",
+      "representation": "diagram + notes"
+    },
+    {
+      "page": 225,
+      "section": "Databases and warehouses",
+      "title": "Redshift Spectrum",
+      "visual": "pdf:225",
+      "status": "study",
+      "noteAnchor": "pdf-page-225",
+      "representation": "diagram + notes"
+    },
+    {
+      "page": 226,
+      "section": "Databases and warehouses",
+      "title": "Redshift Performance",
+      "visual": null,
+      "status": "study",
+      "noteAnchor": "pdf-page-226",
+      "representation": "notes"
+    },
+    {
+      "page": 227,
+      "section": "Databases and warehouses",
+      "title": "Redshift Durability",
+      "visual": null,
+      "status": "study",
+      "noteAnchor": "pdf-page-227",
+      "representation": "notes"
+    },
+    {
+      "page": 228,
+      "section": "Databases and warehouses",
+      "title": "Scaling Redshift",
+      "visual": null,
+      "status": "study",
+      "noteAnchor": "pdf-page-228",
+      "representation": "notes"
+    },
+    {
+      "page": 229,
+      "section": "Databases and warehouses",
+      "title": "Redshift Distribution Styles",
+      "visual": null,
+      "status": "study",
+      "noteAnchor": "pdf-page-229",
+      "representation": "notes"
+    },
+    {
+      "page": 230,
+      "section": "Databases and warehouses",
+      "title": "EVEN distribution",
+      "visual": "pdf:230",
+      "status": "study",
+      "noteAnchor": "pdf-page-230",
+      "representation": "diagram + notes"
+    },
+    {
+      "page": 231,
+      "section": "Databases and warehouses",
+      "title": "KEY distribution",
+      "visual": "pdf:231",
+      "status": "study",
+      "noteAnchor": "pdf-page-231",
+      "representation": "diagram + notes"
+    },
+    {
+      "page": 232,
+      "section": "Databases and warehouses",
+      "title": "ALL distribution",
+      "visual": "pdf:232",
+      "status": "study",
+      "noteAnchor": "pdf-page-232",
+      "representation": "diagram + notes"
+    },
+    {
+      "page": 233,
+      "section": "Databases and warehouses",
+      "title": "Importing / Exporting data",
+      "visual": null,
+      "status": "study",
+      "noteAnchor": "pdf-page-233",
+      "representation": "notes"
+    },
+    {
+      "page": 234,
+      "section": "Databases and warehouses",
+      "title": "COPY command: More depth",
+      "visual": null,
+      "status": "study",
+      "noteAnchor": "pdf-page-234",
+      "representation": "notes"
+    },
+    {
+      "page": 235,
+      "section": "Databases and warehouses",
+      "title": "Redshift copy grants for cross-region snapshot copies",
+      "visual": null,
+      "status": "study",
+      "noteAnchor": "pdf-page-235",
+      "representation": "notes"
+    },
+    {
+      "page": 236,
+      "section": "Databases and warehouses",
+      "title": "DBLINK",
+      "visual": null,
+      "status": "study",
+      "noteAnchor": "pdf-page-236",
+      "representation": "notes"
+    },
+    {
+      "page": 237,
+      "section": "Databases and warehouses",
+      "title": "Integration with other services",
+      "visual": null,
+      "status": "study",
+      "noteAnchor": "pdf-page-237",
+      "representation": "notes"
+    },
+    {
+      "page": 238,
+      "section": "Databases and warehouses",
+      "title": "Redshift Workload Management (WLM)",
+      "visual": null,
+      "status": "study",
+      "noteAnchor": "pdf-page-238",
+      "representation": "notes"
+    },
+    {
+      "page": 239,
+      "section": "Databases and warehouses",
+      "title": "Concurrency Scaling",
+      "visual": null,
+      "status": "study",
+      "noteAnchor": "pdf-page-239",
+      "representation": "notes"
+    },
+    {
+      "page": 240,
+      "section": "Databases and warehouses",
+      "title": "Automatic Workload Management",
+      "visual": null,
+      "status": "study",
+      "noteAnchor": "pdf-page-240",
+      "representation": "notes"
+    },
+    {
+      "page": 241,
+      "section": "Databases and warehouses",
+      "title": "Manual Workload Management",
+      "visual": null,
+      "status": "study",
+      "noteAnchor": "pdf-page-241",
+      "representation": "notes"
+    },
+    {
+      "page": 242,
+      "section": "Databases and warehouses",
+      "title": "Short Query Acceleration (SQA)",
+      "visual": null,
+      "status": "study",
+      "noteAnchor": "pdf-page-242",
+      "representation": "notes"
+    },
+    {
+      "page": 243,
+      "section": "Databases and warehouses",
+      "title": "Resizing Redshift Clusters",
+      "visual": null,
+      "status": "study",
+      "noteAnchor": "pdf-page-243",
+      "representation": "notes"
+    },
+    {
+      "page": 244,
+      "section": "Databases and warehouses",
+      "title": "VACUUM command",
+      "visual": null,
+      "status": "study",
+      "noteAnchor": "pdf-page-244",
+      "representation": "notes"
+    },
+    {
+      "page": 245,
+      "section": "Databases and warehouses",
+      "title": "Newer Redshift features",
+      "visual": null,
+      "status": "study",
+      "noteAnchor": "pdf-page-245",
+      "representation": "notes"
+    },
+    {
+      "page": 246,
+      "section": "Databases and warehouses",
+      "title": "Amazon Redshift ML",
+      "visual": "pdf:246",
+      "status": "study",
+      "noteAnchor": "pdf-page-246",
+      "representation": "diagram + notes"
+    },
+    {
+      "page": 247,
+      "section": "Databases and warehouses",
+      "title": "Redshift anti-patterns",
+      "visual": null,
+      "status": "study",
+      "noteAnchor": "pdf-page-247",
+      "representation": "notes"
+    },
+    {
+      "page": 248,
+      "section": "Databases and warehouses",
+      "title": "Redshift security concerns",
+      "visual": null,
+      "status": "study",
+      "noteAnchor": "pdf-page-248",
+      "representation": "notes"
+    },
+    {
+      "page": 249,
+      "section": "Databases and warehouses",
+      "title": "Redshift Serverless",
+      "visual": null,
+      "status": "study",
+      "noteAnchor": "pdf-page-249",
+      "representation": "notes"
+    },
+    {
+      "page": 250,
+      "section": "Databases and warehouses",
+      "title": "Redshift Serverless: Getting Started",
+      "visual": null,
+      "status": "study",
+      "noteAnchor": "pdf-page-250",
+      "representation": "notes"
+    },
+    {
+      "page": 251,
+      "section": "Databases and warehouses",
+      "title": "Resource Scaling in Redshift Serverless",
+      "visual": null,
+      "status": "study",
+      "noteAnchor": "pdf-page-251",
+      "representation": "notes"
+    },
+    {
+      "page": 252,
+      "section": "Databases and warehouses",
+      "title": "Redshift Serverless: check feature differences",
+      "visual": null,
+      "status": "study",
+      "noteAnchor": "pdf-page-252",
+      "representation": "notes"
+    },
+    {
+      "page": 253,
+      "section": "Databases and warehouses",
+      "title": "Redshift Serverless: Monitoring",
+      "visual": null,
+      "status": "study",
+      "noteAnchor": "pdf-page-253",
+      "representation": "notes"
+    },
+    {
+      "page": 254,
+      "section": "Databases and warehouses",
+      "title": "Redshift Materialized Views",
+      "visual": "pdf:254",
+      "status": "study",
+      "noteAnchor": "pdf-page-254",
+      "representation": "diagram + notes"
+    },
+    {
+      "page": 255,
+      "section": "Databases and warehouses",
+      "title": "Using Materialized Views",
+      "visual": null,
+      "status": "study",
+      "noteAnchor": "pdf-page-255",
+      "representation": "notes"
+    },
+    {
+      "page": 256,
+      "section": "Databases and warehouses",
+      "title": "Redshift Data Sharing",
+      "visual": "pdf:256",
+      "status": "study",
+      "noteAnchor": "pdf-page-256",
+      "representation": "diagram + notes"
+    },
+    {
+      "page": 257,
+      "section": "Databases and warehouses",
+      "title": "Redshift Data Sharing",
+      "visual": "pdf:257",
+      "status": "study",
+      "noteAnchor": "pdf-page-257",
+      "representation": "diagram + notes"
+    },
+    {
+      "page": 258,
+      "section": "Databases and warehouses",
+      "title": "Redshift Lambda UDF",
+      "visual": "pdf:258",
+      "status": "study",
+      "noteAnchor": "pdf-page-258",
+      "representation": "diagram + notes"
+    },
+    {
+      "page": 259,
+      "section": "Databases and warehouses",
+      "title": "Redshift Lambda UDF",
+      "visual": "pdf:259",
+      "status": "study",
+      "noteAnchor": "pdf-page-259",
+      "representation": "diagram + notes"
+    },
+    {
+      "page": 260,
+      "section": "Databases and warehouses",
+      "title": "Redshift Federated Queries",
+      "visual": "pdf:260",
+      "status": "study",
+      "noteAnchor": "pdf-page-260",
+      "representation": "diagram + notes"
+    },
+    {
+      "page": 261,
+      "section": "Databases and warehouses",
+      "title": "Redshift Federated Queries",
+      "visual": null,
+      "status": "study",
+      "noteAnchor": "pdf-page-261",
+      "representation": "notes"
+    },
+    {
+      "page": 262,
+      "section": "Databases and warehouses",
+      "title": "Redshift Federated Queries",
+      "visual": null,
+      "status": "study",
+      "noteAnchor": "pdf-page-262",
+      "representation": "notes"
+    },
+    {
+      "page": 263,
+      "section": "Databases and warehouses",
+      "title": "Redshift System Tables and Views",
+      "visual": null,
+      "status": "study",
+      "noteAnchor": "pdf-page-263",
+      "representation": "notes"
+    },
+    {
+      "page": 264,
+      "section": "Databases and warehouses",
+      "title": "Redshift Data API",
+      "visual": "pdf:264",
+      "status": "study",
+      "noteAnchor": "pdf-page-264",
+      "representation": "diagram + notes"
+    },
+    {
+      "page": 265,
+      "section": "Databases and warehouses",
+      "title": "Redshift Data API: Other use cases",
+      "visual": "pdf:265",
+      "status": "study",
+      "noteAnchor": "pdf-page-265",
+      "representation": "diagram + notes"
+    },
+    {
+      "page": 266,
+      "section": "Databases and warehouses",
+      "title": "Redshift Data API: Finer Points",
+      "visual": null,
+      "status": "study",
+      "noteAnchor": "pdf-page-266",
+      "representation": "notes"
+    },
+    {
+      "page": 267,
+      "section": "Migration and transfer",
+      "title": "Migration and Transfer",
+      "visual": null,
+      "status": "context",
+      "reason": "Chapter/topic divider; covered by the following study topics and section organization."
+    },
+    {
+      "page": 268,
+      "section": "Migration and transfer",
+      "title": "AWS Application Discovery Service",
+      "visual": null,
+      "status": "study",
+      "noteAnchor": "pdf-page-268",
+      "representation": "notes"
+    },
+    {
+      "page": 269,
+      "section": "Migration and transfer",
+      "title": "AWS Application Migration Service (MGN)",
+      "visual": "pdf:269",
+      "status": "study",
+      "noteAnchor": "pdf-page-269",
+      "representation": "diagram + notes"
+    },
+    {
+      "page": 270,
+      "section": "Migration and transfer",
+      "title": "DMS – Database Migration Service",
+      "visual": "pdf:270",
+      "status": "study",
+      "noteAnchor": "pdf-page-270",
+      "representation": "diagram + notes"
+    },
+    {
+      "page": 271,
+      "section": "Migration and transfer",
+      "title": "DMS Sources and Targets",
+      "visual": null,
+      "status": "study",
+      "noteAnchor": "pdf-page-271",
+      "representation": "notes"
+    },
+    {
+      "page": 272,
+      "section": "Migration and transfer",
+      "title": "AWS Schema Conversion Tool (SCT)",
+      "visual": "pdf:272",
+      "status": "study",
+      "noteAnchor": "pdf-page-272",
+      "representation": "diagram + notes"
+    },
+    {
+      "page": 273,
+      "section": "Migration and transfer",
+      "title": "DMS - Continuous Replication",
+      "visual": "pdf:273",
+      "status": "study",
+      "noteAnchor": "pdf-page-273",
+      "representation": "diagram + notes"
+    },
+    {
+      "page": 274,
+      "section": "Migration and transfer",
+      "title": "AWS DMS – Multi-AZ Deployment",
+      "visual": "pdf:274",
+      "status": "study",
+      "noteAnchor": "pdf-page-274",
+      "representation": "diagram + notes"
+    },
+    {
+      "page": 275,
+      "section": "Migration and transfer",
+      "title": "AWS DataSync",
+      "visual": null,
+      "status": "study",
+      "noteAnchor": "pdf-page-275",
+      "representation": "notes"
+    },
+    {
+      "page": 276,
+      "section": "Migration and transfer",
+      "title": "AWS DataSync NFS / SMB to AWS (S3, EFS, FSx…)",
+      "visual": "pdf:276",
+      "status": "study",
+      "noteAnchor": "pdf-page-276",
+      "representation": "diagram + notes"
+    },
+    {
+      "page": 277,
+      "section": "Migration and transfer",
+      "title": "AWS DataSync Transfer between AWS storage services",
+      "visual": "pdf:277",
+      "status": "study",
+      "noteAnchor": "pdf-page-277",
+      "representation": "diagram + notes"
+    },
+    {
+      "page": 278,
+      "section": "Migration and transfer",
+      "title": "Snowball device comparison: course snapshot",
+      "visual": null,
+      "status": "study",
+      "noteAnchor": "pdf-page-278",
+      "representation": "table + notes"
+    },
+    {
+      "page": 279,
+      "section": "Migration and transfer",
+      "title": "Estimate network transfer time",
+      "visual": null,
+      "status": "study",
+      "noteAnchor": "pdf-page-279",
+      "representation": "table + notes"
+    },
+    {
+      "page": 280,
+      "section": "Migration and transfer",
+      "title": "Diagrams",
+      "visual": "pdf:280",
+      "status": "study",
+      "noteAnchor": "pdf-page-280",
+      "representation": "diagram + notes"
+    },
+    {
+      "page": 281,
+      "section": "Migration and transfer",
+      "title": "What is Edge Computing?",
+      "visual": null,
+      "status": "study",
+      "noteAnchor": "pdf-page-281",
+      "representation": "notes"
+    },
+    {
+      "page": 282,
+      "section": "Migration and transfer",
+      "title": "AWS Data Exchange",
+      "visual": null,
+      "status": "study",
+      "noteAnchor": "pdf-page-282",
+      "representation": "notes"
+    },
+    {
+      "page": 283,
+      "section": "Migration and transfer",
+      "title": "AWS Data Exchange",
+      "visual": "pdf:283",
+      "status": "study",
+      "noteAnchor": "pdf-page-283",
+      "representation": "diagram + notes"
+    },
+    {
+      "page": 284,
+      "section": "Migration and transfer",
+      "title": "AWS Data Exchange – Other Products",
+      "visual": null,
+      "status": "study",
+      "noteAnchor": "pdf-page-284",
+      "representation": "notes"
+    },
+    {
+      "page": 285,
+      "section": "Migration and transfer",
+      "title": "AWS Transfer Family",
+      "visual": null,
+      "status": "study",
+      "noteAnchor": "pdf-page-285",
+      "representation": "notes"
+    },
+    {
+      "page": 286,
+      "section": "Migration and transfer",
+      "title": "AWS Transfer Family",
+      "visual": "pdf:286",
+      "status": "study",
+      "noteAnchor": "pdf-page-286",
+      "representation": "diagram + notes"
+    },
+    {
+      "page": 287,
+      "section": "Compute",
+      "title": "Compute",
+      "visual": null,
+      "status": "context",
+      "reason": "Chapter/topic divider; covered by the following study topics and section organization."
+    },
+    {
+      "page": 288,
+      "section": "Compute",
+      "title": "EC2 in Big Data",
+      "visual": null,
+      "status": "study",
+      "noteAnchor": "pdf-page-288",
+      "representation": "notes"
+    },
+    {
+      "page": 289,
+      "section": "Compute",
+      "title": "AWS Graviton",
+      "visual": null,
+      "status": "study",
+      "noteAnchor": "pdf-page-289",
+      "representation": "notes"
+    },
+    {
+      "page": 290,
+      "section": "Compute",
+      "title": "AWS Lambda",
+      "visual": null,
+      "status": "context",
+      "reason": "Chapter/topic divider; covered by the following study topics and section organization."
+    },
+    {
+      "page": 291,
+      "section": "Compute",
+      "title": "What is Lambda?",
+      "visual": null,
+      "status": "study",
+      "noteAnchor": "pdf-page-291",
+      "representation": "notes"
+    },
+    {
+      "page": 292,
+      "section": "Compute",
+      "title": "Example: Serverless Website",
+      "visual": "pdf:292",
+      "status": "study",
+      "noteAnchor": "pdf-page-292",
+      "representation": "diagram + notes"
+    },
+    {
+      "page": 293,
+      "section": "Compute",
+      "title": "Example: Order history app",
+      "visual": "pdf:293",
+      "status": "study",
+      "noteAnchor": "pdf-page-293",
+      "representation": "diagram + notes"
+    },
+    {
+      "page": 294,
+      "section": "Compute",
+      "title": "Example: Transaction rate alarm",
+      "visual": "pdf:294",
+      "status": "study",
+      "noteAnchor": "pdf-page-294",
+      "representation": "diagram + notes"
+    },
+    {
+      "page": 295,
+      "section": "Compute",
+      "title": "Why not just run a server?",
+      "visual": null,
+      "status": "study",
+      "noteAnchor": "pdf-page-295",
+      "representation": "notes"
+    },
+    {
+      "page": 296,
+      "section": "Compute",
+      "title": "Main uses of Lambda",
+      "visual": null,
+      "status": "study",
+      "noteAnchor": "pdf-page-296",
+      "representation": "notes"
+    },
+    {
+      "page": 297,
+      "section": "Compute",
+      "title": "Supported languages",
+      "visual": null,
+      "status": "study",
+      "noteAnchor": "pdf-page-297",
+      "representation": "notes"
+    },
+    {
+      "page": 298,
+      "section": "Compute",
+      "title": "Lambda triggers",
+      "visual": "pdf:298",
+      "status": "study",
+      "noteAnchor": "pdf-page-298",
+      "representation": "diagram + notes"
+    },
+    {
+      "page": 299,
+      "section": "Compute",
+      "title": "Lambda and Amazon OpenSearch Service",
+      "visual": "pdf:299",
+      "status": "study",
+      "noteAnchor": "pdf-page-299",
+      "representation": "diagram + notes"
+    },
+    {
+      "page": 300,
+      "section": "Compute",
+      "title": "Lambda and Redshift",
+      "visual": "pdf:300",
+      "status": "study",
+      "noteAnchor": "pdf-page-300",
+      "representation": "diagram + notes"
+    },
+    {
+      "page": 301,
+      "section": "Compute",
+      "title": "Lambda + Kinesis",
+      "visual": "pdf:301",
+      "status": "study",
+      "noteAnchor": "pdf-page-301",
+      "representation": "diagram + notes"
+    },
+    {
+      "page": 302,
+      "section": "Compute",
+      "title": "Cost Model",
+      "visual": null,
+      "status": "study",
+      "noteAnchor": "pdf-page-302",
+      "representation": "notes"
+    },
+    {
+      "page": 303,
+      "section": "Compute",
+      "title": "Other promises",
+      "visual": null,
+      "status": "study",
+      "noteAnchor": "pdf-page-303",
+      "representation": "notes"
+    },
+    {
+      "page": 304,
+      "section": "Compute",
+      "title": "Anti-patterns",
+      "visual": null,
+      "status": "study",
+      "noteAnchor": "pdf-page-304",
+      "representation": "notes"
+    },
+    {
+      "page": 305,
+      "section": "Compute",
+      "title": "Lambda – File Systems Mounting",
+      "visual": "pdf:305",
+      "status": "study",
+      "noteAnchor": "pdf-page-305",
+      "representation": "diagram + notes"
+    },
+    {
+      "page": 306,
+      "section": "Compute",
+      "title": "Lambda storage choices",
+      "visual": null,
+      "status": "study",
+      "noteAnchor": "pdf-page-306",
+      "representation": "table + notes"
+    },
+    {
+      "page": 307,
+      "section": "Compute",
+      "title": "AWS SAM",
+      "visual": null,
+      "status": "study",
+      "noteAnchor": "pdf-page-307",
+      "representation": "notes"
+    },
+    {
+      "page": 308,
+      "section": "Compute",
+      "title": "AWS SAM – Recipe",
+      "visual": null,
+      "status": "study",
+      "noteAnchor": "pdf-page-308",
+      "representation": "notes"
+    },
+    {
+      "page": 309,
+      "section": "Compute",
+      "title": "Deep Dive into SAM Deployment",
+      "visual": "pdf:309",
+      "status": "study",
+      "noteAnchor": "pdf-page-309",
+      "representation": "diagram + notes"
+    },
+    {
+      "page": 310,
+      "section": "Compute",
+      "title": "SAM Accelerate (sam sync)",
+      "visual": "pdf:310",
+      "status": "study",
+      "noteAnchor": "pdf-page-310",
+      "representation": "diagram + notes"
+    },
+    {
+      "page": 311,
+      "section": "Compute",
+      "title": "SAM Accelerate (sam sync) – Examples",
+      "visual": "pdf:311",
+      "status": "study",
+      "noteAnchor": "pdf-page-311",
+      "representation": "diagram + notes"
+    },
+    {
+      "page": 312,
+      "section": "Compute",
+      "title": "AWS Batch",
+      "visual": null,
+      "status": "study",
+      "noteAnchor": "pdf-page-312",
+      "representation": "notes"
+    },
+    {
+      "page": 313,
+      "section": "Compute",
+      "title": "AWS Batch vs Glue",
+      "visual": null,
+      "status": "study",
+      "noteAnchor": "pdf-page-313",
+      "representation": "notes"
+    },
+    {
+      "page": 314,
+      "section": "Containers",
+      "title": "Containers",
+      "visual": null,
+      "status": "context",
+      "reason": "Chapter/topic divider; covered by the following study topics and section organization."
+    },
+    {
+      "page": 315,
+      "section": "Containers",
+      "title": "Containers on AWS",
+      "visual": null,
+      "status": "context",
+      "reason": "Chapter/topic divider; covered by the following study topics and section organization."
+    },
+    {
+      "page": 316,
+      "section": "Containers",
+      "title": "What is Docker?",
+      "visual": null,
+      "status": "study",
+      "noteAnchor": "pdf-page-316",
+      "representation": "notes"
+    },
+    {
+      "page": 317,
+      "section": "Containers",
+      "title": "Docker on an OS",
+      "visual": "pdf:317",
+      "status": "study",
+      "noteAnchor": "pdf-page-317",
+      "representation": "diagram + notes"
+    },
+    {
+      "page": 318,
+      "section": "Containers",
+      "title": "Where are Docker images stored?",
+      "visual": null,
+      "status": "study",
+      "noteAnchor": "pdf-page-318",
+      "representation": "notes"
+    },
+    {
+      "page": 319,
+      "section": "Containers",
+      "title": "Docker vs. Virtual Machines",
+      "visual": "pdf:319",
+      "status": "study",
+      "noteAnchor": "pdf-page-319",
+      "representation": "diagram + notes"
+    },
+    {
+      "page": 320,
+      "section": "Containers",
+      "title": "Getting Started with Docker",
+      "visual": "pdf:320",
+      "status": "study",
+      "noteAnchor": "pdf-page-320",
+      "representation": "diagram + notes"
+    },
+    {
+      "page": 321,
+      "section": "Containers",
+      "title": "Docker Containers Management on AWS",
+      "visual": null,
+      "status": "study",
+      "noteAnchor": "pdf-page-321",
+      "representation": "notes"
+    },
+    {
+      "page": 322,
+      "section": "Containers",
+      "title": "Amazon ECS - EC2 Launch Type",
+      "visual": "pdf:322",
+      "status": "study",
+      "noteAnchor": "pdf-page-322",
+      "representation": "diagram + notes"
+    },
+    {
+      "page": 323,
+      "section": "Containers",
+      "title": "Amazon ECS – Fargate Launch Type",
+      "visual": "pdf:323",
+      "status": "study",
+      "noteAnchor": "pdf-page-323",
+      "representation": "diagram + notes"
+    },
+    {
+      "page": 324,
+      "section": "Containers",
+      "title": "Amazon ECS – IAM Roles for ECS",
+      "visual": "pdf:324",
+      "status": "study",
+      "noteAnchor": "pdf-page-324",
+      "representation": "diagram + notes"
+    },
+    {
+      "page": 325,
+      "section": "Containers",
+      "title": "Amazon ECS – Load Balancer Integrations",
+      "visual": "pdf:325",
+      "status": "study",
+      "noteAnchor": "pdf-page-325",
+      "representation": "diagram + notes"
+    },
+    {
+      "page": 326,
+      "section": "Containers",
+      "title": "Amazon ECS – Data Volumes (EFS)",
+      "visual": "pdf:326",
+      "status": "study",
+      "noteAnchor": "pdf-page-326",
+      "representation": "diagram + notes"
+    },
+    {
+      "page": 327,
+      "section": "Containers",
+      "title": "Amazon ECS – Data Volumes (S3 Files)",
+      "visual": "pdf:327",
+      "status": "study",
+      "noteAnchor": "pdf-page-327",
+      "representation": "diagram + notes"
+    },
+    {
+      "page": 328,
+      "section": "Containers",
+      "title": "Amazon ECR",
+      "visual": "pdf:328",
+      "status": "study",
+      "noteAnchor": "pdf-page-328",
+      "representation": "diagram + notes"
+    },
+    {
+      "page": 329,
+      "section": "Containers",
+      "title": "Amazon EKS Overview",
+      "visual": null,
+      "status": "study",
+      "noteAnchor": "pdf-page-329",
+      "representation": "notes"
+    },
+    {
+      "page": 330,
+      "section": "Containers",
+      "title": "Amazon EKS - Diagram",
+      "visual": "pdf:330",
+      "status": "study",
+      "noteAnchor": "pdf-page-330",
+      "representation": "diagram + notes"
+    },
+    {
+      "page": 331,
+      "section": "Containers",
+      "title": "Amazon EKS – Node Types",
+      "visual": null,
+      "status": "study",
+      "noteAnchor": "pdf-page-331",
+      "representation": "notes"
+    },
+    {
+      "page": 332,
+      "section": "Containers",
+      "title": "Amazon EKS – Data Volumes",
+      "visual": "pdf:332",
+      "status": "study",
+      "noteAnchor": "pdf-page-332",
+      "representation": "diagram + notes"
+    },
+    {
+      "page": 333,
+      "section": "Analytics and streaming",
+      "title": "Analytics",
+      "visual": null,
+      "status": "context",
+      "reason": "Chapter/topic divider; covered by the following study topics and section organization."
+    },
+    {
+      "page": 334,
+      "section": "Analytics and streaming",
+      "title": "AWS Glue",
+      "visual": null,
+      "status": "context",
+      "reason": "Chapter/topic divider; covered by the following study topics and section organization."
+    },
+    {
+      "page": 335,
+      "section": "Analytics and streaming",
+      "title": "What is Glue?",
+      "visual": null,
+      "status": "study",
+      "noteAnchor": "pdf-page-335",
+      "representation": "notes"
+    },
+    {
+      "page": 336,
+      "section": "Analytics and streaming",
+      "title": "Glue Crawler / Data Catalog",
+      "visual": "pdf:336",
+      "status": "study",
+      "noteAnchor": "pdf-page-336",
+      "representation": "diagram + notes"
+    },
+    {
+      "page": 337,
+      "section": "Analytics and streaming",
+      "title": "Glue and S3 Partitions",
+      "visual": "pdf:337",
+      "status": "study",
+      "noteAnchor": "pdf-page-337",
+      "representation": "diagram + notes"
+    },
+    {
+      "page": 338,
+      "section": "Analytics and streaming",
+      "title": "Glue + Hive",
+      "visual": null,
+      "status": "study",
+      "noteAnchor": "pdf-page-338",
+      "representation": "notes"
+    },
+    {
+      "page": 339,
+      "section": "Analytics and streaming",
+      "title": "Glue ETL",
+      "visual": null,
+      "status": "study",
+      "noteAnchor": "pdf-page-339",
+      "representation": "notes"
+    },
+    {
+      "page": 340,
+      "section": "Analytics and streaming",
+      "title": "Glue ETL",
+      "visual": null,
+      "status": "study",
+      "noteAnchor": "pdf-page-340",
+      "representation": "notes"
+    },
+    {
+      "page": 341,
+      "section": "Analytics and streaming",
+      "title": "Glue ETL: The DynamicFrame",
+      "visual": "pdf:341",
+      "status": "study",
+      "noteAnchor": "pdf-page-341",
+      "representation": "diagram + notes"
+    },
+    {
+      "page": 342,
+      "section": "Analytics and streaming",
+      "title": "Glue ETL - Transformations",
+      "visual": null,
+      "status": "study",
+      "noteAnchor": "pdf-page-342",
+      "representation": "notes"
+    },
+    {
+      "page": 343,
+      "section": "Analytics and streaming",
+      "title": "Glue ETL: ResolveChoice",
+      "visual": "pdf:343",
+      "status": "study",
+      "noteAnchor": "pdf-page-343",
+      "representation": "diagram + notes"
+    },
+    {
+      "page": 344,
+      "section": "Analytics and streaming",
+      "title": "Glue ETL: Modifying the Data Catalog",
+      "visual": null,
+      "status": "study",
+      "noteAnchor": "pdf-page-344",
+      "representation": "notes"
+    },
+    {
+      "page": 345,
+      "section": "Analytics and streaming",
+      "title": "AWS Glue Development Endpoints",
+      "visual": null,
+      "status": "study",
+      "noteAnchor": "pdf-page-345",
+      "representation": "notes"
+    },
+    {
+      "page": 346,
+      "section": "Analytics and streaming",
+      "title": "Running Glue jobs",
+      "visual": null,
+      "status": "study",
+      "noteAnchor": "pdf-page-346",
+      "representation": "notes"
+    },
+    {
+      "page": 347,
+      "section": "Analytics and streaming",
+      "title": "Glue cost model",
+      "visual": null,
+      "status": "study",
+      "noteAnchor": "pdf-page-347",
+      "representation": "notes"
+    },
+    {
+      "page": 348,
+      "section": "Analytics and streaming",
+      "title": "Glue Anti-patterns",
+      "visual": null,
+      "status": "study",
+      "noteAnchor": "pdf-page-348",
+      "representation": "notes"
+    },
+    {
+      "page": 349,
+      "section": "Analytics and streaming",
+      "title": "No longer an anti-pattern: streaming",
+      "visual": null,
+      "status": "study",
+      "noteAnchor": "pdf-page-349",
+      "representation": "notes"
+    },
+    {
+      "page": 350,
+      "section": "Analytics and streaming",
+      "title": "AWS Glue Studio",
+      "visual": "pdf:350",
+      "status": "study",
+      "noteAnchor": "pdf-page-350",
+      "representation": "diagram + notes"
+    },
+    {
+      "page": 351,
+      "section": "Analytics and streaming",
+      "title": "AWS Glue Data Quality",
+      "visual": "pdf:351",
+      "status": "study",
+      "noteAnchor": "pdf-page-351",
+      "representation": "diagram + notes"
+    },
+    {
+      "page": 352,
+      "section": "Analytics and streaming",
+      "title": "More on Data Quality Definition Language (DQDL)",
+      "visual": null,
+      "status": "study",
+      "noteAnchor": "pdf-page-352",
+      "representation": "notes"
+    },
+    {
+      "page": 353,
+      "section": "Analytics and streaming",
+      "title": "AWS Glue Data Quality",
+      "visual": "pdf:353",
+      "status": "study",
+      "noteAnchor": "pdf-page-353",
+      "representation": "diagram + notes"
+    },
+    {
+      "page": 354,
+      "section": "Analytics and streaming",
+      "title": "AWS Glue DataBrew",
+      "visual": null,
+      "status": "study",
+      "noteAnchor": "pdf-page-354",
+      "representation": "notes"
+    },
+    {
+      "page": 355,
+      "section": "Analytics and streaming",
+      "title": "Handling Personally Identifiable Information (PII) in DataBrew Transformations",
+      "visual": null,
+      "status": "study",
+      "noteAnchor": "pdf-page-355",
+      "representation": "notes"
+    },
+    {
+      "page": 356,
+      "section": "Analytics and streaming",
+      "title": "Glue Workflows",
+      "visual": "pdf:356",
+      "status": "study",
+      "noteAnchor": "pdf-page-356",
+      "representation": "diagram + notes"
+    },
+    {
+      "page": 357,
+      "section": "Analytics and streaming",
+      "title": "Glue Workflow Triggers",
+      "visual": null,
+      "status": "study",
+      "noteAnchor": "pdf-page-357",
+      "representation": "notes"
+    },
+    {
+      "page": 358,
+      "section": "Analytics and streaming",
+      "title": "Glue Flex Jobs",
+      "visual": "pdf:358",
+      "status": "study",
+      "noteAnchor": "pdf-page-358",
+      "representation": "diagram + notes"
+    },
+    {
+      "page": 359,
+      "section": "Analytics and streaming",
+      "title": "Glue Flex Jobs",
+      "visual": null,
+      "status": "study",
+      "noteAnchor": "pdf-page-359",
+      "representation": "notes"
+    },
+    {
+      "page": 360,
+      "section": "Analytics and streaming",
+      "title": "AWS Lake Formation",
+      "visual": null,
+      "status": "study",
+      "noteAnchor": "pdf-page-360",
+      "representation": "notes"
+    },
+    {
+      "page": 361,
+      "section": "Analytics and streaming",
+      "title": "AWS Lake Formation",
+      "visual": "pdf:361",
+      "status": "study",
+      "noteAnchor": "pdf-page-361",
+      "representation": "diagram + notes"
+    },
+    {
+      "page": 362,
+      "section": "Analytics and streaming",
+      "title": "AWS Lake Formation: Pricing",
+      "visual": null,
+      "status": "study",
+      "noteAnchor": "pdf-page-362",
+      "representation": "notes"
+    },
+    {
+      "page": 363,
+      "section": "Analytics and streaming",
+      "title": "AWS Lake Formation: Building a Data Lake",
+      "visual": "pdf:363",
+      "status": "study",
+      "noteAnchor": "pdf-page-363",
+      "representation": "diagram + notes"
+    },
+    {
+      "page": 364,
+      "section": "Analytics and streaming",
+      "title": "AWS Lake Formation: The Finer Points",
+      "visual": null,
+      "status": "study",
+      "noteAnchor": "pdf-page-364",
+      "representation": "notes"
+    },
+    {
+      "page": 365,
+      "section": "Analytics and streaming",
+      "title": "Data Permissions in Lake Formation",
+      "visual": "pdf:365",
+      "status": "study",
+      "noteAnchor": "pdf-page-365",
+      "representation": "diagram + notes"
+    },
+    {
+      "page": 366,
+      "section": "Analytics and streaming",
+      "title": "Data Filters in Lake Formation",
+      "visual": "pdf:366",
+      "status": "study",
+      "noteAnchor": "pdf-page-366",
+      "representation": "diagram + notes"
+    },
+    {
+      "page": 367,
+      "section": "Analytics and streaming",
+      "title": "Amazon Athena",
+      "visual": null,
+      "status": "context",
+      "reason": "Chapter/topic divider; covered by the following study topics and section organization."
+    },
+    {
+      "page": 368,
+      "section": "Analytics and streaming",
+      "title": "What is Athena?",
+      "visual": null,
+      "status": "study",
+      "noteAnchor": "pdf-page-368",
+      "representation": "notes"
+    },
+    {
+      "page": 369,
+      "section": "Analytics and streaming",
+      "title": "Some examples",
+      "visual": null,
+      "status": "study",
+      "noteAnchor": "pdf-page-369",
+      "representation": "notes"
+    },
+    {
+      "page": 370,
+      "section": "Analytics and streaming",
+      "title": "Athena + Glue",
+      "visual": "pdf:370",
+      "status": "study",
+      "noteAnchor": "pdf-page-370",
+      "representation": "diagram + notes"
+    },
+    {
+      "page": 371,
+      "section": "Analytics and streaming",
+      "title": "Athena Workgroups",
+      "visual": null,
+      "status": "study",
+      "noteAnchor": "pdf-page-371",
+      "representation": "notes"
+    },
+    {
+      "page": 372,
+      "section": "Analytics and streaming",
+      "title": "Athena cost model",
+      "visual": null,
+      "status": "study",
+      "noteAnchor": "pdf-page-372",
+      "representation": "notes"
+    },
+    {
+      "page": 373,
+      "section": "Analytics and streaming",
+      "title": "Athena Security",
+      "visual": null,
+      "status": "study",
+      "noteAnchor": "pdf-page-373",
+      "representation": "notes"
+    },
+    {
+      "page": 374,
+      "section": "Analytics and streaming",
+      "title": "Athena anti-patterns",
+      "visual": null,
+      "status": "study",
+      "noteAnchor": "pdf-page-374",
+      "representation": "notes"
+    },
+    {
+      "page": 375,
+      "section": "Analytics and streaming",
+      "title": "Athena: Optimizing performance",
+      "visual": null,
+      "status": "study",
+      "noteAnchor": "pdf-page-375",
+      "representation": "notes"
+    },
+    {
+      "page": 376,
+      "section": "Analytics and streaming",
+      "title": "Athena ACID transactions",
+      "visual": null,
+      "status": "study",
+      "noteAnchor": "pdf-page-376",
+      "representation": "notes"
+    },
+    {
+      "page": 377,
+      "section": "Analytics and streaming",
+      "title": "Athena Fine-Grained Access to AWS Glue Data Catalog",
+      "visual": null,
+      "status": "study",
+      "noteAnchor": "pdf-page-377",
+      "representation": "notes"
+    },
+    {
+      "page": 378,
+      "section": "Analytics and streaming",
+      "title": "Athena Fine-Grained Access to AWS Glue Data Catalog",
+      "visual": null,
+      "status": "study",
+      "noteAnchor": "pdf-page-378",
+      "representation": "notes"
+    },
+    {
+      "page": 379,
+      "section": "Analytics and streaming",
+      "title": "Wait,what’s Iceberg?",
+      "visual": null,
+      "status": "study",
+      "noteAnchor": "pdf-page-379",
+      "representation": "notes"
+    },
+    {
+      "page": 380,
+      "section": "Analytics and streaming",
+      "title": "Iceberg + AWS Glue / S3",
+      "visual": "pdf:380",
+      "status": "study",
+      "noteAnchor": "pdf-page-380",
+      "representation": "diagram + notes"
+    },
+    {
+      "page": 381,
+      "section": "Analytics and streaming",
+      "title": "Migrating Glue Data Catalogs to Iceberg",
+      "visual": null,
+      "status": "study",
+      "noteAnchor": "pdf-page-381",
+      "representation": "notes"
+    },
+    {
+      "page": 382,
+      "section": "Analytics and streaming",
+      "title": "CREATE TABLE AS SELECT",
+      "visual": null,
+      "status": "study",
+      "noteAnchor": "pdf-page-382",
+      "representation": "notes"
+    },
+    {
+      "page": 383,
+      "section": "Analytics and streaming",
+      "title": "Athena Federated Queries",
+      "visual": "pdf:383",
+      "status": "study",
+      "noteAnchor": "pdf-page-383",
+      "representation": "diagram + notes"
+    },
+    {
+      "page": 384,
+      "section": "Analytics and streaming",
+      "title": "Athena Federated Queries",
+      "visual": null,
+      "status": "study",
+      "noteAnchor": "pdf-page-384",
+      "representation": "notes"
+    },
+    {
+      "page": 385,
+      "section": "Analytics and streaming",
+      "title": "HDFS YARN MapReduce Spark",
+      "visual": "pdf:385",
+      "status": "study",
+      "noteAnchor": "pdf-page-385",
+      "representation": "diagram + notes"
+    },
+    {
+      "page": 386,
+      "section": "Analytics and streaming",
+      "title": "How Spark Works",
+      "visual": "pdf:386",
+      "status": "study",
+      "noteAnchor": "pdf-page-386",
+      "representation": "diagram + notes"
+    },
+    {
+      "page": 387,
+      "section": "Analytics and streaming",
+      "title": "Spark Components",
+      "visual": "pdf:387",
+      "status": "study",
+      "noteAnchor": "pdf-page-387",
+      "representation": "diagram + notes"
+    },
+    {
+      "page": 388,
+      "section": "Analytics and streaming",
+      "title": "Spark Structured Streaming A constantly growing DataSet",
+      "visual": "pdf:388",
+      "status": "study",
+      "noteAnchor": "pdf-page-388",
+      "representation": "diagram + notes"
+    },
+    {
+      "page": 389,
+      "section": "Analytics and streaming",
+      "title": "Spark Streaming + Kinesis",
+      "visual": "pdf:389",
+      "status": "study",
+      "noteAnchor": "pdf-page-389",
+      "representation": "diagram + notes"
+    },
+    {
+      "page": 390,
+      "section": "Analytics and streaming",
+      "title": "Spark + Redshift",
+      "visual": "pdf:390",
+      "status": "study",
+      "noteAnchor": "pdf-page-390",
+      "representation": "diagram + notes"
+    },
+    {
+      "page": 391,
+      "section": "Analytics and streaming",
+      "title": "Amazon Athena for Apache Spark",
+      "visual": null,
+      "status": "study",
+      "noteAnchor": "pdf-page-391",
+      "representation": "notes"
+    },
+    {
+      "page": 392,
+      "section": "Analytics and streaming",
+      "title": "EMR",
+      "visual": null,
+      "status": "context",
+      "reason": "Chapter/topic divider; covered by the following study topics and section organization."
+    },
+    {
+      "page": 393,
+      "section": "Analytics and streaming",
+      "title": "What is EMR?",
+      "visual": null,
+      "status": "study",
+      "noteAnchor": "pdf-page-393",
+      "representation": "notes"
+    },
+    {
+      "page": 394,
+      "section": "Analytics and streaming",
+      "title": "An EMR Cluster",
+      "visual": "pdf:394",
+      "status": "study",
+      "noteAnchor": "pdf-page-394",
+      "representation": "diagram + notes"
+    },
+    {
+      "page": 395,
+      "section": "Analytics and streaming",
+      "title": "EMR Usage",
+      "visual": null,
+      "status": "study",
+      "noteAnchor": "pdf-page-395",
+      "representation": "notes"
+    },
+    {
+      "page": 396,
+      "section": "Analytics and streaming",
+      "title": "EMR Usage",
+      "visual": null,
+      "status": "study",
+      "noteAnchor": "pdf-page-396",
+      "representation": "notes"
+    },
+    {
+      "page": 397,
+      "section": "Analytics and streaming",
+      "title": "EMR / AWS Integration",
+      "visual": null,
+      "status": "study",
+      "noteAnchor": "pdf-page-397",
+      "representation": "notes"
+    },
+    {
+      "page": 398,
+      "section": "Analytics and streaming",
+      "title": "EMR storage and S3 consistency",
+      "visual": null,
+      "status": "study",
+      "noteAnchor": "pdf-page-398",
+      "representation": "notes"
+    },
+    {
+      "page": 399,
+      "section": "Analytics and streaming",
+      "title": "EMR Storage",
+      "visual": null,
+      "status": "study",
+      "noteAnchor": "pdf-page-399",
+      "representation": "notes"
+    },
+    {
+      "page": 400,
+      "section": "Analytics and streaming",
+      "title": "EMR promises",
+      "visual": null,
+      "status": "study",
+      "noteAnchor": "pdf-page-400",
+      "representation": "notes"
+    },
+    {
+      "page": 401,
+      "section": "Analytics and streaming",
+      "title": "EMR Managed Scaling",
+      "visual": null,
+      "status": "study",
+      "noteAnchor": "pdf-page-401",
+      "representation": "notes"
+    },
+    {
+      "page": 402,
+      "section": "Analytics and streaming",
+      "title": "EMR Serverless",
+      "visual": null,
+      "status": "study",
+      "noteAnchor": "pdf-page-402",
+      "representation": "notes"
+    },
+    {
+      "page": 403,
+      "section": "Analytics and streaming",
+      "title": "Using EMR Serverless",
+      "visual": "pdf:403",
+      "status": "study",
+      "noteAnchor": "pdf-page-403",
+      "representation": "diagram + notes"
+    },
+    {
+      "page": 404,
+      "section": "Analytics and streaming",
+      "title": "EMR Serverless Application Lifecycle",
+      "visual": "pdf:404",
+      "status": "study",
+      "noteAnchor": "pdf-page-404",
+      "representation": "diagram + notes"
+    },
+    {
+      "page": 405,
+      "section": "Analytics and streaming",
+      "title": "Pre-Initialized Capacity",
+      "visual": null,
+      "status": "study",
+      "noteAnchor": "pdf-page-405",
+      "representation": "notes"
+    },
+    {
+      "page": 406,
+      "section": "Analytics and streaming",
+      "title": "EMR Serverless Security",
+      "visual": null,
+      "status": "study",
+      "noteAnchor": "pdf-page-406",
+      "representation": "notes"
+    },
+    {
+      "page": 407,
+      "section": "Analytics and streaming",
+      "title": "EMR on EKS",
+      "visual": "pdf:407",
+      "status": "study",
+      "noteAnchor": "pdf-page-407",
+      "representation": "diagram + notes"
+    },
+    {
+      "page": 408,
+      "section": "Analytics and streaming",
+      "title": "Kinesis Data Streams",
+      "visual": "pdf:408",
+      "status": "study",
+      "noteAnchor": "pdf-page-408",
+      "representation": "diagram + notes"
+    },
+    {
+      "page": 409,
+      "section": "Analytics and streaming",
+      "title": "Kinesis Data Streams",
+      "visual": null,
+      "status": "study",
+      "noteAnchor": "pdf-page-409",
+      "representation": "notes"
+    },
+    {
+      "page": 410,
+      "section": "Analytics and streaming",
+      "title": "Kinesis Data Streams – Capacity Modes",
+      "visual": null,
+      "status": "study",
+      "noteAnchor": "pdf-page-410",
+      "representation": "notes"
+    },
+    {
+      "page": 411,
+      "section": "Analytics and streaming",
+      "title": "Kinesis Data Streams Security",
+      "visual": "pdf:411",
+      "status": "study",
+      "noteAnchor": "pdf-page-411",
+      "representation": "diagram + notes"
+    },
+    {
+      "page": 412,
+      "section": "Analytics and streaming",
+      "title": "Kinesis Producers",
+      "visual": "pdf:412",
+      "status": "study",
+      "noteAnchor": "pdf-page-412",
+      "representation": "diagram + notes"
+    },
+    {
+      "page": 413,
+      "section": "Analytics and streaming",
+      "title": "Kinesis Producer SDK - PutRecord(s)",
+      "visual": null,
+      "status": "study",
+      "noteAnchor": "pdf-page-413",
+      "representation": "notes"
+    },
+    {
+      "page": 414,
+      "section": "Analytics and streaming",
+      "title": "AWS Kinesis API – Exceptions",
+      "visual": null,
+      "status": "study",
+      "noteAnchor": "pdf-page-414",
+      "representation": "notes"
+    },
+    {
+      "page": 415,
+      "section": "Analytics and streaming",
+      "title": "Kinesis Producer Library (KPL)",
+      "visual": null,
+      "status": "study",
+      "noteAnchor": "pdf-page-415",
+      "representation": "notes"
+    },
+    {
+      "page": 416,
+      "section": "Analytics and streaming",
+      "title": "Kinesis Producer Library (KPL) Batching",
+      "visual": "pdf:416",
+      "status": "study",
+      "noteAnchor": "pdf-page-416",
+      "representation": "diagram + notes"
+    },
+    {
+      "page": 417,
+      "section": "Analytics and streaming",
+      "title": "Kinesis Producer Library – When not to use",
+      "visual": "pdf:417",
+      "status": "study",
+      "noteAnchor": "pdf-page-417",
+      "representation": "diagram + notes"
+    },
+    {
+      "page": 418,
+      "section": "Analytics and streaming",
+      "title": "Kinesis Agent",
+      "visual": null,
+      "status": "study",
+      "noteAnchor": "pdf-page-418",
+      "representation": "notes"
+    },
+    {
+      "page": 419,
+      "section": "Analytics and streaming",
+      "title": "Kinesis Consumers - Classic",
+      "visual": "pdf:419",
+      "status": "study",
+      "noteAnchor": "pdf-page-419",
+      "representation": "diagram + notes"
+    },
+    {
+      "page": 420,
+      "section": "Analytics and streaming",
+      "title": "Kinesis Consumer SDK - GetRecords",
+      "visual": "pdf:420",
+      "status": "study",
+      "noteAnchor": "pdf-page-420",
+      "representation": "diagram + notes"
+    },
+    {
+      "page": 421,
+      "section": "Analytics and streaming",
+      "title": "Kinesis Client Library (KCL)",
+      "visual": "pdf:421",
+      "status": "study",
+      "noteAnchor": "pdf-page-421",
+      "representation": "diagram + notes"
+    },
+    {
+      "page": 422,
+      "section": "Analytics and streaming",
+      "title": "Kinesis Connector Library",
+      "visual": "pdf:422",
+      "status": "study",
+      "noteAnchor": "pdf-page-422",
+      "representation": "diagram + notes"
+    },
+    {
+      "page": 423,
+      "section": "Analytics and streaming",
+      "title": "AWS Lambda sourcing from Kinesis",
+      "visual": null,
+      "status": "study",
+      "noteAnchor": "pdf-page-423",
+      "representation": "notes"
+    },
+    {
+      "page": 424,
+      "section": "Analytics and streaming",
+      "title": "Kinesis Enhanced Fan Out",
+      "visual": "pdf:424",
+      "status": "study",
+      "noteAnchor": "pdf-page-424",
+      "representation": "diagram + notes"
+    },
+    {
+      "page": 425,
+      "section": "Analytics and streaming",
+      "title": "Enhanced Fan-Out vs Standard Consumers",
+      "visual": null,
+      "status": "study",
+      "noteAnchor": "pdf-page-425",
+      "representation": "notes"
+    },
+    {
+      "page": 426,
+      "section": "Analytics and streaming",
+      "title": "Kinesis Operations – Adding Shards",
+      "visual": "pdf:426",
+      "status": "study",
+      "noteAnchor": "pdf-page-426",
+      "representation": "diagram + notes"
+    },
+    {
+      "page": 427,
+      "section": "Analytics and streaming",
+      "title": "Kinesis Operations – Merging Shards",
+      "visual": "pdf:427",
+      "status": "study",
+      "noteAnchor": "pdf-page-427",
+      "representation": "diagram + notes"
+    },
+    {
+      "page": 428,
+      "section": "Analytics and streaming",
+      "title": "Out-of-order records after resharding",
+      "visual": "pdf:428",
+      "status": "study",
+      "noteAnchor": "pdf-page-428",
+      "representation": "diagram + notes"
+    },
+    {
+      "page": 429,
+      "section": "Analytics and streaming",
+      "title": "Kinesis Operations – Auto Scaling",
+      "visual": "pdf:429",
+      "status": "study",
+      "noteAnchor": "pdf-page-429",
+      "representation": "diagram + notes"
+    },
+    {
+      "page": 430,
+      "section": "Analytics and streaming",
+      "title": "Kinesis Scaling Limitations",
+      "visual": null,
+      "status": "study",
+      "noteAnchor": "pdf-page-430",
+      "representation": "notes"
+    },
+    {
+      "page": 431,
+      "section": "Analytics and streaming",
+      "title": "Kinesis Data Streams – Handling Duplicates For Producers",
+      "visual": "pdf:431",
+      "status": "study",
+      "noteAnchor": "pdf-page-431",
+      "representation": "diagram + notes"
+    },
+    {
+      "page": 432,
+      "section": "Analytics and streaming",
+      "title": "Kinesis Data Streams – Handling Duplicates For Consumers",
+      "visual": null,
+      "status": "study",
+      "noteAnchor": "pdf-page-432",
+      "representation": "notes"
+    },
+    {
+      "page": 433,
+      "section": "Analytics and streaming",
+      "title": "Kinesis Security",
+      "visual": null,
+      "status": "study",
+      "noteAnchor": "pdf-page-433",
+      "representation": "notes"
+    },
+    {
+      "page": 434,
+      "section": "Analytics and streaming",
+      "title": "Data Firehose",
+      "visual": "pdf:434",
+      "status": "study",
+      "noteAnchor": "pdf-page-434",
+      "representation": "diagram + notes"
+    },
+    {
+      "page": 435,
+      "section": "Analytics and streaming",
+      "title": "AWS Data Firehose",
+      "visual": null,
+      "status": "study",
+      "noteAnchor": "pdf-page-435",
+      "representation": "notes"
+    },
+    {
+      "page": 436,
+      "section": "Analytics and streaming",
+      "title": "Data Firehose Delivery Diagram",
+      "visual": "pdf:436",
+      "status": "study",
+      "noteAnchor": "pdf-page-436",
+      "representation": "diagram + notes"
+    },
+    {
+      "page": 437,
+      "section": "Analytics and streaming",
+      "title": "Firehose Buffer Sizing",
+      "visual": null,
+      "status": "study",
+      "noteAnchor": "pdf-page-437",
+      "representation": "notes"
+    },
+    {
+      "page": 438,
+      "section": "Analytics and streaming",
+      "title": "Kinesis Data Streams vs Firehose",
+      "visual": null,
+      "status": "study",
+      "noteAnchor": "pdf-page-438",
+      "representation": "notes"
+    },
+    {
+      "page": 439,
+      "section": "Analytics and streaming",
+      "title": "Troubleshooting Kinesis Data Stream Producers: Performance",
+      "visual": null,
+      "status": "study",
+      "noteAnchor": "pdf-page-439",
+      "representation": "notes"
+    },
+    {
+      "page": 440,
+      "section": "Analytics and streaming",
+      "title": "Other Kinesis Data Stream Producer Issues",
+      "visual": null,
+      "status": "study",
+      "noteAnchor": "pdf-page-440",
+      "representation": "notes"
+    },
+    {
+      "page": 441,
+      "section": "Analytics and streaming",
+      "title": "Troubleshooting Kinesis Data Stream Consumers",
+      "visual": null,
+      "status": "study",
+      "noteAnchor": "pdf-page-441",
+      "representation": "notes"
+    },
+    {
+      "page": 442,
+      "section": "Analytics and streaming",
+      "title": "Troubleshooting Kinesis Data Stream Consumers",
+      "visual": null,
+      "status": "study",
+      "noteAnchor": "pdf-page-442",
+      "representation": "notes"
+    },
+    {
+      "page": 443,
+      "section": "Analytics and streaming",
+      "title": "Troubleshooting Kinesis Data Stream Consumers",
+      "visual": null,
+      "status": "study",
+      "noteAnchor": "pdf-page-443",
+      "representation": "notes"
+    },
+    {
+      "page": 444,
+      "section": "Analytics and streaming",
+      "title": "Kinesis Data Analytics / Managed Service for Apache Flink",
+      "visual": null,
+      "status": "context",
+      "reason": "Chapter/topic divider; covered by the following study topics and section organization."
+    },
+    {
+      "page": 445,
+      "section": "Analytics and streaming",
+      "title": "Amazon Kinesis Data Analytics for SQL Applications",
+      "visual": "pdf:445",
+      "status": "study",
+      "noteAnchor": "pdf-page-445",
+      "representation": "diagram + notes"
+    },
+    {
+      "page": 446,
+      "section": "Analytics and streaming",
+      "title": "In more depth…",
+      "visual": "pdf:446",
+      "status": "study",
+      "noteAnchor": "pdf-page-446",
+      "representation": "diagram + notes"
+    },
+    {
+      "page": 447,
+      "section": "Analytics and streaming",
+      "title": "Reference tables are cool",
+      "visual": "pdf:447",
+      "status": "study",
+      "noteAnchor": "pdf-page-447",
+      "representation": "diagram + notes"
+    },
+    {
+      "page": 448,
+      "section": "Analytics and streaming",
+      "title": "Kinesis Data Analytics + Lambda",
+      "visual": "pdf:448",
+      "status": "study",
+      "noteAnchor": "pdf-page-448",
+      "representation": "diagram + notes"
+    },
+    {
+      "page": 449,
+      "section": "Analytics and streaming",
+      "title": "Managed Service for Apache Flink",
+      "visual": "pdf:449",
+      "status": "study",
+      "noteAnchor": "pdf-page-449",
+      "representation": "diagram + notes"
+    },
+    {
+      "page": 450,
+      "section": "Analytics and streaming",
+      "title": "Apache Flink Capabilities",
+      "visual": "pdf:450",
+      "status": "study",
+      "noteAnchor": "pdf-page-450",
+      "representation": "diagram + notes"
+    },
+    {
+      "page": 451,
+      "section": "Analytics and streaming",
+      "title": "Common use-cases",
+      "visual": null,
+      "status": "study",
+      "noteAnchor": "pdf-page-451",
+      "representation": "notes"
+    },
+    {
+      "page": 452,
+      "section": "Analytics and streaming",
+      "title": "Kinesis Analytics",
+      "visual": null,
+      "status": "study",
+      "noteAnchor": "pdf-page-452",
+      "representation": "notes"
+    },
+    {
+      "page": 453,
+      "section": "Analytics and streaming",
+      "title": "RANDOM_CUT_FOREST",
+      "visual": null,
+      "status": "study",
+      "noteAnchor": "pdf-page-453",
+      "representation": "notes"
+    },
+    {
+      "page": 454,
+      "section": "Analytics and streaming",
+      "title": "Amazon Managed Streaming for Apache Kafka (Amazon MSK)",
+      "visual": null,
+      "status": "study",
+      "noteAnchor": "pdf-page-454",
+      "representation": "notes"
+    },
+    {
+      "page": 455,
+      "section": "Analytics and streaming",
+      "title": "Apache Kafka at a high level",
+      "visual": "pdf:455",
+      "status": "study",
+      "noteAnchor": "pdf-page-455",
+      "representation": "diagram + notes"
+    },
+    {
+      "page": 456,
+      "section": "Analytics and streaming",
+      "title": "MSK – Configurations",
+      "visual": "pdf:456",
+      "status": "study",
+      "noteAnchor": "pdf-page-456",
+      "representation": "diagram + notes"
+    },
+    {
+      "page": 457,
+      "section": "Analytics and streaming",
+      "title": "MSK – Security",
+      "visual": "pdf:457",
+      "status": "study",
+      "noteAnchor": "pdf-page-457",
+      "representation": "diagram + notes"
+    },
+    {
+      "page": 458,
+      "section": "Analytics and streaming",
+      "title": "MSK – Monitoring",
+      "visual": null,
+      "status": "study",
+      "noteAnchor": "pdf-page-458",
+      "representation": "notes"
+    },
+    {
+      "page": 459,
+      "section": "Analytics and streaming",
+      "title": "MSK Connect",
+      "visual": "pdf:459",
+      "status": "study",
+      "noteAnchor": "pdf-page-459",
+      "representation": "diagram + notes"
+    },
+    {
+      "page": 460,
+      "section": "Analytics and streaming",
+      "title": "MSK Serverless",
+      "visual": null,
+      "status": "study",
+      "noteAnchor": "pdf-page-460",
+      "representation": "notes"
+    },
+    {
+      "page": 461,
+      "section": "Analytics and streaming",
+      "title": "Kinesis Data Streams vs Amazon MSK",
+      "visual": null,
+      "status": "study",
+      "noteAnchor": "pdf-page-461",
+      "representation": "notes"
+    },
+    {
+      "page": 462,
+      "section": "Analytics and streaming",
+      "title": "Amazon OpenSearch Service (formerly Elasticsearch)",
+      "visual": null,
+      "status": "context",
+      "reason": "Chapter/topic divider; covered by the following study topics and section organization."
+    },
+    {
+      "page": 463,
+      "section": "Analytics and streaming",
+      "title": "What is OpenSearch?",
+      "visual": null,
+      "status": "study",
+      "noteAnchor": "pdf-page-463",
+      "representation": "notes"
+    },
+    {
+      "page": 464,
+      "section": "Analytics and streaming",
+      "title": "OpenSearch Dashboards",
+      "visual": null,
+      "status": "study",
+      "noteAnchor": "pdf-page-464",
+      "representation": "notes"
+    },
+    {
+      "page": 465,
+      "section": "Analytics and streaming",
+      "title": "OpenSearch applications",
+      "visual": null,
+      "status": "study",
+      "noteAnchor": "pdf-page-465",
+      "representation": "notes"
+    },
+    {
+      "page": 466,
+      "section": "Analytics and streaming",
+      "title": "OpenSearch concepts",
+      "visual": "pdf:466",
+      "status": "study",
+      "noteAnchor": "pdf-page-466",
+      "representation": "diagram + notes"
+    },
+    {
+      "page": 467,
+      "section": "Analytics and streaming",
+      "title": "An index is split into shards",
+      "visual": "pdf:467",
+      "status": "study",
+      "noteAnchor": "pdf-page-467",
+      "representation": "diagram + notes"
+    },
+    {
+      "page": 468,
+      "section": "Analytics and streaming",
+      "title": "Redundancy",
+      "visual": "pdf:468",
+      "status": "study",
+      "noteAnchor": "pdf-page-468",
+      "representation": "diagram + notes"
+    },
+    {
+      "page": 469,
+      "section": "Analytics and streaming",
+      "title": "Amazon OpenSearch Service (Managed)",
+      "visual": null,
+      "status": "study",
+      "noteAnchor": "pdf-page-469",
+      "representation": "notes"
+    },
+    {
+      "page": 470,
+      "section": "Analytics and streaming",
+      "title": "Amazon OpenSearch options",
+      "visual": null,
+      "status": "study",
+      "noteAnchor": "pdf-page-470",
+      "representation": "notes"
+    },
+    {
+      "page": 471,
+      "section": "Analytics and streaming",
+      "title": "Cold / warm / ultrawarm / hot storage",
+      "visual": null,
+      "status": "study",
+      "noteAnchor": "pdf-page-471",
+      "representation": "notes"
+    },
+    {
+      "page": 472,
+      "section": "Analytics and streaming",
+      "title": "Index State Management",
+      "visual": null,
+      "status": "study",
+      "noteAnchor": "pdf-page-472",
+      "representation": "notes"
+    },
+    {
+      "page": 473,
+      "section": "Analytics and streaming",
+      "title": "More Index Management",
+      "visual": null,
+      "status": "study",
+      "noteAnchor": "pdf-page-473",
+      "representation": "notes"
+    },
+    {
+      "page": 474,
+      "section": "Analytics and streaming",
+      "title": "Cross-cluster replication",
+      "visual": null,
+      "status": "study",
+      "noteAnchor": "pdf-page-474",
+      "representation": "notes"
+    },
+    {
+      "page": 475,
+      "section": "Analytics and streaming",
+      "title": "OpenSearch Stability",
+      "visual": null,
+      "status": "study",
+      "noteAnchor": "pdf-page-475",
+      "representation": "notes"
+    },
+    {
+      "page": 476,
+      "section": "Analytics and streaming",
+      "title": "Amazon OpenSearch Security",
+      "visual": null,
+      "status": "study",
+      "noteAnchor": "pdf-page-476",
+      "representation": "notes"
+    },
+    {
+      "page": 477,
+      "section": "Analytics and streaming",
+      "title": "Securing Dashboards",
+      "visual": "pdf:477",
+      "status": "study",
+      "noteAnchor": "pdf-page-477",
+      "representation": "diagram + notes"
+    },
+    {
+      "page": 478,
+      "section": "Analytics and streaming",
+      "title": "Amazon OpenSearch anti-patterns",
+      "visual": null,
+      "status": "study",
+      "noteAnchor": "pdf-page-478",
+      "representation": "notes"
+    },
+    {
+      "page": 479,
+      "section": "Analytics and streaming",
+      "title": "Amazon OpenSearch performance",
+      "visual": null,
+      "status": "study",
+      "noteAnchor": "pdf-page-479",
+      "representation": "notes"
+    },
+    {
+      "page": 480,
+      "section": "Analytics and streaming",
+      "title": "Amazon OpenSearch Serverless",
+      "visual": "pdf:480",
+      "status": "study",
+      "noteAnchor": "pdf-page-480",
+      "representation": "diagram + notes"
+    },
+    {
+      "page": 481,
+      "section": "Analytics and streaming",
+      "title": "Amazon Quick Suite (formerly QuickSight)",
+      "visual": null,
+      "status": "context",
+      "reason": "Chapter/topic divider; covered by the following study topics and section organization."
+    },
+    {
+      "page": 482,
+      "section": "Analytics and streaming",
+      "title": "What is Quick Suite / Quick Sight?",
+      "visual": null,
+      "status": "study",
+      "noteAnchor": "pdf-page-482",
+      "representation": "notes"
+    },
+    {
+      "page": 483,
+      "section": "Analytics and streaming",
+      "title": "Quick Sight Data Sources",
+      "visual": null,
+      "status": "study",
+      "noteAnchor": "pdf-page-483",
+      "representation": "notes"
+    },
+    {
+      "page": 484,
+      "section": "Analytics and streaming",
+      "title": "SPICE",
+      "visual": null,
+      "status": "study",
+      "noteAnchor": "pdf-page-484",
+      "representation": "notes"
+    },
+    {
+      "page": 485,
+      "section": "Analytics and streaming",
+      "title": "Quick Sight Use Cases",
+      "visual": null,
+      "status": "study",
+      "noteAnchor": "pdf-page-485",
+      "representation": "notes"
+    },
+    {
+      "page": 486,
+      "section": "Analytics and streaming",
+      "title": "Quick Sight Anti-Patterns",
+      "visual": null,
+      "status": "study",
+      "noteAnchor": "pdf-page-486",
+      "representation": "notes"
+    },
+    {
+      "page": 487,
+      "section": "Analytics and streaming",
+      "title": "Quick Sight Security",
+      "visual": null,
+      "status": "study",
+      "noteAnchor": "pdf-page-487",
+      "representation": "notes"
+    },
+    {
+      "page": 488,
+      "section": "Analytics and streaming",
+      "title": "Quick Sight Security",
+      "visual": null,
+      "status": "study",
+      "noteAnchor": "pdf-page-488",
+      "representation": "notes"
+    },
+    {
+      "page": 489,
+      "section": "Analytics and streaming",
+      "title": "QuickSight database connectivity: public and private paths",
+      "visual": "pdf:489",
+      "status": "study",
+      "noteAnchor": "pdf-page-489",
+      "representation": "diagram + notes"
+    },
+    {
+      "page": 490,
+      "section": "Analytics and streaming",
+      "title": "Quick Sight / Redshift / RDS cross-region",
+      "visual": "pdf:490",
+      "status": "study",
+      "noteAnchor": "pdf-page-490",
+      "representation": "diagram + notes"
+    },
+    {
+      "page": 491,
+      "section": "Analytics and streaming",
+      "title": "Quick Suite / Redshift / RDS cross-region",
+      "visual": "pdf:491",
+      "status": "study",
+      "noteAnchor": "pdf-page-491",
+      "representation": "diagram + notes"
+    },
+    {
+      "page": 492,
+      "section": "Analytics and streaming",
+      "title": "Quick Sight / Redshift / RDS cross- account",
+      "visual": "pdf:492",
+      "status": "study",
+      "noteAnchor": "pdf-page-492",
+      "representation": "diagram + notes"
+    },
+    {
+      "page": 493,
+      "section": "Analytics and streaming",
+      "title": "Quick Sight User Management",
+      "visual": null,
+      "status": "study",
+      "noteAnchor": "pdf-page-493",
+      "representation": "notes"
+    },
+    {
+      "page": 494,
+      "section": "Analytics and streaming",
+      "title": "Quick Sight pricing",
+      "visual": null,
+      "status": "study",
+      "noteAnchor": "pdf-page-494",
+      "representation": "notes"
+    },
+    {
+      "page": 495,
+      "section": "Analytics and streaming",
+      "title": "Quick Sight Dashboards",
+      "visual": null,
+      "status": "study",
+      "noteAnchor": "pdf-page-495",
+      "representation": "notes"
+    },
+    {
+      "page": 496,
+      "section": "Analytics and streaming",
+      "title": "Quick Sight Machine Learning Insights",
+      "visual": null,
+      "status": "study",
+      "noteAnchor": "pdf-page-496",
+      "representation": "notes"
+    },
+    {
+      "page": 497,
+      "section": "Analytics and streaming",
+      "title": "Quick Sight Calculated Fields",
+      "visual": null,
+      "status": "study",
+      "noteAnchor": "pdf-page-497",
+      "representation": "notes"
+    },
+    {
+      "page": 498,
+      "section": "Analytics and streaming",
+      "title": "Level-Aware Calculations (LAC)",
+      "visual": "pdf:498",
+      "status": "study",
+      "noteAnchor": "pdf-page-498",
+      "representation": "diagram + notes"
+    },
+    {
+      "page": 499,
+      "section": "Analytics and streaming",
+      "title": "Level-Aware Calculations – Window (LAC-W)",
+      "visual": "pdf:499",
+      "status": "study",
+      "noteAnchor": "pdf-page-499",
+      "representation": "diagram + notes"
+    },
+    {
+      "page": 500,
+      "section": "Analytics and streaming",
+      "title": "QuickSight numeric precision: decimal and floating point",
+      "visual": null,
+      "status": "study",
+      "noteAnchor": "pdf-page-500",
+      "representation": "notes"
+    },
+    {
+      "page": 501,
+      "section": "Application integration",
+      "title": "Application Integration",
+      "visual": null,
+      "status": "context",
+      "reason": "Chapter/topic divider; covered by the following study topics and section organization."
+    },
+    {
+      "page": 502,
+      "section": "Application integration",
+      "title": "AWS SQS What’s a queue?",
+      "visual": "pdf:502",
+      "status": "study",
+      "noteAnchor": "pdf-page-502",
+      "representation": "diagram + notes"
+    },
+    {
+      "page": 503,
+      "section": "Application integration",
+      "title": "AWS SQS – Standard Queue",
+      "visual": null,
+      "status": "study",
+      "noteAnchor": "pdf-page-503",
+      "representation": "notes"
+    },
+    {
+      "page": 504,
+      "section": "Application integration",
+      "title": "SQS – Producing Messages",
+      "visual": "pdf:504",
+      "status": "study",
+      "noteAnchor": "pdf-page-504",
+      "representation": "diagram + notes"
+    },
+    {
+      "page": 505,
+      "section": "Application integration",
+      "title": "SQS – Consuming Messages",
+      "visual": "pdf:505",
+      "status": "study",
+      "noteAnchor": "pdf-page-505",
+      "representation": "diagram + notes"
+    },
+    {
+      "page": 506,
+      "section": "Application integration",
+      "title": "SQS FIFO: ordering and deduplication",
+      "visual": "pdf:506",
+      "status": "study",
+      "noteAnchor": "pdf-page-506",
+      "representation": "diagram + notes"
+    },
+    {
+      "page": 507,
+      "section": "Application integration",
+      "title": "SQS Extended Client",
+      "visual": "pdf:507",
+      "status": "study",
+      "noteAnchor": "pdf-page-507",
+      "representation": "diagram + notes"
+    },
+    {
+      "page": 508,
+      "section": "Application integration",
+      "title": "AWS SQS Use Cases",
+      "visual": null,
+      "status": "study",
+      "noteAnchor": "pdf-page-508",
+      "representation": "notes"
+    },
+    {
+      "page": 509,
+      "section": "Application integration",
+      "title": "SQS Limits",
+      "visual": null,
+      "status": "study",
+      "noteAnchor": "pdf-page-509",
+      "representation": "notes"
+    },
+    {
+      "page": 510,
+      "section": "Application integration",
+      "title": "AWS SQS Security",
+      "visual": null,
+      "status": "study",
+      "noteAnchor": "pdf-page-510",
+      "representation": "notes"
+    },
+    {
+      "page": 511,
+      "section": "Application integration",
+      "title": "Kinesis Data Stream vs SQS",
+      "visual": null,
+      "status": "study",
+      "noteAnchor": "pdf-page-511",
+      "representation": "notes"
+    },
+    {
+      "page": 512,
+      "section": "Application integration",
+      "title": "Stream, delivery service or queue?",
+      "visual": null,
+      "status": "study",
+      "noteAnchor": "pdf-page-512",
+      "representation": "table + notes"
+    },
+    {
+      "page": 513,
+      "section": "Application integration",
+      "title": "SQS vs Kinesis – Use cases",
+      "visual": null,
+      "status": "study",
+      "noteAnchor": "pdf-page-513",
+      "representation": "notes"
+    },
+    {
+      "page": 514,
+      "section": "Application integration",
+      "title": "Amazon SQS – Dead Letter Queue (DLQ)",
+      "visual": "pdf:514",
+      "status": "study",
+      "noteAnchor": "pdf-page-514",
+      "representation": "diagram + notes"
+    },
+    {
+      "page": 515,
+      "section": "Application integration",
+      "title": "SQS DLQ – Redrive to Source",
+      "visual": "pdf:515",
+      "status": "study",
+      "noteAnchor": "pdf-page-515",
+      "representation": "diagram + notes"
+    },
+    {
+      "page": 516,
+      "section": "Application integration",
+      "title": "Amazon SNS",
+      "visual": "pdf:516",
+      "status": "study",
+      "noteAnchor": "pdf-page-516",
+      "representation": "diagram + notes"
+    },
+    {
+      "page": 517,
+      "section": "Application integration",
+      "title": "Amazon SNS",
+      "visual": "pdf:517",
+      "status": "study",
+      "noteAnchor": "pdf-page-517",
+      "representation": "diagram + notes"
+    },
+    {
+      "page": 518,
+      "section": "Application integration",
+      "title": "SNS integrates with a lot of AWS services",
+      "visual": "pdf:518",
+      "status": "study",
+      "noteAnchor": "pdf-page-518",
+      "representation": "diagram + notes"
+    },
+    {
+      "page": 519,
+      "section": "Application integration",
+      "title": "Amazon SNS – How to publish",
+      "visual": "pdf:519",
+      "status": "study",
+      "noteAnchor": "pdf-page-519",
+      "representation": "diagram + notes"
+    },
+    {
+      "page": 520,
+      "section": "Application integration",
+      "title": "Amazon SNS – Security",
+      "visual": null,
+      "status": "study",
+      "noteAnchor": "pdf-page-520",
+      "representation": "notes"
+    },
+    {
+      "page": 521,
+      "section": "Application integration",
+      "title": "SNS + SQS: Fan Out",
+      "visual": "pdf:521",
+      "status": "study",
+      "noteAnchor": "pdf-page-521",
+      "representation": "diagram + notes"
+    },
+    {
+      "page": 522,
+      "section": "Application integration",
+      "title": "Application: S3 Events to multiple queues",
+      "visual": "pdf:522",
+      "status": "study",
+      "noteAnchor": "pdf-page-522",
+      "representation": "diagram + notes"
+    },
+    {
+      "page": 523,
+      "section": "Application integration",
+      "title": "Application: SNS to Amazon S3 through Data Firehose",
+      "visual": "pdf:523",
+      "status": "study",
+      "noteAnchor": "pdf-page-523",
+      "representation": "diagram + notes"
+    },
+    {
+      "page": 524,
+      "section": "Application integration",
+      "title": "Amazon SNS – FIFO Topic",
+      "visual": "pdf:524",
+      "status": "study",
+      "noteAnchor": "pdf-page-524",
+      "representation": "diagram + notes"
+    },
+    {
+      "page": 525,
+      "section": "Application integration",
+      "title": "SNS FIFO + SQS FIFO: Fan Out",
+      "visual": "pdf:525",
+      "status": "study",
+      "noteAnchor": "pdf-page-525",
+      "representation": "diagram + notes"
+    },
+    {
+      "page": 526,
+      "section": "Application integration",
+      "title": "SNS – Message Filtering",
+      "visual": "pdf:526",
+      "status": "study",
+      "noteAnchor": "pdf-page-526",
+      "representation": "diagram + notes"
+    },
+    {
+      "page": 527,
+      "section": "Application integration",
+      "title": "AWS Step Functions",
+      "visual": null,
+      "status": "study",
+      "noteAnchor": "pdf-page-527",
+      "representation": "notes"
+    },
+    {
+      "page": 528,
+      "section": "Application integration",
+      "title": "Step Functions – Examples Train a Machine Learning Model",
+      "visual": "pdf:528",
+      "status": "study",
+      "noteAnchor": "pdf-page-528",
+      "representation": "diagram + notes"
+    },
+    {
+      "page": 529,
+      "section": "Application integration",
+      "title": "Step Functions – Examples Tune a Machine Learning Model",
+      "visual": "pdf:529",
+      "status": "study",
+      "noteAnchor": "pdf-page-529",
+      "representation": "diagram + notes"
+    },
+    {
+      "page": 530,
+      "section": "Application integration",
+      "title": "Step Functions – Examples Manage a Batch Job",
+      "visual": "pdf:530",
+      "status": "study",
+      "noteAnchor": "pdf-page-530",
+      "representation": "diagram + notes"
+    },
+    {
+      "page": 531,
+      "section": "Application integration",
+      "title": "AWS Step Functions",
+      "visual": "pdf:531",
+      "status": "study",
+      "noteAnchor": "pdf-page-531",
+      "representation": "diagram + notes"
+    },
+    {
+      "page": 532,
+      "section": "Application integration",
+      "title": "Amazon AppFlow",
+      "visual": null,
+      "status": "study",
+      "noteAnchor": "pdf-page-532",
+      "representation": "notes"
+    },
+    {
+      "page": 533,
+      "section": "Application integration",
+      "title": "Amazon AppFlow",
+      "visual": "pdf:533",
+      "status": "study",
+      "noteAnchor": "pdf-page-533",
+      "representation": "diagram + notes"
+    },
+    {
+      "page": 534,
+      "section": "Application integration",
+      "title": "Amazon EventBridge (formerly CloudWatch Events)",
+      "visual": "pdf:534",
+      "status": "study",
+      "noteAnchor": "pdf-page-534",
+      "representation": "diagram + notes"
+    },
+    {
+      "page": 535,
+      "section": "Application integration",
+      "title": "Amazon EventBridge Rules",
+      "visual": "pdf:535",
+      "status": "study",
+      "noteAnchor": "pdf-page-535",
+      "representation": "diagram + notes"
+    },
+    {
+      "page": 536,
+      "section": "Application integration",
+      "title": "Amazon EventBridge",
+      "visual": "pdf:536",
+      "status": "study",
+      "noteAnchor": "pdf-page-536",
+      "representation": "diagram + notes"
+    },
+    {
+      "page": 537,
+      "section": "Application integration",
+      "title": "Amazon EventBridge – Schema Registry",
+      "visual": null,
+      "status": "study",
+      "noteAnchor": "pdf-page-537",
+      "representation": "notes"
+    },
+    {
+      "page": 538,
+      "section": "Application integration",
+      "title": "Amazon EventBridge – Resource-based Policy",
+      "visual": "pdf:538",
+      "status": "study",
+      "noteAnchor": "pdf-page-538",
+      "representation": "diagram + notes"
+    },
+    {
+      "page": 539,
+      "section": "Application integration",
+      "title": "Amazon Managed Workflows for Apache Airflow (MWAA)",
+      "visual": null,
+      "status": "study",
+      "noteAnchor": "pdf-page-539",
+      "representation": "notes"
+    },
+    {
+      "page": 540,
+      "section": "Application integration",
+      "title": "Airflow DAG: schedule and task dependency",
+      "visual": "pdf:540",
+      "status": "study",
+      "noteAnchor": "pdf-page-540",
+      "representation": "diagram + notes"
+    },
+    {
+      "page": 541,
+      "section": "Application integration",
+      "title": "Airflow + MWAA",
+      "visual": "pdf:541",
+      "status": "study",
+      "noteAnchor": "pdf-page-541",
+      "representation": "diagram + notes"
+    },
+    {
+      "page": 542,
+      "section": "Application integration",
+      "title": "Amazon MWAA Integration",
+      "visual": null,
+      "status": "study",
+      "noteAnchor": "pdf-page-542",
+      "representation": "notes"
+    },
+    {
+      "page": 543,
+      "section": "Application integration",
+      "title": "Amazon MWAA Architecture",
+      "visual": "pdf:543",
+      "status": "study",
+      "noteAnchor": "pdf-page-543",
+      "representation": "diagram + notes"
+    },
+    {
+      "page": 544,
+      "section": "Security, identity and compliance",
+      "title": "Security, Identity, and Compliance",
+      "visual": null,
+      "status": "context",
+      "reason": "Chapter/topic divider; covered by the following study topics and section organization."
+    },
+    {
+      "page": 545,
+      "section": "Security, identity and compliance",
+      "title": "Least privilege",
+      "visual": null,
+      "status": "study",
+      "noteAnchor": "pdf-page-545",
+      "representation": "code + notes"
+    },
+    {
+      "page": 546,
+      "section": "Security, identity and compliance",
+      "title": "Data Masking and Anonymization",
+      "visual": null,
+      "status": "study",
+      "noteAnchor": "pdf-page-546",
+      "representation": "notes"
+    },
+    {
+      "page": 547,
+      "section": "Security, identity and compliance",
+      "title": "Masking, pseudonymization and anonymization",
+      "visual": null,
+      "status": "study",
+      "noteAnchor": "pdf-page-547",
+      "representation": "notes"
+    },
+    {
+      "page": 548,
+      "section": "Security, identity and compliance",
+      "title": "Password salts and hashing",
+      "visual": null,
+      "status": "study",
+      "noteAnchor": "pdf-page-548",
+      "representation": "notes"
+    },
+    {
+      "page": 549,
+      "section": "Security, identity and compliance",
+      "title": "Key Salting: Example",
+      "visual": "pdf:549",
+      "status": "study",
+      "noteAnchor": "pdf-page-549",
+      "representation": "diagram + notes"
+    },
+    {
+      "page": 550,
+      "section": "Security, identity and compliance",
+      "title": "Keeping Data Where it Belongs",
+      "visual": null,
+      "status": "study",
+      "noteAnchor": "pdf-page-550",
+      "representation": "notes"
+    },
+    {
+      "page": 551,
+      "section": "Security, identity and compliance",
+      "title": "Keeping Data Where it Belongs",
+      "visual": null,
+      "status": "study",
+      "noteAnchor": "pdf-page-551",
+      "representation": "notes"
+    },
+    {
+      "page": 552,
+      "section": "Security, identity and compliance",
+      "title": "IAM: Users & Groups",
+      "visual": "pdf:552",
+      "status": "study",
+      "noteAnchor": "pdf-page-552",
+      "representation": "diagram + notes"
+    },
+    {
+      "page": 553,
+      "section": "Security, identity and compliance",
+      "title": "IAM: Permissions",
+      "visual": null,
+      "status": "study",
+      "noteAnchor": "pdf-page-553",
+      "representation": "notes"
+    },
+    {
+      "page": 554,
+      "section": "Security, identity and compliance",
+      "title": "IAM Policies inheritance",
+      "visual": "pdf:554",
+      "status": "study",
+      "noteAnchor": "pdf-page-554",
+      "representation": "diagram + notes"
+    },
+    {
+      "page": 555,
+      "section": "Security, identity and compliance",
+      "title": "IAM Policies Structure",
+      "visual": "pdf:555",
+      "status": "study",
+      "noteAnchor": "pdf-page-555",
+      "representation": "diagram + notes"
+    },
+    {
+      "page": 556,
+      "section": "Security, identity and compliance",
+      "title": "IAM – Password Policy",
+      "visual": null,
+      "status": "study",
+      "noteAnchor": "pdf-page-556",
+      "representation": "notes"
+    },
+    {
+      "page": 557,
+      "section": "Security, identity and compliance",
+      "title": "Multi Factor Authentication - MFA",
+      "visual": "pdf:557",
+      "status": "study",
+      "noteAnchor": "pdf-page-557",
+      "representation": "diagram + notes"
+    },
+    {
+      "page": 558,
+      "section": "Security, identity and compliance",
+      "title": "MFA: authenticator applications and security keys",
+      "visual": null,
+      "status": "study",
+      "noteAnchor": "pdf-page-558",
+      "representation": "notes"
+    },
+    {
+      "page": 559,
+      "section": "Security, identity and compliance",
+      "title": "MFA: hardware devices",
+      "visual": null,
+      "status": "study",
+      "noteAnchor": "pdf-page-559",
+      "representation": "notes"
+    },
+    {
+      "page": 560,
+      "section": "Security, identity and compliance",
+      "title": "IAM Roles for Services",
+      "visual": "pdf:560",
+      "status": "study",
+      "noteAnchor": "pdf-page-560",
+      "representation": "diagram + notes"
+    },
+    {
+      "page": 561,
+      "section": "Security, identity and compliance",
+      "title": "Why encryption? Encryption in flight (TLS / SSL)",
+      "visual": "pdf:561",
+      "status": "study",
+      "noteAnchor": "pdf-page-561",
+      "representation": "diagram + notes"
+    },
+    {
+      "page": 562,
+      "section": "Security, identity and compliance",
+      "title": "Why encryption? Server-side encryption at rest",
+      "visual": "pdf:562",
+      "status": "study",
+      "noteAnchor": "pdf-page-562",
+      "representation": "diagram + notes"
+    },
+    {
+      "page": 563,
+      "section": "Security, identity and compliance",
+      "title": "Why encryption? Client-side encryption",
+      "visual": "pdf:563",
+      "status": "study",
+      "noteAnchor": "pdf-page-563",
+      "representation": "diagram + notes"
+    },
+    {
+      "page": 564,
+      "section": "Security, identity and compliance",
+      "title": "AWS KMS (Key Management Service)",
+      "visual": null,
+      "status": "study",
+      "noteAnchor": "pdf-page-564",
+      "representation": "notes"
+    },
+    {
+      "page": 565,
+      "section": "Security, identity and compliance",
+      "title": "KMS key types and operations",
+      "visual": null,
+      "status": "study",
+      "noteAnchor": "pdf-page-565",
+      "representation": "notes"
+    },
+    {
+      "page": 566,
+      "section": "Security, identity and compliance",
+      "title": "AWS KMS (Key Management Service)",
+      "visual": null,
+      "status": "study",
+      "noteAnchor": "pdf-page-566",
+      "representation": "notes"
+    },
+    {
+      "page": 567,
+      "section": "Security, identity and compliance",
+      "title": "Copying Snapshots across regions",
+      "visual": "pdf:567",
+      "status": "study",
+      "noteAnchor": "pdf-page-567",
+      "representation": "diagram + notes"
+    },
+    {
+      "page": 568,
+      "section": "Security, identity and compliance",
+      "title": "KMS Key Policies",
+      "visual": "pdf:568",
+      "status": "study",
+      "noteAnchor": "pdf-page-568",
+      "representation": "diagram + notes"
+    },
+    {
+      "page": 569,
+      "section": "Security, identity and compliance",
+      "title": "Copying Snapshots across accounts",
+      "visual": "pdf:569",
+      "status": "study",
+      "noteAnchor": "pdf-page-569",
+      "representation": "diagram + notes"
+    },
+    {
+      "page": 570,
+      "section": "Security, identity and compliance",
+      "title": "AWS Macie",
+      "visual": "pdf:570",
+      "status": "study",
+      "noteAnchor": "pdf-page-570",
+      "representation": "diagram + notes"
+    },
+    {
+      "page": 571,
+      "section": "Security, identity and compliance",
+      "title": "AWS Secrets Manager",
+      "visual": null,
+      "status": "study",
+      "noteAnchor": "pdf-page-571",
+      "representation": "notes"
+    },
+    {
+      "page": 572,
+      "section": "Security, identity and compliance",
+      "title": "AWS Secrets Manager – Multi-Region Secrets",
+      "visual": "pdf:572",
+      "status": "study",
+      "noteAnchor": "pdf-page-572",
+      "representation": "diagram + notes"
+    },
+    {
+      "page": 573,
+      "section": "Security, identity and compliance",
+      "title": "AWS WAF – Web Application Firewall",
+      "visual": null,
+      "status": "study",
+      "noteAnchor": "pdf-page-573",
+      "representation": "notes"
+    },
+    {
+      "page": 574,
+      "section": "Security, identity and compliance",
+      "title": "AWS WAF – Web Application Firewall",
+      "visual": null,
+      "status": "study",
+      "noteAnchor": "pdf-page-574",
+      "representation": "notes"
+    },
+    {
+      "page": 575,
+      "section": "Security, identity and compliance",
+      "title": "WAF – Fixed IP while using WAF with a Load Balancer",
+      "visual": "pdf:575",
+      "status": "study",
+      "noteAnchor": "pdf-page-575",
+      "representation": "diagram + notes"
+    },
+    {
+      "page": 576,
+      "section": "Security, identity and compliance",
+      "title": "AWS Shield: protect from DDoS attack",
+      "visual": null,
+      "status": "study",
+      "noteAnchor": "pdf-page-576",
+      "representation": "notes"
+    },
+    {
+      "page": 577,
+      "section": "Security, identity and compliance",
+      "title": "Security - Kinesis",
+      "visual": null,
+      "status": "study",
+      "noteAnchor": "pdf-page-577",
+      "representation": "notes"
+    },
+    {
+      "page": 578,
+      "section": "Security, identity and compliance",
+      "title": "Security - SQS",
+      "visual": null,
+      "status": "study",
+      "noteAnchor": "pdf-page-578",
+      "representation": "notes"
+    },
+    {
+      "page": 579,
+      "section": "Security, identity and compliance",
+      "title": "Security – AWS IoT",
+      "visual": null,
+      "status": "study",
+      "noteAnchor": "pdf-page-579",
+      "representation": "notes"
+    },
+    {
+      "page": 580,
+      "section": "Security, identity and compliance",
+      "title": "Security – Amazon S3",
+      "visual": null,
+      "status": "study",
+      "noteAnchor": "pdf-page-580",
+      "representation": "notes"
+    },
+    {
+      "page": 581,
+      "section": "Security, identity and compliance",
+      "title": "Security – DynamoDB",
+      "visual": null,
+      "status": "study",
+      "noteAnchor": "pdf-page-581",
+      "representation": "notes"
+    },
+    {
+      "page": 582,
+      "section": "Security, identity and compliance",
+      "title": "Security - RDS",
+      "visual": null,
+      "status": "study",
+      "noteAnchor": "pdf-page-582",
+      "representation": "notes"
+    },
+    {
+      "page": 583,
+      "section": "Security, identity and compliance",
+      "title": "Security - Aurora",
+      "visual": null,
+      "status": "study",
+      "noteAnchor": "pdf-page-583",
+      "representation": "notes"
+    },
+    {
+      "page": 584,
+      "section": "Security, identity and compliance",
+      "title": "Security - Lambda",
+      "visual": null,
+      "status": "study",
+      "noteAnchor": "pdf-page-584",
+      "representation": "notes"
+    },
+    {
+      "page": 585,
+      "section": "Security, identity and compliance",
+      "title": "Security - Glue",
+      "visual": null,
+      "status": "study",
+      "noteAnchor": "pdf-page-585",
+      "representation": "notes"
+    },
+    {
+      "page": 586,
+      "section": "Security, identity and compliance",
+      "title": "Security - EMR",
+      "visual": null,
+      "status": "study",
+      "noteAnchor": "pdf-page-586",
+      "representation": "notes"
+    },
+    {
+      "page": 587,
+      "section": "Security, identity and compliance",
+      "title": "Security – EMR Encryption (security config)",
+      "visual": "pdf:587",
+      "status": "study",
+      "noteAnchor": "pdf-page-587",
+      "representation": "diagram + notes"
+    },
+    {
+      "page": 588,
+      "section": "Security, identity and compliance",
+      "title": "Security – OpenSearch Service",
+      "visual": null,
+      "status": "study",
+      "noteAnchor": "pdf-page-588",
+      "representation": "notes"
+    },
+    {
+      "page": 589,
+      "section": "Security, identity and compliance",
+      "title": "Security - Redshift",
+      "visual": null,
+      "status": "study",
+      "noteAnchor": "pdf-page-589",
+      "representation": "notes"
+    },
+    {
+      "page": 590,
+      "section": "Security, identity and compliance",
+      "title": "Security - Athena",
+      "visual": null,
+      "status": "study",
+      "noteAnchor": "pdf-page-590",
+      "representation": "notes"
+    },
+    {
+      "page": 591,
+      "section": "Security, identity and compliance",
+      "title": "Security - Quicksight",
+      "visual": null,
+      "status": "study",
+      "noteAnchor": "pdf-page-591",
+      "representation": "notes"
+    },
+    {
+      "page": 592,
+      "section": "Networking and delivery",
+      "title": "Networking and Content Delivery",
+      "visual": null,
+      "status": "context",
+      "reason": "Chapter/topic divider; covered by the following study topics and section organization."
+    },
+    {
+      "page": 593,
+      "section": "Networking and delivery",
+      "title": "VPC & Subnets Primer",
+      "visual": "pdf:593",
+      "status": "study",
+      "noteAnchor": "pdf-page-593",
+      "representation": "diagram + notes"
+    },
+    {
+      "page": 594,
+      "section": "Networking and delivery",
+      "title": "VPC Diagram",
+      "visual": "pdf:594",
+      "status": "study",
+      "noteAnchor": "pdf-page-594",
+      "representation": "diagram + notes"
+    },
+    {
+      "page": 595,
+      "section": "Networking and delivery",
+      "title": "Internet Gateway & NAT Gateways",
+      "visual": "pdf:595",
+      "status": "study",
+      "noteAnchor": "pdf-page-595",
+      "representation": "diagram + notes"
+    },
+    {
+      "page": 596,
+      "section": "Networking and delivery",
+      "title": "Network ACL & Security Groups",
+      "visual": "pdf:596",
+      "status": "study",
+      "noteAnchor": "pdf-page-596",
+      "representation": "diagram + notes"
+    },
+    {
+      "page": 597,
+      "section": "Networking and delivery",
+      "title": "Network ACLs vs Security Groups",
+      "visual": "pdf:597",
+      "status": "study",
+      "noteAnchor": "pdf-page-597",
+      "representation": "diagram + notes"
+    },
+    {
+      "page": 598,
+      "section": "Networking and delivery",
+      "title": "VPC Flow Logs",
+      "visual": "pdf:598",
+      "status": "study",
+      "noteAnchor": "pdf-page-598",
+      "representation": "diagram + notes"
+    },
+    {
+      "page": 599,
+      "section": "Networking and delivery",
+      "title": "VPC Peering",
+      "visual": "pdf:599",
+      "status": "study",
+      "noteAnchor": "pdf-page-599",
+      "representation": "diagram + notes"
+    },
+    {
+      "page": 600,
+      "section": "Networking and delivery",
+      "title": "VPC Endpoints",
+      "visual": "pdf:600",
+      "status": "study",
+      "noteAnchor": "pdf-page-600",
+      "representation": "diagram + notes"
+    },
+    {
+      "page": 601,
+      "section": "Networking and delivery",
+      "title": "Site to Site VPN & Direct Connect",
+      "visual": "pdf:601",
+      "status": "study",
+      "noteAnchor": "pdf-page-601",
+      "representation": "diagram + notes"
+    },
+    {
+      "page": 602,
+      "section": "Networking and delivery",
+      "title": "VPC Closing Comments",
+      "visual": null,
+      "status": "study",
+      "noteAnchor": "pdf-page-602",
+      "representation": "notes"
+    },
+    {
+      "page": 603,
+      "section": "Networking and delivery",
+      "title": "AWS PrivateLink (VPC Endpoint Services)",
+      "visual": "pdf:603",
+      "status": "study",
+      "noteAnchor": "pdf-page-603",
+      "representation": "diagram + notes"
+    },
+    {
+      "page": 604,
+      "section": "Networking and delivery",
+      "title": "What is DNS?",
+      "visual": null,
+      "status": "study",
+      "noteAnchor": "pdf-page-604",
+      "representation": "notes"
+    },
+    {
+      "page": 605,
+      "section": "Networking and delivery",
+      "title": "DNS Terminologies",
+      "visual": "pdf:605",
+      "status": "study",
+      "noteAnchor": "pdf-page-605",
+      "representation": "diagram + notes"
+    },
+    {
+      "page": 606,
+      "section": "Networking and delivery",
+      "title": "How DNS Works",
+      "visual": "pdf:606",
+      "status": "study",
+      "noteAnchor": "pdf-page-606",
+      "representation": "diagram + notes"
+    },
+    {
+      "page": 607,
+      "section": "Networking and delivery",
+      "title": "Amazon Route 53",
+      "visual": "pdf:607",
+      "status": "study",
+      "noteAnchor": "pdf-page-607",
+      "representation": "diagram + notes"
+    },
+    {
+      "page": 608,
+      "section": "Networking and delivery",
+      "title": "Route 53 – Records",
+      "visual": null,
+      "status": "study",
+      "noteAnchor": "pdf-page-608",
+      "representation": "notes"
+    },
+    {
+      "page": 609,
+      "section": "Networking and delivery",
+      "title": "Route 53 – Record Types",
+      "visual": null,
+      "status": "study",
+      "noteAnchor": "pdf-page-609",
+      "representation": "notes"
+    },
+    {
+      "page": 610,
+      "section": "Networking and delivery",
+      "title": "Route 53 – Hosted Zones",
+      "visual": null,
+      "status": "study",
+      "noteAnchor": "pdf-page-610",
+      "representation": "notes"
+    },
+    {
+      "page": 611,
+      "section": "Networking and delivery",
+      "title": "Route 53 – Public vs. Private Hosted Zones",
+      "visual": "pdf:611",
+      "status": "study",
+      "noteAnchor": "pdf-page-611",
+      "representation": "diagram + notes"
+    },
+    {
+      "page": 612,
+      "section": "Networking and delivery",
+      "title": "Amazon CloudFront",
+      "visual": "pdf:612",
+      "status": "study",
+      "noteAnchor": "pdf-page-612",
+      "representation": "diagram + notes"
+    },
+    {
+      "page": 613,
+      "section": "Networking and delivery",
+      "title": "CloudFront – Origins",
+      "visual": null,
+      "status": "study",
+      "noteAnchor": "pdf-page-613",
+      "representation": "notes"
+    },
+    {
+      "page": 614,
+      "section": "Networking and delivery",
+      "title": "CloudFront at a high level",
+      "visual": "pdf:614",
+      "status": "study",
+      "noteAnchor": "pdf-page-614",
+      "representation": "diagram + notes"
+    },
+    {
+      "page": 615,
+      "section": "Networking and delivery",
+      "title": "CloudFront – S3 as an Origin",
+      "visual": "pdf:615",
+      "status": "study",
+      "noteAnchor": "pdf-page-615",
+      "representation": "diagram + notes"
+    },
+    {
+      "page": 616,
+      "section": "Networking and delivery",
+      "title": "CloudFront vs S3 Cross Region Replication",
+      "visual": null,
+      "status": "study",
+      "noteAnchor": "pdf-page-616",
+      "representation": "notes"
+    },
+    {
+      "page": 617,
+      "section": "Networking and delivery",
+      "title": "CloudFront – ALB or EC2 as an origin Using VPC Origins",
+      "visual": "pdf:617",
+      "status": "study",
+      "noteAnchor": "pdf-page-617",
+      "representation": "diagram + notes"
+    },
+    {
+      "page": 618,
+      "section": "Networking and delivery",
+      "title": "CloudFront – ALB or EC2 as an origin Using Public Network",
+      "visual": "pdf:618",
+      "status": "study",
+      "noteAnchor": "pdf-page-618",
+      "representation": "diagram + notes"
+    },
+    {
+      "page": 619,
+      "section": "Networking and delivery",
+      "title": "CloudFront – Cache Invalidations",
+      "visual": "pdf:619",
+      "status": "study",
+      "noteAnchor": "pdf-page-619",
+      "representation": "diagram + notes"
+    },
+    {
+      "page": 620,
+      "section": "Management and governance",
+      "title": "Management and Governance",
+      "visual": null,
+      "status": "context",
+      "reason": "Chapter/topic divider; covered by the following study topics and section organization."
+    },
+    {
+      "page": 621,
+      "section": "Management and governance",
+      "title": "Amazon CloudWatch Metrics",
+      "visual": null,
+      "status": "study",
+      "noteAnchor": "pdf-page-621",
+      "representation": "notes"
+    },
+    {
+      "page": 622,
+      "section": "Management and governance",
+      "title": "CloudWatch Metric Streams",
+      "visual": "pdf:622",
+      "status": "study",
+      "noteAnchor": "pdf-page-622",
+      "representation": "diagram + notes"
+    },
+    {
+      "page": 623,
+      "section": "Management and governance",
+      "title": "CloudWatch Logs",
+      "visual": null,
+      "status": "study",
+      "noteAnchor": "pdf-page-623",
+      "representation": "notes"
+    },
+    {
+      "page": 624,
+      "section": "Management and governance",
+      "title": "CloudWatch Logs - Sources",
+      "visual": null,
+      "status": "study",
+      "noteAnchor": "pdf-page-624",
+      "representation": "notes"
+    },
+    {
+      "page": 625,
+      "section": "Management and governance",
+      "title": "CloudWatch Logs Insights",
+      "visual": "pdf:625",
+      "status": "study",
+      "noteAnchor": "pdf-page-625",
+      "representation": "diagram + notes"
+    },
+    {
+      "page": 626,
+      "section": "Management and governance",
+      "title": "CloudWatch Logs Insights",
+      "visual": null,
+      "status": "study",
+      "noteAnchor": "pdf-page-626",
+      "representation": "notes"
+    },
+    {
+      "page": 627,
+      "section": "Management and governance",
+      "title": "CloudWatch Logs – S3 Export",
+      "visual": "pdf:627",
+      "status": "study",
+      "noteAnchor": "pdf-page-627",
+      "representation": "diagram + notes"
+    },
+    {
+      "page": 628,
+      "section": "Management and governance",
+      "title": "CloudWatch Logs Subscriptions",
+      "visual": "pdf:628",
+      "status": "study",
+      "noteAnchor": "pdf-page-628",
+      "representation": "diagram + notes"
+    },
+    {
+      "page": 629,
+      "section": "Management and governance",
+      "title": "CloudWatch Logs Aggregation Multi-Account & Multi Region",
+      "visual": "pdf:629",
+      "status": "study",
+      "noteAnchor": "pdf-page-629",
+      "representation": "diagram + notes"
+    },
+    {
+      "page": 630,
+      "section": "Management and governance",
+      "title": "CloudWatch Logs Subscriptions",
+      "visual": "pdf:630",
+      "status": "study",
+      "noteAnchor": "pdf-page-630",
+      "representation": "diagram + notes"
+    },
+    {
+      "page": 631,
+      "section": "Management and governance",
+      "title": "CloudWatch Logs for EC2",
+      "visual": "pdf:631",
+      "status": "study",
+      "noteAnchor": "pdf-page-631",
+      "representation": "diagram + notes"
+    },
+    {
+      "page": 632,
+      "section": "Management and governance",
+      "title": "CloudWatch Logs Agent & Unified Agent",
+      "visual": null,
+      "status": "study",
+      "noteAnchor": "pdf-page-632",
+      "representation": "notes"
+    },
+    {
+      "page": 633,
+      "section": "Management and governance",
+      "title": "CloudWatch Unified Agent – Metrics",
+      "visual": null,
+      "status": "study",
+      "noteAnchor": "pdf-page-633",
+      "representation": "notes"
+    },
+    {
+      "page": 634,
+      "section": "Management and governance",
+      "title": "CloudWatch Alarms",
+      "visual": null,
+      "status": "study",
+      "noteAnchor": "pdf-page-634",
+      "representation": "notes"
+    },
+    {
+      "page": 635,
+      "section": "Management and governance",
+      "title": "CloudWatch Alarm Targets",
+      "visual": null,
+      "status": "study",
+      "noteAnchor": "pdf-page-635",
+      "representation": "notes"
+    },
+    {
+      "page": 636,
+      "section": "Management and governance",
+      "title": "CloudWatch Alarms – Composite Alarms",
+      "visual": "pdf:636",
+      "status": "study",
+      "noteAnchor": "pdf-page-636",
+      "representation": "diagram + notes"
+    },
+    {
+      "page": 637,
+      "section": "Management and governance",
+      "title": "EC2 Instance Recovery",
+      "visual": "pdf:637",
+      "status": "study",
+      "noteAnchor": "pdf-page-637",
+      "representation": "diagram + notes"
+    },
+    {
+      "page": 638,
+      "section": "Management and governance",
+      "title": "CloudWatch Alarm: good to know",
+      "visual": "pdf:638",
+      "status": "study",
+      "noteAnchor": "pdf-page-638",
+      "representation": "diagram + notes"
+    },
+    {
+      "page": 639,
+      "section": "Management and governance",
+      "title": "AWS CloudTrail",
+      "visual": null,
+      "status": "study",
+      "noteAnchor": "pdf-page-639",
+      "representation": "notes"
+    },
+    {
+      "page": 640,
+      "section": "Management and governance",
+      "title": "CloudTrail Diagram",
+      "visual": "pdf:640",
+      "status": "study",
+      "noteAnchor": "pdf-page-640",
+      "representation": "diagram + notes"
+    },
+    {
+      "page": 641,
+      "section": "Management and governance",
+      "title": "CloudTrail Events",
+      "visual": null,
+      "status": "study",
+      "noteAnchor": "pdf-page-641",
+      "representation": "notes"
+    },
+    {
+      "page": 642,
+      "section": "Management and governance",
+      "title": "CloudTrail Insights",
+      "visual": "pdf:642",
+      "status": "study",
+      "noteAnchor": "pdf-page-642",
+      "representation": "diagram + notes"
+    },
+    {
+      "page": 643,
+      "section": "Management and governance",
+      "title": "CloudTrail Events Retention",
+      "visual": "pdf:643",
+      "status": "study",
+      "noteAnchor": "pdf-page-643",
+      "representation": "diagram + notes"
+    },
+    {
+      "page": 644,
+      "section": "Management and governance",
+      "title": "AWS CloudTrail Lake",
+      "visual": null,
+      "status": "study",
+      "noteAnchor": "pdf-page-644",
+      "representation": "notes"
+    },
+    {
+      "page": 645,
+      "section": "Management and governance",
+      "title": "AWS CloudTrail Lake",
+      "visual": null,
+      "status": "study",
+      "noteAnchor": "pdf-page-645",
+      "representation": "notes"
+    },
+    {
+      "page": 646,
+      "section": "Management and governance",
+      "title": "CloudTrail advanced event selector example",
+      "visual": null,
+      "status": "study",
+      "noteAnchor": "pdf-page-646",
+      "representation": "code + notes"
+    },
+    {
+      "page": 647,
+      "section": "Management and governance",
+      "title": "Querying CloudTrail Lake",
+      "visual": null,
+      "status": "study",
+      "noteAnchor": "pdf-page-647",
+      "representation": "notes"
+    },
+    {
+      "page": 648,
+      "section": "Management and governance",
+      "title": "AWS Config",
+      "visual": null,
+      "status": "study",
+      "noteAnchor": "pdf-page-648",
+      "representation": "notes"
+    },
+    {
+      "page": 649,
+      "section": "Management and governance",
+      "title": "Config Rules",
+      "visual": null,
+      "status": "study",
+      "noteAnchor": "pdf-page-649",
+      "representation": "notes"
+    },
+    {
+      "page": 650,
+      "section": "Management and governance",
+      "title": "AWS Config Resource",
+      "visual": "pdf:650",
+      "status": "study",
+      "noteAnchor": "pdf-page-650",
+      "representation": "diagram + notes"
+    },
+    {
+      "page": 651,
+      "section": "Management and governance",
+      "title": "Config Rules – Remediations",
+      "visual": "pdf:651",
+      "status": "study",
+      "noteAnchor": "pdf-page-651",
+      "representation": "diagram + notes"
+    },
+    {
+      "page": 652,
+      "section": "Management and governance",
+      "title": "Config Rules – Notifications",
+      "visual": "pdf:652",
+      "status": "study",
+      "noteAnchor": "pdf-page-652",
+      "representation": "diagram + notes"
+    },
+    {
+      "page": 653,
+      "section": "Management and governance",
+      "title": "CloudWatch vs CloudTrail vs Config",
+      "visual": null,
+      "status": "study",
+      "noteAnchor": "pdf-page-653",
+      "representation": "notes"
+    },
+    {
+      "page": 654,
+      "section": "Management and governance",
+      "title": "For an Elastic Load Balancer",
+      "visual": null,
+      "status": "study",
+      "noteAnchor": "pdf-page-654",
+      "representation": "notes"
+    },
+    {
+      "page": 655,
+      "section": "Management and governance",
+      "title": "What is CloudFormation",
+      "visual": null,
+      "status": "study",
+      "noteAnchor": "pdf-page-655",
+      "representation": "notes"
+    },
+    {
+      "page": 656,
+      "section": "Management and governance",
+      "title": "Benefits of AWS CloudFormation (1/2)",
+      "visual": null,
+      "status": "study",
+      "noteAnchor": "pdf-page-656",
+      "representation": "notes"
+    },
+    {
+      "page": 657,
+      "section": "Management and governance",
+      "title": "Benefits of AWS CloudFormation (2/2)",
+      "visual": null,
+      "status": "study",
+      "noteAnchor": "pdf-page-657",
+      "representation": "notes"
+    },
+    {
+      "page": 658,
+      "section": "Management and governance",
+      "title": "CloudFormation + Infrastructure Composer",
+      "visual": "pdf:658",
+      "status": "study",
+      "noteAnchor": "pdf-page-658",
+      "representation": "diagram + notes"
+    },
+    {
+      "page": 659,
+      "section": "Management and governance",
+      "title": "SSM Parameter Store",
+      "visual": "pdf:659",
+      "status": "study",
+      "noteAnchor": "pdf-page-659",
+      "representation": "diagram + notes"
+    },
+    {
+      "page": 660,
+      "section": "Management and governance",
+      "title": "SSM Parameter Store Hierarchy",
+      "visual": "pdf:660",
+      "status": "study",
+      "noteAnchor": "pdf-page-660",
+      "representation": "diagram + notes"
+    },
+    {
+      "page": 661,
+      "section": "Management and governance",
+      "title": "Parameter Store tiers",
+      "visual": null,
+      "status": "study",
+      "noteAnchor": "pdf-page-661",
+      "representation": "table + notes"
+    },
+    {
+      "page": 662,
+      "section": "Management and governance",
+      "title": "Parameters Policies (for advanced parameters)",
+      "visual": "pdf:662",
+      "status": "study",
+      "noteAnchor": "pdf-page-662",
+      "representation": "diagram + notes"
+    },
+    {
+      "page": 663,
+      "section": "Management and governance",
+      "title": "Well Architected Framework General Guiding Principles",
+      "visual": null,
+      "status": "study",
+      "noteAnchor": "pdf-page-663",
+      "representation": "notes"
+    },
+    {
+      "page": 664,
+      "section": "Management and governance",
+      "title": "Well-Architected: six pillars and explicit tradeoffs",
+      "visual": null,
+      "status": "study",
+      "noteAnchor": "pdf-page-664",
+      "representation": "notes"
+    },
+    {
+      "page": 665,
+      "section": "Management and governance",
+      "title": "AWS Well-Architected Tool",
+      "visual": null,
+      "status": "study",
+      "noteAnchor": "pdf-page-665",
+      "representation": "notes"
+    },
+    {
+      "page": 666,
+      "section": "Management and governance",
+      "title": "Amazon Managed Grafana",
+      "visual": null,
+      "status": "study",
+      "noteAnchor": "pdf-page-666",
+      "representation": "notes"
+    },
+    {
+      "page": 667,
+      "section": "Management and governance",
+      "title": "Amazon Managed Grafana",
+      "visual": null,
+      "status": "study",
+      "noteAnchor": "pdf-page-667",
+      "representation": "notes"
+    },
+    {
+      "page": 668,
+      "section": "Machine learning",
+      "title": "Machine Learning",
+      "visual": null,
+      "status": "context",
+      "reason": "Chapter/topic divider; covered by the following study topics and section organization."
+    },
+    {
+      "page": 669,
+      "section": "Machine learning",
+      "title": "Amazon SageMaker AI",
+      "visual": "pdf:669",
+      "status": "study",
+      "noteAnchor": "pdf-page-669",
+      "representation": "diagram + notes"
+    },
+    {
+      "page": 670,
+      "section": "Machine learning",
+      "title": "SageMaker Feature Store",
+      "visual": null,
+      "status": "study",
+      "noteAnchor": "pdf-page-670",
+      "representation": "notes"
+    },
+    {
+      "page": 671,
+      "section": "Machine learning",
+      "title": "Where the features come from is up to you.",
+      "visual": "pdf:671",
+      "status": "study",
+      "noteAnchor": "pdf-page-671",
+      "representation": "diagram + notes"
+    },
+    {
+      "page": 672,
+      "section": "Machine learning",
+      "title": "How SageMaker Feature Store Organizes Your Data",
+      "visual": "pdf:672",
+      "status": "study",
+      "noteAnchor": "pdf-page-672",
+      "representation": "diagram + notes"
+    },
+    {
+      "page": 673,
+      "section": "Machine learning",
+      "title": "Data Ingestion (streaming or batch)",
+      "visual": "pdf:673",
+      "status": "study",
+      "noteAnchor": "pdf-page-673",
+      "representation": "diagram + notes"
+    },
+    {
+      "page": 674,
+      "section": "Machine learning",
+      "title": "SageMaker Feature Store Security",
+      "visual": null,
+      "status": "study",
+      "noteAnchor": "pdf-page-674",
+      "representation": "notes"
+    },
+    {
+      "page": 675,
+      "section": "Machine learning",
+      "title": "SageMaker ML Lineage Tracking",
+      "visual": "pdf:675",
+      "status": "study",
+      "noteAnchor": "pdf-page-675",
+      "representation": "diagram + notes"
+    },
+    {
+      "page": 676,
+      "section": "Machine learning",
+      "title": "Lineage Tracking Entities",
+      "visual": null,
+      "status": "study",
+      "noteAnchor": "pdf-page-676",
+      "representation": "notes"
+    },
+    {
+      "page": 677,
+      "section": "Machine learning",
+      "title": "Querying Lineage Entities",
+      "visual": null,
+      "status": "study",
+      "noteAnchor": "pdf-page-677",
+      "representation": "notes"
+    },
+    {
+      "page": 678,
+      "section": "Machine learning",
+      "title": "Ground Truth: availability and labeling concept",
+      "visual": null,
+      "status": "study",
+      "noteAnchor": "pdf-page-678",
+      "representation": "notes"
+    },
+    {
+      "page": 679,
+      "section": "Machine learning",
+      "title": "What is Ground Truth?",
+      "visual": null,
+      "status": "study",
+      "noteAnchor": "pdf-page-679",
+      "representation": "notes"
+    },
+    {
+      "page": 680,
+      "section": "Machine learning",
+      "title": "But it’s more than that",
+      "visual": "pdf:680",
+      "status": "study",
+      "noteAnchor": "pdf-page-680",
+      "representation": "diagram + notes"
+    },
+    {
+      "page": 681,
+      "section": "Machine learning",
+      "title": "Who are these human labelers?",
+      "visual": null,
+      "status": "study",
+      "noteAnchor": "pdf-page-681",
+      "representation": "notes"
+    },
+    {
+      "page": 682,
+      "section": "Machine learning",
+      "title": "Ground Truth Plus",
+      "visual": null,
+      "status": "study",
+      "noteAnchor": "pdf-page-682",
+      "representation": "notes"
+    },
+    {
+      "page": 683,
+      "section": "Machine learning",
+      "title": "Other ways to generate training labels",
+      "visual": null,
+      "status": "study",
+      "noteAnchor": "pdf-page-683",
+      "representation": "notes"
+    },
+    {
+      "page": 684,
+      "section": "Machine learning",
+      "title": "Amazon Mechanical Turk",
+      "visual": null,
+      "status": "study",
+      "noteAnchor": "pdf-page-684",
+      "representation": "notes"
+    },
+    {
+      "page": 685,
+      "section": "Machine learning",
+      "title": "Amazon Mechanical Turk",
+      "visual": "pdf:685",
+      "status": "study",
+      "noteAnchor": "pdf-page-685",
+      "representation": "diagram + notes"
+    },
+    {
+      "page": 686,
+      "section": "Machine learning",
+      "title": "SageMaker Canvas",
+      "visual": null,
+      "status": "study",
+      "noteAnchor": "pdf-page-686",
+      "representation": "notes"
+    },
+    {
+      "page": 687,
+      "section": "Machine learning",
+      "title": "SageMaker Data Wrangler",
+      "visual": null,
+      "status": "study",
+      "noteAnchor": "pdf-page-687",
+      "representation": "notes"
+    },
+    {
+      "page": 688,
+      "section": "Machine learning",
+      "title": "Data Wrangler sources",
+      "visual": "pdf:688",
+      "status": "study",
+      "noteAnchor": "pdf-page-688",
+      "representation": "diagram + notes"
+    },
+    {
+      "page": 689,
+      "section": "Machine learning",
+      "title": "Data Wrangler: Import Data",
+      "visual": "pdf:689",
+      "status": "study",
+      "noteAnchor": "pdf-page-689",
+      "representation": "diagram + notes"
+    },
+    {
+      "page": 690,
+      "section": "Machine learning",
+      "title": "Data Wrangler: Preview Data",
+      "visual": "pdf:690",
+      "status": "study",
+      "noteAnchor": "pdf-page-690",
+      "representation": "diagram + notes"
+    },
+    {
+      "page": 691,
+      "section": "Machine learning",
+      "title": "Data Wrangler: Visualize Data",
+      "visual": "pdf:691",
+      "status": "study",
+      "noteAnchor": "pdf-page-691",
+      "representation": "diagram + notes"
+    },
+    {
+      "page": 692,
+      "section": "Machine learning",
+      "title": "Data Wrangler: Transform Data",
+      "visual": "pdf:692",
+      "status": "study",
+      "noteAnchor": "pdf-page-692",
+      "representation": "diagram + notes"
+    },
+    {
+      "page": 693,
+      "section": "Machine learning",
+      "title": "Data Wrangler: Quick Model",
+      "visual": "pdf:693",
+      "status": "study",
+      "noteAnchor": "pdf-page-693",
+      "representation": "diagram + notes"
+    },
+    {
+      "page": 694,
+      "section": "Machine learning",
+      "title": "Data Wrangler: Export Data Flow",
+      "visual": "pdf:694",
+      "status": "study",
+      "noteAnchor": "pdf-page-694",
+      "representation": "diagram + notes"
+    },
+    {
+      "page": 695,
+      "section": "Machine learning",
+      "title": "Data Wrangler Troubleshooting",
+      "visual": null,
+      "status": "study",
+      "noteAnchor": "pdf-page-695",
+      "representation": "notes"
+    },
+    {
+      "page": 696,
+      "section": "Machine learning",
+      "title": "Foundation Models",
+      "visual": null,
+      "status": "study",
+      "noteAnchor": "pdf-page-696",
+      "representation": "notes"
+    },
+    {
+      "page": 697,
+      "section": "Machine learning",
+      "title": "AWS Foundation Models (Base Models)",
+      "visual": null,
+      "status": "study",
+      "noteAnchor": "pdf-page-697",
+      "representation": "notes"
+    },
+    {
+      "page": 698,
+      "section": "Machine learning",
+      "title": "Amazon Bedrock",
+      "visual": null,
+      "status": "study",
+      "noteAnchor": "pdf-page-698",
+      "representation": "notes"
+    },
+    {
+      "page": 699,
+      "section": "Machine learning",
+      "title": "The Bedrock API Endpoints",
+      "visual": null,
+      "status": "study",
+      "noteAnchor": "pdf-page-699",
+      "representation": "notes"
+    },
+    {
+      "page": 700,
+      "section": "Machine learning",
+      "title": "Bedrock authorization",
+      "visual": null,
+      "status": "study",
+      "noteAnchor": "pdf-page-700",
+      "representation": "notes"
+    },
+    {
+      "page": 701,
+      "section": "Machine learning",
+      "title": "Amazon Bedrock: Model Access",
+      "visual": null,
+      "status": "study",
+      "noteAnchor": "pdf-page-701",
+      "representation": "notes"
+    },
+    {
+      "page": 702,
+      "section": "Machine learning",
+      "title": "Let’s Play",
+      "visual": null,
+      "status": "study",
+      "noteAnchor": "pdf-page-702",
+      "representation": "notes"
+    },
+    {
+      "page": 703,
+      "section": "Machine learning",
+      "title": "Fine-tuning",
+      "visual": null,
+      "status": "study",
+      "noteAnchor": "pdf-page-703",
+      "representation": "notes"
+    },
+    {
+      "page": 704,
+      "section": "Machine learning",
+      "title": "Fine-tuning in Bedrock: “Custom Models”",
+      "visual": null,
+      "status": "study",
+      "noteAnchor": "pdf-page-704",
+      "representation": "notes"
+    },
+    {
+      "page": 705,
+      "section": "Machine learning",
+      "title": "“Continued Pre-Training”",
+      "visual": null,
+      "status": "study",
+      "noteAnchor": "pdf-page-705",
+      "representation": "notes"
+    },
+    {
+      "page": 706,
+      "section": "Machine learning",
+      "title": "Low-Rank Adaptation (LoRA)",
+      "visual": "pdf:706",
+      "status": "study",
+      "noteAnchor": "pdf-page-706",
+      "representation": "diagram + notes"
+    },
+    {
+      "page": 707,
+      "section": "Machine learning",
+      "title": "Retrieval Augmented Generation (RAG)",
+      "visual": "pdf:707",
+      "status": "study",
+      "noteAnchor": "pdf-page-707",
+      "representation": "diagram + notes"
+    },
+    {
+      "page": 708,
+      "section": "Machine learning",
+      "title": "RAG: Pros and Cons",
+      "visual": null,
+      "status": "study",
+      "noteAnchor": "pdf-page-708",
+      "representation": "notes"
+    },
+    {
+      "page": 709,
+      "section": "Machine learning",
+      "title": "RAG: Example Approach (winning at Jeopardy!)",
+      "visual": "pdf:709",
+      "status": "study",
+      "noteAnchor": "pdf-page-709",
+      "representation": "diagram + notes"
+    },
+    {
+      "page": 710,
+      "section": "Machine learning",
+      "title": "Choosing a Database (Knowledge Base Data Store) for RAG",
+      "visual": null,
+      "status": "study",
+      "noteAnchor": "pdf-page-710",
+      "representation": "notes"
+    },
+    {
+      "page": 711,
+      "section": "Machine learning",
+      "title": "Embeddings",
+      "visual": "pdf:711",
+      "status": "study",
+      "noteAnchor": "pdf-page-711",
+      "representation": "diagram + notes"
+    },
+    {
+      "page": 712,
+      "section": "Machine learning",
+      "title": "Embeddings are vectors, so store them in…",
+      "visual": "pdf:712",
+      "status": "study",
+      "noteAnchor": "pdf-page-712",
+      "representation": "diagram + notes"
+    },
+    {
+      "page": 713,
+      "section": "Machine learning",
+      "title": "RAG Example with a Vector Database: Making Data from Star Trek, by Cheating.",
+      "visual": "pdf:713",
+      "status": "study",
+      "noteAnchor": "pdf-page-713",
+      "representation": "diagram + notes"
+    },
+    {
+      "page": 714,
+      "section": "Machine learning",
+      "title": "RAG in Bedrock: Knowledge Bases",
+      "visual": "pdf:714",
+      "status": "study",
+      "noteAnchor": "pdf-page-714",
+      "representation": "diagram + notes"
+    },
+    {
+      "page": 715,
+      "section": "Machine learning",
+      "title": "Using Knowledge Bases",
+      "visual": "pdf:715",
+      "status": "study",
+      "noteAnchor": "pdf-page-715",
+      "representation": "diagram + notes"
+    },
+    {
+      "page": 716,
+      "section": "Machine learning",
+      "title": "Let’s Make a Knowledge Base",
+      "visual": null,
+      "status": "study",
+      "noteAnchor": "pdf-page-716",
+      "representation": "notes"
+    },
+    {
+      "page": 717,
+      "section": "Machine learning",
+      "title": "Breaking up the R in RAG",
+      "visual": "pdf:717",
+      "status": "study",
+      "noteAnchor": "pdf-page-717",
+      "representation": "diagram + notes"
+    },
+    {
+      "page": 718,
+      "section": "Machine learning",
+      "title": "Pre-Retrieval",
+      "visual": "pdf:718",
+      "status": "study",
+      "noteAnchor": "pdf-page-718",
+      "representation": "diagram + notes"
+    },
+    {
+      "page": 719,
+      "section": "Machine learning",
+      "title": "More on Chunking",
+      "visual": "pdf:719",
+      "status": "study",
+      "noteAnchor": "pdf-page-719",
+      "representation": "diagram + notes"
+    },
+    {
+      "page": 720,
+      "section": "Machine learning",
+      "title": "Chunking with Bedrock: Standard Chunking",
+      "visual": "pdf:720",
+      "status": "study",
+      "noteAnchor": "pdf-page-720",
+      "representation": "diagram + notes"
+    },
+    {
+      "page": 721,
+      "section": "Machine learning",
+      "title": "Chunking with Bedrock: Hierarchical Chunking",
+      "visual": "pdf:721",
+      "status": "study",
+      "noteAnchor": "pdf-page-721",
+      "representation": "diagram + notes"
+    },
+    {
+      "page": 722,
+      "section": "Machine learning",
+      "title": "Chunking with Bedrock: Semantic Chunking",
+      "visual": "pdf:722",
+      "status": "study",
+      "noteAnchor": "pdf-page-722",
+      "representation": "diagram + notes"
+    },
+    {
+      "page": 723,
+      "section": "Machine learning",
+      "title": "Optimizing your Embeddings",
+      "visual": null,
+      "status": "study",
+      "noteAnchor": "pdf-page-723",
+      "representation": "notes"
+    },
+    {
+      "page": 724,
+      "section": "Machine learning",
+      "title": "Sparse vs. Dense Embeddings",
+      "visual": "pdf:724",
+      "status": "study",
+      "noteAnchor": "pdf-page-724",
+      "representation": "diagram + notes"
+    },
+    {
+      "page": 725,
+      "section": "Machine learning",
+      "title": "Optimizing Retrieval with Metadata",
+      "visual": "pdf:725",
+      "status": "study",
+      "noteAnchor": "pdf-page-725",
+      "representation": "diagram + notes"
+    },
+    {
+      "page": 726,
+      "section": "Machine learning",
+      "title": "Keeping Your KB Up to Date",
+      "visual": "pdf:726",
+      "status": "study",
+      "noteAnchor": "pdf-page-726",
+      "representation": "diagram + notes"
+    },
+    {
+      "page": 727,
+      "section": "Machine learning",
+      "title": "OpenSearch as a Vector Store",
+      "visual": "pdf:727",
+      "status": "study",
+      "noteAnchor": "pdf-page-727",
+      "representation": "diagram + notes"
+    },
+    {
+      "page": 728,
+      "section": "Machine learning",
+      "title": "OpenSearch Vector Engines",
+      "visual": null,
+      "status": "study",
+      "noteAnchor": "pdf-page-728",
+      "representation": "notes"
+    },
+    {
+      "page": 729,
+      "section": "Machine learning",
+      "title": "OpenSearch as a Vector Store: Finer Points",
+      "visual": null,
+      "status": "study",
+      "noteAnchor": "pdf-page-729",
+      "representation": "notes"
+    },
+    {
+      "page": 730,
+      "section": "Machine learning",
+      "title": "OpenSearch as a Vector Store: Finer Points",
+      "visual": null,
+      "status": "study",
+      "noteAnchor": "pdf-page-730",
+      "representation": "notes"
+    },
+    {
+      "page": 731,
+      "section": "Machine learning",
+      "title": "Amazon Aurora as a Vector Store",
+      "visual": "pdf:731",
+      "status": "study",
+      "noteAnchor": "pdf-page-731",
+      "representation": "diagram + notes"
+    },
+    {
+      "page": 732,
+      "section": "Machine learning",
+      "title": "Amazon Quick",
+      "visual": "pdf:732",
+      "status": "study",
+      "noteAnchor": "pdf-page-732",
+      "representation": "diagram + notes"
+    },
+    {
+      "page": 733,
+      "section": "Machine learning",
+      "title": "Amazon Quick – Capabilities",
+      "visual": "pdf:733",
+      "status": "study",
+      "noteAnchor": "pdf-page-733",
+      "representation": "diagram + notes"
+    },
+    {
+      "page": 734,
+      "section": "Machine learning",
+      "title": "Amazon Quick + IAM Identity Center",
+      "visual": "pdf:734",
+      "status": "study",
+      "noteAnchor": "pdf-page-734",
+      "representation": "diagram + notes"
+    },
+    {
+      "page": 735,
+      "section": "Machine learning",
+      "title": "Amazon Quick – Integrations",
+      "visual": "pdf:735",
+      "status": "study",
+      "noteAnchor": "pdf-page-735",
+      "representation": "diagram + notes"
+    },
+    {
+      "page": 736,
+      "section": "Machine learning",
+      "title": "Apps in Amazon Quick",
+      "visual": "pdf:736",
+      "status": "study",
+      "noteAnchor": "pdf-page-736",
+      "representation": "diagram + notes"
+    },
+    {
+      "page": 737,
+      "section": "Machine learning",
+      "title": "Amazon Quick Example",
+      "visual": "pdf:737",
+      "status": "study",
+      "noteAnchor": "pdf-page-737",
+      "representation": "diagram + notes"
+    },
+    {
+      "page": 738,
+      "section": "Machine learning",
+      "title": "Amazon Kendra",
+      "visual": "pdf:738",
+      "status": "study",
+      "noteAnchor": "pdf-page-738",
+      "representation": "diagram + notes"
+    },
+    {
+      "page": 739,
+      "section": "Developer tools",
+      "title": "Developer Tools",
+      "visual": null,
+      "status": "context",
+      "reason": "Chapter/topic divider; covered by the following study topics and section organization."
+    },
+    {
+      "page": 740,
+      "section": "Developer tools",
+      "title": "Console, CLI and SDK access",
+      "visual": null,
+      "status": "study",
+      "noteAnchor": "pdf-page-740",
+      "representation": "notes"
+    },
+    {
+      "page": 741,
+      "section": "Developer tools",
+      "title": "Access key identifiers and secrets",
+      "visual": null,
+      "status": "study",
+      "noteAnchor": "pdf-page-741",
+      "representation": "notes"
+    },
+    {
+      "page": 742,
+      "section": "Developer tools",
+      "title": "What’s the AWS CLI?",
+      "visual": null,
+      "status": "study",
+      "noteAnchor": "pdf-page-742",
+      "representation": "notes"
+    },
+    {
+      "page": 743,
+      "section": "Developer tools",
+      "title": "What’s the AWS SDK?",
+      "visual": null,
+      "status": "study",
+      "noteAnchor": "pdf-page-743",
+      "representation": "notes"
+    },
+    {
+      "page": 744,
+      "section": "Developer tools",
+      "title": "AWS Cloud Development Kit (CDK)",
+      "visual": "pdf:744",
+      "status": "study",
+      "noteAnchor": "pdf-page-744",
+      "representation": "diagram + notes"
+    },
+    {
+      "page": 745,
+      "section": "Developer tools",
+      "title": "CDK in a diagram",
+      "visual": "pdf:745",
+      "status": "study",
+      "noteAnchor": "pdf-page-745",
+      "representation": "diagram + notes"
+    },
+    {
+      "page": 746,
+      "section": "Developer tools",
+      "title": "CDK vs SAM",
+      "visual": null,
+      "status": "study",
+      "noteAnchor": "pdf-page-746",
+      "representation": "notes"
+    },
+    {
+      "page": 747,
+      "section": "Developer tools",
+      "title": "CDK + SAM",
+      "visual": "pdf:747",
+      "status": "study",
+      "noteAnchor": "pdf-page-747",
+      "representation": "diagram + notes"
+    },
+    {
+      "page": 748,
+      "section": "Developer tools",
+      "title": "CDK Hands-On",
+      "visual": "pdf:748",
+      "status": "study",
+      "noteAnchor": "pdf-page-748",
+      "representation": "diagram + notes"
+    },
+    {
+      "page": 749,
+      "section": "Developer tools",
+      "title": "AWS CodeDeploy",
+      "visual": "pdf:749",
+      "status": "study",
+      "noteAnchor": "pdf-page-749",
+      "representation": "diagram + notes"
+    },
+    {
+      "page": 750,
+      "section": "Developer tools",
+      "title": "AWS CodeCommit",
+      "visual": null,
+      "status": "study",
+      "noteAnchor": "pdf-page-750",
+      "representation": "notes"
+    },
+    {
+      "page": 751,
+      "section": "Developer tools",
+      "title": "AWS CodeBuild",
+      "visual": "pdf:751",
+      "status": "study",
+      "noteAnchor": "pdf-page-751",
+      "representation": "diagram + notes"
+    },
+    {
+      "page": 752,
+      "section": "Developer tools",
+      "title": "AWS CodePipeline",
+      "visual": "pdf:752",
+      "status": "study",
+      "noteAnchor": "pdf-page-752",
+      "representation": "diagram + notes"
+    },
+    {
+      "page": 753,
+      "section": "Cost management and API Gateway",
+      "title": "Everything Else",
+      "visual": null,
+      "status": "context",
+      "reason": "Chapter/topic divider; covered by the following study topics and section organization."
+    },
+    {
+      "page": 754,
+      "section": "Cost management and API Gateway",
+      "title": "AWS Budgets",
+      "visual": null,
+      "status": "study",
+      "noteAnchor": "pdf-page-754",
+      "representation": "notes"
+    },
+    {
+      "page": 755,
+      "section": "Cost management and API Gateway",
+      "title": "Cost Explorer",
+      "visual": null,
+      "status": "study",
+      "noteAnchor": "pdf-page-755",
+      "representation": "notes"
+    },
+    {
+      "page": 756,
+      "section": "Cost management and API Gateway",
+      "title": "Cost Explorer – Monthly Cost by AWS Service",
+      "visual": "pdf:756",
+      "status": "study",
+      "noteAnchor": "pdf-page-756",
+      "representation": "diagram + notes"
+    },
+    {
+      "page": 757,
+      "section": "Cost management and API Gateway",
+      "title": "Cost Explorer– Hourly & Resource Level",
+      "visual": "pdf:757",
+      "status": "study",
+      "noteAnchor": "pdf-page-757",
+      "representation": "diagram + notes"
+    },
+    {
+      "page": 758,
+      "section": "Cost management and API Gateway",
+      "title": "Cost Explorer – Savings Plan Alternative to Reserved Instances",
+      "visual": "pdf:758",
+      "status": "study",
+      "noteAnchor": "pdf-page-758",
+      "representation": "diagram + notes"
+    },
+    {
+      "page": 759,
+      "section": "Cost management and API Gateway",
+      "title": "Cost Explorer – Forecast Usage",
+      "visual": "pdf:759",
+      "status": "study",
+      "noteAnchor": "pdf-page-759",
+      "representation": "diagram + notes"
+    },
+    {
+      "page": 760,
+      "section": "Cost management and API Gateway",
+      "title": "Example: Building a Serverless API",
+      "visual": "pdf:760",
+      "status": "study",
+      "noteAnchor": "pdf-page-760",
+      "representation": "diagram + notes"
+    },
+    {
+      "page": 761,
+      "section": "Cost management and API Gateway",
+      "title": "AWS API Gateway",
+      "visual": null,
+      "status": "study",
+      "noteAnchor": "pdf-page-761",
+      "representation": "notes"
+    },
+    {
+      "page": 762,
+      "section": "Cost management and API Gateway",
+      "title": "API Gateway – Integrations High Level",
+      "visual": null,
+      "status": "study",
+      "noteAnchor": "pdf-page-762",
+      "representation": "notes"
+    },
+    {
+      "page": 763,
+      "section": "Cost management and API Gateway",
+      "title": "API Gateway – AWS Service Integration Kinesis Data Streams example",
+      "visual": "pdf:763",
+      "status": "study",
+      "noteAnchor": "pdf-page-763",
+      "representation": "diagram + notes"
+    },
+    {
+      "page": 764,
+      "section": "Cost management and API Gateway",
+      "title": "API Gateway - Endpoint Types",
+      "visual": "pdf:764",
+      "status": "study",
+      "noteAnchor": "pdf-page-764",
+      "representation": "diagram + notes"
+    },
+    {
+      "page": 765,
+      "section": "Cost management and API Gateway",
+      "title": "API Gateway – Security",
+      "visual": "pdf:765",
+      "status": "study",
+      "noteAnchor": "pdf-page-765",
+      "representation": "diagram + notes"
+    }
+  ]
+}

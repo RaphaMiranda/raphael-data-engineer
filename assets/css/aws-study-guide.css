@@ -77,7 +77,7 @@ button:focus-visible, a:focus-visible { outline: 2px solid var(--cyan); outline-
 .title-stats span { padding: .55rem .75rem; border-radius: 999px; background: rgba(78, 222, 163, .1); color: var(--green); font: .73rem var(--font-mono); }
 .warning { color: var(--danger); }
 
-.topic-sidebar { min-width: 0; min-height: 0; display: grid; grid-template-rows: auto minmax(0, 1fr); padding: 1rem; overflow: hidden; background: rgba(19, 27, 46, .88); box-shadow: -1px 0 0 rgba(70, 69, 84, .15); transition: opacity .22s ease, padding .3s ease, transform .3s ease; }
+.topic-sidebar { min-width: 0; min-height: 0; display: grid; grid-template-rows: auto auto minmax(0, 1fr); padding: 1rem; overflow: hidden; background: rgba(19, 27, 46, .88); box-shadow: -1px 0 0 rgba(70, 69, 84, .15); transition: opacity .22s ease, padding .3s ease, transform .3s ease; }
 .sidebar-hidden .topic-sidebar { padding-inline: 0; opacity: 0; pointer-events: none; transform: translateX(1rem); }
 .overview-heading { display: flex; justify-content: space-between; align-items: start; margin: 0 0 1rem; }
 .overview-heading h2 { margin: .35rem 0 0; font: 700 1.2rem/1.2 var(--font-headline); letter-spacing: -.03em; }
@@ -86,6 +86,26 @@ button:focus-visible, a:focus-visible { outline: 2px solid var(--cyan); outline-
 .topic-button:hover, .topic-button[aria-current="true"] { background: var(--surface-bright); }
 .topic-button small { display: block; color: var(--cyan); font: .66rem var(--font-mono); text-transform: uppercase; letter-spacing: .1em; }
 .topic-title { display: block; margin-top: .25rem; color: var(--text); font-size: .875rem; line-height: 1.35; }
+.topic-button[hidden] { display: none; }
+.topic-filters { display: grid; gap: .45rem; margin-bottom: .7rem; }
+.topic-filters label { color: var(--muted); font: .7rem var(--font-mono); }
+.topic-filters input, .topic-filters select { min-width: 0; width: 100%; min-height: 44px; padding: .65rem .7rem; border: 1px solid rgba(70, 69, 84, .2); border-radius: .5rem; background: var(--surface); color: var(--text); font: .8rem var(--font-body); }
+.topic-filters input:focus-visible, .topic-filters select:focus-visible, summary:focus-visible, .study-table:focus-visible { outline: 2px solid var(--cyan); outline-offset: 3px; }
+.topic-filters p { margin: .15rem 0 0; min-height: 1.2rem; color: var(--muted); font-size: .72rem; }
+.notes-details, .diagram-text { margin-top: 1.5rem; padding: 1rem; border-radius: .7rem; background: rgba(6, 14, 32, .4); color: var(--muted); line-height: 1.65; }
+.notes-details summary, .diagram-text summary { width: fit-content; min-height: 44px; padding: .6rem 0; cursor: pointer; color: var(--cyan); font-size: .88rem; }
+.diagram-text li { margin-bottom: .55rem; overflow-wrap: anywhere; }
+.diagram-controls { display: flex; flex-wrap: wrap; gap: .4rem; }
+.diagram-controls button { min-width: 44px; min-height: 44px; }
+.diagram-controls button:disabled { opacity: .45; cursor: default; }
+.source-reference { margin-top: 1.5rem; color: var(--muted); font-size: .78rem; line-height: 1.7; overflow-wrap: anywhere; }
+.source-reference a, .detail-note a, .slide-lede a, .note-list a { color: var(--cyan); text-underline-offset: .2em; }
+.study-table { max-width: 100%; overflow: auto; margin-top: 1.5rem; border-radius: .6rem; background: var(--surface-low); box-shadow: inset 1px 1px 0 rgba(70, 69, 84, .15); }
+.study-table table { width: 100%; border-collapse: collapse; text-align: left; font-size: .85rem; }
+.study-table th, .study-table td { min-width: 8rem; padding: .8rem; vertical-align: top; }
+.study-table th { color: var(--text); background: var(--surface-high); }
+.study-table tbody tr:nth-child(even) { background: rgba(6, 14, 32, .4); }
+.slide { max-height: 100%; }
 .sidebar-toggle { position: absolute; z-index: 3; top: 1.25rem; right: .75rem; width: 44px; height: 44px; padding: .5rem; border: 0; border-radius: .75rem; color: var(--primary); background: var(--surface-high); font: 500 1.25rem/1 var(--font-mono); transition: background .2s ease, transform .2s ease; }
 .sidebar-toggle:hover { background: var(--surface-bright); }
 .sidebar-toggle:active { transform: scale(.96); }

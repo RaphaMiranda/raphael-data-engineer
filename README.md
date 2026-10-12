@@ -12,11 +12,11 @@ A static portfolio for Raphael Miranda, with case studies and a focused AWS Cert
 
 ## Study deck
 
-The AWS deck keeps the Markdown document as its source of truth. It turns every heading into a slide, retains unfinished source topics as prompts for future study, and supports Previous/Next controls, arrow keys, and a topic map (`O`). The notes are a personal study aid; validate exam-critical details against current AWS documentation.
+The AWS deck keeps the Markdown document as its source of truth. The course collection covers the supplied PDF through physical page 765; the personal collection preserves the existing working notes and unfinished prompts. Search by topic or PDF page, use Previous/Next or arrow keys, and open the topic map with `O`. Slides show brief key points with expandable full notes, tables and code. The notes are a personal study aid; validate exam-critical details against current AWS documentation. See the [coverage and writing review](docs/aws-study-review.md).
 
 ### Visuals and diagrams
 
-`assets/js/aws-study-visuals.js` is a title-keyed visual registry. Add an `image` entry for a root-relative image path, or a `diagram` entry with its node/link data. The first working GoJS example is attached to the **DynamoDB Streams** slide.
+`assets/js/aws-study-visuals.js` contains 329 course schematics keyed by `pdf:<physical page>` plus the two existing title-keyed personal-note visuals. Match a source topic with `<!-- pdf-page: 543 -->` in Markdown. Add an `image` entry with a root-relative path or a `diagram` with node/link data. Set structural links' `relation` flag to omit data-flow arrowheads. Diagrams include readable text and keyboard zoom/fit controls; their text remains available when the canvas library cannot load.
 
 GoJS is loaded from a version-pinned CDN and is proprietary. Its current non-commercial terms allow personal learning use but retain a watermark; commercial or organisation use requires an appropriate GoJS licence. See the [GoJS deployment guidance](https://gojs.net/latest/learn/deployment).
 

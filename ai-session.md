@@ -1,5 +1,17 @@
 # AI session log
 
+## 2026-10-13 - PDF-backed AWS study material
+
+- **Branch:** `feature/pdf-study-material`.
+- **Goal:** Extract useful study material through physical PDF page 765, interpret its diagrams and optimize the resulting notes and presentation.
+- **Changed files:** `docs/aws-data-eng-associate.md`, `docs/aws-study-source-coverage.json`, `docs/aws-study-review.md`, `assets/js/aws-study-visuals.js`, `assets/js/aws-study-guide.js`, `assets/css/aws-study-guide.css`, `assets/js/main.js`, `aws-study-guide.html`, `tests/aws-study-guide.test.js`, `tests/aws-study-guide-browser.js`, `README.md`, `ai-session.md`.
+- **Coverage:** Rendered and visually reviewed all 765 requested pages, with targeted full-page checks of diagrams and image-only code/tables. Added 730 page-linked study topics and 329 semantic schematics; recorded 31 dividers and four non-study pages in a complete coverage index. Pages 766-780 remain outside scope. SQL screenshots became readable queries; comparisons became semantic tables. Added course attribution, physical-page markers, dated qualifications, primary-source links for selected corrections and explicit unfinished-source prompts.
+- **Presentation:** Added course/personal collections, topic/page search and direct page links. Main slides show at most four points, with short summaries of category-only labels; complete outlines, examples and tables expand below. Diagrams have text equivalents, keyboard zoom/fit and a blocked-CDN fallback; structural links omit flow arrowheads. Corrected mobile slide scrolling and shared-header highlighting for fragment links. No new website dependencies or build tooling.
+- **Preserved work:** All 173 pre-existing heading lines and their complete bodies remain in Personal working notes. Compared the appended original content with the pre-edit backup. Its existing trailing whitespace remains intentionally untouched; all newly authored note lines and the other changed files pass whitespace checks.
+- **Verification:** All 19 Node tests pass; changed production/test scripts pass syntax checks. Chrome at 1440x1000 and 375x812 passed 146 study-deck assertions each, including corrected source models, page search, collection switching, zoom, text alternatives, safe code/tables and library fallback. Shared-navigation checks pass across all nine pages at both widths, including study-page and homepage fragment highlighting. Real Enter activation of diagram text, zoom and detailed code passed with visible focus. Explicit reduced-motion emulation disabled diagram animation and reduced CSS animation. Desktop/mobile screenshots inspected; no study-deck horizontal overflow or runtime errors. All 29 local page, asset and documentation HTTP checks returned 200; local fragment targets exist.
+- **Boundaries:** The notes distinguish the dated course snapshot from selected verified corrections; they are not a fully current AWS reference or official exam blueprint. The existing lakehouse and AI pair-programming case-study body overflows remain unchanged (210px/75px at 375px); shared headers fit. Source PDF, rendered pages and temporary extraction tools are excluded from the commit.
+- **Commit:** `feat: expand AWS study deck from course PDF`.
+
 ## 2026-10-08 - AWS Explorer hero landing page
 
 - **Branch:** `feature/aws-explorer-landing`.
