@@ -5,7 +5,7 @@
   const header = document.querySelector('.site-header');
   const toggle = document.getElementById('menu-toggle');
   const menu = document.getElementById('mobile-menu');
-  const expected = ['Home', 'Timeline', 'Skills', 'Case Studies', 'AWS Study Guide', 'Service Explorer'];
+  const expected = ['Home', 'Timeline', 'Skills', 'Case Studies', 'AWS DE-01 Guide', 'Service Explorer'];
   assert([...header.querySelectorAll('.site-links [data-nav]')].map(a => a.textContent).join('|') === expected.join('|'), 'Shared desktop menu labels and order');
   assert([...menu.querySelectorAll('[data-nav]')].map(a => a.textContent).join('|') === expected.join('|'), 'Mobile menu contains the same destinations');
   assert([...header.querySelectorAll('a')].every(a => a.getAttribute('href').startsWith('/')), 'Header destinations are root-relative');

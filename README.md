@@ -1,6 +1,6 @@
-# Raphael Miranda — Data Engineer portfolio
+# Raphael Miranda Mata — Data Engineer portfolio
 
-A static portfolio for Raphael Miranda, with case studies and a focused AWS Certified Data Engineer – Associate study deck.
+A static portfolio for Raphael Miranda Mata, with case studies and a focused AWS Certified Data Engineer – Associate study deck.
 
 ## Pages
 

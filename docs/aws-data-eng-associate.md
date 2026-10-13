@@ -6027,6 +6027,7 @@ Node roles, storage choices and deployment sizing affect both query behavior and
 
 Hot, warm and cold tiers trade query performance and access behavior for storage cost. Move data according to how often it must be searched.
 
+- Hot (standard data nodes)
   - Instance stores or EBS volumes / fastest performance
 - UltraWarm (warm) storage uses S3 + caching
   - Best for indices with few writes (like log data / immutable data)
@@ -6093,6 +6094,7 @@ Separate cluster-management responsibilities from data processing and distribute
   - Minimum storage requirement is roughly: Source Data * (1 + Number of Replicas) * 1.45
 - Choosing the number of shards
   - (source data + room to grow) * (1 + indexing overhead) / desired shard size
+  - Indexing overhead is normally 10% of your data
   - In rare cases you may need to limit the number of shards per node
     - You usually run out of disk space first.
 - Choosing instance types
@@ -6197,7 +6199,7 @@ QuickSight can analyze supported databases, lake data and uploaded files. The se
   - Common or extended log format
 - Data preparation allows limited ETL
 
-## SPICE
+## Quick Sight Is SPICE!
 
 <!-- pdf-page: 484 -->
 

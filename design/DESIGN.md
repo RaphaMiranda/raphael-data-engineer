@@ -1,6 +1,6 @@
 # Design System: Architectural Precision
 
-Canonical specification for Raphael Miranda's portfolio, case studies and AWS learning workspace. Updated 2026-10-13 from the implemented frontend. Use this document as context when generating screens in Google Stitch or changing the static site.
+Canonical specification for Raphael Miranda Mata's portfolio, case studies and AWS learning workspace. Updated 2026-10-13 from the implemented frontend. Use this document as context when generating screens in Google Stitch or changing the static site.
 
 Only the homepage's first-screen hero is restored from `feature/merged-aws-study-notes`, as clarified by the user. Its headline, illustrative terminal and original hero treatment are intentional exceptions to the newer composition guidance. Everything around and below that hero retains the frontend design review: featured project grid, footer contrast, icon-font subset, shared accessibility improvements and refined case-study/learning-tool layouts.
 
