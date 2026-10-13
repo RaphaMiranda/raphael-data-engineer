@@ -136,9 +136,12 @@
       const relationships = visual.links.map(function (link) {
         const from = visual.nodes.find(function (node) { return node.key === link.from; });
         const to = visual.nodes.find(function (node) { return node.key === link.to; });
-        return "<li>" + escapeHtml((from ? from.text : link.from) + " — " + link.label + (link.relation ? " — " : " → ") + (to ? to.text : link.to)) + "</li>";
+        return "<li>" + escapeHtml((from ? from.text : link.from) + " — " + link.label + (link.relation ? " — " : link.bidirectional ? " ↔ " : " → ") + (to ? to.text : link.to)) + "</li>";
       }).join("");
-      const nodes = visual.nodes.map(function (node) { return "<li>" + escapeHtml(node.text + (node.detail ? ": " + node.detail : "")) + "</li>"; }).join("");
+      const nodes = visual.nodes.map(function (node) {
+        const group = node.group && visual.nodes.find(function (entry) { return entry.key === node.group; });
+        return "<li>" + escapeHtml(node.text + (node.isGroup ? " (dashed container)" : "") + (node.detail ? ": " + node.detail : "") + (group ? "; inside " + group.text : "")) + "</li>";
+      }).join("");
       return "<figure class=\"slide-visual\"><div class=\"visual-toolbar\"><p class=\"visual-label\">" + (visual.kind === "structure" ? "Structure" : "Flow") + " diagram</p><div class=\"diagram-controls\"><button class=\"diagram-button\" type=\"button\" data-diagram-zoom=\"out\" aria-label=\"Zoom diagram out\">−</button><button class=\"diagram-button\" type=\"button\" data-diagram-fit=\"" + escapeHtml(visual.id) + "\">Fit diagram</button><button class=\"diagram-button\" type=\"button\" data-diagram-zoom=\"in\" aria-label=\"Zoom diagram in\">+</button></div></div><div class=\"study-diagram\" id=\"" + escapeHtml(visual.id) + "\" aria-hidden=\"true\"></div><p class=\"diagram-fallback\" data-diagram-fallback hidden>Canvas unavailable. The complete diagram is described below.</p><figcaption>" + escapeHtml(visual.caption) + "</figcaption><details class=\"diagram-text\"><summary>Read diagram as text</summary><p>Components</p><ul>" + nodes + "</ul><p>Relationships</p><ul>" + relationships + "</ul></details></figure>";
     }
     return "";
@@ -187,6 +190,7 @@
     const host = document.getElementById(visual.id);
     const fallback = elements.slide.querySelector("[data-diagram-fallback]");
     if (!host) return;
+    host.classList.toggle("study-diagram--vertical", visual.layout === "vertical");
     if (!window.go) {
       host.hidden = true;
       if (fallback) fallback.hidden = false;
@@ -198,7 +202,7 @@
     const $ = go.GraphObject.make;
     const reduceMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
     const diagram = $(go.Diagram, host, {
-      layout: $(go.LayeredDigraphLayout, { direction: 0, layerSpacing: 48, columnSpacing: 28 }),
+      layout: visual.layout === "vertical" ? $(go.Layout) : $(go.LayeredDigraphLayout, { direction: 0, layerSpacing: 48, columnSpacing: 28 }),
       initialAutoScale: go.AutoScale.Uniform,
       contentAlignment: go.Spot.Center,
       isReadOnly: true,
@@ -212,18 +216,31 @@
       "animationManager.isEnabled": !reduceMotion,
       "toolManager.mouseWheelBehavior": go.WheelMode.Zoom
     });
+    // Keep the vertical diagram below the library attribution on narrow screens.
+    if (visual.layout === "vertical") diagram.padding = new go.Margin(80, 8, 8, 8);
 
-    diagram.nodeTemplate = $(go.Node, "Auto", { selectable: false, cursor: "default" },
+    diagram.nodeTemplate = $(go.Node, "Auto", { selectable: false, cursor: "default", locationSpot: visual.layout === "vertical" ? go.Spot.Center : go.Spot.TopLeft },
+      new go.Binding("location", "loc", go.Point.parse),
       $(go.Shape, "RoundedRectangle", { parameter1: 12, stroke: "#464554", strokeWidth: 1.3 }, new go.Binding("fill", "fill")),
       $(go.Panel, "Vertical", { margin: 12, defaultAlignment: go.Spot.Left },
         $(go.TextBlock, { font: "600 13px 'Space Grotesk', sans-serif", stroke: "#dae2fd", maxSize: new go.Size(150, NaN), wrap: go.Wrap.Fit }, new go.Binding("text", "text")),
         $(go.TextBlock, { margin: new go.Margin(5, 0, 0, 0), font: "10px 'JetBrains Mono', monospace", stroke: "#c7c4d7", maxSize: new go.Size(150, NaN), wrap: go.Wrap.Fit }, new go.Binding("text", "detail"))
       )
     );
+    diagram.groupTemplate = $(go.Group, "Auto", { selectable: false, avoidable: false },
+      $(go.Shape, "RoundedRectangle", { fill: "rgba(19, 27, 46, .4)", stroke: "#aebad3", strokeWidth: 1.5, strokeDashArray: [8, 6] }),
+      $(go.Panel, "Vertical",
+        $(go.TextBlock, { alignment: go.Spot.Left, margin: new go.Margin(12, 16, 0, 16), font: "600 13px 'Space Grotesk', sans-serif", stroke: "#c0c1ff" }, new go.Binding("text", "text")),
+        $(go.Placeholder, { padding: 18 })
+      )
+    );
     diagram.linkTemplate = $(go.Link, { routing: go.Routing.AvoidsNodes, corner: 10, selectable: false },
+      new go.Binding("fromSpot", "fromSpot", go.Spot.parse),
+      new go.Binding("toSpot", "toSpot", go.Spot.parse),
       $(go.Shape, { stroke: "#5de6ff", strokeWidth: 2 }),
       $(go.Shape, { toArrow: "Standard", fill: "#5de6ff", stroke: null, scale: .8 }, new go.Binding("toArrow", "relation", function (relation) { return relation ? "" : "Standard"; })),
-      $(go.TextBlock, { segmentOffset: new go.Point(0, -12), font: "10px 'JetBrains Mono', monospace", stroke: "#c7c4d7" }, new go.Binding("text", "label"))
+      $(go.Shape, { fromArrow: "", fill: "#5de6ff", stroke: null, scale: .8 }, new go.Binding("fromArrow", "bidirectional", function (bidirectional) { return bidirectional ? "Backward" : ""; })),
+      $(go.TextBlock, { segmentOffset: new go.Point(0, -12), font: "10px 'JetBrains Mono', monospace", stroke: "#c7c4d7" }, new go.Binding("text", "label", function (label) { return visual.hideLinkLabels ? "" : label; }))
     );
     diagram.addDiagramListener("InitialLayoutCompleted", function () { diagram.commandHandler.zoomToFit(); });
     diagram.model = new go.GraphLinksModel(visual.nodes.map(function (node) { return Object.assign({}, node); }), visual.links.map(function (link) { return Object.assign({}, link); }));

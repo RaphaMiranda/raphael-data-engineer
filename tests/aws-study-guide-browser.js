@@ -51,7 +51,7 @@
   visible = [...document.querySelectorAll('[data-slide-index]')].filter(button => !button.hidden);
   assert(visible.length > 10 && visible.every(button => /dynamodb/i.test(button.textContent)), 'Service-name search filters topic titles');
 
-  for (const n of [39, 103, 162, 188, 319, 327, 408, 490, 491, 492, 543, 715, 765]) {
+  for (const n of [39, 103, 162, 188, 319, 327, 408, 490, 491, 492, 543, 595, 715, 765]) {
     await page(n);
     const host = slide.querySelector('.study-diagram');
     const model = go.Diagram.fromDiv(host);
@@ -72,6 +72,19 @@
     if (visual.kind === 'structure') assert(shapeArrows.every(arrow => arrow === ''), 'Structural relations omit flow arrowheads');
     assert(document.documentElement.scrollWidth <= innerWidth, 'No horizontal overflow: ' + n);
     assert(slide.querySelectorAll(':scope > div > .note-list > li').length <= 4, 'Presentation shows at most four key points: ' + n);
+    if (n === 595) {
+      const az = model.findNodeForKey('az');
+      const node = key => model.findNodeForKey(key);
+      assert(az instanceof go.Group && az.elt(0).strokeDashArray.join(',') === '8,6', 'AZ renders as a dashed container');
+      assert(['public', 'nat', 'private'].every(key => node(key).containingGroup === az && az.actualBounds.containsRect(node(key).actualBounds)), 'AZ encloses both subnets and NAT');
+      assert(['www', 'igw'].every(key => !node(key).containingGroup && node(key).actualBounds.bottom < az.actualBounds.top), 'WWW and IGW remain above and outside the AZ');
+      const order = ['www', 'igw', 'public', 'nat', 'private'].map(key => node(key).location.y);
+      assert(order.every((y, index) => !index || y > order[index - 1]), 'Network layout runs vertically with WWW first');
+      const links = [...model.links];
+      assert(links.filter(link => link.elt(2).fromArrow === 'Backward' && link.elt(1).toArrow === 'Standard').length === 3, 'Three connections have arrows at both ends');
+      const outbound = links.find(link => link.data.from === 'private' && link.data.to === 'nat');
+      assert(outbound && outbound.elt(2).fromArrow === '' && outbound.elt(1).toArrow === 'Standard', 'Private subnet points only toward NAT');
+    }
   }
 
   await page(521);
@@ -98,6 +111,8 @@
   await page(23);
   assert(slide.querySelector('.study-diagram').hidden && !slide.querySelector('.diagram-fallback').hidden, 'Blocked diagram library has a visible fallback');
   assert(slide.querySelector('.diagram-text').open && slide.querySelectorAll('.diagram-text li').length > 5, 'Fallback includes full components and relationships');
+  await page(595);
+  assert(slide.querySelector('.diagram-text').open && slide.querySelector('.diagram-text').textContent.includes('inside AZ') && slide.querySelector('.diagram-text').textContent.includes('↔'), 'Network fallback preserves containment and bidirectional relationships');
   window.go = goLibrary;
 
   searchFor('Cardinality');

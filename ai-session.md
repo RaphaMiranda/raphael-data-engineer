@@ -1,5 +1,16 @@
 # AI session log
 
+## 2026-10-13 - Vertical internet/NAT gateway diagram
+
+- **Branch:** `feature/frontend-design-review`.
+- **Goal:** Correct the Internet Gateway & NAT Gateways schematic on physical PDF page 595 to the user's requested vertical topology and dashed Availability Zone container.
+- **Changed files:** `assets/js/aws-study-visuals.js`, `assets/js/aws-study-guide.js`, `assets/css/aws-study-guide.css`, `tests/aws-study-guide.test.js`, `tests/aws-study-guide-browser.js`, `README.md`, `ai-session.md`.
+- **Changes:** Replaced the horizontal chain with WWW first, WWW ↔ IGW, IGW ↔ Public Subnet, IGW ↔ NAT and Private Subnet → NAT. The dashed AZ contains both subnets and NAT; WWW and IGW remain above/outside it. Added opt-in fixed vertical positions, group rendering, explicit link attachment points and bidirectional arrowheads/text alternatives. The vertical canvas reserves room for the library attribution on mobile. Existing diagrams retain their default layout. Documented authoring fields in README.
+- **Factual review:** Caption retains outbound-initiation and return-traffic qualifications, including placement of a public NAT gateway in a public subnet, checked against [AWS NAT gateway documentation](https://docs.aws.amazon.com/vpc/latest/userguide/vpc-nat-gateway.html) and [AWS internet gateway documentation](https://docs.aws.amazon.com/vpc/latest/userguide/VPC_Internet_Gateway.html). Renderer APIs checked against official GoJS group, layout, link and spot documentation.
+- **Verification:** All 22 Node tests and changed JavaScript syntax checks pass. Chrome study checks pass 203 assertions each at 1440x1000 and 375x812, including actual vertical positions, dashed group bounds, excluded nodes, all arrow directions, zoom/fit and blocked-library text fallback. Desktop/mobile screenshots inspected; WWW clears the attribution area. Real Enter activates zoom, fit and the text disclosure with visible focus. No horizontal overflow or browser runtime errors. All 33 referenced local paths return HTTP 200 and fragment targets exist; scoped whitespace checks pass.
+- **Preserved work:** Existing user changes in `docs/aws-data-eng-associate.md` remain untouched and excluded. No new dependencies, source-note edits, homepage changes or Explorer changes.
+- **Commit:** `fix: correct vertical internet and NAT gateway diagram`.
+
 ## 2026-10-13 - Remove repeated flat-list slide notes
 
 - **Branch:** `feature/frontend-design-review`.

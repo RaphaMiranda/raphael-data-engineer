@@ -110,6 +110,23 @@ test('source-specific diagrams retain the enrollment model and distinguish lifec
   assert.ok(alternatives.links.some(l => l.label === 'VPC sharing option'));
 });
 
+test('internet gateway diagram preserves the vertical topology and AZ boundary', () => {
+  const network = visuals['pdf:595'];
+  assert.equal(network.layout, 'vertical');
+  assert.equal(network.nodes[0].text, 'WWW');
+  assert.ok(network.nodes.find(node => node.key === 'az').isGroup);
+  assert.deepEqual(Array.from(network.nodes.filter(node => node.group === 'az').map(node => node.key)), ['public', 'nat', 'private']);
+  assert.ok(network.nodes.filter(node => ['www', 'igw'].includes(node.key)).every(node => !node.group));
+  assert.deepEqual(Array.from(network.links.map(link => [link.from, link.to, Boolean(link.bidirectional)])), [
+    ['www', 'igw', true], ['igw', 'public', true], ['igw', 'nat', true], ['private', 'nat', false]
+  ]);
+  const html = helpers.renderVisual(slides.find(slide => slide.sourcePage === 595));
+  assert.match(html, /AZ \(dashed container\): Availability Zone/);
+  assert.match(html, /Public Subnet: Route to IGW; inside AZ/);
+  assert.match(html, /IGW — NAT egress and responses ↔ NAT/);
+  assert.match(html, /Private Subnet — initiates outbound traffic → NAT/);
+});
+
 test('presentation stays brief while the complete nested reference outline remains available', () => {
   const items = [0, 2, 0, 2, 0, 0, 2, 0, 2].map((indent, i) => ({ indent, text: String(i), ordered: false }));
   const split = helpers.splitPoints(items, 4);

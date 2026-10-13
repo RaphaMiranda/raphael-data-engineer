@@ -287,7 +287,25 @@ window.studyVisuals = {
   diagram(587, "An EMR security configuration controls supported at-rest and in-transit encryption paths; data and local/HDFS storage require their own settings.", ["EMR security configuration", "S3 encryption", "Local / HDFS encryption", "Node-to-node transport"], [[0,1,"at-rest policy"],[0,2,"at-rest policy"],[0,3,"in-transit policy"]], "structure");
   diagram(593, "A VPC is Regional; subnets each occupy one AZ, with route tables determining public or private routing.", ["Regional VPC", "AZ A public subnet", "AZ A private subnet", "AZ B public subnet", "AZ B private subnet"], [[0,1,"subnet"],[0,2,"subnet"],[0,3,"subnet"],[0,4,"subnet"]], "structure");
   diagram(594, "Subnet CIDRs divide a VPC address range into nonoverlapping ranges within individual AZs.", ["VPC 10.0.0.0/16", "AZ A subnet|10.0.1.0/24", "AZ B subnet|10.0.2.0/24", "AZ C subnet|10.0.3.0/24"], [[0,1,"address allocation"],[0,2,"address allocation"],[0,3,"address allocation"]], "structure");
-  diagram(595, "Private IPv4 workloads can initiate internet traffic through a NAT gateway in a public subnet and an internet gateway; unsolicited inbound access is not provided.", ["Private workload", "Private route table", "Public NAT gateway", "Internet gateway", "Internet"], [[0,1,"outbound packet"],[1,2,"default route"],[2,3,"public-subnet route"],[3,4,"internet egress"]]);
+  window.studyVisuals["pdf:595"] = {
+    type: "diagram", id: "pdf-diagram-595", sourcePage: 595, kind: "flow", layout: "vertical", hideLinkLabels: true,
+    label: "Internet gateway and NAT gateway paths within an Availability Zone",
+    caption: "WWW and the IGW are outside the AZ; the public subnet, NAT and private subnet are inside. A public NAT gateway is deployed in a public subnet. Private workloads initiate outbound traffic through NAT; return traffic is supported, but unsolicited inbound access is not provided.",
+    nodes: [
+      { key: "www", text: "WWW", detail: "Internet", fill: "#2d3449", loc: "0 0" },
+      { key: "igw", text: "IGW", detail: "Internet gateway", fill: "#173947", loc: "0 90" },
+      { key: "az", text: "AZ", detail: "Availability Zone", isGroup: true },
+      { key: "public", text: "Public Subnet", detail: "Route to IGW", fill: "#242d52", group: "az", loc: "0 210" },
+      { key: "nat", text: "NAT", detail: "Public NAT gateway", fill: "#173b34", group: "az", loc: "0 300" },
+      { key: "private", text: "Private Subnet", detail: "Initiates outbound traffic", fill: "#242d52", group: "az", loc: "0 390" }
+    ],
+    links: [
+      { from: "www", to: "igw", label: "internet traffic", bidirectional: true, fromSpot: "0.5 1", toSpot: "0.5 0" },
+      { from: "igw", to: "public", label: "public-subnet traffic", bidirectional: true, fromSpot: "0.5 1", toSpot: "0.5 0" },
+      { from: "igw", to: "nat", label: "NAT egress and responses", bidirectional: true, fromSpot: "0 0.5", toSpot: "0 0.5" },
+      { from: "private", to: "nat", label: "initiates outbound traffic", fromSpot: "0.5 0", toSpot: "0.5 1" }
+    ]
+  };
   diagram(596, "NACLs act at subnet boundaries and security groups at network interfaces; both apply alongside route and application controls.", ["Network packet", "Subnet NACL", "ENI security group", "Application"], [[0,1,"stateless rules"],[1,2,"stateful rules"],[2,3,"allowed traffic"]]);
   diagram(597, "Security groups are stateful allow rules; NACLs are stateless ordered allow/deny rules requiring return-path allowances.", ["Security group", "Stateful response tracking", "NACL", "Separate inbound / outbound rules"], [[0,1,"automatic response allowance"],[2,3,"stateless evaluation"]], "structure");
   diagram(598, "VPC Flow Logs capture network-flow metadata, not packet payloads, and publish to a configured supported destination.", ["VPC / subnet / ENI", "Flow log records", "CloudWatch Logs", "S3", "Data Firehose"], [[0,1,"traffic metadata"],[1,2,"destination option"],[1,3,"destination option"],[1,4,"destination option"]]);
