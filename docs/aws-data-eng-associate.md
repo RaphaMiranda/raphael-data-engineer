@@ -7677,80 +7677,72 @@ DNS resolves human-readable names to records used by clients to locate services.
 
 <!-- pdf-page: 605 -->
 
-DNS names form a hierarchy from root to top-level domain to authoritative domain and subdomains.
+DNS is the Internet’s address book: it maps names people remember to records computers can use.
 
-- Domain Registrar: Amazon Route 53, GoDaddy, …
-- DNS Records: A, AAAA, CNAME, NS, …
-- Zone File: contains DNS records
-- Name Server: resolves DNS queries (Authoritative or Non- Authoritative)
-- Top Level Domain (TLD): .com, .us, .in, .gov, .org, …
-- Second Level Domain (SLD): amazon.com, google.com, …
+- Name hierarchy — in `www.example.com`, `www` is a subdomain, `example.com` is the second-level domain, and `.com` is the top-level domain.
+- Domain registrar — the company where a domain is registered, such as Route 53 or GoDaddy.
+- DNS record — an instruction for what answer to return for a name.
+- DNS servers — authoritative servers give answers for their zone; recursive resolvers find and cache answers for clients.
+- Hosted zone — Route 53’s collection of records for a domain or subdomain.
+- Zone file — a text format for storing DNS records.
 
 ## How DNS Works
 
 <!-- pdf-page: 606 -->
 
-A recursive resolver follows delegations when its cache has no answer, then returns an address that the client uses separately for HTTP.
+- Your device asks a DNS resolver for the record behind a name such as `www.example.com`.
+- If the answer is not cached, the resolver follows referrals: root → `.com` → the domain’s authoritative name server.
+- That server returns the DNS answer; your browser then connects to the destination. DNS finds the destination, it does not deliver the web page.
 
 ## Amazon Route 53
 
 <!-- pdf-page: 607 -->
 
-Route 53 answers DNS queries from hosted-zone records; the client's application traffic then goes to the resolved endpoint.
+Route 53 is AWS’s managed authoritative DNS service: it stores domain records and answers queries for them.
 
-- A highly available, scalable, fully managed and Authoritative DNS
-  - Authoritative = the customer (you) can update the DNS records
-- Route 53 is also a Domain Registrar
-- Ability to check the health of your resources
-- The only AWS service which provides 100% availability SLA
-- Why Route 53? 53 is a reference to the traditional DNS port
+- Register a domain with Route 53, or keep another registrar and use Route 53 for DNS.
+- Health checks monitor configured endpoints; failover policies can prefer a healthy alternative.
 
 ## Route 53 – Records
 
 <!-- pdf-page: 608 -->
 
-A DNS record combines a name, type, value and routing behavior. Choose the record from the address or service relationship it must represent.
+A DNS record tells Route 53 what answer to return for a name and how long resolvers can reuse it.
 
-- Each record contains:
-  - Domain/subdomain Name – e.g., example.com
-  - Record Type – e.g., A or AAAA
-  - Value – e.g., 12.34.56.78
-  - Routing Policy – how Route 53 responds to queries
-  - TTL – amount of time the record cached at DNS Resolvers
-- Route 53 supports the following DNS record types:
-  - (must know) A / AAAA / CNAME / NS
-  - (advanced) CAA / DS / MX / NAPTR / PTR / SOA / TXT / SPF / SRV
+- Name + type — which DNS question this record answers, such as an A record for `www.example.com`.
+- Value — the answer, such as an IP address or another hostname.
+- Routing policy — how Route 53 chooses an answer when multiple targets are configured.
+- TTL (seconds) — how long resolvers keep the answer in cache before asking Route 53 again.
 
 ## Route 53 – Record Types
 
 <!-- pdf-page: 609 -->
 
-Record types describe different mappings: A and AAAA provide addresses, while CNAME points one name to another under its documented constraints.
+Choose a record type by the kind of answer DNS should return.
 
-- AAAA – maps a hostname to IPv6
-- CNAME – maps a hostname to another hostname
-  - The target is a domain name which must have an A or AAAA record
-  - Can’t create a CNAME record for the top node of a DNS namespace (Zone Apex)
-  - Example: you can’t create for example.com, but you can create for www.example.com
-- NS – Name Servers for the Hosted Zone
-  - Control how traffic is routed for a domain
+- A returns an IPv4 address; AAAA returns an IPv6 address.
+- CNAME points one hostname to another. DNS looks up the target; this does not redirect a browser request.
+- NS lists a zone’s authoritative name servers and tells DNS where to ask for its records.
+- CNAME cannot be used at the zone apex (`example.com`). A Route 53 Alias can point the apex to supported AWS resources.
+- Other types (advanced, beyond this exam’s focus): CAA, DS, MX, NAPTR, PTR, SOA, TXT, SPF and SRV.
 
 ## Route 53 – Hosted Zones
 
 <!-- pdf-page: 610 -->
 
-A hosted zone holds the records for a DNS namespace. Public and private zones serve different resolution scopes.
+A hosted zone is Route 53’s container for the DNS records of a domain or subdomain.
 
-- Pricing figures on this source page are a dated illustration. Check current Region, usage and feature pricing before making a cost decision.
-- Public Hosted Zones – contains records that specify how to route traffic on the Internet (public domain names) application1.mypublicdomain.com
-- Private Hosted Zones – contain records that specify how you route traffic within one or more VPCs (private domain names) application1.company.internal
-- You pay $0.50 per month per hosted zone
+- Its name server (NS) records identify which servers answer for the zone.
+- For a public domain, set the registrar’s name servers to the zone’s NS records so DNS reaches Route 53.
 
 ## Route 53 – Public vs. Private Hosted Zones
 
 <!-- pdf-page: 611 -->
 
-Public hosted zones answer public DNS; private hosted zones answer through associated VPC resolver contexts.
+- Public zone — public DNS resolvers return its records to Internet clients.
+- Private zone — the VPC resolver returns its records to clients inside associated VPCs.
+- The same domain can have both: internal clients can get a private answer while public clients get a public answer (split-view DNS).
+- DNS supplies a record; network rules still decide whether a client can reach the destination.
 
 ## Amazon CloudFront
 

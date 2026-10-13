@@ -211,3 +211,11 @@
 - **Changes:** Increased the primary slide area by reducing the sidebar width, enlarging the slide surface, and tightening outer stage spacing. Replaced Hide topics / Show topics with `>` / `<` controls and retained accessible labels.
 - **Verification:** `node --check assets/js/aws-study-guide.js`; local HTTP checks returned 200 for the deck, stylesheet, and script; `git diff --check` passed. Browser rendering could not be exercised because this environment has no accessible browser surface or browser automation executable.
 - **Commit:** `feat: enlarge study slides and use arrow toggle`.
+
+## 2026-10-13 — Route 53 slide rewrite
+
+- **Branch:** `feature/frontend-design-review`
+- **Goal:** Make the DNS and Route 53 study slides clearer and easier to review.
+- **Changes:** Rewrote DNS terminology and lookup slides, plus the Route 53 overview, record fields, record types, hosted zones, and public/private zones. Clarified A/AAAA, CNAME and apex Alias behavior, NS delegation, TTL, and split-view DNS; removed dated hosted-zone pricing and unrelated service trivia.
+- **Verification:** 22 Node tests passed; 203 browser checks passed at 1440×1000 and 375×812; 33 local links returned HTTP 200; AWS claims checked against official Route 53 documentation; `git diff --check` passed.
+- **Commit:** `docs: simplify Route 53 study slides`.
