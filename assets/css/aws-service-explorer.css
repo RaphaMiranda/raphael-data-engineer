@@ -70,6 +70,10 @@ summary:hover { background: var(--high); }
 .notebook-summary h3 { font-size: 1.4rem; margin: .5rem 0 .75rem; }
 .notebook-summary h4 { font-size: .9375rem; color: var(--green); margin: 1rem 0 .4rem; }
 .notebook-summary p, .notebook-summary li { max-width: 65ch; font-size: .9375rem; line-height: 1.7; }
+.relationship-choices { margin: 0 0 1.25rem; padding: .85rem; border-radius: .75rem; background: #1c263b; }
+.relationship-choices > p { margin-bottom: .65rem; }
+#relationship-choices { display: flex; flex-wrap: wrap; gap: .5rem; }
+#relationship-choices button { text-align: left; font-size: .8rem; }
 .notebook-more { margin-top: 1rem; }
 .notebook-more > summary { background: #0e172b; font-size: .875rem; }
 .map-controls { display: flex; align-items: end; flex-wrap: wrap; gap: 1rem; margin-top: .75rem; }
@@ -94,7 +98,11 @@ input[type="checkbox"] { accent-color: var(--cyan); width: 18px; height: 18px; }
 .graph-node.selected text { fill: #c7f9e5; }
 .graph-node:hover rect, .graph-node:focus rect { stroke: var(--cyan); stroke-width: 3; }
 .graph-node:focus { outline: none; }
+.junction { cursor: pointer; }
+.junction-hit { fill: transparent; pointer-events: all; }
 .junction polygon { fill: #193443; stroke: #5de6ff88; stroke-width: 1; }
+.junction[aria-pressed="true"] polygon, .junction:hover polygon, .junction:focus polygon { fill: #24515f; stroke: var(--cyan); stroke-width: 2; }
+.junction:focus { outline: none; }
 .junction text { fill: var(--cyan); font: 500 12px var(--font-mono); }
 .edge { fill: none; stroke: #5de6ff99; stroke-width: 1.5; }
 .edge.control { stroke: #c0c1ff88; stroke-dasharray: 5 5; }

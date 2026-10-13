@@ -49,9 +49,11 @@
       panel.innerHTML = `<div class="notebook-summary"><p class="eyebrow">${esc(service.categories.join(' / '))}</p><h3>${esc(service.name)}</h3><p>${esc(service.description)}</p><h4>Use it when…</h4><p>${esc(service.choose)}</p></div><details id="notebook-more" class="notebook-more"><summary>More details · notes, recall & sources</summary>${serviceCard(service)}</details>`;
     } else {
       const matches = core.matchRelationships(data.relationships, selected);
-      const relationship = relevantRelationships().find(r => r.id === pattern) || matches.all[0] || matches.subset[0];
+      const relevant = relevantRelationships();
+      const relationship = relevant.find(r => r.id === pattern) || matches.all[0] || matches.subset[0];
       const summary = relationship ? `<p class="eyebrow">${matches.all.includes(relationship) ? 'Selected connection' : 'Subset of your selection'}</p><h3>${esc(relationship.name)}</h3><p>${esc(relationship.why)}</p>${relationship.participants.some(id => !selected.includes(id)) ? `<p class="additional">Also needs: ${relationship.participants.filter(id => !selected.includes(id)).map(id => esc(byId.get(id).name)).join(', ')}.</p>` : ''}<h4>How they connect</h4><ol class="flow-list">${relationship.flow.slice(0, 2).map(f => `<li>${esc(shortName(f.from))} → ${esc(shortName(f.to))}: ${esc(f.label)}${f.type === 'control' ? ' (control / metadata)' : ''}</li>`).join('')}</ol>${relationship.flow.length > 2 ? '<p class="small muted">Full flow in More details.</p>' : ''}<h4>Main tradeoffs</h4><p>${esc(relationship.tradeoffs)}</p>` : '<h3>No verified relationship</h3><p>Try fewer services or another combination. A missing result does not mean integration is impossible.</p>';
-      panel.innerHTML = `<div class="notebook-summary">${summary}<p class="small muted">${matches.all.length} whole-selection matches · ${matches.subset.length} subset matches. Use the relationship selector to explore another.</p></div><details id="notebook-more" class="notebook-more"><summary>More details · all matches & sources</summary><h3>Involving all ${selected.length} selected services</h3><p class="small muted">Results may need additional participants or supporting services, identified in each card.</p>${matches.all.length ? matches.all.map(relationshipCard).join('') : `<div class="empty-state"><p>No verified relationship involving all selected services is recorded in this dataset.</p><p>Try a smaller working set or review the official documentation. We do not infer connections from shared categories.</p></div>`}${matches.subset.length ? `<h3 class="subset-heading">Relationships involving a subset</h3><p class="small muted">These results include at least two of your selected services, but do not connect the entire working set.</p>${matches.subset.map(relationshipCard).join('')}` : ''}</details>`;
+      const choices = relevant.length > 1 ? `<section class="relationship-choices" aria-label="Choose a relationship"><p class="eyebrow">Choose a relationship</p><div id="relationship-choices">${relevant.map((r, index) => `<button type="button" data-relationship="${esc(r.id)}" aria-pressed="${r.id === relationship?.id}">R${index + 1} · ${esc(r.name)}</button>`).join('')}</div></section>` : '';
+      panel.innerHTML = `<div class="notebook-summary">${choices}${summary}<p class="small muted">${matches.all.length} whole-selection matches · ${matches.subset.length} subset matches. Select a relationship here or on the map to update this notebook.</p></div><details id="notebook-more" class="notebook-more"><summary>More details · all matches & sources</summary><h3>Involving all ${selected.length} selected services</h3><p class="small muted">Results may need additional participants or supporting services, identified in each card.</p>${matches.all.length ? matches.all.map(relationshipCard).join('') : `<div class="empty-state"><p>No verified relationship involving all selected services is recorded in this dataset.</p><p>Try a smaller working set or review the official documentation. We do not infer connections from shared categories.</p></div>`}${matches.subset.length ? `<h3 class="subset-heading">Relationships involving a subset</h3><p class="small muted">These results include at least two of your selected services, but do not connect the entire working set.</p>${matches.subset.map(relationshipCard).join('')}` : ''}</details>`;
     }
     panel.parentElement.scrollTop = 0;
   }
@@ -77,6 +79,12 @@
     selected = [...new Set(ids)].filter(id => byId.has(id));
     renderSelections();
     if (focusId) document.querySelector(focusId)?.focus({ preventScroll: true });
+  }
+  function chooseRelationship(id, focusTarget) {
+    if (!relevantRelationships().some(relationship => relationship.id === id)) return;
+    pattern = id;
+    renderSelections();
+    if (focusTarget) document.querySelector(`${focusTarget}[data-relationship="${id}"]`)?.focus({ preventScroll: true });
   }
   function renderServices() {
     const active = document.activeElement;
@@ -124,6 +132,7 @@
       visible.forEach((s, i) => positions.set(s.id, { x: 24, y: 30 + i * 70 }));
       bounds = compact ? { width: 340, height: visible.length * 70 + connections.length * 100 + 100 } : { width: 740, height: Math.max(visible.length * 70 + 60, connections.length * 130 + 90) };
       connections.forEach((r, i) => {
+        const label = `R${relevant.indexOf(r) + 1}`;
         const junction = compact ? { x: 50, y: visible.length * 70 + 65 + i * 100 } : { x: 460, y: 65 + i * 130 };
         r.participants.filter(id => positions.has(id)).forEach(id => {
           const point = positions.get(id), y = point.y + 23;
@@ -134,12 +143,13 @@
           world.append(path);
           // Number focused spokes; large overviews keep labels at junctions.
           // Full flows and roles remain available in the notebook.
-          if (!compact && connections.length <= 3) world.append(svg('text', { x: point.x + 250 + i * 28, y: y - 6, class: 'edge-label' }, `R${i + 1}`));
+          if (!compact && connections.length <= 3) world.append(svg('text', { x: point.x + 250 + i * 28, y: y - 6, class: 'edge-label' }, label));
         });
-        const group = svg('g', { class: 'junction' });
+        const group = svg('g', { class: 'junction', role: 'button', tabindex: 0, 'aria-label': `Show ${r.name} in notebook`, 'aria-pressed': r.id === pattern, 'data-relationship': r.id });
+        group.append(svg('rect', { x: junction.x - 20, y: junction.y - 26, width: compact ? 260 : 280, height: compact ? 62 : 52, rx: 10, class: 'junction-hit' }));
         group.append(svg('polygon', { points: `${junction.x},${junction.y - 13} ${junction.x + 13},${junction.y} ${junction.x},${junction.y + 13} ${junction.x - 13},${junction.y}` }));
         group.append(svg('title', {}, `${r.name}. ${r.participants.map(id => `${byId.get(id).name}: ${r.roles[id]}`).join('; ')}`));
-        lines(group, `R${i + 1} · ${r.name}`, junction.x + 24, junction.y - 4, 25, '', 12);
+        lines(group, `${label} · ${r.name}`, junction.x + 24, junction.y - 4, 25, '', 12);
         world.append(group);
       });
     } else {
@@ -190,6 +200,11 @@
     transform();
   }
   document.addEventListener('click', event => {
+    const relationship = event.target.closest('[data-relationship]');
+    if (relationship) {
+      chooseRelationship(relationship.dataset.relationship, relationship.closest('#relationship-choices') ? '#relationship-choices ' : '#graph-world ');
+      return;
+    }
     const service = event.target.closest('[data-service]');
     if (service) {
       const fromRelated = service.closest('#related-services');
@@ -230,7 +245,7 @@
   $('fit-graph').addEventListener('click', fitGraph);
   const viewport = $('graph-viewport');
   viewport.addEventListener('focusin', event => {
-    const node = event.target.closest('.graph-node');
+    const node = event.target.closest('.graph-node, .junction');
     if (!node) return;
     const rect = node.getBoundingClientRect(), area = viewport.getBoundingClientRect();
     if (rect.left < area.left || rect.right > area.right || rect.top < area.top || rect.bottom > area.bottom) {
@@ -242,13 +257,15 @@
   viewport.addEventListener('keydown', event => {
     const node = event.target.closest('.graph-node');
     if (node && ['Enter', ' '].includes(event.key)) { event.preventDefault(); setSelection(core.toggleSelection(selected, node.dataset.service)); return; }
+    const relationship = event.target.closest('[data-relationship]');
+    if (relationship && ['Enter', ' '].includes(event.key)) { event.preventDefault(); chooseRelationship(relationship.dataset.relationship, '#graph-world '); return; }
     const moves = { ArrowLeft: [40, 0], ArrowRight: [-40, 0], ArrowUp: [0, 40], ArrowDown: [0, -40] };
     if (moves[event.key]) { event.preventDefault(); pan.x += moves[event.key][0]; pan.y += moves[event.key][1]; transform(); }
     else if (['+', '=', '-', '0'].includes(event.key)) { event.preventDefault(); if (event.key === '0') fitGraph(); else zoomBy(event.key === '-' ? .8 : 1.25); }
   });
   let drag = null;
   viewport.addEventListener('pointerdown', event => {
-    if (event.target.closest('.graph-node') || event.button !== 0) return;
+    if (event.target.closest('.graph-node, .junction') || event.button !== 0) return;
     drag = { id: event.pointerId, x: event.clientX, y: event.clientY, pan: { ...pan } };
     viewport.setPointerCapture(event.pointerId);
     $('service-graph').classList.add('dragging');

@@ -1,5 +1,14 @@
 # AI session log
 
+## 2026-10-14 - Selectable Explorer relationships
+
+- **Branch:** `feature/aws-explorer-first-use-tour`.
+- **Goal:** Let learners choose an individual relationship when a selected service pair has several documented patterns, and replace the notebook preview with that relationship.
+- **Changed files:** `assets/js/aws-service-explorer.js`, `assets/css/aws-service-explorer.css`, `aws-study-guide/service-explorer.html`, `tests/aws-explorer-notebook-browser.js`, `docs/aws-service-explorer.md`, `ai-session.md`.
+- **Changes:** Added numbered relationship buttons to multi-match notebooks and made each map junction a pointer- and keyboard-accessible button. Selecting R1/R2 synchronizes the relationship dropdown, focuses the selected map relationship and replaces the compact notebook preview. Focused maps retain the same R number as the notebook; the chooser sits at the top of the notebook so it remains directly reachable. No relationship data or factual claims changed.
+- **Verification:** All 11 Explorer Node tests and changed-script syntax checks pass. Notebook regression checks pass 28 assertions each at 1440x1000 and 375x812, including direct map mouse selection, keyboard activation, notebook-button switching, selector synchronization, stable R labels and responsive layout. The existing 24 interaction checks and all 63 relationship-card/preview checks pass at desktop. A real browser click switched the visible notebook from COPY to R2 Redshift Spectrum; a real map-junction click switched it to R3 UNLOAD. No browser errors; all five changed local paths returned HTTP 200; scoped whitespace checks pass.
+- **Commit:** `feat: make AWS explorer relationships selectable`.
+
 ## 2026-10-14 - Opened cumulative AWS study pull request
 
 - **Branch:** `feature/aws-explorer-first-use-tour`.
