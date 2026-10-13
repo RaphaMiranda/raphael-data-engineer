@@ -1,5 +1,15 @@
 # AI session log
 
+## 2026-10-13 - Limit the homepage rollback to its hero
+
+- **Branch:** `feature/frontend-design-review`.
+- **Goal:** Correct the previous rollback so only the first-screen hero comes from `feature/merged-aws-study-notes`; retain everything else from the frontend design review.
+- **Changed files:** `index.html`, `assets/css/portfolio.css`, `design/DESIGN.md`, `docs/frontend-design-review.md`, `ai-session.md`.
+- **Changes:** Composed the homepage from design-review commit `eabdba6`, replacing only its first section with the original hero. Restored the complete reviewed portfolio stylesheet, featured five-project grid, footer contrast/44px links, icon-font subset and 80px fixed-header clearance. Updated the design specification and audit note to describe the hero-only exception. The generated hero image remains unused.
+- **Verification:** Source comparison confirms the hero exactly matches the older branch and every surrounding homepage byte and the portfolio stylesheet match `eabdba6`. Chrome navigation/layout checks pass at 1440x1000 (9 assertions) and 375x812 (13), with zero horizontal overflow and no runtime errors. Confirmed five cards, full-width featured project, responsive two/one-column grid, footer color `#aebad3`, 44px footer targets and the icon subset. Hero/project screenshots inspected at both sizes. Real Enter activates View Case Studies; mobile Enter/Escape opens/closes navigation and restores focus. All 33 referenced local paths return HTTP 200 and local fragment targets exist. Scoped whitespace checks pass.
+- **Preserved work:** Case-study pages, shared styles, AWS study deck, Explorer, visual models and data remain identical to the frontend design review. Current user edits in `docs/aws-data-eng-associate.md` remain untouched and excluded.
+- **Commit:** `fix: limit homepage rollback to the hero section`.
+
 ## 2026-10-13 - Restore the previous homepage
 
 - **Branch:** `feature/frontend-design-review`.

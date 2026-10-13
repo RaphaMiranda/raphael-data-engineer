@@ -10,7 +10,7 @@
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&family=Inter:wght@300;400;500;600&family=JetBrains+Mono&display=swap" rel="stylesheet" />
-  <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet" />
+  <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&icon_names=api,arrow_forward,bar_chart,bolt,build,chat,check_circle,cleaning_services,cloud,code,compare_arrows,content_copy,database,dataset,deployed_code,double_arrow,download,draw,explore,forum,group,history,history_edu,hub,lock,manage_search,masks,merge_type,modeling,monitoring,open_in_new,person,policy,present_to_all,raw_on,rocket_launch,search,security,settings_ethernet,settings_input_component,shield_lock,smart_toy,speed,storage,terminal,trending_up,verified,verified_user,visibility_off,warning,water_drop,workspace_premium&display=block" rel="stylesheet" />
 
   <!-- Tailwind CDN + shared config -->
   <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
@@ -18,6 +18,7 @@
 
   <!-- Custom styles -->
   <link rel="stylesheet" href="/assets/css/styles.css" />
+  <link rel="stylesheet" href="/assets/css/portfolio.css" />
 </head>
 
 <body class="bg-surface text-on-surface font-body selection:bg-primary-container selection:text-on-primary-container">
@@ -53,7 +54,7 @@
     </nav>
   </header>
 
-  <main class="pt-16">
+  <main class="portfolio-main" id="main-content">
 
     <!-- ╔══════════════════════════════════════╗ -->
     <!-- ║  Hero                                ║ -->
@@ -401,10 +402,11 @@
           </div>
         </div>
 
-        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+        <div class="case-grid">
 
           <!-- Lakehouse -->
-          <a href="/case-studies/lakehouse-databricks.html" class="group bg-surface-container-low p-8 rounded-2xl border border-outline-variant/10 hover:border-primary/30 transition-all hover:shadow-[0_0_32px_rgba(192,193,255,0.06)] flex flex-col gap-4">
+          <a href="/case-studies/lakehouse-databricks.html" class="case-feature group bg-surface-container-low p-8 rounded-2xl border border-outline-variant/10 hover:border-primary/30 transition-all hover:shadow-[0_0_32px_rgba(192,193,255,0.06)] flex flex-col gap-4">
+            <div class="case-feature-copy">
             <div class="flex items-center gap-3 mb-2">
               <span class="material-symbols-outlined text-secondary">storage</span>
               <span class="text-xs font-mono uppercase tracking-widest text-secondary">Architecture</span>
@@ -417,6 +419,8 @@
               <span class="text-xs font-mono px-2 py-1 rounded bg-surface-container-high text-secondary border border-secondary/20">AWS Glue</span>
             </div>
             <span class="text-primary text-sm font-bold flex items-center gap-1 group-hover:gap-2 transition-all">Read case study <span class="material-symbols-outlined text-base">arrow_forward</span></span>
+            </div>
+            <img class="case-feature-image" src="/assets/images/lakehouse-databricks.png" width="480" height="1600" alt="" loading="lazy" decoding="async">
           </a>
 
           <!-- Governance -->
@@ -546,9 +550,9 @@
         © 2025 Raphael Miranda · Data Engineer
       </div>
       <div class="flex gap-8">
-        <a href="https://linkedin.com/in/raphaelmiranda0" target="_blank" rel="noopener" class="text-slate-500 hover:text-indigo-300 transition-colors font-label text-sm tracking-wide underline decoration-indigo-500/30 underline-offset-4 hover:translate-x-1 duration-200">LinkedIn</a>
-        <a href="https://github.com/RaphaMiranda" target="_blank" rel="noopener" class="text-slate-500 hover:text-indigo-300 transition-colors font-label text-sm tracking-wide underline decoration-indigo-500/30 underline-offset-4 hover:translate-x-1 duration-200">GitHub</a>
-        <a href="#case-studies" class="text-slate-500 hover:text-indigo-300 transition-colors font-label text-sm tracking-wide underline decoration-indigo-500/30 underline-offset-4 hover:translate-x-1 duration-200">Case Studies</a>
+        <a href="https://linkedin.com/in/raphaelmiranda0" target="_blank" rel="noopener" class="hover:text-indigo-300 transition-colors font-label text-sm tracking-wide underline decoration-indigo-500/30 underline-offset-4 hover:translate-x-1 duration-200">LinkedIn</a>
+        <a href="https://github.com/RaphaMiranda" target="_blank" rel="noopener" class="hover:text-indigo-300 transition-colors font-label text-sm tracking-wide underline decoration-indigo-500/30 underline-offset-4 hover:translate-x-1 duration-200">GitHub</a>
+        <a href="#case-studies" class="hover:text-indigo-300 transition-colors font-label text-sm tracking-wide underline decoration-indigo-500/30 underline-offset-4 hover:translate-x-1 duration-200">Case Studies</a>
       </div>
     </div>
   </footer>

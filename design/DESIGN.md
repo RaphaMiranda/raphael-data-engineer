@@ -2,7 +2,7 @@
 
 Canonical specification for Raphael Miranda's portfolio, case studies and AWS learning workspace. Updated 2026-10-13 from the implemented frontend. Use this document as context when generating screens in Google Stitch or changing the static site.
 
-The homepage was restored to `feature/merged-aws-study-notes` at the user's request after the design review. Its original hero, illustrative terminal, project grid and footer are intentional exceptions to the newer composition guidance. Shared accessibility improvements and the refined case-study/learning-tool layouts remain in place.
+Only the homepage's first-screen hero is restored from `feature/merged-aws-study-notes`, as clarified by the user. Its headline, illustrative terminal and original hero treatment are intentional exceptions to the newer composition guidance. Everything around and below that hero retains the frontend design review: featured project grid, footer contrast, icon-font subset, shared accessibility improvements and refined case-study/learning-tool layouts.
 
 ## 1. Visual Theme & Atmosphere
 
@@ -19,7 +19,7 @@ Implementation ownership:
 | Shared tokens and fonts | `assets/js/tailwind.config.js` |
 | Header, focus, shared surfaces and preference fallbacks | `assets/css/styles.css` |
 | Cross-page navigation | `assets/js/main.js` |
-| Portfolio composition | `index.html`, `assets/css/styles.css` |
+| Portfolio composition | `index.html`, `assets/css/portfolio.css` |
 | Article layout | `assets/css/case-studies.css`, `case-studies/*.html` |
 | Study deck | `assets/css/aws-study-guide.css`, `assets/js/aws-study-guide.js` |
 | Explorer entry | `assets/css/aws-explorer-landing.css` |
@@ -41,7 +41,7 @@ All surfaces belong to the same cool navy family. Periwinkle carries the brand a
 | Hover Layer | `#31394d` | Hover elevation without a glow |
 | Reading Ink | `#dae2fd` | Primary text on navy |
 | Supporting Ink | `#c7c4d7` | Body notes and descriptive text |
-| Quiet Ink | `#aebad3` | Header links, placeholders and supporting tool text |
+| Quiet Ink | `#aebad3` | Header links, placeholders, supporting tool text and footer links |
 | Brand Periwinkle | `#c0c1ff` | Primary action, selected navigation and controlled emphasis |
 | Brand Depth | `#8083ff` | Existing compact brand gradients |
 | Action Ink | `#1000a9` | Dark lettering on light periwinkle actions |
@@ -81,7 +81,7 @@ Do not truncate study topics to make them look short. Preserve original headings
 
 **Focus.** Use a visible cyan ring, normally 3px with a 3px offset; page-specific study controls may use 2px. Leave room for the outline. Never hide focus or clip the 44px study-sidebar arrow. Initial study loading leaves focus at the document; explicit slide navigation moves focus to the slide.
 
-**Project cards.** Preserve the restored homepage's five equal project cards, Editorial Layer surface, 1rem (16px) corners, 2rem padding and original hover treatment. Keep project titles, technologies and destinations real. Existing results require evidence before editorial changes.
+**Project cards.** Use an Editorial Layer surface, 1rem (16px) corners and generous padding. The leading project includes its existing architectural image and spans the complete two-column grid; the remaining four projects fill two rows. Hover changes tone and raises the card by at most 3px. Keep project titles, technologies and destinations real. Existing results require evidence before editorial changes.
 
 **Article code.** Code retains its whitespace inside a keyboard-focusable `pre` with horizontal scrolling. Grid/flex children use `min-width: 0`; the panel stays within the page. Prose can wrap long tokens. Keep the focus ring visible when readers use arrow keys to inspect long lines.
 
@@ -101,10 +101,10 @@ Use CSS Grid for page composition and flexbox for compact action groups. Every c
 
 Portfolio composition:
 
-- Preserve the original 921px minimum-height hero, 1280px container, 2rem side gutters, two equal columns from 768px and 3rem column gap.
+- Preserve the original 921px minimum-height hero, 1280px container, 2rem side gutters, two equal columns from 768px and 3rem column gap. The main container retains the review's 80px fixed-header clearance.
 - The original headline, opportunity indicator, introduction, illustrative pipeline terminal and decorative background remain. The terminal illustrates a workflow; it is not live telemetry.
 - Below 768px, hide the terminal and use the original single-column text/actions. Keep both case-study and résumé destinations.
-- Five equal project cards use one column below 768px, two from 768px and three from 1024px. This restored grid intentionally retains its incomplete final desktop row.
+- Five project cards retain the reviewed two-column grid: one full-width feature plus four regular cells. `grid-auto-flow: dense` avoids an empty corner. Below 768px use one column.
 - Case-study articles use controlled title widths, 65ch paragraphs, generous section spacing and smaller mobile padding. Preserve their individual content structure.
 
 Workspace boundaries:
@@ -123,13 +123,13 @@ Workspace boundaries:
 
 Use `100dvh` for viewport-aware shells. The desktop study shell keeps the slide and topic list independently scrollable; the mobile shell has automatic height and a dynamic-viewport minimum. Do not force article content into a fixed-height slide.
 
-Image direction for future work: tactile infrastructure, organized cable paths, machined metal, cool light and dark negative space. The generated `assets/images/infrastructure-editorial.webp` is retained as an unused illustration recorded in the design review; the restored homepage does not load it. Explorer keeps its static schematic SVG background behind a contrast-preserving navy wash.
+Image direction for future work: tactile infrastructure, organized cable paths, machined metal, cool light and dark negative space. The generated `assets/images/infrastructure-editorial.webp` is retained as an unused illustration recorded in the design review; the restored hero does not load it. The featured project retains the reviewed crop of the existing lakehouse artwork. Explorer keeps its static schematic SVG background behind a contrast-preserving navy wash.
 
-Performance for new media: prioritize hero images, lazy-load below-fold media, and reserve dimensions. The five case-study pages share an alphabetically sorted **52-symbol Material Symbols subset** with `display=block`; update their requests together when adding a glyph. The restored homepage retains its original full icon-font request. See [Google's subsetting guidance](https://developers.google.com/fonts/docs/material_symbols). Existing Tailwind and font CDN requests remain part of the current static implementation.
+Performance for new media: prioritize hero images, lazy-load below-fold media, and reserve dimensions. The homepage and five case-study pages retain the reviewed alphabetically sorted **52-symbol Material Symbols subset** with `display=block`; update their requests together when adding a glyph. See [Google's subsetting guidance](https://developers.google.com/fonts/docs/material_symbols). Existing Tailwind and font CDN requests remain part of the current static implementation.
 
 ## 6. Motion & Interaction
 
-Motion confirms an action. Use short CSS feedback around 150–220ms and modest transform/opacity changes. The existing study entrance is a brief 420ms fade and 15px rise. Preserve the restored homepage's existing hover and opportunity-indicator treatments; shared reduced-motion rules disable its animation when requested. Reading content, diagrams and topic lists do not need perpetual animation.
+Motion confirms an action. Use short CSS feedback around 150–220ms and modest transform/opacity changes. The existing study entrance is a brief 420ms fade and 15px rise; project cards rise slightly on hover. Preserve the restored hero's existing hover and opportunity-indicator treatments; shared reduced-motion rules disable its animation when requested. Reading content, diagrams and topic lists do not need perpetual animation.
 
 Do not animate the study grid's track widths or its progress-bar width. Sidebar visibility changes its layout immediately; opacity/transform may soften the panel transition. Avoid scroll hijacking, pinned reading sections, custom cursors, typewriter headings and unrequested carousels. No animation library is required.
 

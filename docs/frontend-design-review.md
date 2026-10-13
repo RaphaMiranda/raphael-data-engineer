@@ -2,7 +2,7 @@
 
 Reviewed 2026-10-13 on `feature/frontend-design-review`. Covers the portfolio, all five case studies, AWS study deck, Explorer introduction and Explorer workspace. The canonical specification is [design/DESIGN.md](../design/DESIGN.md).
 
-**Homepage rollback, 2026-10-13:** The user subsequently requested the home screen from `feature/merged-aws-study-notes`. `index.html` was restored exactly from that branch and the unused `portfolio.css` was removed. The hero, project-grid, footer and homepage font changes described below are historical; the homepage Lighthouse figures do not describe the restored page. Case-study and AWS-tool improvements remain. The generated image is retained as an unused asset for this record.
+**Hero-only rollback, clarified 2026-10-13:** Only the first-screen hero comes from `feature/merged-aws-study-notes`. All surrounding homepage markup and `portfolio.css` retain the frontend design review (`eabdba6`), including the featured project grid, footer contrast and icon-font subset. Case-study and AWS-tool improvements remain. The hero redesign and its Lighthouse figures below are historical; those figures do not describe this combined page. The generated hero image is retained as an unused asset for this record.
 
 ## Design decisions and fixes
 
