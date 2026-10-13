@@ -32,7 +32,7 @@
   if (topicList) {
     for (let i = 0; i < 100 && !topicList.children.length; i++) await new Promise(resolve => setTimeout(resolve, 50));
     const buttons = [...topicList.querySelectorAll('button')];
-    assert(buttons.length > 10 && buttons.every(b => b.children.length === 2 && b.children[0].matches('small') && b.children[1].matches('.topic-title')), 'Study topics contain section and title only');
+    assert(buttons.length > 10 && buttons.every(b => b.children.length === 1 && b.children[0].matches('.topic-title')) && topicList.querySelectorAll('.topic-section > summary').length > 1, 'Study topics contain titles grouped under collapsible sections');
     assert(!topicList.querySelector('.topic-summary'), 'Topic descriptions are absent');
     const sidebarToggle = document.getElementById('overview-toggle');
     const stage = document.querySelector('.study-stage');
@@ -50,7 +50,7 @@
     buttons[2].click();
     assert(document.querySelector('#slide h2').textContent === buttons[2].querySelector('.topic-title').textContent, 'Compact topic rows still navigate to the correct slide');
     buttons[0].click();
-    assert(buttons.every(b => b.getBoundingClientRect().height >= 44), 'Topic touch targets remain at least 44px');
+    assert(buttons.every(b => parseFloat(getComputedStyle(b).minHeight) >= 44) && [...topicList.querySelectorAll('.topic-section > summary')].every(summary => summary.getBoundingClientRect().height >= 44), 'Topic and section touch targets remain at least 44px');
   }
   assert([...header.querySelectorAll('a, button')].filter(e => e.getClientRects().length).every(e => e.getBoundingClientRect().right <= innerWidth), 'No horizontal header overflow');
   if (!location.pathname.startsWith('/case-studies/')) assert(document.documentElement.scrollWidth <= innerWidth, 'No horizontal page overflow');

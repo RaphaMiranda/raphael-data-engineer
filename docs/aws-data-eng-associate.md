@@ -1,157 +1,73 @@
-# Section Study approach
+<!-- Unified personal study notes; PDF material through physical page 765. -->
 
-<!-- collection: course -->
+Personal notes supplemented and paraphrased from **AWSCertifiedDataEngineerSlides.pdf**, by **Stephane Maarek and Frank Kane** (PDF metadata: 25 September 2026). Reviewed 13 October 2026. Limits, prices and availability are dated study material unless a current reference is linked; this is not an official AWS reference.
 
-Study notes interpreted from **AWSCertifiedDataEngineerSlides.pdf**, physical pages **1–765 inclusive**. Course authors: **Stephane Maarek and Frank Kane**. The supplied PDF metadata is dated **25 September 2026**. Reviewed **13 October 2026**.
+# Section Fundamentals
 
-These are personal study materials, not AWS documentation or an official exam blueprint. Source-derived limits, prices, console behavior and availability describe the course snapshot unless a dated correction is cited. Verify them in AWS documentation before deploying or booking an exam.
+<!-- original-note: 0 -->
+<!-- section -->
 
-Read the takeaway, explain the diagram, then recall the operational tradeoff. Each source topic has a physical PDF page marker; the presentation shows a short set of points and expandable reference notes. Repeated slide titles are distinguished by page. Tables and screenshots are rewritten as comparisons, SQL examples or workflow steps. Decorative logos, biographies and chapter cards are accounted for in the coverage index rather than copied.
-
-## How the material is organized
-
-- Fundamentals → SQL/Git → storage → databases → migration → compute/containers.
-- Analytics/streaming → integration → security → networks → operations.
-- ML/data preparation/RAG → developer tools → costs and API Gateway.
-- The final **Personal working notes** collection preserves the pre-existing headings and unfinished prompts. It remains separate from the source-linked course sequence so duplicates do not interrupt that sequence.
-
-# Section Course orientation
-
-## How to use this study guide
-
-<!-- pdf-page: 4 -->
-
-Study the requirement, choose a service, then explain its tradeoffs and failure modes.
-
-- The course targets DEA-C01 and recommends prior AWS fundamentals, including EC2/networking, and data-engineering knowledge.
-- Read the key points first; expand detailed notes and diagram text when revising.
-- Use the PDF page number to find the original example. Console screenshots are interpreted as learning steps, not reproduced UI instructions.
-- Test yourself: What enters the system? Where is durable state? What retries? Which identity is authorized? What changes cost or latency?
-
-## Service map: integration and analytics
-
-<!-- pdf-page: 7 -->
-
-Distinguish moving events, orchestrating work and analyzing data.
-
-- Integration: SQS, SNS, EventBridge, Step Functions, AppFlow and MWAA.
-- Analytics: Glue, Lake Formation, Athena, EMR, Kinesis, OpenSearch and QuickSight.
-- Cost visibility and control: Cost Explorer and Budgets.
-
-## Service map: compute, containers and databases
-
-<!-- pdf-page: 8 -->
-
-Choose storage and execution models independently.
-
-- Compute: EC2, Lambda and Batch; SAM supports serverless application development.
-- Containers: ECS and EKS orchestrate workloads; ECR stores images.
-- Database choices include RDS/Aurora, DynamoDB, DocumentDB, Keyspaces, Neptune, MemoryDB, Timestream and Redshift; match the data model and access pattern.
-
-## Service map: development and operations
-
-<!-- pdf-page: 9 -->
-
-Build reproducible infrastructure and retain operational evidence.
-
-- CLI/SDK, CDK, CodeBuild, CodeDeploy and CodePipeline support development and delivery; repository availability is a separate service consideration.
-- CloudFormation, CloudWatch, CloudTrail, Config, Systems Manager and Managed Grafana cover provisioning, observability and governance.
-- SageMaker supports ML workflows; API Gateway exposes application interfaces.
-
-## Service map: migration, networks and security
-
-<!-- pdf-page: 10 -->
-
-Plan how data reaches AWS and how users and workloads gain access.
-
-- Migration: discovery, Application Migration Service, DMS, DataSync, Transfer Family and offline-transfer options.
-- Networking: VPC, PrivateLink, Route 53 and CloudFront.
-- Security: IAM, KMS, Secrets Manager, WAF and Macie.
-
-## Service map: storage
-
-<!-- pdf-page: 11 -->
-
-Separate objects, block devices, shared filesystems and recovery copies.
-
-- S3: object storage and lake datasets.
-- EBS: block volumes for supported compute.
-- EFS: shared NFS files.
-- AWS Backup: centrally managed recovery points for supported resources.
-
-# Section Data engineering fundamentals
-
-## Types of Data
+# Types of Data
 
 <!-- pdf-page: 13 -->
+<!-- original-note: 1 -->
 
-Classify data by how explicitly its structure is defined: structured, semi-structured or unstructured.
+Start by identifying the data's structure: fixed columns, flexible named fields, or content that needs interpretation before it can be queried.
 
-- Structured
-- Unstructured
-- Semi-Structured
+- Structured: a consistent row-and-column model, such as a relational table or well-defined CSV.
+- Semi-structured: keys, tags or nesting provide organization, as in JSON, XML and many logs.
+- Unstructured: text, media and other content need interpretation or preprocessing for the intended analysis.
 
 ## Structured Data
 
 <!-- pdf-page: 14 -->
 
-Definition: Data that is organized in a defined manner or schema, typically found in relational databases.
+Structured data follows an explicit model, such as named columns with consistent meanings and types, which makes repeated queries straightforward.
 
-- Characteristics:
-  - Easily queryable
-  - Organized in rows and columns
-  - Has a consistent structure
-- Examples:
-  - Database tables
-  - CSV files with consistent columns
-  - Excel spreadsheets
+- A schema defines how to interpret each field.
+- Relational tables and consistently organized spreadsheets are examples.
+- Delimited files count as structured only when their records follow an agreed layout.
 
 ## Unstructured Data
 
 <!-- pdf-page: 15 -->
 
-Definition: Data that doesn't have a predefined structure or schema.
+Unstructured data lacks a ready-made row-and-column model. Extract useful features or text before applying the analysis the content requires.
 
-- Characteristics:
-  - Not easily queryable without preprocessing
-  - May come in various formats
-- Examples:
-  - Text files without a fixed format
-  - Videos and audio files
-  - Images
-  - Emails and word processing documents
+- Examples include free text, audio, video and images.
+- A document may contain useful information without exposing it as predefined fields.
+- The preparation depends on the question: searching text and analyzing an image require different processing.
 
 ## Semi-Structured Data
 
 <!-- pdf-page: 16 -->
 
-Definition: Data that is not as organized as structured data but has some level of structure in the form of tags, hierarchies, or other patterns.
+Semi-structured records use tags, keys or nesting to provide organization without requiring every record to share the same fixed layout.
 
-- Characteristics:
-  - Elements might be tagged or categorized in some way
-  - More flexible than structured data but not as chaotic as unstructured data
-- Examples:
-  - XML and JSON files
-  - Email headers (which have a mix of structured fields like date, subject, etc., and unstructured data in the body)
-  - Log files with varied formats
+- JSON and XML make the field structure explicit while allowing variation between records.
+- Logs may mix common fields with event-specific attributes.
+- Email headers are structured fields surrounding a less structured message body.
 
-## Properties of Data
+# Properties of Data
 
 <!-- pdf-page: 17 -->
+<!-- original-note: 2 -->
 
-Volume, velocity and variety describe different pressures on a data pipeline.
+The three Vs describe different design pressures: how much data exists, how quickly it arrives, and how many shapes and sources must be supported.
 
-- Volume
-- Velocity
-- Variety
+- Volume determines the scale of storage and processing.
+- Velocity connects arrival rate to the required processing delay.
+- Variety determines the formats, schemas and connectors the pipeline must handle.
+
+- Review prompt: estimate a real organization's daily arrival volume, retained history and working-set size before choosing capacity.
 
 ## Volume
 
 <!-- pdf-page: 18 -->
 
-Definition: Refers to the amount or size of data that organizations are dealing with at any given time.
+Volume is the amount of data to store and process. Estimate both today's working set and its growth before selecting storage and compute capacity.
 
-- Characteristics:
+- Key properties:
   - May range from gigabytes to petabytes or even more
   - Challenges in storing, processing, and analyzing high volumes of data
 - Examples:
@@ -162,9 +78,9 @@ Definition: Refers to the amount or size of data that organizations are dealing 
 
 <!-- pdf-page: 19 -->
 
-Definition: Refers to the speed at which new data is generated, collected, and processed.
+Velocity is the rate at which data arrives and must be processed. The required freshness determines whether batch, near-real-time or streaming operation is appropriate.
 
-- Characteristics:
+- Key properties:
   - High velocity requires real-time or near-real-time processing capabilities
   - Rapid ingestion and processing can be critical for certain applications
 - Examples:
@@ -175,22 +91,20 @@ Definition: Refers to the speed at which new data is generated, collected, and p
 
 <!-- pdf-page: 20 -->
 
-Definition: Refers to the different types, structures, and sources of data.
+Variety describes differences in source systems, formats and structure. A pipeline may combine relational records with API documents, logs, images or other content.
 
-- Characteristics:
-  - Data can be structured, semi-structured, or unstructured
-  - Data can come from multiple sources and in various formats
-- Examples:
-  - A business analyzing data from relational databases (structured), emails (unstructured), and JSON logs (semi-structured).
-  - Healthcare systems collecting data from electronic medical records, wearable health devices, and patient feedback forms.
+- Example from the personal notes: combine clinical-system database records with JSON returned by an API.
+- Identify each source's format and meaning before trying to join its records.
+- Flexible storage does not remove the need to interpret and validate the fields used in analysis.
 
-## Data Warehouse
+# Data Warehouse
 
 <!-- pdf-page: 22 -->
+<!-- original-note: 3 -->
 
-Definition: A centralized repository optimized for analysis where data from different sources is stored in a structured format.
+A warehouse brings curated, structured data together for reporting and analytical queries. Model the data before loading it and optimize for repeated reads.
 
-- Characteristics:
+- Key properties:
   - Designed for complex queries and analysis
   - Data is cleaned, transformed, and loaded (ETL process)
   - Typically uses a star or snowflake schema
@@ -206,13 +120,14 @@ Definition: A centralized repository optimized for analysis where data from diff
 
 Source systems feed a central warehouse; subject-specific data marts serve accounting, analysis and machine learning.
 
-## Data Lake
+# Data Lake
 
 <!-- pdf-page: 24 -->
+<!-- original-note: 4 -->
 
-Definition: A storage repository that holds vast amounts of raw data in its native format, including structured, semi-structured, and unstructured data.
+A lake keeps source data in its original form so different processing engines can reuse it. Raw storage is flexible, but useful analysis still needs metadata, quality checks and access control.
 
-- Characteristics:
+- Key properties:
   - Can store large volumes of raw data without predefined schema
   - Data is loaded as-is, no need for preprocessing
   - Supports batch, real-time, and stream processing
@@ -222,35 +137,30 @@ Definition: A storage repository that holds vast amounts of raw data in its nati
   - Azure Data Lake Storage
   - Hadoop Distributed File System (HDFS)
 
-## Comparing the two
+## Comparisons
 
 <!-- pdf-page: 25 -->
+<!-- original-note: 5 -->
 
-Warehouses prioritize modeled analytics; lakes retain flexible raw data. Compare schema, data types, agility and total cost.
+Compare a lake and a warehouse by when structure is imposed, which data types they retain and how much preparation each query needs.
 
-- Schema:
-  - Data Warehouse: Schema-on-write (predefined schema before writing data)
-    - Extract – Transform – Load (ETL)
-  - Data Lake: Schema-on-read (schema is defined at the time of reading data)
-    - Extract – Load – Transform (ELT)
-- Data Types:
-  - Data Warehouse: Primarily structured data
-  - Data Lake: Both structured and unstructured data
-- Agility:
-  - Data Warehouse: Less agile due to predefined schema
-  - Data Lake: More agile as it accepts raw data without a predefined structure
-- Processing:
-  - Data Warehouse: ETL (Extract, Transform, Load)
-  - Data Lake: ELT (Extract, Load, Transform) or just Load for storage purposes
-- Cost:
-  - Data Warehouse: Typically more expensive because of optimizations for complex queries
-  - Data Lake: Cost-effective storage solutions, but costs can rise when processing large amounts of data
+| Decision | Warehouse | Lake |
+| --- | --- | --- |
+| Data preparation | Curated data fitted to a model before loading | Raw or prepared data retained for later processing |
+| Schema | Commonly enforced on write | Commonly interpreted on read |
+| Workload | Repeated analytical SQL and reporting | Exploration, processing and multiple analytical consumers |
+| Data shape | Primarily modeled, structured datasets | Structured, semi-structured and unstructured datasets |
+| Cost question | Compute and storage for the reporting workload | Storage plus the processing and scans used by consumers |
 
-## Choosing a Warehouse vs. a Lake
+- ETL and ELT are workflow choices, not absolute definitions of either storage architecture.
+- Many organizations retain raw data in a lake and publish curated warehouse tables.
+
+## When to use datawarehouse:
 
 <!-- pdf-page: 26 -->
+<!-- original-note: 6 -->
 
-Choose the analytical store by the data, query pattern and governance requirement; many systems use both.
+Many pipelines use both: retain incoming data in a lake, then publish curated datasets to a warehouse for stable business reporting.
 
 - Use a Data Warehouse when:
   - You have structured data sources and require fast and complex queries.
@@ -263,13 +173,14 @@ Choose the analytical store by the data, query pattern and governance requiremen
   - Advanced analytics, machine learning, or data discovery are key goals.
 - Often, organizations use a combination of both, ingesting raw data into a data lake and then processing and moving refined data into a data warehouse for analysis.
 
-## Data Lakehouse
+# Data Lakehouses
 
 <!-- pdf-page: 27 -->
+<!-- original-note: 7 -->
 
-Definition: A hybrid data architecture that combines the best features of data lakes and data warehouses, aiming to provide the performance, reliability, and capabilities of a data warehouse while maintaining the flexibility, scale, and low-cost storage of data lakes.
+A lakehouse adds table management and warehouse-style reliability to lake storage, aiming to keep open data access while supporting dependable analytics.
 
-- Characteristics:
+- Key properties:
   - Supports both structured and unstructured data.
   - Allows for schema-on-write and schema-on-read.
   - Provides capabilities for both detailed analytics and machine learning tasks.
@@ -281,11 +192,12 @@ Definition: A hybrid data architecture that combines the best features of data l
   - Databricks Lakehouse Platform: A unified platform that combines the capabilities of data lakes and data warehouses.
   - Azure Synapse Analytics: Microsoft's analytics service that brings together big data and data warehousing.
 
-## Data Mesh
+# Data Mesh
 
 <!-- pdf-page: 28 -->
+<!-- original-note: 8 -->
 
-Data mesh distributes ownership to domains while sharing governance standards and self-service infrastructure.
+Data mesh is an ownership model: domain teams publish usable data products, while shared tooling and federated standards keep the organization coordinated.
 
 - Coined in 2019; it’s more about governance and organization
 - Individual teams own “data products” within a given domain
@@ -296,22 +208,30 @@ Data mesh distributes ownership to domains while sharing governance standards an
 - Data lakes, warehouses, etc. may be part of it
   - But a “data mesh” is more about the “data management paradigm” and not the specific technologies or architectures.
 
-## ETL Pipelines
+# ETL Pipelines
 
 <!-- pdf-page: 29 -->
+<!-- original-note: 9 -->
 
-Definition: ETL stands for Extract, Transform, Load. It's a process used to move data from source systems into a data warehouse.
+ETL extracts source records, prepares them for the target model and loads them into an analytical store. Choose batch or streaming operation from the freshness requirement.
 
 - Extract:
   - Retrieve raw data from source systems, which can be databases, CRMs, flat files, APIs, or other data repositories.
   - Ensure data integrity during the extraction phase.
   - Can be done in real-time or in batches, depending on requirements.
 
-## ETL Pipelines: Transform
+## Extract
+
+<!-- original-note: 10 -->
+
+Extraction gathers records from databases, applications, files or APIs while preserving the information needed to load them correctly.
+
+# Transform
 
 <!-- pdf-page: 30 -->
+<!-- original-note: 11 -->
 
-Convert the extracted data into a format suitable for the target data warehouse.
+Transformation turns source records into usable target data: clean values, align formats, enrich fields, calculate measures and handle missing information.
 
 - Can involve various operations such as:
   - Data cleansing (e.g., removing duplicates, fixing errors)
@@ -321,20 +241,22 @@ Convert the extracted data into a format suitable for the target data warehouse.
   - Encoding or decoding data
   - Handling missing values
 
-## ETL Pipelines: Load
+# Load
 
 <!-- pdf-page: 31 -->
+<!-- original-note: 12 -->
 
-Move the transformed data into the target data warehouse or another data repository.
+Loading writes prepared data into its destination. Batch size, streaming behavior and integrity checks must match the target system's constraints.
 
 - Can be done in batches (all at once) or in a streaming manner (as data becomes available).
 - Ensure that data maintains its integrity during the loading phase.
 
-## Managing ETL Pipelines
+# Managing ETL pipelines
 
 <!-- pdf-page: 32 -->
+<!-- original-note: 13 -->
 
-This process must be automated in some reliable way
+Orchestration makes the pipeline repeatable: schedule work, enforce dependencies, observe failures and arrange retries instead of relying on manual execution.
 
 - AWS Glue
 - Orchestration services
@@ -345,11 +267,12 @@ This process must be automated in some reliable way
   - Glue Workflows
 - We’ll get into specific architectures later.
 
-## Data Sources
+# Data sources
 
 <!-- pdf-page: 33 -->
+<!-- original-note: 14 -->
 
-Applications use database drivers; JDBC is Java-oriented, while ODBC exposes a language-independent interface through drivers.
+A source connection depends on both the interface and the driver. JDBC and ODBC provide database access; APIs, logs and streams require their own ingestion paths.
 
 - JDBC
   - Java Database Connectivity
@@ -363,11 +286,40 @@ Applications use database drivers; JDBC is Java-oriented, while ODBC exposes a l
 - API’s
 - Streams
 
-## CSV (Comma-Separated Values)
+## JDBC
+
+<!-- original-note: 15 -->
+<!-- title: JDBC -->
+
+JDBC gives Java applications a database interface through an appropriate driver. Separate the application's language from the database engine it connects to.
+
+## ODBC
+
+<!-- original-note: 16 -->
+<!-- title: ODBC -->
+
+ODBC exposes a common database interface to different application languages. Install a driver compatible with the database and host platform.
+
+## OTher data sources
+
+<!-- original-note: 17 -->
+<!-- title: Other data sources -->
+
+Logs, APIs and event streams are source systems too. Record their format, arrival pattern and recovery behavior before designing ingestion.
+
+# Data Formats
+
+<!-- original-note: 18 -->
+
+Choose a format for the access pattern: readable interchange, schema-aware record transport or compressed analytical column scans.
+
+## CSV : Text based format that represents data in tabular form where each line corresponds to a row and values are separeted by comma or similar separator
 
 <!-- pdf-page: 35 -->
+<!-- original-note: 19 -->
+<!-- title: CSV -->
 
-Description: Text-based format that represents data in a tabular form where each line corresponds to a row and values within a row are separated by commas.
+CSV represents rows as delimited text. It is convenient for exchanging and inspecting tabular data, but applications must agree on delimiters, quoting and column meanings.
 
 - When to Use:
   - For small to medium datasets.
@@ -376,11 +328,13 @@ Description: Text-based format that represents data in a tabular form where each
   - Importing/Exporting data from databases or spreadsheets.
 - Systems: Databases (SQL-based), Excel, Pandas in Python, R, many ETL tools.
 
-## JSON (JavaScript Object Notation)
+## Json
 
 <!-- pdf-page: 36 -->
+<!-- original-note: 20 -->
+<!-- title: JSON -->
 
-Description: Lightweight, text-based, and human-readable data interchange format that represents structured or semi- structured data based on key-value pairs.
+JSON represents values with named fields and nested structures. It suits APIs and flexible records, while leaving validation and type interpretation to the consuming system.
 
 - When to Use:
   - Data interchange between a web server and a web client.
@@ -388,11 +342,13 @@ Description: Lightweight, text-based, and human-readable data interchange format
   - Use cases that need a flexible schema or nested data structures.
 - Systems: Web browsers, many programming languages (like JavaScript, Python, Java, etc.), RESTful APIs, NoSQL databases (like MongoDB).
 
-## Avro
+## AVRO
 
 <!-- pdf-page: 37 -->
+<!-- original-note: 21 -->
+<!-- title: Avro -->
 
-Description: Binary format that stores both the data and its schema, allowing it to be processed later with different systems without needing the original system's context.
+Avro stores records in a compact binary representation with schema information. It is useful when systems exchange records and their schemas evolve over time.
 
 - When to Use:
   - With big data and real-time processing systems.
@@ -403,8 +359,9 @@ Description: Binary format that stores both the data and its schema, allowing it
 ## Parquet
 
 <!-- pdf-page: 38 -->
+<!-- original-note: 22 -->
 
-Description: Columnar storage format optimized for analytics. Allows for efficient compression and encoding schemes.
+Parquet stores values by column, allowing analytical engines to read selected fields and compress similar values efficiently.
 
 - When to Use:
   - Analyzing large datasets with analytics engines.
@@ -412,11 +369,12 @@ Description: Columnar storage format optimized for analytics. Allows for efficie
   - Storing data on distributed systems where I/O operations and storage need optimization.
 - Systems: Hadoop ecosystem, Apache Spark, Apache Hive, Apache Impala, Amazon Redshift Spectrum.
 
-## A Very (intentionally) Incomplete Overview of Data Modeling
+# Data Modelling
 
 <!-- pdf-page: 39 -->
+<!-- original-note: 23 -->
 
-The enrollment star schema connects the fact table to course, student and payment dimensions through foreign keys.
+Choose the grain of a fact table, identify its measures and connect descriptive dimensions through keys. The enrollment example illustrates this separation.
 
 - The exam guide doesn’t really talk about specific data models.
 - But here’s a star schema.
@@ -425,19 +383,33 @@ The enrollment star schema connects the fact table to course, student and paymen
   - Primary / foreign keys
 - This sort of diagram is an Entity Relationship Diagram (ERD)
 
-## Data Lineage
+## Star Schema
+
+<!-- original-note: 24 -->
+
+A star schema keeps the fact table at the center with direct links to its dimensions. Explain the grain and each foreign-key relationship using the enrollment diagram.
+
+## Snowflake
+
+<!-- original-note: 25 -->
+<!-- unexpanded -->
+
+# Data Lineage
 
 <!-- pdf-page: 40 -->
+<!-- original-note: 26 -->
 
-Lineage follows source data through transformations to outputs, making upstream dependencies and downstream impact visible.
+Lineage records where data originated, which transformations changed it and which outputs depend on it. Use that history to trace errors and assess downstream impact.
 
-- Description: A visual representation that traces the flow and transformation of data through its lifecycle, from its source to its final destination.
+- A visual representation that traces the flow and transformation of data through its lifecycle, from its source to its final destination.
 - Importance:
   - Helps in tracking errors back to their source.
   - Ensures compliance with regulations.
   - Provides a clear understanding of how data is moved, transformed, and consumed within systems.
 
-## Data Lineage
+- Review prompt: trace one field through a Glue/Spark transformation and explain how its recorded lineage would help investigate an incorrect report.
+
+## Capturing Spark lineage
 
 <!-- pdf-page: 41 -->
 
@@ -447,11 +419,13 @@ In the illustrated lineage solution, a Spline agent observes Glue/Spark jobs; La
   - Uses Spline Agent (for Spark) attached to Glue
   - Dump lineage data into Neptune via Lambda
 
-## Schema Evolution
+# schema evolution
 
 <!-- pdf-page: 42 -->
+<!-- original-note: 27 -->
+<!-- title: Schema evolution -->
 
-Description: The ability to adapt and change the schema of a dataset over time without disrupting existing processes or systems.
+Schema evolution changes fields or their definitions without unexpectedly breaking readers and writers. Treat compatibility as part of the pipeline contract.
 
 - Importance:
   - Ensures data systems can adapt to changing business requirements.
@@ -460,11 +434,14 @@ Description: The ability to adapt and change the schema of a dataset over time w
 - Glue Schema Registry
   - Schema discovery, compatibility, validation, registration…
 
-## Database Performance Optimization
+- Review prompt: design a production process for adding, removing or changing a field without breaking existing pipeline readers.
+
+# Database Performance Optimization
 
 <!-- pdf-page: 43 -->
+<!-- original-note: 28 -->
 
-Partitioning distributes data for parallel work; indexing and compression address different parts of query cost.
+Improve performance by addressing the actual bottleneck: indexes narrow lookups, partitions reduce work, and compression lowers storage and transfer volume.
 
 - Indexing
   - Avoid full table scans!
@@ -479,20 +456,17 @@ Partitioning distributes data for parallel work; indexing and compression addres
     - Various tradeoffs between compression & speed
   - Columnar compression
 
-## Data Sampling Techniques
+# Data Sampling Techniques
 
 <!-- pdf-page: 44 -->
+<!-- original-note: 29 -->
 
-Random sampling selects from the entire population; stratified sampling first divides the population into groups.
+Sampling reduces the amount of data examined while preserving the properties needed for the question. Match the selection method to the population's structure.
 
-- Random Sampling
-  - Everything has an equal chance
-- Stratified Sampling
-  - Divide population into homogenous subgroups (strata)
-  - Random sample within each stratum
-  - Ensures representation of each subgroup
-- Others
-  - Systemic, Cluster, Convenience, Judgmental
+- Random: give eligible observations a random chance of selection.
+- Stratified: sample separately within defined groups, then combine them.
+- Systematic: take every kth observation after selecting a starting point.
+- Other methods named in the notes include cluster, convenience and judgmental sampling; assess their selection bias before relying on the result.
 
 ## Random Sampling
 
@@ -515,11 +489,12 @@ Select every kth observation after choosing a starting point.
 - The PDF labels this "systemic" sampling; the statistical term is systematic.
 - Avoid a sampling interval that aligns with periodic structure in the population.
 
-## Data Skew Mechanisms
+# Data Skew mechanisms
 
 <!-- pdf-page: 48 -->
+<!-- original-note: 30 -->
 
-A popular partition key sends disproportionate traffic to one partition; even storage distribution alone does not prevent hot keys.
+Skew occurs when some keys or partitions receive much more work than others. A celebrity account or a busy recent partition can become the limiting part of a distributed job.
 
 - Data skew refers to the unequal distribution or imbalance of data across various nodes or partitions in distributed computing systems.
 - “The celebrity problem”
@@ -531,11 +506,13 @@ A popular partition key sends disproportionate traffic to one partition; even st
   - Temporal skew
 - Important to monitor data distribution and alert when skew issues arise.
 
-## Addressing data skew
+## Solutions
 
 <!-- pdf-page: 49 -->
+<!-- original-note: 31 -->
+<!-- title: Reducing data skew -->
 
-Choose a partitioning strategy that reduces uneven work without changing the required result.
+Redistribute work with better partitioning, sampling or salting, and verify that the change preserves the required result.
 
 - Adaptive partitioning adjusts partitioning to observed data characteristics.
 - Salting adds a distribution factor; account for it when joining or combining results.
@@ -543,17 +520,26 @@ Choose a partitioning strategy that reduces uneven work without changing the req
 - Sampling estimates the distribution before choosing a strategy.
 - Custom partitioning applies domain-specific placement rules.
 
-## Data validation and profiling
+- Review prompts: work through a salted join, then choose a domain-specific partitioning rule and explain how to recombine its results.
+
+# Data Validation and Profiling
 
 <!-- pdf-page: 50 -->
+<!-- original-note: 32 -->
 
-Check whether data is present, consistent, correct and relationally valid before trusting analysis.
+Profile data along four separate dimensions: missing information, contradictory values, incorrect values and broken relationships.
 
 - Completeness: required fields and records exist; inspect missing/null counts and populated-field percentages.
 - Consistency: cross-field rules and comparisons across sources or time do not contradict each other.
 - Accuracy: compare values with trusted sources, known standards and business rules.
 - Integrity: preserve valid relationships and lifecycle consistency, including foreign-key/reference checks.
 - Missing, contradictory, inaccurate or disconnected data can each produce misleading conclusions; report these dimensions separately.
+
+# Add a topic about Data Cardinality
+
+<!-- original-note: 34 -->
+<!-- title: Data cardinality: review prompt -->
+<!-- unexpanded -->
 
 # Section SQL and Git
 
@@ -625,11 +611,12 @@ GROUP BY EXTRACT(YEAR FROM sale_date), product_id
 ORDER BY sale_year, total_sales DESC;
 ```
 
-## Pivoting rows into report columns
+# SQL Pivoting
 
 <!-- pdf-page: 56 -->
+<!-- original-note: 33 -->
 
-A pivot turns distinct category values into output columns and aggregates the corresponding measures.
+Pivoting changes category values into report columns. For sales reporting, group by salesperson and aggregate the amount for each month.
 
 - The screenshot pivots monthly sales into January and February columns per salesperson.
 - PIVOT syntax differs by database; conditional aggregation is a portable alternative.
@@ -661,7 +648,7 @@ INNER JOIN returns matching row pairs. Duplicate keys can produce multiple outpu
 
 <!-- pdf-page: 59 -->
 
-Return only customers with matching payments; multiple payments produce multiple result rows.
+An inner join emits rows only when the join condition matches. A customer with several matching payments contributes several joined rows.
 
 - The screenshot is interpreted as SQL plus result semantics; individual customer/payment rows are illustrative.
 
@@ -682,7 +669,7 @@ LEFT OUTER JOIN keeps every left row; unmatched right-side columns become NULL.
 
 <!-- pdf-page: 61 -->
 
-Keep every customer and return NULL payment fields when no payment matches.
+A left join preserves every row from its left input. When no payment matches a customer, the payment columns in the result are NULL.
 
 - The screenshot is interpreted as SQL plus result semantics; individual customer/payment rows are illustrative.
 
@@ -703,7 +690,7 @@ RIGHT OUTER JOIN keeps every right row; unmatched left-side columns become NULL.
 
 <!-- pdf-page: 63 -->
 
-Keep every customer on the right-hand side; the preserved side depends on table order.
+A right join preserves every row from its right input. Swapping the inputs changes which unmatched records remain in the result.
 
 - The screenshot is interpreted as SQL plus result semantics; individual customer/payment rows are illustrative.
 
@@ -733,7 +720,7 @@ A cross join returns the Cartesian product: m rows times n rows yields m × n co
 
 <!-- pdf-page: 66 -->
 
-Return every customer/payment combination, whether or not the customer numbers match.
+A cross join pairs each row from one input with every row from the other, producing all combinations without a matching-key condition.
 
 - The screenshot is interpreted as SQL plus result semantics; individual customer/payment rows are illustrative.
 
@@ -808,7 +795,7 @@ Branches diverge from a common commit and may later merge; branch pointers ident
 
 <!-- pdf-page: 71 -->
 
-git remote add <name> <url>: Add a remote repository.
+Remote repositories provide shared references for collaboration. Configure a remote, fetch its history and explicitly push the branches you intend to publish.
 
 - git remote: List all remote repositories.
 - git push <remote> <branch>: Push a branch to a remote repository.
@@ -818,7 +805,7 @@ git remote add <name> <url>: Add a remote repository.
 
 <!-- pdf-page: 72 -->
 
-git reset: Reset your staging area to match the most recent commit, without affecting the working directory.
+Choose an undo operation by what must change: the staging area, working files or committed history. Check the affected scope before resetting or reverting.
 
 - git reset --hard: Reset the staging area and the working directory to match the most recent commit.
 - git revert <commit>: Create a new commit that undoes all of the changes from a previous commit.
@@ -827,7 +814,7 @@ git reset: Reset your staging area to match the most recent commit, without affe
 
 <!-- pdf-page: 73 -->
 
-git stash: Temporarily save changes that are not yet ready for a commit.
+Stashing, rebasing, cherry-picking and bisecting solve different history-management problems; select the operation from the result you need.
 
   - git stash pop: Restore the most recently stashed changes.
 - git rebase <branch>: Reapply changes from one branch onto another, often used to integrate changes from one branch into another.
@@ -837,7 +824,7 @@ git stash: Temporarily save changes that are not yet ready for a commit.
 
 <!-- pdf-page: 74 -->
 
-git blame <file>: Show who made changes to a file and when.
+Inspect commits, file attribution and differences to understand a change before integrating it. Use patches when exchanging changes outside the usual branch workflow.
 
 - git diff: Show changes between commits, commit and working tree, etc.
 - git fetch: Fetch changes from a remote repository without merging them.
@@ -852,18 +839,21 @@ Git integrity checks, cleanup and the reflog support local repository maintenanc
 - git gc: Clean up and optimize the local repository.
 - git reflog: Record when refs were updated in the local repository, useful for recovering lost commits.
 
-# Section Object and file storage
+# Section Storage
 
-## Section introduction
+<!-- original-note: 35 -->
+<!-- section -->
+
+## Amazon S3 overview
 
 <!-- pdf-page: 78 -->
 
-Amazon S3 is one of the main building blocks of AWS
+S3 stores objects for data lakes, backups, archives, application assets and content distribution. Other AWS services often use it as a durable exchange point.
 
-- It’s advertised as ”infinitely scaling” storage
-- Many websites use Amazon S3 as a backbone
-- Many AWS services use Amazon S3 as an integration as well
-- We’ll have a step-by-step approach to S3
+- Storage and recovery: backups, disaster recovery, archives and hybrid transfer.
+- Applications and delivery: static websites, media, application assets and software updates.
+- Analytics: retain datasets and exchange outputs between processing tools.
+- The personal notes use long-retention financial archives and analytical reports as example workloads; they are examples rather than current customer claims.
 
 ## Amazon S3 Use cases
 
@@ -881,23 +871,21 @@ S3 supports object-backed storage, archives, recovery copies, content delivery a
 - Software delivery
 - Static website
 
-## Amazon S3 - Buckets
+## Buckets
 
 <!-- pdf-page: 80 -->
+<!-- original-note: 36 -->
+<!-- title: S3 buckets -->
 
-Amazon S3 allows people to store objects (files) in “buckets” (directories)
+A bucket is the container for S3 objects in a Region. Choose its namespace deliberately; object key prefixes organize names rather than creating ordinary directories.
 
-- Buckets are defined at the region level
-- S3 looks like a global service but buckets are created in a region
-- Naming:
-  - Shared Global Namespace – have a globally unique name (across all regions all accounts)
-  - Account Regional Namespace – allows for “reuse” of the same bucket name across regions
-- Naming constraints:
-  - No uppercase, No underscore
-  - Not an IP
-  - Must start with lowercase letter or number
-  - Must NOT start with the prefix xn--
-  - Must NOT end with the suffix -s3alias
+- Shared-global bucket names must be unique across accounts and Regions within their AWS partition.
+- An account-regional namespace reserves names for one account using the required account/Region suffix; it does not make arbitrary duplicate global names valid.
+- Account-regional creation uses the documented naming convention and namespace request setting.
+- Naming basics: 3-63 characters; lowercase letters, digits, periods and hyphens; begin and end with a letter or digit. Uppercase, underscores, adjacent periods and IP-address formatting are invalid.
+- Reserved names include the xn-- prefix and -s3alias suffix; consult the linked rules for the complete list and namespace-specific requirements.
+
+**Current reference (checked 2026-10-13):** [S3 bucket namespaces and naming](https://docs.aws.amazon.com/AmazonS3/latest/userguide/bucketnamingrules.html).
 
 ## Amazon S3 - Objects
 
@@ -929,11 +917,13 @@ An S3 object combines its bytes with metadata, optional tags and a version ident
 
 **Current reference (checked 2026-10-13):** [S3 object limits](https://docs.aws.amazon.com/AmazonS3/latest/userguide/UsingObjects.html).
 
-## Amazon S3 – Security
+### Security
 
 <!-- pdf-page: 83 -->
+<!-- original-note: 37 -->
+<!-- title: S3 security -->
 
-S3 authorization combines identity and resource policies, with explicit denies and public-access controls constraining access.
+S3 access depends on the requesting identity, applicable resource policies and blocking controls. An explicit deny takes precedence over an allow.
 
 - User-Based
   - IAM Policies – which API calls should be allowed for a specific user from IAM
@@ -990,7 +980,7 @@ Cross-account S3 access requires authorization on both sides; the destination bu
 
 <!-- pdf-page: 89 -->
 
-These settings were created to prevent company data leaks
+Block Public Access adds controls against unintended public exposure. Evaluate these settings together with the bucket's policies and access-control configuration.
 
 - If you know your bucket should never be public, leave these on
 - Can be set at the account level
@@ -1011,11 +1001,13 @@ Versioning retains distinct versions under the same object key; a delete marker 
   - Any file that is not versioned prior to enabling versioning will have version “null”
   - Suspending versioning does not delete the previous versions
 
-## Amazon S3 – Replication (CRR & SRR)
+### Replication
 
 <!-- pdf-page: 91 -->
+<!-- original-note: 38 -->
+<!-- title: S3 replication -->
 
-S3 asynchronously replicates eligible new object versions to another bucket in the same or a different Region.
+Replication copies eligible objects to another bucket in the same Region or a different Region. Configure the rule, permissions and destination for the recovery or distribution requirement.
 
 - Must enable Versioning in source and destination buckets
 - Cross-Region Replication (CRR)
@@ -1031,7 +1023,7 @@ S3 asynchronously replicates eligible new object versions to another bucket in t
 
 <!-- pdf-page: 92 -->
 
-After you enable Replication, only new objects are replicated
+A newly enabled replication rule handles eligible new writes. Use a separate batch-replication workflow when existing objects also need to be copied.
 
 - Optionally, you can replicate existing objects using S3 Batch Replication
   - Replicates existing objects and objects that failed replication
@@ -1046,7 +1038,7 @@ After you enable Replication, only new objects are replicated
 
 <!-- pdf-page: 93 -->
 
-Feature of Amazon S3 Replication that guarantees replication speed
+Replication Time Control adds a defined replication-time objective and monitoring to supported replication rules, with additional charges and documented eligibility.
 
 - 99.99% of new objects replicated within 15 minutes
 - Provides predictable, auditable replication time
@@ -1056,11 +1048,13 @@ Feature of Amazon S3 Replication that guarantees replication speed
 - Helps you meet compliance or business requirements
 - Extra cost per GB for the replication
 
-## S3 Storage Classes
+### s3 Classes
 
 <!-- pdf-page: 94 -->
+<!-- original-note: 39 -->
+<!-- title: S3 storage classes -->
 
-S3 storage classes trade storage cost, retrieval cost, access delay and resilience for different access patterns.
+Choose a storage class by access frequency, retrieval delay, resilience and retention charges rather than storage price alone.
 
 - Amazon S3 Standard - General Purpose
 - Amazon S3 Standard-Infrequent Access (IA)
@@ -1102,7 +1096,7 @@ S3 Standard targets frequently accessed data with immediate access and multi-AZ 
 
 <!-- pdf-page: 97 -->
 
-For data that is less frequently accessed, but requires rapid access when needed
+Infrequent-access classes trade lower storage prices for retrieval charges and minimum-duration rules while retaining immediate object access.
 
 - Lower cost than S3 Standard
 - Amazon S3 Standard-Infrequent Access (S3 Standard-IA)
@@ -1117,7 +1111,7 @@ For data that is less frequently accessed, but requires rapid access when needed
 
 <!-- pdf-page: 98 -->
 
-Low-cost object storage meant for archiving / backup
+Glacier classes serve long-retention and rarely accessed data. Choose between immediate reads and restore workflows according to the acceptable retrieval delay.
 
 - Pricing: price for storage + object retrieval cost
 - Amazon S3 Glacier Instant Retrieval
@@ -1207,7 +1201,7 @@ The lifecycle waterfall shows alternative permitted transitions, not a mandatory
 
 <!-- pdf-page: 104 -->
 
-Transition Actions – configure objects to transition to another storage class
+Lifecycle rules transition or expire eligible objects, versions and uploads. Scope each rule to the intended dataset and retention requirement.
 
   - Move objects to Standard IA class 60 days after creation
   - Move to Glacier for archiving after 6 months
@@ -1221,7 +1215,7 @@ Transition Actions – configure objects to transition to another storage class
 
 <!-- pdf-page: 105 -->
 
-Your application on EC2 creates images thumbnails after profile photos are uploaded to Amazon S3. These thumbnails can be easily recreated, and only need to be kept for 60 days. The source images should be able to be immediately retrieved for these 60 days, and afterwards, the user can wait up to 6 hours. How would you design this?
+Store profile originals for immediate access for 60 days, then allow a six-hour retrieval delay. Treat reproducible thumbnails separately because they can be deleted and regenerated.
 
 - S3 source images can be on Standard, with a lifecycle configuration to transition them to Glacier after 60 days
 - S3 thumbnails can be on One-Zone IA, with a lifecycle configuration to expire them (delete them) after 60 days
@@ -1230,7 +1224,7 @@ Your application on EC2 creates images thumbnails after profile photos are uploa
 
 <!-- pdf-page: 106 -->
 
-A rule in your company states that you should be able to recover your deleted S3 objects immediately for 30 days, although this may happen rarely. After this time, and for up to 365 days, deleted objects should be recoverable within 48 hours.
+Combine versioning and lifecycle transitions to keep deleted objects immediately recoverable for 30 days, then recoverable with a longer delay through day 365.
 
 - Enable S3 Versioning in order to have object versions, so that “deleted objects” are in fact hidden by a “delete marker” and can be recovered
 - Transition the “noncurrent versions” of the object to Standard IA
@@ -1249,11 +1243,13 @@ S3 storage-class analysis produces reports to inform lifecycle decisions; recomm
 - 24 to 48 hours to start seeing data analysis
 - Good first step to put together Lifecycle Rules (or improve them)!
 
-## S3 Event Notifications
+### s3 Event Notifications
 
 <!-- pdf-page: 108 -->
+<!-- original-note: 40 -->
+<!-- title: S3 event notifications -->
 
-S3 object events can notify SNS, SQS or Lambda; configure the supported event types and filters.
+Object events can trigger downstream processing. Select the event type, destination and destination permissions as separate parts of the notification setup.
 
 - S3:ObjectCreated, S3:ObjectRemoved, S3:ObjectRestore, S3:Replication…
 - Object name filtering possible (*.jpg)
@@ -1277,11 +1273,13 @@ S3 events enter EventBridge, where rules filter event detail and route to config
 - Multiple Destinations – ex Step Functions, Kinesis Streams / Firehose…
 - EventBridge Capabilities – Archive, Replay Events, Reliable delivery
 
-## S3 – Baseline Performance
+### s3 Performance
 
 <!-- pdf-page: 111 -->
+<!-- original-note: 41 -->
+<!-- title: S3 performance -->
 
-Amazon S3 automatically scales to high request rates, latency 100- 200 ms
+S3 scales request handling across key prefixes. Parallel transfers and selective reads improve throughput without changing the data's durable storage location.
 
 - Your application can achieve at least 3,500 PUT/COPY/POST/DELETE or 5,500 GET/HEAD requests per second per prefix in a bucket.
 - There are no limits to the number of prefixes in a bucket.
@@ -1314,11 +1312,13 @@ Byte-range GETs can download separate ranges concurrently or retrieve only a fil
 - Parallelize GETs by requesting specific byte ranges
 - Better resilience in case of failures
 
-## Amazon S3 – Object Encryption
+### Encryption
 
 <!-- pdf-page: 114 -->
+<!-- original-note: 42 -->
+<!-- title: S3 encryption -->
 
-You can encrypt objects in S3 buckets using one of the following methods
+Distinguish encryption at rest from protection in transit, then identify who manages the keys and which permissions each request requires.
 
 - Server-Side Encryption (SSE)
   - Server-Side Encryption with Amazon S3-Managed Keys (SSE-S3) – Enabled by Default
@@ -1326,7 +1326,6 @@ You can encrypt objects in S3 buckets using one of the following methods
   - Dual-Layer Server-Side Encryption with KMS Keys (DSSE-KMS)
   - Server-Side Encryption with Customer-Provided Keys (SSE-C)
 - Client-Side Encryption
-- It’s important to understand which ones are for which situation for the exam
 
 ## Amazon S3 Encryption – SSE-S3
 
@@ -1374,6 +1373,8 @@ DSSE-KMS applies two independent encryption layers, combining KMS-controlled key
 - For compliance standards requiring multi-layer encryption (higher cost & latency than SSE-KMS)
 - Must set header "x-amz-server-side-encryption": "aws:kms:dsse"
 
+**Current reference (checked 2026-10-13):** [S3 dual-layer encryption](https://docs.aws.amazon.com/AmazonS3/latest/userguide/UsingDSSEncryption.html).
+
 ## Amazon S3 Encryption – SSE-C
 
 <!-- pdf-page: 119 -->
@@ -1420,16 +1421,18 @@ A bucket-policy explicit deny on aws:SecureTransport=false rejects unencrypted t
 
 <!-- pdf-page: 123 -->
 
-SSE-S3 encryption is automatically applied to new objects stored in S3 bucket
+Default encryption supplies encryption for new uploads, while a bucket policy can enforce request and access requirements. These controls serve different purposes.
 
 - Optionally, you can “force encryption” using a bucket policy and refuse any API call to PUT an S3 object without encryption headers
 - Note: Bucket Policies are evaluated before “Default Encryption”
 
-## S3 – Access Points
+### Access Points
 
 <!-- pdf-page: 124 -->
+<!-- original-note: 43 -->
+<!-- title: S3 access points -->
 
-Separate access points apply application-specific permissions to shared S3 data; they do not create separate copies of the bucket.
+Access points give teams or applications separate named access paths and policies to shared S3 data. A VPC origin can constrain the network path.
 
 - Access Points simplify security management for S3 Buckets
 - Each Access Point has:
@@ -1446,11 +1449,12 @@ A VPC-origin S3 access point is reached through a gateway endpoint; endpoint, ac
 - You must create a VPC Endpoint to access the Access Point (Gateway or Interface Endpoint)
 - The VPC Endpoint Policy must allow access to the target bucket and Access Point
 
-## S3 Tables
+### S3 Tables
 
 <!-- pdf-page: 126 -->
+<!-- original-note: 44 -->
 
-The heart of Amazon’s data lakehouse system they are building out
+S3 Tables combines table-oriented storage with managed maintenance for Iceberg datasets. Table buckets and table permissions differ from an ordinary collection of objects.
 
   - This seems to be the direction AWS is converging on as a data platform
   - Combined with Amazon Sagemaker Lakehouse
@@ -1562,7 +1566,7 @@ Table replication creates read-only replicas for backup, compliance or local rea
 
 <!-- pdf-page: 133 -->
 
-The standard tools apply to table buckets and tables
+Table-bucket and table access uses identity and resource permissions, with organizational controls and supported analytics-governance tools where appropriate.
 
   - IAM identity-based policies (user, group, or role)
   - Resource-based policies
@@ -1578,11 +1582,13 @@ The standard tools apply to table buckets and tables
   - Dual-stack IPv4 and IPv6 endpoints
 - Public access and HTTP not allowed
 
-## S3 – Storage Lens
+### Storage Lens
 
 <!-- pdf-page: 134 -->
+<!-- original-note: 45 -->
+<!-- title: S3 Storage Lens -->
 
-Storage Lens aggregates organization, account, Region and bucket metrics into dashboards and optional exports.
+Storage Lens summarizes storage and access patterns across buckets and accounts so you can investigate cost, protection and performance issues.
 
 - Understand, analyze, and optimize storage across entire AWS Organization
 - Discover anomalies, identify cost efficiencies, and apply data protection best practices across entire AWS Organization (30 days usage & activity metrics)
@@ -1594,7 +1600,7 @@ Storage Lens aggregates organization, account, Region and bucket metrics into da
 
 <!-- pdf-page: 135 -->
 
-Visualize summarized insights and trends for both free and advanced metrics
+The Storage Lens dashboard presents storage trends and metric summaries for the selected scope. Drill into anomalies rather than treating totals as an explanation.
 
 - Default dashboard shows Multi-Region and Multi-Account data
 - Preconfigured by Amazon S3
@@ -1666,11 +1672,13 @@ Storage Lens free and paid metric sets differ in detail, retention and available
   - Prefix Aggregation – Collect metrics at the prefix level
   - Data is available for queries for 15 months
 
-## What’s an EBS Volume?
+## EBS Elastic Block Store
 
 <!-- pdf-page: 141 -->
+<!-- original-note: 46 -->
+<!-- title: EBS volumes -->
 
-An EBS (Elastic Block Store) Volume is a network drive you can attach to your instances while they run
+EBS provides persistent block storage for EC2 within an Availability Zone. Volume attachment, provisioned capacity and deletion settings determine how the data survives instance changes.
 
 - It allows your instances to persist data, even after their termination
 - They can only be mounted to one instance at a time (at the CCP level)
@@ -1703,7 +1711,7 @@ EBS volumes belong to one Availability Zone and may remain unattached; the examp
 
 <!-- pdf-page: 144 -->
 
-Controls the EBS behaviour when an EC2 instance terminates
+DeleteOnTermination determines whether an attached EBS volume is removed with its instance. Check the root and additional volumes separately.
 
   - By default, the root EBS volume is deleted (attribute enabled)
   - By default, any other attached EBS volume is not deleted (attribute disabled)
@@ -1714,7 +1722,7 @@ Controls the EBS behaviour when an EC2 instance terminates
 
 <!-- pdf-page: 145 -->
 
-You don’t have to detach a volume or restart your instance to change it!
+Elastic Volumes can change supported volume characteristics without first removing the volume. Filesystem growth and applicable modification limits still require attention.
 
   - Just go to actions / modify volume from the console
 - Increase volume size
@@ -1725,11 +1733,13 @@ You don’t have to detach a volume or restart your instance to change it!
 - Adjust performance
   - Increase or decrease
 
-## Amazon EFS – Elastic File System
+## EFS Elastic file system
 
 <!-- pdf-page: 146 -->
+<!-- original-note: 47 -->
+<!-- title: EFS filesystems -->
 
-EFS offers a shared NFS filesystem to compute instances across Availability Zones through mount targets.
+EFS provides a managed shared filesystem for compatible clients. Multiple instances can access the same files through configured mount targets and network permissions.
 
 - Managed NFS (network file system) that can be mounted on many EC2
 - EFS works with EC2 instances in multi-AZ
@@ -1739,7 +1749,7 @@ EFS offers a shared NFS filesystem to compute instances across Availability Zone
 
 <!-- pdf-page: 147 -->
 
-Use cases: content management, web serving, data sharing, Wordpress
+Shared content, web serving and application files are typical EFS workloads. Select client compatibility, mount security and encryption for the participating instances.
 
 - Uses NFSv4.1 protocol
 - Uses security group to control access to EFS
@@ -1816,8 +1826,9 @@ EFS clients in separate AZs mount one shared filesystem; EBS ordinarily supplies
 ## AWS Backup
 
 <!-- pdf-page: 152 -->
+<!-- original-note: 48 -->
 
-AWS Backup centralizes policy-based protection of supported resources.
+AWS Backup applies centrally managed backup plans to supported resources. Select schedules, retention, destinations and recovery options from the workload's recovery objectives.
 
 - Fully managed service
 - Centrally manage and automate backups across AWS services
@@ -1865,7 +1876,10 @@ Vault Lock protects recovery points with retention controls; compliance-mode imm
   - Updates that shorten or alter retention periods
 - Even the root user cannot delete backups when enabled
 
-# Section Databases and warehouses
+# Section Databases
+
+<!-- original-note: 49 -->
+<!-- section -->
 
 ## Traditional Architecture
 
@@ -1884,7 +1898,7 @@ A conventional web tier scales behind a load balancer while a relational databas
 
 <!-- pdf-page: 159 -->
 
-NoSQL databases are non-relational databases and are distributed
+NoSQL describes several non-relational data models. Choose one from its access pattern and scaling behavior rather than assuming every NoSQL database behaves alike.
 
 - NoSQL databases include MongoDB, DynamoDB, …
 - NoSQL databases do not support query joins (or just limited support)
@@ -1893,11 +1907,13 @@ NoSQL databases are non-relational databases and are distributed
 - NoSQL databases scale horizontally
 - There’s no “right or wrong” for NoSQL vs SQL, they just require to model the data differently and think about user queries
 
-## Amazon DynamoDB
+## DynamoDB (NoSQL DBs)
 
 <!-- pdf-page: 160 -->
+<!-- original-note: 50 -->
+<!-- title: Amazon DynamoDB -->
 
-Fully managed, highly available with replication across multiple AZs
+DynamoDB is a managed key-value and document database for predictable, low-latency access at scale. Design keys around the reads and writes the application will perform.
 
 - NoSQL database - not a relational database
 - Scales to massive workloads, distributed database
@@ -1907,11 +1923,13 @@ Fully managed, highly available with replication across multiple AZs
 - Enables event driven programming with DynamoDB Streams
 - Low cost and auto-scaling capabilities
 
-## DynamoDB - Basics
+### Basics
 
 <!-- pdf-page: 161 -->
+<!-- original-note: 51 -->
+<!-- title: DynamoDB items and tables -->
 
-A DynamoDB table stores key-identified items with flexible non-key attributes and a 400 KB item-size limit.
+Each item is identified by its table's primary key; non-key attributes can vary between items. Item size and data types affect capacity and access design.
 
 - DynamoDB is made of Tables
 - Each table has a Primary Key (must be decided at creation time)
@@ -1923,11 +1941,15 @@ A DynamoDB table stores key-identified items with flexible non-key attributes an
   - Document Types – List, Map
   - Set Types – String Set, Number Set, Binary Set
 
-## DynamoDB – Primary Keys
+- Non-key attributes can be added as the item model evolves; keep the required primary-key attributes consistent.
+
+### Primary Keys
 
 <!-- pdf-page: 162 -->
+<!-- original-note: 52 -->
+<!-- title: DynamoDB primary keys -->
 
-A simple DynamoDB primary key consists of a partition key; its value uniquely identifies an item.
+A table uses either a partition key alone or a partition key with a sort key. The combined key uniquely identifies an item in the second model.
 
 - Option 1: Partition Key (HASH)
   - Partition key must be unique for each item
@@ -1960,11 +1982,12 @@ A good movie-table partition key distributes data and traffic while matching the
 - “movie_id” has the highest cardinality so it’s a good candidate
 - “movie_language” doesn’t take many values and may be skewed towards English so it’s not a great choice for the Partition Key
 
-## DynamoDB in Big Data
+### DynamoDB use cases
 
 <!-- pdf-page: 165 -->
+<!-- original-note: 53 -->
 
-DynamoDB fits predictable key-based low-latency access; model the access pattern before selecting it.
+DynamoDB suits small, frequently accessed records with known lookup patterns, such as shopping carts, sessions, voting and device events.
 
 - Common use cases include:
   - Mobile apps
@@ -1984,6 +2007,13 @@ DynamoDB fits predictable key-based low-latency access; model the access pattern
                           - Binary Large Object (BLOB) data: store data in S3 & metadata in DynamoDB
                           - Large data with low I/O rate: use S3 instead
 
+### DynamoDB Anti Pattern
+
+<!-- original-note: 54 -->
+<!-- title: DynamoDB anti-patterns -->
+
+Reconsider DynamoDB when the application depends on relational joins, large binary objects or large datasets with little request activity.
+
 ## DynamoDB capacity modes
 
 <!-- pdf-page: 166 -->
@@ -1996,11 +2026,13 @@ Provisioned capacity and on-demand capacity express different planning and billi
 
 **Current reference (checked 2026-10-13):** [DynamoDB capacity modes](https://docs.aws.amazon.com/amazondynamodb/latest/developerguide/capacity-mode.html).
 
-## R/W Capacity Modes – Provisioned
+### Read Capacity Unit and Write Capacity Unit (RCU and WCU)
 
 <!-- pdf-page: 167 -->
+<!-- original-note: 55 -->
+<!-- title: DynamoDB provisioned capacity -->
 
-Table must have provisioned read and write capacity units
+Provisioned capacity sets read and write throughput explicitly. Calculate units from item size and read consistency, then decide whether to adjust capacity manually or through scaling.
 
 - Read Capacity Units (RCU) – throughput for reads
 - Write Capacity Units (WCU) – throughput for writes
@@ -2024,11 +2056,13 @@ For provisioned standard writes, round each item up to 1 KB and multiply by writ
 - Example 3: we write 120 items per minute, with item size 2 KB
   - We need
 
-## Strongly Consistent Read vs. Eventually Consistent Read
+### Strongly Consistent Read vs Eventually Conssistent read
 
 <!-- pdf-page: 169 -->
+<!-- original-note: 56 -->
+<!-- title: DynamoDB read consistency -->
 
-An eventually consistent read can briefly lag a completed write. Strongly consistent reads return the latest successful write where supported.
+An eventual read can briefly return an older value. A supported strongly consistent read returns the latest successful write, using more read capacity.
 
 - Eventually Consistent Read (default)
   - If we read just after a write, it’s possible we’ll get some stale data because of replication
@@ -2050,11 +2084,13 @@ Round each item up to 4 KB. Strong reads use one RCU per unit per second; eventu
   - We need 16
 - Example 3: 10 Strongly Consistent Reads per second, with item size 6 KB
 
-## DynamoDB – Partitions Internal
+### Partitions Internal
 
 <!-- pdf-page: 171 -->
+<!-- original-note: 57 -->
+<!-- title: DynamoDB partitions -->
 
-DynamoDB hashes the partition-key value to place data; uneven key traffic can create a hot partition.
+DynamoDB hashes partition keys to place items on physical partitions. Uneven traffic can exhaust a partition even when table-wide capacity appears sufficient.
 
 - Data is stored in partitions
 - Partition Keys go through a hashing algorithm to know to which partition they go to
@@ -2064,11 +2100,13 @@ DynamoDB hashes the partition-key value to place data; uneven key traffic can cr
   - # 𝑜𝑓 𝑝𝑎𝑟𝑡𝑖𝑡𝑖𝑜𝑛𝑠= ceil(max # 𝑜𝑓 𝑝𝑎𝑟𝑡𝑖𝑡𝑖𝑜𝑛𝑠𝑏𝑦 𝑐𝑎𝑝𝑎𝑐𝑖𝑡𝑦, # 𝑜𝑓 𝑝𝑎𝑟𝑡𝑖𝑡𝑖𝑜𝑛𝑠𝑏𝑦 𝑠𝑖𝑧𝑒)
 - WCUs and RCUs are spread evenly across partitions
 
-## DynamoDB – Throttling
+### Throttling
 
 <!-- pdf-page: 172 -->
+<!-- original-note: 58 -->
+<!-- title: DynamoDB throttling -->
 
-If we exceed provisioned RCUs or WCUs, we get “ProvisionedThroughputExceededException”
+Throttling means a request exceeded an applicable capacity limit. Inspect hot keys, item sizes and configured capacity before choosing retries, redistribution or a read cache.
 
 - Reasons:
   - Hot Keys – one partition key is being read too many times (e.g., popular item)
@@ -2079,17 +2117,26 @@ If we exceed provisioned RCUs or WCUs, we get “ProvisionedThroughputExceededEx
   - Distribute partition keys as much as possible
   - If RCU issue, we can use DynamoDB Accelerator (DAX)
 
-## DynamoDB on-demand: capacity still has limits
+### R/W Capacity Modes - On-Demanda
 
 <!-- pdf-page: 173 -->
+<!-- original-note: 59 -->
+<!-- title: DynamoDB on-demand capacity -->
 
-On-demand removes explicit RCU/WCU provisioning, but does not eliminate throttling.
+On-demand billing removes explicit RCU/WCU provisioning, but hot partitions, quotas and rapid traffic changes can still throttle requests.
 
 - Hot partitions, table/account quotas, configured maximum throughput and rapid workload changes can still limit requests.
 - Billing uses read/write request units; the item-size and consistency multipliers still matter.
 - Choose it for uncertain or variable traffic. Compare actual utilization and prices instead of memorizing the PDF's 2.5× price ratio.
 
 **Current reference (checked 2026-10-13):** [DynamoDB throttling causes](https://docs.aws.amazon.com/amazondynamodb/latest/developerguide/TroubleshootingThrottling.html).
+
+### Basic APIs
+
+<!-- original-note: 60 -->
+<!-- title: DynamoDB APIs -->
+
+Use item APIs for individual records, Query for a partition-key access pattern, Scan for a broad examination, and batch APIs to group supported operations.
 
 ## DynamoDB – Writing Data
 
@@ -2144,7 +2191,7 @@ Query selects one partition-key value and can narrow the sort-key range; a filte
 
 <!-- pdf-page: 177 -->
 
-Scan the entire table and then filter out data (inefficient)
+A Scan examines a broad set of items before applying its filter. Filtering the response does not avoid the read work already performed.
 
 - Returns up to 1 MB of data – use pagination to keep on reading
 - Consumes a lot of RCU
@@ -2172,7 +2219,7 @@ Deletion APIs remove individual or batched items; conditions help guard concurre
 
 <!-- pdf-page: 179 -->
 
-Allows you to save in latency by reducing the number of API calls
+Batch operations group supported requests to reduce call overhead. Inspect unprocessed items and retry them; a grouped request is not automatically an atomic transaction.
 
 - Operations are done in parallel for better efficiency
 - Part of a batch can fail; in which case we need to try again for the failed items
@@ -2187,26 +2234,28 @@ Allows you to save in latency by reducing the number of API calls
   - Items are retrieved in parallel to minimize latency
   - UnprocessedKeys for failed read operations (exponential backoff or add RCU)
 
-## DynamoDB – PartiQL
+### DynamoDB – PartiQL
 
 <!-- pdf-page: 180 -->
+<!-- original-note: 61 -->
+<!-- title: DynamoDB PartiQL -->
 
-SQL-compatible query language for DynamoDB
+PartiQL offers SQL-like syntax for DynamoDB operations; it does not turn the table into a relational database or remove key-based access constraints.
 
-- Allows you to select, insert, update, and delete data in DynamoDB using SQL
-- Run queries across multiple DynamoDB tables
-- Run PartiQL queries from:
-  - AWS Management Console
-  - NoSQL Workbench for DynamoDB
-  - DynamoDB APIs
-  - AWS CLI
-  - AWS SDK
+- Supported operations include SELECT, INSERT, UPDATE and DELETE.
+- A SELECT addresses one table or index; do not infer relational joins across DynamoDB tables.
+- A partition-key equality or IN condition can avoid a full scan; filtering only on other attributes can scan the table.
+- Submit supported statements through the console, NoSQL Workbench, CLI, SDK or DynamoDB APIs.
 
-## DynamoDB – Local Secondary Index (LSI)
+**Current reference (checked 2026-10-13):** [DynamoDB PartiQL SELECT](https://docs.aws.amazon.com/amazondynamodb/latest/developerguide/ql-reference.select.html).
+
+### DynamoDB - Local Secondary Index
 
 <!-- pdf-page: 181 -->
+<!-- original-note: 62 -->
+<!-- title: DynamoDB local secondary indexes -->
 
-An LSI retains the base table's partition key and supplies another sort key within that item collection.
+An LSI retains the table's partition key and supplies another sort key. Plan it when creating the table because it cannot be added afterward.
 
 - Alternative Sort Key for your table (same Partition Key as that of base table)
 - The Sort Key consists of one scalar attribute (String, Number, or Binary)
@@ -2214,11 +2263,13 @@ An LSI retains the base table's partition key and supplies another sort key with
 - Must be defined at table creation time
 - Attribute Projections – can contain some or all the attributes of the base table (KEYS_ONLY, INCLUDE, ALL)
 
-## DynamoDB – Global Secondary Index (GSI)
+### DynamoDB - GLobal Secondary Indez
 
 <!-- pdf-page: 182 -->
+<!-- original-note: 63 -->
+<!-- title: DynamoDB global secondary indexes -->
 
-A GSI supports a different partition key and optional sort key; projected attributes determine what the index contains.
+A GSI provides another partition-key and optional sort-key access path. Its projections and capacity behavior are separate design choices from the base table.
 
 - Alternative Primary Key (HASH or HASH+RANGE) from the base table
 - Speed up queries on non-key attributes
@@ -2242,11 +2293,11 @@ Index capacity and hot keys can constrain table writes as well as index queries.
   - Uses the WCUs and RCUs of the main table
   - No special throttling considerations
 
-## DynamoDB - PartiQL
+## DynamoDB PartiQL operations
 
 <!-- pdf-page: 184 -->
 
-Use a SQL-like syntax to manipulate DynamoDB tables
+PartiQL expresses supported item operations with familiar SQL-like statements. Batch execution is separate from a relational join across tables.
 
 - Supports some (but not all) statements:
   - INSERT
@@ -2255,11 +2306,12 @@ Use a SQL-like syntax to manipulate DynamoDB tables
   - DELETE
 - It supports Batch operations
 
-## DynamoDB Accelerator (DAX)
+### DynamoDB Accelerator (DAX)
 
 <!-- pdf-page: 185 -->
+<!-- original-note: 64 -->
 
-DAX caches supported DynamoDB reads. Cache misses reach DynamoDB; supported writes pass through to the table.
+DAX caches DynamoDB reads to reduce response latency and repeated read traffic. It helps read-heavy access patterns rather than increasing write capacity.
 
 - Fully-managed, highly available, seamless in- memory cache for DynamoDB
 - Microseconds latency for cached reads & queries
@@ -2270,65 +2322,67 @@ DAX caches supported DynamoDB reads. Cache misses reach DynamoDB; supported writ
 - Multi-AZ (3 nodes minimum recommended for production)
 - Secure (Encryption at rest with KMS, VPC, IAM, CloudTrail, …)
 
-## DynamoDB Accelerator (DAX) vs. ElastiCache
+### Dax vs Elasticache
 
 <!-- pdf-page: 186 -->
+<!-- original-note: 65 -->
+<!-- title: DAX and ElastiCache -->
 
-DAX accelerates DynamoDB item/query reads; ElastiCache can separately cache computed application results.
+Use DAX for DynamoDB-compatible item and query caching. Use an application-managed cache when you need to store independently computed results, such as aggregates.
 
-## DynamoDB Streams
+- Example: cache a computed aggregate in an application cache when it will be read many times, rather than expecting DAX to compute that aggregate.
+
+### DynamoDB Streams
 
 <!-- pdf-page: 187 -->
+<!-- original-note: 66 -->
 
-Ordered stream of item-level modifications (create/update/delete) in a table
+DynamoDB Streams records item changes for consumers that react to inserts, updates and deletes. Retention and item-image selection shape what a consumer can reconstruct.
 
-- Stream records can be:
-  - Sent to Kinesis Data Streams
-  - Read by AWS Lambda
-  - Read by Kinesis Client Library applications
-- Data Retention for up to 24 hours
-- Use cases:
-  - react to changes in real-time (welcome email to users)
-  - Analytics
-  - Insert into derivative tables
-  - Insert into OpenSearch Service
-  - Implement cross-region replication
+- DynamoDB Streams retains changes for 24 hours and preserves modification order for each item.
+- Lambda or a supported Streams adapter can process the change records.
+- Kinesis Data Streams for DynamoDB is a separate change-capture option; it is not an automatic destination appended to DynamoDB Streams.
+- Applications can use changes to send notifications, maintain derived tables or feed search and analytics systems through an appropriate processing path.
+- Consumer retries still require safe handling of repeated processing.
 
-## DynamoDB Streams
+**Current reference (checked 2026-10-13):** [DynamoDB change-capture options](https://docs.aws.amazon.com/amazondynamodb/latest/developerguide/streamsmain.html).
+
+## DynamoDB change-capture paths
 
 <!-- pdf-page: 188 -->
 
 DynamoDB change capture has separate Streams and Kinesis integration paths; downstream consumers process changes asynchronously.
 
-## DynamoDB Streams
+## DynamoDB stream images
 
 <!-- pdf-page: 189 -->
 
-Ability to choose the information that will be written to the stream:
+StreamViewType selects keys, the old item image, the new image or both. Choose the information that downstream processing needs before enabling change capture.
 
-  - KEYS_ONLY – only the key attributes of the modified item
-  - NEW_IMAGE – the entire item, as it appears after it was modified
-  - OLD_IMAGE – the entire item, as it appeared before it was modified
-  - NEW_AND_OLD_IMAGES – both the new and the old images of the item
-- DynamoDB Streams are made of shards, just like Kinesis Data Streams
-- You don’t provision shards, this is automated by AWS
-- Records are not retroactively populated in a stream after
+- KEYS_ONLY: primary-key attributes.
+- NEW_IMAGE: the item after the change.
+- OLD_IMAGE: the item before the change.
+- NEW_AND_OLD_IMAGES: both versions.
+- DynamoDB manages the stream's shards; enabling a stream does not backfill earlier table changes.
 
-## DynamoDB Streams & AWS Lambda
+### DynamoDB Streams & AWS Lambda
 
 <!-- pdf-page: 190 -->
+<!-- original-note: 67 -->
 
-A Lambda event source mapping polls DynamoDB Streams and invokes a function with batches; the table does not synchronously call the function.
+A Lambda event source mapping polls DynamoDB Streams and invokes the function with batches. Give the function the required stream permissions and handle retries safely.
 
 - You need to define an Event Source Mapping to read from a DynamoDB Streams
 - You need to ensure the Lambda function has the appropriate permissions
 - Your Lambda function is invoked synchronously
 
-## DynamoDB – Time To Live (TTL)
+### DynamoDB – Time To Live (TTL)
 
 <!-- pdf-page: 191 -->
+<!-- original-note: 68 -->
+<!-- title: DynamoDB TTL -->
 
-TTL removes expired items asynchronously; deletions can appear in Streams for downstream processing.
+TTL marks items for eventual deletion using an epoch-time Number attribute. Expiration is not an immediate access-control or deletion boundary.
 
 - Automatically delete items after an expiry timestamp
 - Doesn’t consume any WCUs (i.e., no extra cost)
@@ -2338,11 +2392,15 @@ TTL removes expired items asynchronously; deletions can appear in Streams for do
 - Expired items are deleted from both LSIs and GSIs
 - A delete operation for each expired item enters the DynamoDB Streams (can help recover expired items)
 
-## DynamoDB – Large Objects Pattern
+### Use cases Large Objects Pattern / Indexing s3 Objects Metadata
 
 <!-- pdf-page: 192 -->
+<!-- original-note: 69 -->
+<!-- title: Large objects and S3 metadata -->
 
-Store large object bytes in S3 and their searchable metadata and object reference in DynamoDB.
+Keep large object bytes in S3 and store their identifiers or searchable metadata in DynamoDB. This separates blob storage from low-latency metadata access.
+
+- The related metadata-indexing example uses S3 for the object and DynamoDB for the fields needed to find or describe it.
 
 ## DynamoDB – Indexing S3 Objects Metadata
 
@@ -2350,11 +2408,12 @@ Store large object bytes in S3 and their searchable metadata and object referenc
 
 An S3 event can trigger metadata extraction into DynamoDB, which an API queries independently of the object download.
 
-## DynamoDB – Security & Other Features
+### DynamoDB security and other features
 
 <!-- pdf-page: 194 -->
+<!-- original-note: 70 -->
 
-DynamoDB security and operations combine IAM permissions, encryption, recovery and local-development options.
+DynamoDB access combines IAM authorization, network access, encryption and recovery features. Apply fine-grained restrictions where clients access their own records directly.
 
 - Security
   - VPC Endpoints available to access DynamoDB without using the Internet
@@ -2379,17 +2438,19 @@ Federated identity obtains temporary AWS credentials; IAM policies then authoriz
 
 <!-- pdf-page: 196 -->
 
-Using Web Identity Federation or Cognito Identity Pools, each user gets AWS credentials
+Temporary credentials and IAM conditions can restrict direct client access to a user's own keys and attributes. Authentication alone does not establish that data boundary.
 
 - You can assign an IAM Role to these users with a Condition to limit their API access to DynamoDB
 - LeadingKeys – limit row-level access for users on the Primary Key
 - Attributes – limit specific attributes the user can see
 
-## What is RDS?
+## Amazon RDS - Hosted relational Database
 
 <!-- pdf-page: 198 -->
+<!-- original-note: 71 -->
+<!-- title: Amazon RDS -->
 
-RDS manages supported relational database engines while the application retains responsibility for schema, queries and access design.
+RDS manages supported relational engines, while applications remain responsible for transaction design, schemas, queries and access patterns.
 
 - Hosted relational database
   - Amazon Aurora
@@ -2414,7 +2475,7 @@ ACID means atomicity, consistency, isolation and durability; transactions preser
   - Isolation
   - Durability
 
-## Amazon Aurora
+## Aurora engine and storage model
 
 <!-- pdf-page: 200 -->
 
@@ -2450,11 +2511,13 @@ Locking coordinates concurrent transactions; the actual conflict rules depend on
 - Shared and exclusive modes describe compatibility with other locks; they do not universally describe all snapshot-read behavior.
 - MVCC can let ordinary reads observe a consistent snapshot while another transaction holds a write lock. See the MySQL example on page 203.
 
-## Database locks: engine-specific behavior
+### Lock command
 
 <!-- pdf-page: 203 -->
+<!-- original-note: 72 -->
+<!-- title: Database locking commands -->
 
-Locks protect concurrent operations, but their scope and interaction with reads depend on the database engine and isolation level.
+Use engine-specific locking commands to coordinate concurrent operations. Distinguish locking reads from ordinary MVCC snapshot reads and plan for deadlock retries.
 
 - MySQL LOCK TABLES / UNLOCK TABLES are explicit table-lock operations.
 - SELECT ... FOR SHARE and FOR UPDATE request locking reads inside a transaction.
@@ -2471,11 +2534,12 @@ The PDF contains a heading and a service icon, with no written best-practice gui
 
 - Unexpanded source area: retain it as a review prompt. Do not attribute invented recommendations to this slide.
 
-## Amazon RDS operational guidelines
+### RDS Operational guidelines
 
 <!-- pdf-page: 205 -->
+<!-- original-note: 73 -->
 
-Use CloudWatch to monitor memory, CPU, storage, replica lag
+Operate RDS from measurements: watch memory, CPU, storage and replica lag, maintain appropriate DNS behavior and tune the working set and queries.
 
 - Perform automatic backups during daily low in write IOPS
 - Insufficient I/O will make recovery after failure slow.
@@ -2504,16 +2568,15 @@ Query plans, selective indexes and workload measurements guide relational-query 
 
 <!-- pdf-page: 207 -->
 
-Database tuning mechanisms are engine-specific; apply MySQL/MariaDB settings in their supported context.
+Database tuning mechanisms are engine-specific; use the chosen engine's guidance and evaluate the durability and availability tradeoffs of bulk-load settings.
 
-- MySQL, MariaDB
-  - Keep tables well under 16TB, ideally under 100GB
-  - Have enough RAM to hold indexes of actively used tables
-  - Try to have less than 10,000 tables
-  - Use InnoDB for storage engine
-- PostgreSQL
-  - When loading data, disable DB backups and multi-AZ. Tweak various DB parameters such as maintenance_work_mem, max_wal_size, checkpoint_timeout. Disable synchronous_commit, autovacuum, and ensure tables are logged.
-  - Use autovacuum
+- MySQL/MariaDB: keep active indexes in memory and use InnoDB. The documented table-file limit is 16 TiB; partition large tables well below that size.
+  - Tables above 100 GB can make some operations expensive. Fewer than 10,000 tables is performance guidance, rather than a hard table-count limit.
+- PostgreSQL bulk loads may benefit from tuning maintenance_work_mem, max_wal_size and checkpoint_timeout.
+- Disabling backups, Multi-AZ, synchronous_commit or autovacuum changes protection or behavior. Treat such changes as a controlled load procedure with explicit recovery requirements and restoration of normal settings afterward.
+- Keep ordinary maintenance, including appropriate autovacuum behavior, part of the production configuration.
+
+**Current reference (checked 2026-10-13):** [RDS engine-specific practices](https://docs.aws.amazon.com/AmazonRDS/latest/UserGuide/CHAP_BestPractices.html).
 
 ## DB-specific tweaks
 
@@ -2527,11 +2590,12 @@ SQL Server tuning and administration options differ from MySQL-family settings.
   - Deploy into all AZ’s
 - Oracle is its own beast
 
-## Amazon Aurora
+### Amazon Aurora
 
 <!-- pdf-page: 209 -->
+<!-- original-note: 74 -->
 
-Aurora is a proprietary technology from AWS (not open sourced)
+Aurora combines MySQL- or PostgreSQL-compatible compute with a managed distributed storage layer. Separate engine compatibility from storage, replica and recovery behavior.
 
 - Postgres and MySQL are both supported as Aurora DB (that means your drivers will work as if Aurora was a Postgres or MySQL database)
 - Aurora is “AWS cloud optimized” and claims 5x performance improvement over MySQL on RDS, over 3x the performance of Postgres on RDS
@@ -2540,11 +2604,13 @@ Aurora is a proprietary technology from AWS (not open sourced)
 - Failover in Aurora is instantaneous. It’s HA (High Availability) native.
 - Aurora costs more than RDS (20% more) – but is more efficient
 
-## Aurora High Availability and Read Scaling
+#### High Availability and Read Scaling
 
 <!-- pdf-page: 210 -->
+<!-- original-note: 75 -->
+<!-- title: Aurora availability and read scaling -->
 
-Aurora replicates a cluster volume across three AZs. The course illustrates six copies, a four-copy write quorum and a three-copy read quorum.
+Aurora's storage replicas protect data, while database replicas provide read capacity and failover targets. These are related but different forms of replication.
 
 - 6 copies of your data across 3 AZ:
   - 4 copies out of 6 needed for writes
@@ -2556,11 +2622,12 @@ Aurora replicates a cluster volume across three AZs. The course illustrates six 
 - Master + up to 15 Aurora Read Replicas serve reads
 - Support for Cross Region Replication
 
-## Aurora DB Cluster
+#### Aurora DB Cluster
 
 <!-- pdf-page: 211 -->
+<!-- original-note: 76 -->
 
-The writer endpoint follows the current primary; the reader endpoint distributes connections across available replicas sharing the cluster volume.
+The writer endpoint follows the current writer. The reader endpoint distributes connections across eligible readers; it does not split every query inside one connection.
 
 ## Features of Aurora
 
@@ -2593,11 +2660,13 @@ The pgvector extension stores embeddings and supports vector-distance queries in
 - Allows you to store structured and vector data in the same place
 - Can be appropriate for small / medium RAG systems with mostly structured data
 
-## DocumentDB
+## DocumentDB (MongoDB) NoSQL
 
 <!-- pdf-page: 214 -->
+<!-- original-note: 77 -->
+<!-- title: Amazon DocumentDB -->
 
-Aurora is an “AWS-implementation” of PostgreSQL / MySQL …
+DocumentDB provides a managed document database with MongoDB compatibility. Check application and feature compatibility instead of assuming it is the same product as MongoDB.
 
 - DocumentDB is the same for MongoDB (which is a NoSQL database)
 - MongoDB is used to store, query, and index JSON data
@@ -2606,11 +2675,13 @@ Aurora is an “AWS-implementation” of PostgreSQL / MySQL …
 - DocumentDB storage automatically grows in increments of 10GB
 - Automatically scales to workloads with millions of requests per seconds
 
-## Amazon MemoryDB for Redis
+## MemoryDB for Redis
 
 <!-- pdf-page: 215 -->
+<!-- original-note: 78 -->
+<!-- title: Amazon MemoryDB -->
 
-MemoryDB serves low-latency in-memory operations while a distributed transaction log provides durability.
+MemoryDB combines an in-memory data model with durable storage, making it distinct from using a disposable cache in front of another database.
 
 - Redis-compatible, durable, in-memory database service
 - Ultra-fast performance with over 160 millions requests/second
@@ -2618,11 +2689,13 @@ MemoryDB serves low-latency in-memory operations while a distributed transaction
 - Scale seamlessly from 10s GBs to 100s TBs of storage
 - Use cases: web and mobile apps, online gaming, media streaming, …
 
-## Amazon Keyspaces (for Apache Cassandra)
+## Amazon Keyspaces (For Apache Cassandra) NoSQL
 
 <!-- pdf-page: 216 -->
+<!-- original-note: 79 -->
+<!-- title: Amazon Keyspaces -->
 
-Apache Cassandra is an open-source NoSQL distributed database
+Keyspaces provides a managed Cassandra-compatible database accessed through CQL. It fits applications built around Cassandra's partitioned data model.
 
 - A managed Apache Cassandra-compatible database service
 - Serverless, Scalable, highly available, fully managed by AWS
@@ -2637,8 +2710,9 @@ Apache Cassandra is an open-source NoSQL distributed database
 ## Amazon Neptune
 
 <!-- pdf-page: 217 -->
+<!-- original-note: 80 -->
 
-Graph databases represent entities as vertices and relationships as edges; traversal answers connection-oriented questions.
+Neptune stores connected data as a graph. Choose graph models and query languages from the relationships and traversals the application needs.
 
 - Fully managed graph database
 - A popular graph dataset would be a social network
@@ -2660,11 +2734,23 @@ A graph statement connects a subject to an object through a predicate; RDF and p
 
 - Supported graph query languages: Gremlin, openCypher, SPARQL
 
+##
+
+<!-- original-note: 81 -->
+<!-- title: Database review prompt 1 -->
+<!-- unexpanded -->
+
+##
+
+<!-- original-note: 82 -->
+<!-- title: Database review prompt 2 -->
+<!-- unexpanded -->
+
 ## Amazon Timestream
 
 <!-- pdf-page: 219 -->
 
-Fully managed, fast, scalable, serverless time series database
+Timestream stores time-indexed observations for analytical queries. Its time-series model differs from a general relational or key-value database.
 
 - Automatically scales up/down to adjust capacity
 - Store and analyze trillions of events per day
@@ -2681,11 +2767,12 @@ Fully managed, fast, scalable, serverless time series database
 
 Timestream ingests time-series observations through supported APIs and connectors, then serves analytical queries to visualization tools.
 
-## What is Redshift?
+## Amazon Redshift
 
 <!-- pdf-page: 222 -->
+<!-- original-note: 83 -->
 
-Fully-managed, petabyte scale data warehouse service
+Redshift is a columnar analytical warehouse. It is designed for large scans, joins and aggregations rather than frequent small transactional updates.
 
 - 10X better performance than other DW’s
   - Via machine learning, massively parallel query execution, columnar storage
@@ -2717,11 +2804,12 @@ Redshift targets analytical workloads that benefit from a managed columnar wareh
 
 In a provisioned Redshift cluster, the leader coordinates SQL work across compute nodes and slices; node families in the slide are historical examples.
 
-## Redshift Spectrum
+### Redshift Spectrum
 
 <!-- pdf-page: 225 -->
+<!-- original-note: 84 -->
 
-Redshift Spectrum and Athena can query S3 data through external metadata; this does not imply data flows from Athena into Redshift.
+Spectrum extends Redshift queries to external data in S3 without first copying all of it into local warehouse tables.
 
 - Query exabytes of unstructured data in S3 without loading
 - Limitless concurrency
@@ -2740,11 +2828,12 @@ Redshift combines parallel execution, columnar storage and query optimization fo
 - Columnar Data Storage
 - Column Compression
 
-## Redshift Durability
+### Redshift Durability
 
 <!-- pdf-page: 227 -->
+<!-- original-note: 85 -->
 
-Redshift durability uses redundant storage and recovery copies; plan restoration separately from query availability.
+Redshift uses redundant storage and snapshots to protect warehouse data. Recovery planning still needs snapshot retention, copy permissions and restoration procedures.
 
 - Replication within cluster
 - Backup to S3
@@ -2822,7 +2911,7 @@ COPY loads bulk data into Redshift; UNLOAD writes query results out to supported
 
 <!-- pdf-page: 234 -->
 
-Use COPY to load large amounts of data from outside of Redshift
+COPY loads data in bulk from supported sources. Plan file layout, permissions, compression and error handling for parallel warehouse ingestion.
 
 - If your data is already in Redshift in another table,
   - Use INSERT INTO …SELECT
@@ -2840,7 +2929,7 @@ Use COPY to load large amounts of data from outside of Redshift
 
 <!-- pdf-page: 235 -->
 
-Let’s say you have a KMS-encrypted Redshift cluster and a snapshot of it
+An encrypted snapshot copy needs the correct destination-Region key and copy grant. Data replication and permission to use an encryption key are separate concerns.
 
 - You want to copy that snapshot to another region for backup
 - In the destination AWS region:
@@ -2854,7 +2943,7 @@ Let’s say you have a KMS-encrypted Redshift cluster and a snapshot of it
 
 <!-- pdf-page: 236 -->
 
-Connect Redshift to PostgreSQL (possibly in RDS)
+DBLINK provides a PostgreSQL-based connection path in the source example. Keep it distinct from Redshift's supported federated-query mechanisms.
 
 - Good way to copy and sync data between PostgreSQL and Redshift
 
@@ -2874,7 +2963,7 @@ Redshift integrations cover data ingestion, catalog access, visualization and mo
 
 <!-- pdf-page: 238 -->
 
-Prioritize short, fast queries vs. long, slow queries
+WLM assigns query workloads to execution resources so short interactive work and longer analytical jobs can be governed deliberately.
 
 - Query queues
 - Via console, CLI, or API
@@ -2883,7 +2972,7 @@ Prioritize short, fast queries vs. long, slow queries
 
 <!-- pdf-page: 239 -->
 
-Automatically adds cluster capacity to handle increase in concurrent read queries
+Concurrency Scaling supplies additional supported query capacity during bursts. Eligibility and usage charges determine how it fits the workload.
 
 - Support virtually unlimited concurrent users & queries
 - WLM queues manage which queries are sent to the concurrency scaling cluster
@@ -2909,7 +2998,7 @@ Automatic workload management allocates execution resources across configured qu
 
 <!-- pdf-page: 241 -->
 
-One default queue with concurrency level of 5 (5 queries at once)
+Manual WLM uses configured queues and concurrency settings. Queue allocation trades simultaneous execution against the memory available to each query.
 
 - Superuser queue with concurrency level 1
 - Define up to 8 queues, up to concurrency level 50
@@ -2921,7 +3010,7 @@ One default queue with concurrency level of 5 (5 queries at once)
 
 <!-- pdf-page: 242 -->
 
-Prioritize short-running queries over longer-running ones
+Short Query Acceleration gives eligible short queries a separate execution path so they spend less time waiting behind longer work.
 
 - Short queries run in a dedicated space, won’t wait in queue behind long queries
 - Can be used in place of WLM queues for short queries
@@ -2954,7 +3043,7 @@ Elastic and classic resize have different constraints and interruption character
 
 <!-- pdf-page: 244 -->
 
-Recovers space from deleted rows and restores sort order
+VACUUM reclaims deleted space or restores sorting according to the chosen operation. Use the table's maintenance needs and supported automatic behavior to decide when to run it.
 
 - VACUUM FULL
 - VACUUM DELETE ONLY
@@ -3024,7 +3113,7 @@ Redshift security requires appropriate encryption, identity permissions and priv
 
 <!-- pdf-page: 249 -->
 
-Automatic scaling and provisioning for your workload
+Serverless manages warehouse compute provisioning around the workload. Data organization, authorization and cost controls remain design responsibilities.
 
 - Optimizes costs & performance
   - Pay only when in use
@@ -3049,11 +3138,12 @@ Create a Serverless namespace/workgroup with deliberate identity, network, encry
   - Audit logging
 - Can manage snapshots & recovery points after creation
 
-## Resource Scaling in Redshift Serverless
+### Resource Scaling in Redshift Serverless
 
 <!-- pdf-page: 251 -->
+<!-- original-note: 86 -->
 
-Capacity measured in Redshift Processing Units (RPU’s)
+Redshift Serverless measures compute capacity in RPUs. Compare base and maximum capacity with query performance and the resulting usage charges.
 
 - You pay for RPU-hours (per second) plus storage
 - Base RPU’s
@@ -3064,11 +3154,12 @@ Capacity measured in Redshift Processing Units (RPU’s)
   - Can set a usage limit to control costs
   - Or, increase it to improve throughput
 
-## Redshift Serverless: check feature differences
+### Redshift Serverless
 
 <!-- pdf-page: 252 -->
+<!-- original-note: 87 -->
 
-Serverless uses namespaces and workgroups rather than the same administration model as a provisioned cluster.
+Redshift Serverless separates namespaces from workgroups and changes several administration controls. It can be configured for public accessibility when routing and security rules permit it.
 
 - Parameter groups, maintenance controls and workload-management configuration differ; check the current feature matrix.
 - Correction: Serverless can be configured for public accessibility. The slide's "no public endpoints" statement is outdated.
@@ -3076,11 +3167,13 @@ Serverless uses namespaces and workgroups rather than the same administration mo
 
 **Current reference (checked 2026-10-13):** [Connecting to Redshift Serverless](https://docs.aws.amazon.com/redshift/latest/mgmt/serverless-connecting.html).
 
-## Redshift Serverless: Monitoring
+###  Serverless Monitoring
 
 <!-- pdf-page: 253 -->
+<!-- original-note: 88 -->
+<!-- title: Redshift Serverless monitoring -->
 
-Serverless system views and metrics expose workload behavior and resource consumption.
+Use query, load and serverless usage views alongside CloudWatch metrics to connect workload behavior with capacity consumption.
 
 - Monitoring views
   - SYS_QUERY_HISTORY
@@ -3095,11 +3188,12 @@ Serverless system views and metrics expose workload behavior and resource consum
   - QueriesCompletedPerSecond, QueryDuration, QueriesRunning,etc.
   - Dimensions: DatabaseName, latency (short/medium/long), QueryType, stage
 
-## Redshift Materialized Views
+### Redshift Materialized Views
 
 <!-- pdf-page: 254 -->
+<!-- original-note: 89 -->
 
-A materialized view stores a query result derived from base tables. Refresh policy determines when the stored result reflects later changes.
+A materialized view stores the result of a query so later reads can reuse it. Faster queries must be balanced against refresh cost and acceptable staleness.
 
 - Contain precomputed results based on SQL queries over one or more base tables.
   - This differs from a “normal” view in that it actually stores the results of the query
@@ -3122,11 +3216,13 @@ Create, refresh and query materialized views according to the freshness required
 - Materialized views can be built from other materialized views
   - Useful for re-using expensive joins
 
-## Redshift Data Sharing
+### Data Sharing
 
 <!-- pdf-page: 256 -->
+<!-- original-note: 90 -->
+<!-- title: Redshift data sharing -->
 
-Redshift data sharing exposes selected live data to authorized consumers without copying the shared dataset.
+A producer grants consumers access to live warehouse data. Sharing avoids a separate data copy and allows consumers to isolate their query workloads.
 
 - Securely share live data across Redshift clusters for read purposes
 - Why?
@@ -3154,11 +3250,12 @@ Producer and consumer compute can scale independently while consumers read share
   - AWS Data Exchange
   - AWS Lake Formation - managed
 
-## Redshift Lambda UDF
+### Redshift Lambda UDF
 
 <!-- pdf-page: 258 -->
+<!-- original-note: 91 -->
 
-A Lambda UDF calls an external function from Redshift SQL; it is distinct from retired Redshift Python UDFs.
+Register a Lambda-backed external function to apply custom logic from Redshift SQL. Function permissions, invocation overhead and supported data handling remain constraints.
 
 - Lambda UDFs remain a distinct supported external-function mechanism; Redshift Python UDF end of support after June 30, 2026 does not mean Lambda UDFs were retired.
 - Use custom functions in AWS Lambda inside SQL queries
@@ -3187,11 +3284,12 @@ Lambda UDF requests contain batches of arguments; the handler must return a corr
 
 **Current reference (checked 2026-10-13):** [Redshift Lambda UDF syntax](https://docs.aws.amazon.com/redshift/latest/dg/r_CREATE_EXTERNAL_FUNCTION.html).
 
-## Redshift Federated Queries
+### Redshift Federated Queries
 
 <!-- pdf-page: 260 -->
+<!-- original-note: 92 -->
 
-Federated queries combine Redshift data with supported remote RDS or Aurora databases; authorization and pushdown affect performance.
+Federated queries read supported RDS or Aurora databases from Redshift. Network connectivity and Secrets Manager credentials are required in addition to SQL definitions.
 
 - Query and analyze across databases, warehouses, and lakes
 - Ties Redshift to Amazon RDS or Aurora for PostgreSQL and MySQL
@@ -3203,7 +3301,7 @@ Federated queries combine Redshift data with supported remote RDS or Aurora data
 
 <!-- pdf-page: 261 -->
 
-Must establish connectivity between your Redshift cluster and RDS / Aurora
+A federated query needs a reachable external database and permission to retrieve its credentials. SQL definitions cannot substitute for network connectivity.
 
   - Put them in the same VPC subnet
   - Or use VPC peering
@@ -3223,11 +3321,12 @@ Federation reads supported external databases without first loading all remote d
 - Costs will be incurred on external DB’s
 - You can query RDS/Aurora from Redshift, but not the other way around
 
-## Redshift System Tables and Views
+### Redshift System Tables and Views
 
 <!-- pdf-page: 263 -->
+<!-- original-note: 93 -->
 
-System tables and views expose query, load, storage and operational state; access and retention differ by view.
+System views and tables expose warehouse activity, query history, loads and metadata. Choose the appropriate view family and account for its visibility and retention.
 
 - Contains info about how Redshift is functioning
 - Types of system tables / views
@@ -3239,11 +3338,12 @@ System tables and views expose query, load, storage and operational state; acces
   - SVL views: Details about queries on main clusters
 - Many system monitoring views & tables are only for provisioned clusters, not serverless
 
-## Redshift Data API
+### Redshift Data API
 
 <!-- pdf-page: 264 -->
+<!-- original-note: 94 -->
 
-The Redshift Data API accepts authenticated HTTPS requests and returns a statement identifier for asynchronous status and result retrieval.
+The Redshift Data API submits SQL over HTTPS and returns asynchronous statement status and results. It supports application and workflow integration without a persistent database connection.
 
 - Secure HTTP endpoint for SQL statements to Redshift clusters
   - Provisioned or serverless
@@ -3275,11 +3375,13 @@ Lambda, EventBridge and Step Functions can orchestrate Data API calls without ma
     - Set WithEvent parameter to true
   - Schedule Data API operations
 
-## Redshift Data API: Finer Points
+### Maximum for Data API:
 
 <!-- pdf-page: 266 -->
+<!-- original-note: 95 -->
+<!-- title: Redshift Data API limits -->
 
-Data API request, runtime and result limits are separate constraints; consult current API quotas.
+Query duration, concurrent statements, result size and result retention are separate Data API limits. Check the current quota for the chosen operation.
 
 - Maximum…
   - Query duration: 24 hours
@@ -3297,13 +3399,17 @@ Data API request, runtime and result limits are separate constraints; consult cu
   - Users must have same IAM role or permissions to operate on a given statement
 - Cluster must be in a VPC
 
-# Section Migration and transfer
+# Migration And Transfer
+
+<!-- original-note: 96 -->
+<!-- title: Migration and transfer -->
+<!-- section -->
 
 ## AWS Application Discovery Service
 
 <!-- pdf-page: 268 -->
 
-Plan migration projects by gathering information about on-premises data centers
+Application Discovery collects on-premises inventory and dependency information to help plan migration waves and target resources.
 
 - Server utilization data and dependency mapping are important for migrations
 - Agentless Discovery (AWS Agentless Discovery Connector)
@@ -3324,11 +3430,12 @@ Application Migration Service replicates server disks to a staging area before t
 - Supports wide range of platforms, Operating Systems, and databases
 - Minimal downtime, reduced costs
 
-## DMS – Database Migration Service
+## AWS Database Migration Service
 
 <!-- pdf-page: 270 -->
+<!-- original-note: 97 -->
 
-DMS moves database data through a replication task; source/target compatibility and full-load versus CDC settings matter.
+DMS moves data between supported sources and targets, using full loads and change data capture where supported. Schema conversion is a separate migration task.
 
 - Quickly and securely migrate databases to AWS, resilient, self healing
 - The source database remains available during the migration
@@ -3342,7 +3449,7 @@ DMS moves database data through a replication task; source/target compatibility 
 
 <!-- pdf-page: 271 -->
 
-On-Premises and EC2 instances databases: Oracle, MS SQL Server, MySQL, MariaDB, PostgreSQL, MongoDB, SAP, DB2
+DMS supports specific source-target combinations, with different full-load and CDC capabilities. Validate the chosen engines and versions as a pair.
 
 - Azure: Azure SQL Database
 - Amazon RDS: all including Aurora
@@ -3357,11 +3464,12 @@ On-Premises and EC2 instances databases: Oracle, MS SQL Server, MySQL, MariaDB, 
                         - DocumentDB & Amazon Neptune
                         - Redis & Babelfish
 
-## AWS Schema Conversion Tool (SCT)
+### AWS Schema Conversion Tool (SCT)
 
 <!-- pdf-page: 272 -->
+<!-- original-note: 98 -->
 
-Schema Conversion Tool converts compatible schema and code and reports objects requiring manual remediation.
+SCT translates schema and related objects when moving between different database engines. DMS handles the data movement; same-engine migrations may not need conversion.
 
 - Convert your Database’s Schema from one engine to another
 - Example OLTP: (SQL Server or Oracle) to MySQL, PostgreSQL, Aurora
@@ -3392,8 +3500,9 @@ A Multi-AZ DMS deployment provides a standby for replication-instance availabili
 ## AWS DataSync
 
 <!-- pdf-page: 275 -->
+<!-- original-note: 99 -->
 
-DataSync automates transfer and verification between supported storage locations.
+DataSync schedules and verifies transfers between supported storage locations, including on-premises or other-cloud sources and AWS storage.
 
 - Move large amount of data to and from
   - On-premises / other cloud to AWS (NFS, SMB, HDFS, S3 API…) – needs agent
@@ -3418,11 +3527,12 @@ An on-premises DataSync agent accesses supported local storage and transfers dat
 
 DataSync also transfers between supported AWS storage locations; agent requirements depend on the location types.
 
-## Snowball device comparison: course snapshot
+## AWS Snow Family
 
 <!-- pdf-page: 278 -->
+<!-- original-note: 100 -->
 
-The source compares portable storage-optimized and compute-optimized offline-transfer devices.
+Snow devices illustrate offline transfer and edge processing where connectivity is limited. Their availability and support notices determine whether they remain an option.
 
 - Availability correction: Snowball Edge closed new-customer access November 7, 2025. AWS announces commercial-Region device support ending December 31, 2026, with stated exceptions for active GovCloud/ADC jobs. Review current migration options rather than treating this as a new-customer recommendation.
 - Both pictured models list 104 vCPUs and 416 GB memory.
@@ -3452,7 +3562,7 @@ Compare online transfer time with the complete offline workflow, including prepa
 | 100 TB | 124 days | 12 days | 30 hours |
 | 1 PB | 3 years | 124 days | 12 days |
 
-## Diagrams
+## Offline transfer workflow
 
 <!-- pdf-page: 280 -->
 
@@ -3465,7 +3575,7 @@ Offline appliance transfer trades network upload time for device preparation, sh
 
 <!-- pdf-page: 281 -->
 
-Process data while it’s being created on an edge location
+Edge processing performs useful work near the data's origin, such as a remote site or vehicle, when connectivity or latency makes cloud-only processing unsuitable.
 
   - A truck on the road, a ship on the sea, a mining station underground...
 - These locations may have limited internet and no access to computing power
@@ -3477,8 +3587,9 @@ Process data while it’s being created on an edge location
 ## AWS Data Exchange
 
 <!-- pdf-page: 282 -->
+<!-- original-note: 101 -->
 
-Find, subscribe to, and use third-party data in the cloud
+Data Exchange lets subscribers obtain third-party datasets through supported delivery and sharing products, including S3 objects, Redshift data and APIs.
 
   - Reuters, who curate data from over 2.2 million unique news stories per year in multiple languages
   - Change Healthcare, who process and anonymize more than 14 billion healthcare transactions and $1 trillion in claims annually
@@ -3508,8 +3619,9 @@ Data Exchange products can expose data through different delivery or sharing mec
 ## AWS Transfer Family
 
 <!-- pdf-page: 285 -->
+<!-- original-note: 102 -->
 
-A fully-managed service for file transfers into and out of Amazon S3 or Amazon EFS using the FTP protocol
+Transfer Family exposes managed file-transfer endpoints backed by S3 or EFS. Match the protocol and identity integration to the clients that will connect.
 
 - Supported Protocols
   - AWS Transfer for FTP (File Transfer Protocol (FTP))
@@ -3527,13 +3639,18 @@ A fully-managed service for file transfers into and out of Amazon S3 or Amazon E
 
 Transfer Family provides managed file-transfer endpoints with configured identity and storage permissions.
 
-# Section Compute
+# Computing
 
-## EC2 in Big Data
+<!-- original-note: 103 -->
+<!-- title: Compute -->
+<!-- section -->
+
+## EC2
 
 <!-- pdf-page: 288 -->
+<!-- original-note: 104 -->
 
-Choose EC2 purchase options by interruption tolerance, duration and utilization of the processing workload.
+EC2 provides configurable compute for data workloads. Select instance resources and purchase options from utilization, runtime and interruption tolerance.
 
 - On demand, Spot & Reserved instances:
   - Spot: can tolerate loss, low cost => checkpointing feature (ML, etc)
@@ -3549,8 +3666,9 @@ Choose EC2 purchase options by interruption tolerance, duration and utilization 
 ## AWS Graviton
 
 <!-- pdf-page: 289 -->
+<!-- original-note: 105 -->
 
-Amazon’s own family of processors, powers several EC2 instance types
+Graviton is AWS's Arm-based processor family. Compare compatible instance and service options using the application's actual workload rather than a universal performance ratio.
 
   - General purpose: M7, T4
   - Compute optimized: C7, C6
@@ -3561,16 +3679,27 @@ Amazon’s own family of processors, powers several EC2 instance types
 - Option for many data engineering services
   - MSK, RDS, MemoryDB, ElastiCache, OpenSearch, EMR, Lambda, Fargate
 
-## What is Lambda?
+## AWS Lambda
 
 <!-- pdf-page: 291 -->
+<!-- original-note: 106 -->
 
-Lambda runs event-driven code in managed execution environments within its configured limits.
+Lambda executes event-driven code in managed environments. It is useful for file, stream, API and orchestration tasks that fit the selected execution model.
 
 - A way to run code snippets “in the cloud”
   - Serverless
   - Continuous scaling
 - Often used to process data as it’s moved around
+
+- Execution limit: default-capacity invocations are limited to 900 seconds. Managed Instances supports up to 5,400 seconds for asynchronous and eligible event-source-mapping invocations; synchronous, Amazon MQ and DocumentDB paths retain the 15-minute limit.
+
+**Current reference (checked 2026-10-13):** [Lambda timeout by execution model](https://docs.aws.amazon.com/lambda/latest/dg/configuration-timeout.html).
+
+### Lambda Architectures
+
+<!-- original-note: 107 -->
+
+Common Lambda patterns process object events, update derived records from streams or expose an API. Identify the trigger, durable state and retry boundary in each architecture.
 
 ## Example: Serverless Website
 
@@ -3598,7 +3727,7 @@ Historical architecture: Kinesis SQL analytics processed an input stream and emi
 
 <!-- pdf-page: 295 -->
 
-Server management (patches, monitoring, hardware failures, etc.)
+Managed execution removes much host administration, but the economic choice still depends on utilization, scaling behavior and the work that must stay running.
 
 - Servers can be cheap, but scaling gets expensive really fast
 - You don’t pay for processing time you don’t use
@@ -3682,16 +3811,13 @@ Lambda cost depends on request volume, execution duration, configured resources 
 
 Managed scaling and availability do not remove the need to configure concurrency, permissions and recovery behavior.
 
-- High availability
-  - No scheduled downtime
-  - Retries failed code 3 times
-- Unlimited scalability*
-  - Safety throttle of 1,000 concurrent executions per region
-- High performance
-  - New functions callable in seconds
-  - Events processed in milliseconds
-  - Code is cached automatically
-  - But you do specify a timeout! This can cause problems. Max is 900 seconds (15 min)
+- Configure the invocation timeout for the selected capacity mode and invocation type.
+- Default-capacity functions have a 15-minute maximum. Managed Instances allows up to 90 minutes for asynchronous and eligible event-source-mapping invocations, with documented exceptions.
+- Retry behavior depends on the invocation path and configuration; there is no universal rule that every failure is retried three times.
+- Account and function concurrency controls can throttle work. Managed scaling is not unlimited capacity.
+- Keep durable application state outside one execution environment.
+
+**Current reference (checked 2026-10-13):** [Lambda timeout by execution model](https://docs.aws.amazon.com/lambda/latest/dg/configuration-timeout.html); [Managed Instances timeout and retries](https://docs.aws.amazon.com/lambda/latest/dg/lambda-managed-instances-execution-environment.html).
 
 ## Anti-patterns
 
@@ -3706,11 +3832,13 @@ Long-running or locally stateful workloads need a different execution/state desi
 - Stateful applications
   - But you can work in DynamoDB or S3 to keep track of state
 
-## Lambda – File Systems Mounting
+### Lambda - File Systems Mounting
 
 <!-- pdf-page: 305 -->
+<!-- original-note: 108 -->
+<!-- title: Lambda filesystem access -->
 
-VPC-connected Lambda mounts EFS through an access point and mount targets; routing and security groups must permit NFS.
+Lambda can mount EFS through a configured VPC connection. Distinguish shared persistent files from local scratch space, packaged layers and S3 objects.
 
 - Lambda functions can access EFS file systems if they are running in a VPC
 - Configure Lambda to mount EFS file systems to local directory during initialization
@@ -3737,11 +3865,13 @@ Separate per-environment scratch space, packaged dependencies, object storage an
 
 **Current reference (checked 2026-10-13):** [Lambda ephemeral storage](https://docs.aws.amazon.com/lambda/latest/dg/configuration-ephemeral-storage.html).
 
-## AWS SAM
+### Lambda - SAM
 
 <!-- pdf-page: 307 -->
+<!-- original-note: 109 -->
+<!-- title: AWS SAM -->
 
-SAM = Serverless Application Model
+SAM describes serverless resources in templates and builds on CloudFormation deployment. Its local development and synchronization commands shorten the edit-test cycle.
 
 - Framework for developing and deploying serverless applications
 - All the configuration is YAML code
@@ -3754,7 +3884,7 @@ SAM = Serverless Application Model
 
 <!-- pdf-page: 308 -->
 
-Transform Header indicates it’s SAM template:
+A SAM template declares its transform and serverless resource types, then supplies the properties used to build and deploy the application.
 
   - Transform: 'AWS::Serverless-2016-10-31'
 - Write Code
@@ -3800,11 +3930,13 @@ Watch mode monitors local changes and selects the supported sync route; it is a 
   - If changes include configuration, it uses sam sync
   - If changes are code only, it uses sam sync --code
 
-## AWS Batch
+ ## AWS BATCH
 
 <!-- pdf-page: 312 -->
+<!-- original-note: 110 -->
+<!-- title: AWS Batch -->
 
-Run batch jobs as Docker images
+Batch schedules containerized jobs and provisions supported compute to run them. Resource management is handled by the service, while jobs still consume billable compute.
 
 - Dynamic provisioning of the instances (EC2 & Spot Instances)
 - Optimal quantity and type based on volume and requirements
@@ -3813,11 +3945,13 @@ Run batch jobs as Docker images
 - Schedule Batch Jobs using CloudWatch Events
 - Orchestrate Batch Jobs using AWS Step Functions
 
-## AWS Batch vs Glue
+### AWS BATCH vs Glue
 
 <!-- pdf-page: 313 -->
+<!-- original-note: 111 -->
+<!-- title: AWS Batch and Glue -->
 
-Glue:
+Choose Glue for its managed ETL and catalog integration. Choose Batch for broader containerized computation whose runtime and resource needs do not fit that ETL model.
 
   - Glue ETL - Run Apache Spark code, Scala or Python based, focus on the ETL
   - Glue ETL - Do not worry about configuring or managing the resources
@@ -3827,13 +3961,17 @@ Glue:
   - Resources are created in your account, managed by Batch
   - For any non-ETL related work, Batch is probably better
 
-# Section Containers
+# Containers
 
-## What is Docker?
+<!-- original-note: 112 -->
+<!-- section -->
+
+## Docker
 
 <!-- pdf-page: 316 -->
+<!-- original-note: 113 -->
 
-Docker is a software development platform to deploy apps
+Containers package an application with its dependencies for a compatible runtime. They share a host kernel, so portability still depends on the operating-system and processor environment.
 
 - Apps are packaged in containers that can be run on any OS
 - Apps run the same, regardless of where they’re run
@@ -3845,6 +3983,8 @@ Docker is a software development platform to deploy apps
   - Works with any language, any OS, any technology
 - Use cases: microservices architecture, lift-and-shift apps from on-premises to the AWS cloud, …
 
+- Portability still requires a compatible operating-system kernel and processor architecture; packaging does not make every image run unchanged on every host.
+
 ## Docker on an OS
 
 <!-- pdf-page: 317 -->
@@ -3855,7 +3995,7 @@ Containers package applications and dependencies while sharing the host kernel.
 
 <!-- pdf-page: 318 -->
 
-Docker images are stored in Docker Repositories
+A registry stores versioned container images for later deployment. Distinguish a public image source from a private repository with controlled access.
 
 - Docker Hub (https://hub.docker.com)
   - Public repository
@@ -3883,7 +4023,7 @@ A Dockerfile builds an image. A registry distributes images, and a runtime creat
 
 <!-- pdf-page: 321 -->
 
-Amazon Elastic Container Service (Amazon ECS)
+ECS and EKS orchestrate containers with different APIs; Fargate supplies supported serverless compute beneath those orchestration choices.
 
   - Amazon’s own container platform
 - Amazon Elastic Kubernetes Service (Amazon EKS)
@@ -3894,11 +4034,13 @@ Amazon Elastic Container Service (Amazon ECS)
 - Amazon ECR:
   - Store container images
 
-## Amazon ECS - EC2 Launch Type
+## AWS ECS
 
 <!-- pdf-page: 322 -->
+<!-- original-note: 114 -->
+<!-- title: Amazon ECS -->
 
-With the EC2 launch option, ECS places tasks on registered container instances whose capacity you manage.
+ECS runs task definitions on a cluster using supported compute options. With EC2 you manage the instance fleet; with Fargate you request task resources without managing those hosts.
 
 - ECS = Elastic Container Service
 - Launch Docker containers on AWS = Launch ECS Tasks on ECS Clusters
@@ -3919,11 +4061,13 @@ Fargate runs ECS tasks without exposing host-instance administration to the appl
 - AWS just runs ECS Tasks for you based on the CPU / RAM you need
 - To scale, just increase the number of tasks. Simple - no more EC2 instances
 
-## Amazon ECS – IAM Roles for ECS
+### ECS - IAM roles
 
 <!-- pdf-page: 324 -->
+<!-- original-note: 115 -->
+<!-- title: ECS IAM roles -->
 
-Host or execution permissions support infrastructure operations; the task role grants AWS permissions to application code.
+Separate the permissions used by container infrastructure from the task role used by application code. Give each workload only the AWS access it needs.
 
 - EC2 Instance Profile (EC2 Launch Type only):
   - Used by the ECS agent
@@ -3969,11 +4113,13 @@ The source's S3 Files example mounts a filesystem from Fargate or ECS Managed In
 - Changes sync automatically to the S3 bucket
 - Use cases: containers needing shared file access to data that already lives in S3
 
-## Amazon ECR
+### ECR
 
 <!-- pdf-page: 328 -->
+<!-- original-note: 116 -->
+<!-- title: Amazon ECR -->
 
-ECS pulls a private ECR image using the appropriate execution/instance permissions, then runs the resulting task.
+ECR stores container images for deployment. Image repository access, lifecycle policies and scanning complement the runtime configuration in ECS or EKS.
 
 - ECR = Elastic Container Registry
 - Store and manage Docker images on AWS
@@ -3982,11 +4128,13 @@ ECS pulls a private ECR image using the appropriate execution/instance permissio
 - Access is controlled through IAM (permission errors => policy)
 - Supports image vulnerability scanning, versioning, image tags, image lifecycle, …
 
-## Amazon EKS Overview
+### EKS
 
 <!-- pdf-page: 329 -->
+<!-- original-note: 117 -->
+<!-- title: Amazon EKS -->
 
-Amazon EKS = Amazon Elastic Kubernetes Service
+EKS manages a Kubernetes control plane. Choose node groups or supported serverless compute according to the Kubernetes workload and operational responsibilities.
 
 - It is a way to launch managed Kubernetes clusters on AWS
 - Kubernetes is an open-source system for automatic deployment, scaling and management of containerized (usually Docker) application
@@ -4007,7 +4155,7 @@ EKS separates a managed Kubernetes control plane from worker capacity deployed a
 
 <!-- pdf-page: 331 -->
 
-Managed Node Groups
+EKS compute options differ in who provisions and maintains nodes. Compare managed groups, self-managed nodes and supported Fargate workloads.
 
   - Creates and manages Nodes (EC2 instances) for you
   - Nodes are part of an ASG managed by EKS
@@ -4032,13 +4180,17 @@ Kubernetes persistent-volume claims use a compatible CSI driver to provision or 
 - Amazon FSx for Lustre
 - Amazon FSx for NetApp ONTAP
 
-# Section Analytics and streaming
+# Analytics
 
-## What is Glue?
+<!-- original-note: 118 -->
+<!-- section -->
+
+## AWS Glue
 
 <!-- pdf-page: 335 -->
+<!-- original-note: 119 -->
 
-Serverless discovery and definition of table definitions and schema
+Glue combines data discovery, a shared catalog and managed ETL. Crawlers describe datasets; jobs transform their contents; orchestration connects the steps.
 
   - S3 “data lakes”
   - RDS
@@ -4084,7 +4236,7 @@ Partition keys organize data prefixes so a query predicate can prune irrelevant 
 
 <!-- pdf-page: 338 -->
 
-Hive lets you run SQL-like queries from EMR
+Glue's catalog can act as a Hive metastore for compatible analytics engines, separating shared table metadata from the jobs that process data.
 
 - The Glue Data Catalog can serve as a Hive “metastore”
 - You can also import a Hive metastore into Glue
@@ -4093,7 +4245,7 @@ Hive lets you run SQL-like queries from EMR
 
 <!-- pdf-page: 339 -->
 
-Automatic code generation
+Glue ETL jobs use generated or authored code to read, prepare and write data. A generated script still needs review against the transformation requirements.
 
 - Scala or Python
 - Encryption
@@ -4110,7 +4262,7 @@ Automatic code generation
 
 <!-- pdf-page: 340 -->
 
-Transform data, Clean Data, Enrich Data (before doing analysis)
+An ETL job cleans and reshapes records for later analysis. Scaling choices and processing abstractions depend on the supported Glue job type.
 
   - Generate ETL code in Python or Scala, you can modify the code
   - Can provide your own Spark or PySpark scripts
@@ -4131,11 +4283,12 @@ A DynamicFrame is a distributed collection of self-describing DynamicRecords, al
   - Very much like a Spark DataFrame, but with more ETL stuff
   - Scala and Python APIs
 
-## Glue ETL - Transformations
+## AWS Glue Transformations
 
 <!-- pdf-page: 342 -->
+<!-- original-note: 120 -->
 
-Bundled Transformations:
+Glue transformations remove or select fields, filter records, join datasets and apply custom mappings. Match the transformation to the quality or modeling problem.
 
   - DropFields, DropNullFields – remove (null) fields
   - Filter – specify a function to filter records
@@ -4161,11 +4314,12 @@ ResolveChoice makes a mixed-type field explicit by casting, projecting, creating
 - make_struct: Creates a structure that contains each data type
 - project: Projects every type to a given type, for example project:string
 
-## Glue ETL: Modifying the Data Catalog
+## AWS Glue Modifying Data Catalog
 
 <!-- pdf-page: 344 -->
+<!-- original-note: 121 -->
 
-ETL scripts can update your schema and partitions if necessary
+An ETL job can publish supported schema and partition changes to the Data Catalog. Updating files alone does not necessarily update the metadata used by query engines.
 
 - Adding new partitions
   - Re-run the crawler, or
@@ -4184,7 +4338,7 @@ ETL scripts can update your schema and partitions if necessary
 
 <!-- pdf-page: 345 -->
 
-Develop ETL scripts using a notebook
+Development endpoints and notebooks illustrate interactive ETL development. Check the supported environment and stop resources that continue accruing charges.
 
   - Then create an ETL job that runs your script (using Spark and Glue)
 - Endpoint is in a VPC controlled by security groups, connect via:
@@ -4195,11 +4349,13 @@ Develop ETL scripts using a notebook
   - PyCharm professional edition
   - Use Elastic IP’s to access a private endpoint address
 
-## Running Glue jobs
+## AWS Running Glue Jobs
 
 <!-- pdf-page: 346 -->
+<!-- original-note: 122 -->
+<!-- title: Running Glue jobs -->
 
-Time-based schedules (cron style)
+Run Glue jobs from schedules, triggers or workflows. Bookmarks retain processing state so suitable recurring jobs can identify new input.
 
 - Job bookmarks
   - Persists state from the job run
@@ -4212,11 +4368,12 @@ Time-based schedules (cron style)
   - Fire off a Lambda function or SNS notification when ETL succeeds or fails
   - Invoke EC2 run, send event to Kinesis, activate a Step Function
 
-## Glue cost model
+## AWS Glue Cost Model
 
 <!-- pdf-page: 347 -->
+<!-- original-note: 123 -->
 
-Billed by the second for crawler and ETL jobs
+Glue charges depend on compute time, catalog usage and optional development resources. Estimate the complete workflow rather than one ETL run alone.
 
 - First million objects stored and accesses are free for the Glue Data Catalog
 - Development endpoints for developing ETL code charged by the minute
@@ -4225,7 +4382,7 @@ Billed by the second for crawler and ETL jobs
 
 <!-- pdf-page: 348 -->
 
-Multiple ETL engines
+Choose a different execution environment when the job depends on unsupported engines or runtime behavior. Glue's ETL model does not cover every distributed application.
 
 - Glue ETL is based on Spark
 - If you want to use other engines (Hive, Pig, etc) Data Pipeline EMR would be a better fit.
@@ -4234,7 +4391,7 @@ Multiple ETL engines
 
 <!-- pdf-page: 349 -->
 
-As of April 2020, Glue ETL supports serverless streaming ETL
+Glue streaming ETL continuously processes supported Kinesis or Kafka input using Spark Structured Streaming rather than waiting for a bounded batch.
 
   - Consumes from Kinesis or Kafka
   - Clean & transform in-flight
@@ -4244,8 +4401,9 @@ As of April 2020, Glue ETL supports serverless streaming ETL
 ## AWS Glue Studio
 
 <!-- pdf-page: 350 -->
+<!-- original-note: 125 -->
 
-Glue Studio's visual job is a directed graph of sources, transformations and targets; the generated job still needs correct schema and permissions.
+Glue Studio builds and monitors ETL jobs through a visual graph. The graph still represents concrete sources, transformations and targets that need review.
 
 - Visual interface for ETL workflows
 - Visual job editor
@@ -4260,19 +4418,30 @@ Glue Studio's visual job is a directed graph of sources, transformations and tar
 ## AWS Glue Data Quality
 
 <!-- pdf-page: 351 -->
+<!-- original-note: 126 -->
 
-Glue Data Quality evaluates a ruleset against data and produces rule outcomes and quality metrics; catalog integration provides dataset context.
+Glue Data Quality evaluates datasets against rules that you define or refine from recommendations. Integrate the checks into the job's success and failure handling.
 
 - Data quality rules may be created manually or recommended automatically
 - Integrates into Glue jobs
 - Uses Data Quality Definition Language (DQDL)
 - Results can be used to fail the job, or just be reported to CloudWatch
 
+Example retained from the personal notes:
+
+```dqdl
+Rules = [
+    RowCount >= 100,
+    IsComplete "customer_id",
+    IsUnique "order_id"
+]
+```
+
 ## More on Data Quality Definition Language (DQDL)
 
 <!-- pdf-page: 352 -->
 
-Even though this is specific to AWS Glue, the exam expects you to understand its syntax.
+DQDL expresses quality checks as a ruleset. Read the rule names, thresholds and combined conditions to understand what makes a dataset pass.
 
 - A DQDL document consists of a ruleset, for example:
   - Rules = [IsComplete "order-id", IsUnique "order-id"]
@@ -4296,8 +4465,9 @@ The quality-results screen connects each configured rule to a pass/fail outcome 
 ## AWS Glue DataBrew
 
 <!-- pdf-page: 354 -->
+<!-- original-note: 127 -->
 
-A visual data preparation tool
+DataBrew expresses visual data-preparation steps as reusable recipes and jobs. Use profiling and quality checks to evaluate the dataset before publishing the result.
 
   - UI for pre-processing large data sets
   - Input from S3, data warehouse, or database
@@ -4312,11 +4482,13 @@ A visual data preparation tool
   - IAM can restrict who can do what
   - CloudWatch & CloudTrail
 
-## Handling Personally Identifiable Information (PII) in DataBrew Transformations
+## Handling PII in DataBRew Transformations
 
 <!-- pdf-page: 355 -->
+<!-- original-note: 128 -->
+<!-- title: PII transformations in DataBrew -->
 
-Enable PII statistics in a DataBrew profile job to identify PII
+Identify sensitive fields, then choose whether to replace, shuffle or encrypt them. Reversible protection and anonymity are different goals.
 
 - Substitution (REPLACE_WITH_RANDOM…)
 - Shuffling (SHUFFLE_ROWS)
@@ -4330,8 +4502,9 @@ Enable PII statistics in a DataBrew profile job to identify PII
 ## Glue Workflows
 
 <!-- pdf-page: 356 -->
+<!-- original-note: 129 -->
 
-Glue workflows coordinate crawlers and jobs through triggers and run conditions.
+Glue Workflows coordinate related jobs and crawlers with dependencies and triggers. Use them for ETL orchestration rather than general application workflows.
 
 - Design multi-job, multi-crawler ETL processes run together
 - Create from AWS Glue blueprint, from the console, or API
@@ -4341,7 +4514,7 @@ Glue workflows coordinate crawlers and jobs through triggers and run conditions.
 
 <!-- pdf-page: 357 -->
 
-Triggers within workflows start jobs or crawlers
+Workflow triggers start jobs or crawlers from schedules, requests, events or dependency conditions. A trigger is the activation rule, not the transformation itself.
 
   - Or can be fired when jobs or crawlers complete
 - Schedule
@@ -4354,11 +4527,12 @@ Triggers within workflows start jobs or crawlers
     - Batch size (number of events)
     - Batch window (within X seconds, default is 15 min)
 
-## Glue Flex Jobs
+## AWS Glue Flex Jobs
 
 <!-- pdf-page: 358 -->
+<!-- original-note: 124 -->
 
-Glue Flex uses spare capacity for eligible nonurgent jobs; startup and completion time can vary when capacity is unavailable or reclaimed.
+Flex uses available capacity for eligible nonurgent Glue jobs. Lower cost comes with capacity-dependent startup and execution behavior.
 
 - Execution class (“FLEX”) for non-urgent ETL workloads
   - Uses spare compute capacity instead of dedicated workers
@@ -4372,7 +4546,7 @@ Glue Flex uses spare capacity for eligible nonurgent jobs; startup and completio
 
 <!-- pdf-page: 359 -->
 
-Not supported:
+Flex is limited to supported job types. Python shell, streaming and ML-transform jobs in this source comparison use other execution choices.
 
   - Python shell jobs
   - Streaming jobs
@@ -4384,8 +4558,9 @@ Not supported:
 ## AWS Lake Formation
 
 <!-- pdf-page: 360 -->
+<!-- original-note: 130 -->
 
-“Makes it easy to set up a secure data lake in days”
+Lake Formation centralizes governance of a data lake using catalog metadata and access permissions, working with Glue and the underlying storage services.
 
 - Loading data & monitoring data flows
 - Setting up partitions
@@ -4405,7 +4580,7 @@ Lake Formation governs a data lake while supported query engines enforce granted
 
 <!-- pdf-page: 362 -->
 
-No cost for Lake Formation itself
+Estimate Lake Formation together with the storage, processing and optional features used around it. A course statement about the service's price is not a full workload estimate.
 
 - But underlying services incur charges
   - Glue
@@ -4424,7 +4599,7 @@ Building a governed lake combines storage registration, discovery, ingestion and
 
 <!-- pdf-page: 364 -->
 
-Cross-account Lake Formation permission
+Cross-account governance combines catalog sharing, recipient setup and authorization. Confirm which principal can discover and query the shared data.
 
   - Recipient must be set up as a data lake administrator
   - Can use AWS Resource Access Manager for accounts external to your organization
@@ -4433,21 +4608,25 @@ Cross-account Lake Formation permission
 - IAM permissions on the KMS encryption key are needed for encrypted data catalogs in Lake Formation
 - IAM permissions needed to create blueprints and workflows
 
-## Data Permissions in Lake Formation
+## Data Permissions in Lake formation
 
 <!-- pdf-page: 365 -->
+<!-- original-note: 131 -->
+<!-- title: Lake Formation data permissions -->
 
-Lake Formation permissions relate a principal to catalog resources and allowed operations.
+Lake Formation grants access to cataloged data at supported scopes. Coordinate those grants with IAM, account sharing and the query engine's access path.
 
 - Can tie to IAM users/roles, SAML, or external AWS accounts
 - Can use policy tags on databases, tables, or columns
 - Can select specific permissions for tables or columns
 
-## Data Filters in Lake Formation
+## Data filters in Lake Formation
 
 <!-- pdf-page: 366 -->
+<!-- original-note: 132 -->
+<!-- title: Lake Formation data filters -->
 
-Data filters narrow authorized data by rows, columns or cells; a table grant need not expose every value.
+Data filters limit the rows, columns or cells a principal can read. Apply the filter together with the table's SELECT permission.
 
 - Column, row, or cell-level security
 - Apply when granting SELECT permission on tables
@@ -4456,11 +4635,12 @@ Data filters narrow authorized data by rows, columns or cells; a table grant nee
 - Specific columns + specific rows = cell-level security
 - Create filters via the console (seen here) or via CreateDataCellsFilter API.
 
-## What is Athena?
+## Amazon Athena
 
 <!-- pdf-page: 368 -->
+<!-- original-note: 133 -->
 
-Interactive query service for S3 (SQL)
+Athena runs SQL against data in S3 without a database server to administer. Catalog metadata, file layout and the amount scanned determine much of its usefulness and cost.
 
   - No need to load data, it stays in S3
 - Presto under the hood
@@ -4474,11 +4654,11 @@ Interactive query service for S3 (SQL)
   - Snappy, Zlib, LZO, Gzip compression
 - Unstructured, semi-structured, or structured
 
-## Some examples
+## Athena workloads
 
 <!-- pdf-page: 369 -->
 
-Ad-hoc queries of web logs
+Athena suits exploratory SQL over logs, staging datasets and other files, with results available to applications or visualization tools.
 
 - Querying staging data before loading to Redshift
 - Analyze CloudTrail / CloudFront / VPC / ELB etc logs in S3
@@ -4489,14 +4669,16 @@ Ad-hoc queries of web logs
 ## Athena + Glue
 
 <!-- pdf-page: 370 -->
+<!-- original-note: 134 -->
 
-Athena queries S3 using catalog metadata and can feed QuickSight; it does not require loading the dataset into a dedicated database.
+S3 holds the data, Glue describes it, Athena queries it and QuickSight can visualize the results. Metadata discovery is separate from data processing.
 
-## Athena Workgroups
+### Athena Workgroups
 
 <!-- pdf-page: 371 -->
+<!-- original-note: 135 -->
 
-Can organize users / teams / apps / workloads into Workgroups
+Workgroups separate Athena workloads and govern query history, access settings and usage controls for teams or applications.
 
 - Can control query access and track costs by Workgroup
 - Integrates with IAM, CloudWatch, SNS
@@ -4510,7 +4692,7 @@ Can organize users / teams / apps / workloads into Workgroups
 
 <!-- pdf-page: 372 -->
 
-Pay-as-you-go
+Athena query cost depends on the selected capacity or scan-pricing model and supporting services. Reducing unnecessary scans can improve both cost and latency.
 
   - $5 per TB scanned
   - Successful or cancelled queries count, failed queries do not.
@@ -4523,8 +4705,9 @@ Pay-as-you-go
 ## Athena Security
 
 <!-- pdf-page: 373 -->
+<!-- original-note: 136 -->
 
-Access control
+Athena needs permission to query the catalog, read source data and write results. Protect the result location and encryption keys as well as the source bucket.
 
   - IAM, ACLs, S3 bucket policies
   - AmazonAthenaFullAccess / AWSQuicksightAthenaAccess
@@ -4539,7 +4722,7 @@ Access control
 
 <!-- pdf-page: 374 -->
 
-Highly formatted reports / visualization
+Athena is a query engine rather than a report-layout or general ETL product. Use a visualization tool or processing service when those are the main requirement.
 
   - That’s what QuickSight is for
 - ETL
@@ -4549,7 +4732,7 @@ Highly formatted reports / visualization
 
 <!-- pdf-page: 375 -->
 
-Use columnar data (ORC, Parquet)
+Columnar formats, compression, useful partitions and sensible file sizes reduce the work Athena must scan to answer a query.
 
 - Small number of large files performs better than large number of small files
 - Use partitions
@@ -4558,8 +4741,9 @@ Use columnar data (ORC, Parquet)
 ## Athena ACID transactions
 
 <!-- pdf-page: 376 -->
+<!-- original-note: 137 -->
 
-Powered by Apache Iceberg
+Athena uses supported Iceberg tables for transactional updates and time travel. Plan table maintenance and compaction alongside concurrent reads and writes.
 
   - Just add ‘table_type’ = ‘ICEBERG’ in your CREATE TABLE command
 - Concurrent users can safely make row-level modifications
@@ -4574,7 +4758,7 @@ Powered by Apache Iceberg
 
 <!-- pdf-page: 377 -->
 
-IAM-based Database and table- level security
+Catalog permissions determine which metadata a caller can use. Coordinate table and database authorization with permissions on the underlying data and keys.
 
   - Broader than data filters in Lake Formation
   - Cannot restrict to specific table versions
@@ -4584,7 +4768,7 @@ IAM-based Database and table- level security
 
 <!-- pdf-page: 378 -->
 
-You might have policies to restrict access to:
+Map catalog operations to their IAM actions and resource scope. Restricting one operation does not automatically restrict every way of accessing the data.
 
   - ALTER or CREATE DATABASE
   - CREATE TABLE
@@ -4599,7 +4783,7 @@ You might have policies to restrict access to:
 
 <!-- pdf-page: 379 -->
 
-Apache Iceberg is a table format for data lakes
+Iceberg adds table metadata, snapshots and transactional behavior over lake files. It is a table format, separate from the physical file format.
 
   - Petabyte-scale
   - Originally from Netflix
@@ -4634,7 +4818,7 @@ Iceberg separates metadata from data files; compatible engines use catalog coord
 
 <!-- pdf-page: 381 -->
 
-Glue Data Catalogs must be made compatible with the Iceberg API
+Catalog migration requires compatible Iceberg metadata and APIs. Treat metadata conversion and the data files themselves as different parts of the change.
 
 - Once done, Athena can use it for ACID transactions
 - Other reasons to migrate:
@@ -4654,7 +4838,7 @@ Glue Data Catalogs must be made compatible with the Iceberg API
 
 <!-- pdf-page: 382 -->
 
-You might see this in the context of Amazon Athena
+CTAS creates a table from query output. In Athena it can also reorganize or convert S3 data into a layout better suited to subsequent queries.
 
   - But it exists in other databases as well.
 - Creates a new table from query results (CTAS)
@@ -4662,11 +4846,12 @@ You might see this in the context of Amazon Athena
 - Can ALSO be used to convert data into a new underlying format
   - So this is a trick to get Athena to convert data stored in S3
 
-## Athena Federated Queries
+### Athena Federated Queries
 
 <!-- pdf-page: 383 -->
+<!-- original-note: 141 -->
 
-Athena federated queries invoke a connector, commonly Lambda-based, to access supported non-S3 data sources.
+Athena federation uses connectors to query supported sources beyond S3. Connections, credentials and source-side work remain necessary even though the query is submitted to Athena.
 
 - Query data from sources other than S3
 - Data source connectors translate between source and Athena
@@ -4686,7 +4871,7 @@ Athena federated queries invoke a connector, commonly Lambda-based, to access su
 
 <!-- pdf-page: 384 -->
 
-Views on federated data sources
+Federated-query support varies by connector. Views, native passthrough queries, credential handling and cross-account access have their own requirements.
 
   - Stored in AWS Glue
 - Can use with AWS Secrets Manager
@@ -4699,11 +4884,12 @@ Views on federated data sources
 - Passthrough Queries allow you to use the native query language of the data source
 - Some connectors may be used as Spark data sources
 
-## HDFS YARN MapReduce Spark
+### Hadoop
 
 <!-- pdf-page: 385 -->
+<!-- original-note: 146 -->
 
-Hadoop layers distributed storage, cluster resource management and processing frameworks.
+Hadoop separates distributed storage, resource scheduling and processing: HDFS stores blocks, YARN allocates resources and MapReduce executes map and reduce stages.
 
 - Distributed processing framework for big data
 - In-memory caching, optimized query execution
@@ -4720,11 +4906,12 @@ Hadoop layers distributed storage, cluster resource management and processing fr
   - Integrated with Kinesis, Kafka, on EMR
 - Spark is NOT meant for OLTP
 
-## How Spark Works
+## Apache Spark
 
 <!-- pdf-page: 386 -->
+<!-- original-note: 138 -->
 
-The Spark driver plans work, a cluster manager allocates resources and executors run tasks and retain cached partitions.
+Spark distributes computation across executors coordinated by a driver and cluster manager. It supports analytical processing and reusable transformations rather than transactional database serving.
 
 - Spark apps are run as independent processes on a cluster
 - The SparkContext (driver program) coordinates them
@@ -4738,11 +4925,14 @@ The Spark driver plans work, a cluster manager allocates resources and executors
 
 Spark Core underpins higher-level SQL, streaming, ML and graph APIs.
 
-## Spark Structured Streaming A constantly growing DataSet
+### Spark Structured Streaming
 
 <!-- pdf-page: 388 -->
+<!-- original-note: 139 -->
 
-Structured Streaming models incoming data as an unbounded table and incrementally updates query results in a supported sink.
+Structured Streaming treats arriving records as additions to an unbounded table. Queries continuously transform that input and publish results to a configured sink.
+
+- Example from the personal notes: group incoming actions by a one-hour event-time window, count them and publish the result to a JDBC sink. The original sketch was conceptual rather than runnable API code.
 
 ## Spark Streaming + Kinesis
 
@@ -4760,11 +4950,13 @@ Spark can exchange bulk data with Redshift through S3 staging; S3 is the transfe
   - It’s a Spark SQL data source
 - Useful for ETL using Spark
 
-## Amazon Athena for Apache Spark
+### Spark + Athena
 
 <!-- pdf-page: 391 -->
+<!-- original-note: 140 -->
+<!-- title: Spark in Athena -->
 
-Can run Jupyter notebooks with Spark within Athena console
+Athena can run Spark notebook sessions in supported workgroups. Session resources, permissions and notebook encryption remain part of the setup.
 
   - Notebooks may be encrypted automatically or with KMS
 - Totally serverless
@@ -4775,11 +4967,12 @@ Can run Jupyter notebooks with Spark within Athena console
 - Can adjust DPU’s for coordinator and executor sizes
 - Pricing based on compute usage and DPU per hour
 
-## What is EMR?
+## AWS EMR
 
 <!-- pdf-page: 393 -->
+<!-- original-note: 142 -->
 
-Elastic MapReduce
+EMR runs distributed data frameworks on managed infrastructure. Separate the cluster's control role, storage-bearing core nodes and compute-only task nodes.
 
 - Managed Hadoop framework on EC2 instances
 - Includes Spark, HBase, Presto, Flink, Hive & more
@@ -4804,11 +4997,12 @@ An EMR on EC2 cluster separates orchestration, core compute with HDFS and option
   - No risk of data loss when removing
   - Good use of spot instances
 
-## EMR Usage
+### EMR Usage
 
 <!-- pdf-page: 395 -->
+<!-- original-note: 143 -->
 
-Transient vs Long-Running Clusters
+Use a transient EMR cluster for a bounded sequence of steps, or retain a cluster for repeated work. Termination behavior and durable output storage determine the lifecycle.
 
 - Transient clusters terminate once all steps are complete
   - Loading data, processing, storing – then shut down
@@ -4819,11 +5013,11 @@ Transient vs Long-Running Clusters
   - Can use reserved instances on long-running clusters to save $
   - Termination protection on by default, auto-termination off
 
-## EMR Usage
+## Submitting EMR work
 
 <!-- pdf-page: 396 -->
 
-Frameworks and applications are specified at cluster launch
+Select EMR applications and frameworks for the jobs that will run. Submit steps or connect through supported interfaces, then store outputs in the intended destination.
 
 - Connect directly to master to run jobs directly
 - Or, submit ordered steps via the console
@@ -4835,7 +5029,7 @@ Frameworks and applications are specified at cluster launch
 
 <!-- pdf-page: 397 -->
 
-Amazon EC2 for the instances that comprise the nodes in the cluster
+EMR uses surrounding AWS services for compute, networking, storage and monitoring. Track the role of each service rather than viewing the cluster in isolation.
 
 - Amazon VPC to configure the virtual network in which you launch your instances
 - Amazon S3 to store input and output data
@@ -4843,11 +5037,12 @@ Amazon EC2 for the instances that comprise the nodes in the cluster
 - AWS IAM to configure permissions
 - AWS CloudTrail to audit requests made to the service
 
-## EMR storage and S3 consistency
+### EMR Storage
 
 <!-- pdf-page: 398 -->
+<!-- original-note: 144 -->
 
-Use cluster-local HDFS for suitable working data and S3 for storage that must outlive the cluster.
+Use HDFS for suitable cluster-local work and S3 for data that must survive cluster termination. Historical EMRFS consistency workarounds are distinct from S3's current strong consistency.
 
 - HDFS distributes blocks across cluster nodes; replication protects against some node failures, not cluster termination.
 - EMRFS gives Hadoop applications access to S3, with different semantics from a local filesystem.
@@ -4855,11 +5050,11 @@ Use cluster-local HDFS for suitable working data and S3 for storage that must ou
 
 **Current reference (checked 2026-10-13):** [S3 consistency model](https://aws.amazon.com/s3/consistency/).
 
-## EMR Storage
+## EMR local and attached storage
 
 <!-- pdf-page: 399 -->
 
-Local file system
+Local disks hold temporary working data, while EBS can provide supported cluster storage. Neither should be confused with outputs deliberately persisted outside the cluster.
 
   - Suitable only for temporary data (buffers, caches, etc)
 - EBS for HDFS
@@ -4872,7 +5067,7 @@ Local file system
 
 <!-- pdf-page: 400 -->
 
-EMR charges by the hour
+EMR manages parts of provisioning and replacement, while the cluster still consumes infrastructure and requires workload monitoring and termination decisions.
 
   - Plus EC2 charges
 - Provisions new nodes if a core node fails
@@ -4883,11 +5078,12 @@ EMR charges by the hour
 - Core nodes can also be added or removed
   - But removing risks data loss.
 
-## EMR Managed Scaling
+### AWS EMR Managed Scaling
 
 <!-- pdf-page: 401 -->
+<!-- original-note: 145 -->
 
-EMR Automatic Scaling
+Managed Scaling adjusts eligible EMR resources within configured limits. Core-node storage responsibilities and task-node compute requirements influence safe scaling.
 
   - The old way of doing it
   - Custom scaling rules based on CloudWatch metrics
@@ -4903,11 +5099,12 @@ EMR Automatic Scaling
   - First removes task nodes, then core nodes, no further than minimum constraints
   - Spot nodes always removed before on-demand instances
 
-## EMR Serverless
+### EMR Serverless
 
 <!-- pdf-page: 402 -->
+<!-- original-note: 147 -->
 
-Choose an EMR Release and Runtime (Spark, Hive, Presto)
+EMR Serverless runs jobs through applications without a cluster fleet to manage. Application state, worker sizing and pre-initialized capacity affect startup and cost.
 
 - Submit queries / scripts via job run requests
 - EMR manages underlying capacity
@@ -4918,6 +5115,8 @@ Choose an EMR Release and Runtime (Spark, Hive, Presto)
   - You no longer have to estimate how many workers are needed for your workloads – they are provisioned as needed, automatically.
 - Serverless? Really?
   - TBH you still need to think about worker nodes and how they are configured.
+
+- Lifecycle exercise: explain application creation, startup, job submission and stopping using the following application-flow diagrams.
 
 ## Using EMR Serverless
 
@@ -4935,7 +5134,7 @@ An EMR Serverless application can start, stop and restart before termination.
 
 <!-- pdf-page: 405 -->
 
-Spark adds 10% overhead to memory requested for drivers & executors
+Pre-initialized capacity can shorten job startup. Size workers for both the application's requested resources and framework overhead.
 
 - Be sure initial capacity is at least 10% more than requested by the job
 
@@ -4943,7 +5142,7 @@ Spark adds 10% overhead to memory requested for drivers & executors
 
 <!-- pdf-page: 406 -->
 
-Basically the same as EMR
+Protect EMR Serverless data, execution identities and network paths just as deliberately as a cluster-based job, using the supported encryption controls.
 
 - EMRFS
   - S3 encryption (SSE or CSE) at rest
@@ -4955,27 +5154,29 @@ Basically the same as EMR
 - Hive communication between Glue Metastore and EMR uses TLS
 - Force HTTPS (TLS) on S3 policies with aws:SecureTransport
 
-## EMR on EKS
+### EMR On EKS
 
 <!-- pdf-page: 407 -->
+<!-- original-note: 148 -->
 
-EMR on EKS schedules Spark workloads onto Kubernetes capacity that may also host other applications.
+EMR on EKS submits supported analytics jobs to Kubernetes infrastructure. The EKS cluster still exists and can share resources with other compatible workloads.
 
 - Allows submitting Spark job on Elastic Kubernetes Service without provisioning clusters
 - Fully managed
 - Share resources between Spark and other apps on Kubernetes
 
-## Kinesis Data Streams
+## Amazon Kinesis Data Streams
 
 <!-- pdf-page: 408 -->
+<!-- original-note: 149 -->
 
-Producers choose partition keys; Kinesis assigns records to shards that consumers read independently.
+Kinesis Data Streams retains ordered shard records for independent consumers and replay. Partition-key distribution and consumer type determine throughput and read behavior.
 
 ## Kinesis Data Streams
 
 <!-- pdf-page: 409 -->
 
-Retention between 1 day to 365 days
+Retention enables replay independently of the rate at which consumers process records. Record-size limits, ordering and delivery behavior remain separate constraints.
 
 - Current correction: default maximum Kinesis record size is 1 MiB; supported configuration can raise it to 10 MiB for intermittent large records. Sustained per-shard throughput limits remain separate.
 - Ability to reprocess (replay) data
@@ -4992,7 +5193,7 @@ Retention between 1 day to 365 days
 
 <!-- pdf-page: 410 -->
 
-Provisioned mode:
+Provisioned streams expose shard-count planning; on-demand streams manage capacity differently. Compare scaling behavior, limits and billing for the chosen mode.
 
 - Current correction: default maximum Kinesis record size is 1 MiB; supported configuration can raise it to 10 MiB for intermittent large records. Sustained per-shard throughput limits remain separate.
   - You choose the number of shards provisioned, scale manually or using API
@@ -5007,11 +5208,12 @@ Provisioned mode:
 
 **Current reference (checked 2026-10-13):** [Kinesis large records](https://docs.aws.amazon.com/streams/latest/dev/large-records.html).
 
-## Kinesis Data Streams Security
+## Kinesis data streams security
 
 <!-- pdf-page: 411 -->
+<!-- original-note: 150 -->
 
-Kinesis access combines network reachability, IAM authorization and optional KMS encryption controls.
+Protect stream access with IAM and network controls, use TLS in transit and configure encryption at rest. Client-side encryption remains an application responsibility.
 
 - Control access / authorization using IAM policies
 - Encryption in flight using HTTPS endpoints
@@ -5023,19 +5225,22 @@ Kinesis access combines network reachability, IAM authorization and optional KMS
 ## Kinesis Producers
 
 <!-- pdf-page: 412 -->
+<!-- original-note: 151 -->
 
-The SDK, KPL, agent and supported third-party integrations are alternative producer paths into Kinesis.
+Choose a producer by where records originate: SDK calls for application code, KPL for buffered high-throughput publishing or an agent for supported log-file ingestion.
 
 - Kinesis SDK
 - Kinesis Producer Library (KPL)
 - Kinesis Agent
 - 3rd party libraries: Spark, Log4J Appenders, Flume, Kafka Connect, NiFi…
 
-## Kinesis Producer SDK - PutRecord(s)
+### SDK
 
 <!-- pdf-page: 413 -->
+<!-- original-note: 152 -->
+<!-- title: Kinesis producer SDK -->
 
-APIs that are used are PutRecord (one) and PutRecords (many records)
+PutRecord sends one record; PutRecords groups records in a request. Inspect individual failures and distribute partition keys before adding retries or capacity.
 
 - PutRecords uses batching and increases throughput => less HTTP requests
 - ProvisionedThroughputExceeded if we go over the limits
@@ -5050,7 +5255,7 @@ APIs that are used are PutRecord (one) and PutRecords (many records)
 
 <!-- pdf-page: 414 -->
 
-ProvisionedThroughputExceeded Exceptions
+Throughput exceptions signal that an applicable shard or stream limit was exceeded. Inspect partition-key distribution before repeatedly retrying the same load.
 
   - Happens when sending more data (exceeding MB/s or TPS for any shard)
   - Make sure you don’t have a hot shard (such as your partition key is bad and too much data goes to that partition)
@@ -5059,11 +5264,13 @@ ProvisionedThroughputExceeded Exceptions
   - Increase shards (scaling)
   - Ensure your partition key is a good one
 
-## Kinesis Producer Library (KPL)
+### KPL (Kinesis Producer Library)
 
 <!-- pdf-page: 415 -->
+<!-- original-note: 153 -->
+<!-- title: Kinesis Producer Library -->
 
-Easy to use and highly configurable C++ / Java library
+KPL buffers, aggregates and collects records to improve publishing efficiency. The resulting latency and de-aggregation requirements are part of the tradeoff.
 
 - Used for building high performance, long-running producers
 - Automated and configurable retry mechanism
@@ -5077,6 +5284,8 @@ Easy to use and highly configurable C++ / Java library
 - Compression must be implemented by the user
 - KPL Records must be de-coded with KCL or special helper library
 
+- Review prompt: explain collection versus aggregation using the batching diagram, then describe how RecordMaxBufferedTime trades latency for packing efficiency.
+
 ## Kinesis Producer Library (KPL) Batching
 
 <!-- pdf-page: 416 -->
@@ -5085,21 +5294,24 @@ KPL aggregation packs user records into a Kinesis record; collection batches mul
 
 - We can influence the batching efficiency by introducing some delay with RecordMaxBufferedTime (default 100ms)
 
-## Kinesis Producer Library – When not to use
+### Anti pattern:
 
 <!-- pdf-page: 417 -->
+<!-- original-note: 154 -->
+<!-- title: When to avoid KPL buffering -->
 
-KPL buffering trades some latency for efficient requests; a direct SDK write avoids that producer-side buffer.
+Buffering improves packing efficiency but delays delivery. Use a more direct publishing path when the application cannot tolerate that extra wait.
 
 - The KPL can incur an additional processing delay of up to RecordMaxBufferedTime within the library (user- configurable)
 - Larger values of RecordMaxBufferedTime results in higher packing efficiencies and better performance
 - Applications that cannot tolerate this additional delay may need to use the AWS SDK directly
 
-## Kinesis Agent
+### Kinesis Agent
 
 <!-- pdf-page: 418 -->
+<!-- original-note: 155 -->
 
-Monitor Log files and sends them to Kinesis Data Streams
+The Kinesis Agent watches supported log files and publishes their contents, handling rotation, checkpoints and retries while exposing operational metrics.
 
 - Java-based agent, built on top of KPL
 - Install in Linux-based server environments
@@ -5113,8 +5325,10 @@ Monitor Log files and sends them to Kinesis Data Streams
 ## Kinesis Consumers - Classic
 
 <!-- pdf-page: 419 -->
+<!-- original-note: 156 -->
+<!-- title: Kinesis shared-throughput consumers -->
 
-Multiple consumer applications can independently process the same stream using SDKs, KCL or managed integrations.
+Classic consumers poll shards and share each shard's read throughput. More consumers do not create extra shared read capacity.
 
 - Kinesis SDK
 - Kinesis Client Library (KCL)
@@ -5124,11 +5338,13 @@ Multiple consumer applications can independently process the same stream using S
 - AWS Lambda
 - (Kinesis Consumer Enhanced Fan-Out discussed in the next lecture)
 
-## Kinesis Consumer SDK - GetRecords
+### Kinesis SDK
 
 <!-- pdf-page: 420 -->
+<!-- original-note: 157 -->
+<!-- title: Kinesis consumer SDK -->
 
-Shared-throughput consumers compete for each shard's shared read capacity; adding consumers does not multiply that capacity.
+GetRecords reads through a shard iterator. Polling frequency, batch size and shared throughput jointly determine latency and throttling.
 
 - Classic Kinesis - Records are polled by consumers from a shard
 - Each shard has 2 MB total aggregate throughput
@@ -5136,28 +5352,26 @@ Shared-throughput consumers compete for each shard's shared read capacity; addin
 - Maximum of 5 GetRecords API calls per shard per second = 200ms latency
 - If 5 consumers application consume from the same shard, means every consumer can poll once a second and receive less than 400 KB/s
 
-## Kinesis Client Library (KCL)
+### Kinesis Client Library (KCL)
 
 <!-- pdf-page: 421 -->
+<!-- original-note: 158 -->
+<!-- title: Kinesis Client Library -->
 
-KCL coordinates shard leases and checkpoints in DynamoDB so workers can rebalance and recover progress.
+KCL coordinates workers, leases shards, checkpoints progress and handles resharding. Its DynamoDB coordination tables also need sufficient capacity.
 
-- Java-first library but exists for other languages too (Golang, Python, Ruby, Node, .NET …)
-- Read records from Kinesis produced with the KPL (de-aggregation)
-- Share multiple shards with multiple consumers in one “group”, shard discovery
-- Checkpointing feature to resume progress
-- Leverages DynamoDB for coordination and checkpointing (one row per shard)
-  - Make sure you provision enough WCU / RCU
-  - Or use On-Demand for DynamoDB
-  - Otherwise DynamoDB may slow down KCL
-- Record processors will process the data
-- ExpiredIteratorException => increase
+- KCL consumes records and de-aggregates KPL records for the application record processor.
+- Workers discover and share shard assignments, then checkpoint progress for recovery.
+- DynamoDB coordination-table throttling can delay worker progress; monitor its capacity as well as the stream.
+- An expired iterator needs investigation of processing delays and iterator handling; increasing DynamoDB capacity is not a universal fix.
+- Verify library and language support for the selected KCL version.
 
-## Kinesis Connector Library
+### Kinesis Connector Library
 
 <!-- pdf-page: 422 -->
+<!-- original-note: 159 -->
 
-The course's Kinesis Connector example is a consumer application delivering transformed stream data to configured destinations; check library maintenance before use.
+The older connector library combines KCL consumption with destination writers. For supported use cases, compare it with managed Firehose delivery or Lambda processing.
 
 - Older Java library (2016), leverages the KCL library
 - Write data to:
@@ -5167,11 +5381,20 @@ The course's Kinesis Connector example is a consumer application delivering tran
   - OpenSearch
 - Kinesis Firehose replaces the Connector Library for a few of these targets, Lambda for the others
 
-## AWS Lambda sourcing from Kinesis
+### Kinesis Firehose
+
+<!-- original-note: 160 -->
+<!-- title: Firehose as a stream consumer -->
+
+A Firehose delivery stream can consume Kinesis records and deliver buffered output. It is a managed delivery path rather than a KCL application.
+
+### AWS Lambda
 
 <!-- pdf-page: 423 -->
+<!-- original-note: 161 -->
+<!-- title: Lambda as a stream consumer -->
 
-AWS Lambda can source records from Kinesis Data Streams
+A Lambda event source mapping reads Kinesis batches and invokes the function. Configure batch handling and retry behavior around ordered shard processing.
 
 - Lambda consumer has a library to de-aggregate record from the KPL
 - Lambda can be used to run lightweight ETL to:
@@ -5183,11 +5406,13 @@ AWS Lambda can source records from Kinesis Data Streams
 - Lambda can be used to trigger notifications / send emails in real time
 - Lambda has a configurable batch size (more in Lambda section)
 
-## Kinesis Enhanced Fan Out
+### Kinesis Enhanced Fan out
 
 <!-- pdf-page: 424 -->
+<!-- original-note: 162 -->
+<!-- title: Kinesis enhanced fan-out -->
 
-Enhanced fan-out gives registered consumers dedicated per-shard read throughput through SubscribeToShard rather than sharing GetRecords capacity.
+Enhanced fan-out gives registered consumers dedicated per-shard read throughput and a push-based delivery path, trading extra cost for isolation and lower latency.
 
 - New game-changing feature from August 2018.
 - Works with KCL 2.0 and AWS Lambda (Nov 2018)
@@ -5201,7 +5426,7 @@ Enhanced fan-out gives registered consumers dedicated per-shard read throughput 
 
 <!-- pdf-page: 425 -->
 
-Standard consumers:
+Shared consumers compete for shard read throughput; enhanced fan-out isolates supported consumers. Compare both throughput allocation and registered-consumer quotas.
 
   - Low number of consuming applications (1,2,3…)
   - Can tolerate ~200 ms latency
@@ -5214,32 +5439,38 @@ Standard consumers:
 
 **Current reference (checked 2026-10-13):** [Kinesis quotas by capacity mode](https://docs.aws.amazon.com/streams/latest/dev/service-sizes-and-limits.html).
 
-## Kinesis Operations – Adding Shards
+### Kinesis Operations - Adding Sharts
 
 <!-- pdf-page: 426 -->
+<!-- original-note: 163 -->
+<!-- title: Splitting Kinesis shards -->
 
-A split closes the parent shard and creates two children covering its hash-key range.
+Splitting a shard increases provisioned capacity or divides a hot key range. Existing records remain on the parent shard until retention expires.
 
 - Also called “Shard Splitting”
 - Can be used to increase the Stream capacity (1 MB/s data in per shard)
 - Can be used to divide a “hot shard”
 - The old shard is closed and will be deleted once the data is expired
 
-## Kinesis Operations – Merging Shards
+### Merging Sharts
 
 <!-- pdf-page: 427 -->
+<!-- original-note: 164 -->
+<!-- title: Merging Kinesis shards -->
 
-A merge combines adjacent shard hash-key ranges into one child shard.
+Merging adjacent shards reduces provisioned capacity. Continue consuming the closed parents correctly while records remain within retention.
 
 - Decrease the Stream capacity and save costs
 - Can be used to group two shards with low traffic
 - Old shards are closed and deleted based on data expiration
 
-## Out-of-order records after resharding
+### Out of order records after resahrding
 
 <!-- pdf-page: 428 -->
+<!-- original-note: 165 -->
+<!-- title: Ordering after Kinesis resharding -->
 
-A consumer must finish a parent before processing its children when it needs to preserve ordering across resharding.
+Read a parent shard fully before its child shards to preserve the ordering dependency. KCL manages that progression for its consumers.
 
 - After a reshard, you can read from child shards
 - However, data you haven’t read yet could still be in the parent
@@ -5247,22 +5478,25 @@ A consumer must finish a parent before processing its children when it needs to 
 - After a reshard, read entirely from the parent until you don’t have new records
 - Note: The Kinesis Client Library (KCL) has this logic already built-in, even after resharding operations
 
-## Kinesis Operations – Auto Scaling
+### Kinesis Operations - Auto Scaling
 
 <!-- pdf-page: 429 -->
+<!-- original-note: 166 -->
+<!-- title: Kinesis scaling -->
 
-For provisioned streams, external automation can observe CloudWatch metrics and request shard-count changes; on-demand capacity is a different mode.
+Distinguish managed on-demand capacity from a provisioned stream's shard-scaling automation. Capacity limits and the time required to reshard still matter.
 
-- Auto Scaling is not a native feature of Kinesis
-- The API call to change the number of shards is UpdateShardCount
-- We can implement Auto Scaling with AWS Lambda
-- See: https://aws.amazon.com/blogs/b ig-data/scaling-amazon-kinesis- data-streams-with-aws- application-auto-scaling/
+- For a provisioned stream, UpdateShardCount requests a supported shard-count change.
+- External automation can observe metrics and request that change, including through a Lambda workflow.
+- On-demand mode uses a different capacity-management model; do not apply a blanket "no automatic scaling" statement to every stream.
+
+- Review prompt: fill in a complete provisioned-scaling example around UpdateShardCount, including limits, observation periods and failure handling.
 
 ## Kinesis Scaling Limitations
 
 <!-- pdf-page: 430 -->
 
-Resharding cannot be done in parallel. Plan capacity in advance
+Provisioned resharding has operational and quota constraints. Plan a capacity change before the current stream becomes the bottleneck.
 
 - You can only perform one resharding operation at a time and it takes a few seconds
 - For1000 shards, it takes 30K seconds (8.3 hours) to double the shards to 2000
@@ -5274,21 +5508,25 @@ Resharding cannot be done in parallel. Plan capacity in advance
   - Scale a stream with more than 10,000 shards down unless the result is less than 10,000 shards
   - Scale up to more than the shard limit for your account
 
-## Kinesis Data Streams – Handling Duplicates For Producers
+### Kinesis Handling duplicates for Producers
 
 <!-- pdf-page: 431 -->
+<!-- original-note: 167 -->
+<!-- title: Producer duplicates -->
 
-An unacknowledged successful write may be retried and create a duplicate. Use an application record identifier and idempotent processing.
+A timed-out producer can retry a write that already succeeded. Include a stable record identifier so the processing path can recognize duplicates.
 
 - Producer retries can create duplicates due to network timeouts
 - Although the two records have identical data, they also have unique sequence numbers
 - Fix: embed unique record ID in the data to de-duplicate on the consumer side
 
-## Kinesis Data Streams – Handling Duplicates For Consumers
+### Kinesis Handling duplicates for consumers
 
 <!-- pdf-page: 432 -->
+<!-- original-note: 168 -->
+<!-- title: Consumer duplicates -->
 
-Consumer retries can make your application read the same data twice
+Worker restarts, checkpoints and resharding can cause records to be processed again. Make destination effects idempotent rather than assuming a single delivery.
 
 - Consumer retries happen when record processors restart:
 - Fixes:
@@ -5300,24 +5538,26 @@ Consumer retries can make your application read the same data twice
 
 <!-- pdf-page: 433 -->
 
-Control access / authorization using IAM policies
+IAM controls who can publish or consume, while TLS and KMS protect data on its network and storage paths. These are complementary controls.
 
 - Encryption in flight using HTTPS endpoints
 - Encryption at rest using KMS
 - Client side encryption must be manually implemented (harder)
 - VPC Endpoints available for Kinesis to access within VPC
 
-## Data Firehose
+## Kinesis Data Firehose
 
 <!-- pdf-page: 434 -->
+<!-- original-note: 169 -->
+<!-- title: Amazon Data Firehose -->
 
-Data Firehose buffers delivery, optionally transforms records and sends them to a configured destination with optional S3 backup.
+Firehose buffers incoming records and delivers them to supported destinations, with optional transformation and backup paths. It does not expose a general replay API for arbitrary consumers.
 
-## AWS Data Firehose
+## Firehose operations
 
 <!-- pdf-page: 435 -->
 
-Fully Managed Service, no administration
+Firehose manages the delivery infrastructure, but buffering, destinations, transformation and failed-data handling still require configuration.
 
 - Near Real Time (Buffer based on time and size, optionally can be disabled)
 - Load data into Redshift / Amazon S3 / OpenSearch / Splunk
@@ -5336,11 +5576,13 @@ Fully Managed Service, no administration
 
 Firehose delivery to Redshift stages files in S3 and issues COPY; Lambda transformation and failed-record backup are optional branches.
 
-## Firehose Buffer Sizing
+### Kinesis Firehose Buffer Sizing
 
 <!-- pdf-page: 437 -->
+<!-- original-note: 170 -->
+<!-- title: Firehose buffering -->
 
-Firehose accumulates records in a buffer
+Delivery occurs according to the configured size and time thresholds. Larger buffers can improve efficiency while increasing the delay before data reaches the destination.
 
 - The buffer is flushed based on time and size rules
 - Buffer Size (ex: 32MB): if that buffer size is reached, it’s flushed
@@ -5349,29 +5591,29 @@ Firehose accumulates records in a buffer
 - High throughput => Buffer Size will be hit
 - Low throughput => Buffer Time will be hit
 
-## Kinesis Data Streams vs Firehose
+### Kinesis Data Streams vs Firehose
 
 <!-- pdf-page: 438 -->
+<!-- original-note: 171 -->
+<!-- title: Kinesis Data Streams and Firehose -->
 
-Streams
+Choose Streams for retained records, independent consumers and replay. Choose Firehose for managed buffered delivery into a supported destination.
 
-  - Going to write custom code (producer / consumer)
-  - Real time (~200 ms latency for classic, ~70 ms latency for enhanced fan-out)
-  - On-demand or Provisioned mode
-  - Data Storage for 1 to 365 days, replay capability, multi consumers
-  - Use with Lambda to insert data in real-time to OpenSearch (for example)
-- Firehose
-  - Fully managed, send to S3, Splunk, Redshift, OpenSearch
-  - Serverless data transformations with Lambda
-  - Near real time
-  - Automated Scaling
-  - No data storage
+| Requirement | Kinesis Data Streams | Data Firehose |
+| --- | --- | --- |
+| Consumption | Independent applications read retained records | Managed delivery to configured destinations |
+| Replay | Within configured retention | No general replay API for arbitrary consumers |
+| Timing | Consumer-dependent stream processing | Buffered delivery |
+| Processing | Application, Lambda or supported analytics consumer | Supported transformation and format-conversion options |
+| Capacity | Provisioned or supported on-demand modes | Managed delivery scaling |
 
-## Troubleshooting Kinesis Data Stream Producers: Performance
+### Troubleshooting Kinesis data stream producers
 
 <!-- pdf-page: 439 -->
+<!-- original-note: 172 -->
+<!-- title: Troubleshooting Kinesis producers -->
 
-Writing is too slow
+When publishing is slow, distinguish hot shards, insufficient capacity, batching choices and network or service errors before changing the stream.
 
   - Service limits may be exceeded. Check for throughput exceptions, see what operations are being throttled. Different calls have different limits.
   - There are shard-level limits for writes and reads
@@ -5382,11 +5624,11 @@ Writing is too slow
 - Small producers (i.e. apps)
   - Use PutRecords or Kinesis Recorder in the AWS Mobile SDKs
 
-## Other Kinesis Data Stream Producer Issues
+## Kinesis producer errors
 
 <!-- pdf-page: 440 -->
 
-Stream returns a 500 or 503 error
+Differentiate temporary service errors from invalid requests and oversize records. Apply retries only to recoverable failures and inspect per-record outcomes.
 
   - This indicates an AmazonKinesisException error rate above 1%
   - Implement a retry mechanism
@@ -5402,11 +5644,13 @@ Stream returns a 500 or 503 error
   - Use exponential backoff
   - Rate-limit
 
-## Troubleshooting Kinesis Data Stream Consumers
+### Troubleshooting Kinesis data stream Consumers
 
 <!-- pdf-page: 441 -->
+<!-- original-note: 173 -->
+<!-- title: Troubleshooting Kinesis consumers -->
 
-Records get skipped with Kinesis Client Library
+Investigate missing or delayed processing through checkpoints, record handlers, iterator age, permissions and downstream processing capacity.
 
   - Check for unhandled exceptions on processRecords
 - Records in same shard are processed by more than one processor
@@ -5426,11 +5670,11 @@ Records get skipped with Kinesis Client Library
   - Usually insufficient resources
   - Monitor with GetRecords.IteratorAgeMilliseconds and MillisBehindLatest
 
-## Troubleshooting Kinesis Data Stream Consumers
+## Kinesis and Lambda invocation failures
 
 <!-- pdf-page: 442 -->
 
-Lambda function can’t get invoked
+If Lambda is not processing a stream, inspect its event source mapping, execution permissions and failure behavior before changing producer code.
 
   - Permissions issue on execution role
   - Function is timing out (check max execution time)
@@ -5443,11 +5687,11 @@ Lambda function can’t get invoked
   - Use enhanced fan-out
   - Use retries and exponential backoff
 
-## Troubleshooting Kinesis Data Stream Consumers
+## Kinesis consumer latency
 
 <!-- pdf-page: 443 -->
 
-High latency
+High iterator age can indicate slow processing, insufficient consumer capacity or downstream delays. Follow the processing path to locate the bottleneck.
 
   - Monitor with GetRecords.Latency and IteratorAge
   - Increase shards
@@ -5551,7 +5795,7 @@ Flink builds a processing graph of stateless and stateful operators, including e
 
 <!-- pdf-page: 451 -->
 
-Streaming ETL
+Streaming analytics can transform events, calculate ongoing metrics and detect conditions before delivering results to downstream systems.
 
 - Continuous metric generation
 - Responsive analytics
@@ -5560,7 +5804,7 @@ Streaming ETL
 
 <!-- pdf-page: 452 -->
 
-Pay only for resources consumed (but it’s not cheap)
+Managed analytics charges follow the resources and processing model in use. Historical product names and example prices require dated interpretation.
 
   - Charged by Kinesis Processing Units (KPU’s) consumed per hour
   - 1 KPU = 1 vCPU + 4GB
@@ -5572,7 +5816,7 @@ Pay only for resources consumed (but it’s not cheap)
 
 <!-- pdf-page: 453 -->
 
-SQL function used for anomaly detection on numeric columns in a stream
+RANDOM_CUT_FOREST is a historical Kinesis SQL anomaly-detection example. Retain the anomaly-detection concept while using a supported engine for new work.
 
 - They’re especially proud of this because they published a paper on it
 - It’s a novel way to identify outliers in a data set so you can handle them however you need to
@@ -5582,7 +5826,7 @@ SQL function used for anomaly detection on numeric columns in a stream
 
 <!-- pdf-page: 454 -->
 
-Alternative to Kinesis (Kafka vs Kinesis next lecture)
+MSK provides managed Apache Kafka infrastructure. Its Kafka APIs and ecosystem differ from Kinesis even when both serve streaming architectures.
 
 - Fully managed Apache Kafka on AWS
   - Allow you to create, update, delete clusters
@@ -5635,7 +5879,7 @@ MSK security separates transport encryption, client authentication and authoriza
 
 <!-- pdf-page: 458 -->
 
-CloudWatch Metrics
+Monitor MSK through supported service and broker metrics, logs and monitoring integrations. Observe partition health and consumer lag alongside resource use.
 
   - Basic monitoring (cluster and broker metrics)
   - Enhanced monitoring (++enhanced broker metrics)
@@ -5664,7 +5908,7 @@ MSK Connect runs a compatible connector that consumes Kafka records and delivers
 
 <!-- pdf-page: 460 -->
 
-Run Apache Kafka on MSK without managing the capacity
+MSK Serverless reduces broker-capacity administration while retaining Kafka's application model and documented service constraints.
 
 - MSK automatically provisions resources and scales compute & storage
 - You just define your topics and your partitions and you’re good to go!
@@ -5680,7 +5924,7 @@ Run Apache Kafka on MSK without managing the capacity
 
 <!-- pdf-page: 461 -->
 
-10 MB message size limit
+Compare Kafka and Kinesis by protocol, partitioning, retention, consumer behavior and operating model. Message limits depend on the selected service configuration.
 
 - Data Streams with Shards
 - Shard Splitting & Merging
@@ -5700,7 +5944,7 @@ Run Apache Kafka on MSK without managing the capacity
 
 <!-- pdf-page: 463 -->
 
-A fork of Elasticsearch and Kibana
+OpenSearch indexes documents for search and aggregation. It originated from Elasticsearch and provides its own supported APIs and visualization ecosystem.
 
 - A search engine
 - An analysis tool
@@ -5722,7 +5966,7 @@ Dashboards turn indexed search and aggregation results into interactive visualiz
 
 <!-- pdf-page: 465 -->
 
-Full-text search
+Search, log analysis and document aggregation are typical OpenSearch workloads. The index model is different from transactional database serving.
 
 - Log analytics
 - Application monitoring
@@ -5751,7 +5995,7 @@ Writes reach a primary shard and are replicated; reads may use eligible primary 
 
 <!-- pdf-page: 469 -->
 
-Fully-managed (but not serverless)
+Managed OpenSearch domains supply service-managed infrastructure with explicit sizing and configuration choices. They are distinct from the serverless deployment model.
 
   - There is a separate serverless option now
 - Scale up or down without downtime
@@ -5770,7 +6014,7 @@ Fully-managed (but not serverless)
 
 <!-- pdf-page: 470 -->
 
-Dedicated master node(s)
+Node roles, storage choices and deployment sizing affect both query behavior and cluster stability. Assign resources to the work each role performs.
 
   - Choice of count and instance types
 - “Domains”
@@ -5781,7 +6025,7 @@ Dedicated master node(s)
 
 <!-- pdf-page: 471 -->
 
-Standard data nodes use “hot” storage
+Hot, warm and cold tiers trade query performance and access behavior for storage cost. Move data according to how often it must be searched.
 
   - Instance stores or EBS volumes / fastest performance
 - UltraWarm (warm) storage uses S3 + caching
@@ -5801,7 +6045,7 @@ Standard data nodes use “hot” storage
 
 <!-- pdf-page: 472 -->
 
-Automates index management policies
+Index State Management applies lifecycle actions when configured conditions are met. Policies automate maintenance rather than changing the underlying retention requirement.
 
 - Examples
   - Delete old indices after a period of time
@@ -5817,7 +6061,7 @@ Automates index management policies
 
 <!-- pdf-page: 473 -->
 
-Index rollups
+Rollups and transforms prepare derived data for repeated analysis. Decide which detail can be summarized and which original data must remain available.
 
   - Periodically roll up old data into summarized indices
   - Saves storage costs
@@ -5830,7 +6074,7 @@ Index rollups
 
 <!-- pdf-page: 474 -->
 
-Replicate indices / mappings / metadata across domains
+Cross-cluster replication follows supported indices and metadata into another domain. Replication direction, permissions and destination configuration still matter.
 
 - Ensures high availability in an outage
 - Replicate data geographically for better latency
@@ -5842,7 +6086,7 @@ Replicate indices / mappings / metadata across domains
 
 <!-- pdf-page: 475 -->
 
-3 dedicated master nodes is best
+Separate cluster-management responsibilities from data processing and distribute supported resources appropriately. Stable sizing is part of reliable search performance.
 
   - Avoids “split brain”
 - Don’t run out of disk space
@@ -5860,7 +6104,7 @@ Replicate indices / mappings / metadata across domains
 
 <!-- pdf-page: 476 -->
 
-Resource-based policies
+OpenSearch authorization can combine network, resource-policy and fine-grained controls. Apply the layers required by the application's access path.
 
 - Identity-based policies
 - IP-based policies
@@ -5885,7 +6129,7 @@ A private OpenSearch dashboard needs network access through a supported private 
 
 <!-- pdf-page: 478 -->
 
-OLTP
+OpenSearch is a poor substitute for a transactional database or for workloads without a search or aggregation requirement.
 
   - No transactions
   - RDS or DynamoDB is better
@@ -5897,7 +6141,7 @@ OLTP
 
 <!-- pdf-page: 479 -->
 
-Memory pressure in the JVM can result if:
+JVM memory pressure and shard layout can constrain search performance. Investigate field choices, aggregation load and resource distribution together.
 
   - You have unbalanced shard allocations across nodes
   - You have too many shards in a cluster
@@ -5924,7 +6168,7 @@ OpenSearch Serverless separates collection access from managed indexing and sear
 
 <!-- pdf-page: 482 -->
 
-Quick Sight is part of the larger Quick Suite
+QuickSight provides business-intelligence analysis and dashboards within the broader product suite described by the source. Keep analytics features separate from branding changes.
 
 - Fast, easy, cloud-powered business analytics service
 - Allows all employees in an organization to:
@@ -5940,7 +6184,7 @@ Quick Sight is part of the larger Quick Suite
 
 <!-- pdf-page: 483 -->
 
-Redshift
+QuickSight can analyze supported databases, lake data and uploaded files. The selected source determines connectivity, refresh and permission requirements.
 
 - Aurora / RDS
 - Athena
@@ -5957,7 +6201,7 @@ Redshift
 
 <!-- pdf-page: 484 -->
 
-Data sets are imported into SPICE
+SPICE imports datasets into an analytical cache for interactive queries. Importing creates a refresh and capacity-planning responsibility.
 
   - Super-fast, Parallel, In-memory Calculation Engine
   - Uses columnar storage, in-memory, machine code generation
@@ -5972,7 +6216,7 @@ Data sets are imported into SPICE
 
 <!-- pdf-page: 485 -->
 
-Interactive ad-hoc exploration / visualization of data
+Use QuickSight to explore data and communicate results through interactive visuals. Prepare and govern the underlying datasets before presenting their conclusions.
 
 - Dashboards and KPI’s
 - Analyze / visualize data from:
@@ -5986,7 +6230,7 @@ Interactive ad-hoc exploration / visualization of data
 
 <!-- pdf-page: 486 -->
 
-ETL
+QuickSight is not a general data-transformation engine or a substitute for the systems that ingest and prepare analytical data.
 
 - Use Glue instead, although QuickSight can do some transformations
 
@@ -5994,7 +6238,7 @@ ETL
 
 <!-- pdf-page: 487 -->
 
-Multi-factor authentication on your account
+Protect account access and choose the edition and identity integration required by the organization. Data access remains a separate permission boundary.
 
 - VPC connectivity
   - Add QuickSight’s IP address range to your database security groups
@@ -6007,7 +6251,7 @@ Multi-factor authentication on your account
 
 <!-- pdf-page: 488 -->
 
-Resource access
+QuickSight needs explicit access to supported AWS resources and encryption keys. A user who can open the application may still lack access to a dataset.
 
   - Must ensure QuickSight is authorized to use Athena / S3 / your S3 buckets
   - This can be managed within the QuickSight console (Manage Quicksight / Security & Permissions)\
@@ -6063,7 +6307,7 @@ Transit Gateway routing, a supported PrivateLink endpoint and VPC sharing are al
 
 <!-- pdf-page: 493 -->
 
-Users defined via IAM, or email signup
+User and group management depends on the supported identity model and edition. Assign access according to authoring and consumption responsibilities.
 
 - Active Directory connector with Quick Sight Enterprise Edition
   - All keys are managed by AWS; you CANNOT use customer- provided keys
@@ -6074,7 +6318,7 @@ Users defined via IAM, or email signup
 
 <!-- pdf-page: 494 -->
 
-Annual subscription
+QuickSight pricing depends on the chosen roles, capacity and subscription model. Treat the source's dollar amounts as examples rather than a current quote.
 
   - Standard: $9 / user /month
   - Enterprise: $18 / user / month
@@ -6093,7 +6337,7 @@ Annual subscription
 
 <!-- pdf-page: 495 -->
 
-Read-only snapshots of an analysis
+A dashboard publishes a read-oriented view of an analysis. Updates to the analysis and publication determine what readers see.
 
 - Can share with others with Quick suite access
 - Can share even more widely with embedded dashboards
@@ -6106,7 +6350,7 @@ Read-only snapshots of an analysis
 
 <!-- pdf-page: 496 -->
 
-ML-powered anomaly detection
+ML insights can highlight anomalies or forecast patterns in suitable data. Validate the input, interval and interpretation before using an insight to make a decision.
 
   - Uses Random Cut Forest
   - Identify top contributors to significant changes in metrics
@@ -6123,7 +6367,7 @@ ML-powered anomaly detection
 
 <!-- pdf-page: 497 -->
 
-Create new fields based on others
+Calculated fields derive values from dataset fields. Understand whether an expression operates at row or aggregation level before comparing its results.
 
   - For example, profit margin, things like that
 - Mathematical and logical operators
@@ -6257,7 +6501,7 @@ The extended-client pattern places a large payload in S3 and a reference in SQS;
 
 <!-- pdf-page: 508 -->
 
-Decouple applications (for example to handle payments asynchronously)
+A work queue decouples request arrival from processing capacity, such as accepting payment work for asynchronous handling.
 
 - Buffer writes to a database (for example a voting application)
 - Handle large loads of messages coming in (for example an email sender)
@@ -6267,7 +6511,7 @@ Decouple applications (for example to handle payments asynchronously)
 
 <!-- pdf-page: 509 -->
 
-Maximum of 120,000 in-flight messages being processed by consumers
+SQS quotas constrain in-flight work and API behavior separately from queue retention. Check the queue type and current documented limits.
 
 - Batch Request has a maximum of 10 messages
 - Message content is XML, JSON, Unformatted text
@@ -6283,7 +6527,7 @@ Maximum of 120,000 in-flight messages being processed by consumers
 
 <!-- pdf-page: 510 -->
 
-Encryption in flight using the HTTPS endpoint
+Protect SQS with HTTPS, supported at-rest encryption and IAM or queue policies. Delivery to a queue and access to its encryption key require separate authorization.
 
 - Can enable SSE (Server Side Encryption) using KMS
   - Can set the CMK (Customer Master Key) we want to use
@@ -6297,7 +6541,7 @@ Encryption in flight using the HTTPS endpoint
 
 <!-- pdf-page: 511 -->
 
-Kinesis Data Stream:
+Kinesis retains records for independent readers; SQS distributes work to receivers that acknowledge completion by deleting messages.
 
 - Data can be consumed many times
 - Data is deleted after the retention period
@@ -6338,7 +6582,7 @@ Choose by replay, consumer independence, ordering and delivery behavior rather t
 
 <!-- pdf-page: 513 -->
 
-SQS use cases:
+Use a queue to distribute tasks and buffer uneven demand. Use a stream when independent consumers or replay of ordered records are central requirements.
 
   - Order processing
   - Image Processing
@@ -6426,7 +6670,7 @@ Mobile push can target a platform endpoint directly or reach multiple subscribed
 
 <!-- pdf-page: 520 -->
 
-Encryption:
+SNS combines topic permissions with transport and at-rest protection. Authorize publishers and subscribers for the intended delivery paths.
 
   - In-flight encryption using HTTPS API
   - At-rest encryption using KMS keys
@@ -6499,7 +6743,7 @@ Subscription filter policies route only matching events; a subscription without 
 
 <!-- pdf-page: 527 -->
 
-Use to design workflows
+Step Functions models a workflow as states and transitions. Define success, retries, error handling and service calls as part of the state machine.
 
 - Easy visualizations
 - Advanced Error Handling and Retry mechanism outside the code
@@ -6546,7 +6790,7 @@ Map iterates a dataset, Parallel runs branches and Choice selects a path; these 
 
 <!-- pdf-page: 532 -->
 
-Fully managed integration service that enables you to securely transfer data between Software-as-a-Service (SaaS) applications and AWS
+AppFlow transfers supported SaaS application data to or from supported AWS destinations, with connectors, mappings and run settings controlling the exchange.
 
 - Sources: Salesforce, SAP, Zendesk, Slack, and ServiceNow
 - Destinations: AWS services like Amazon S3, Amazon Redshift or non-AWS such as SnowFlake and Salesforce
@@ -6591,7 +6835,7 @@ Default, partner and custom buses separate event intake; each has configured rul
 
 <!-- pdf-page: 537 -->
 
-EventBridge can analyze the events in your bus and infer the schema
+An event schema describes the structure consumers should expect. EventBridge can infer supported schemas and provide code bindings for integration.
 
 - The Schema Registry allows you to generate code for your application, that will know in advance how data is structured in the event bus
 - Schema can be versioned
@@ -6610,7 +6854,7 @@ Cross-account event routing requires a permitted target bus and receiver resourc
 
 <!-- pdf-page: 539 -->
 
-Apache Airflow is batch-oriented workflow tool
+MWAA hosts Apache Airflow for scheduled, dependency-based batch workflows. Airflow orchestrates tasks rather than acting as the data-processing engine itself.
 
 - Develop, schedule, and monitor your workflows
 - Workflows are defined as Python code that creates a Directed Acyclic Graph (DAG)
@@ -6668,7 +6912,7 @@ MWAA loads DAG definitions and supporting files from S3 and schedules task execu
 
 <!-- pdf-page: 542 -->
 
-Leverages open-source integrations
+MWAA operators and integrations invoke surrounding data and compute services. Execution roles, credentials and network access govern those calls.
 
   - Athena, Batch, CloudWatch, DynamoDB, DataSync
   - EMR, Fargate, EKS, Kinesis, Glue, Lambda
@@ -6713,7 +6957,7 @@ Grant only the actions and resource scope required by the workload.
 
 <!-- pdf-page: 546 -->
 
-Dealing with PII or other sensitive data
+Sensitive-data handling starts by identifying the fields and the permitted use. Masking, encryption and anonymization solve different disclosure problems.
 
 - Masking obfuscates data
   - For example, masking all but the last 4 digits of a credit card or social security number
@@ -6754,7 +6998,7 @@ A password-hashing illustration combines a salt with a password. A fast SHA-256 
 
 <!-- pdf-page: 550 -->
 
-Compliance may prohibit data from being transferred into certain regions
+Data-residency requirements constrain where data may be stored, copied or processed. Apply the constraint to backups and supporting services as well as the primary dataset.
 
 - It’s all too easy for backups or replication to send data to a region where it is not allowed
 - AWS Organizations’ Service Control Policies are one way to enforce this
@@ -6766,7 +7010,7 @@ Compliance may prohibit data from being transferred into certain regions
 
 <!-- pdf-page: 551 -->
 
-Example: IAM Policy to restrict RDS to backups in us-east-1 and us-west-1
+The policy example restricts specified RDS backup actions to selected Regions. Verify the action, resource and condition together rather than generalizing it to all data movement.
 
 ## IAM: Users & Groups
 
@@ -6784,7 +7028,7 @@ IAM users can belong to multiple groups; groups collect permissions and do not c
 
 <!-- pdf-page: 553 -->
 
-Users or Groups can be assigned JSON documents called policies
+IAM policies grant actions on resources subject to conditions. Effective access depends on all applicable policies and explicit denies.
 
 - These policies define the permissions of the users
 - In AWS you apply the least privilege principle: don’t give more permissions than a user needs
@@ -6817,7 +7061,7 @@ A policy statement defines its effect, allowed or denied actions, resources and 
 
 <!-- pdf-page: 556 -->
 
-Strong passwords = higher security for your account
+A password policy defines supported composition and lifecycle requirements for applicable IAM users. It complements federation and stronger authentication factors.
 
 - In AWS, you can setup a password policy:
   - Set a minimum password length
@@ -6908,7 +7152,7 @@ With client-side encryption, the service stores ciphertext and the client contro
 
 <!-- pdf-page: 564 -->
 
-Anytime you hear “encryption” for an AWS service, it’s most likely KMS
+KMS manages cryptographic keys and authorized operations used by many AWS integrations. Control of a key is distinct from permission to access encrypted data.
 
 - AWS manages encryption keys for us
 - Fully integrated with IAM for authorization
@@ -6989,7 +7233,7 @@ Macie discovers sensitive S3 data and emits findings that EventBridge can route 
 
 <!-- pdf-page: 571 -->
 
-Newer service, meant for storing secrets
+Secrets Manager stores application secrets and supports configured rotation workflows. Retrieving a secret and rotating the associated credential are separate operations.
 
 - Capability to force rotation of secrets every X days
 - Automate generation of secrets on rotation (uses Lambda)
@@ -7027,7 +7271,7 @@ WAF evaluates application-layer HTTP(S) requests at supported attachment points.
 
 <!-- pdf-page: 574 -->
 
-Define Web ACL (Web Access Control List) Rules:
+A web ACL evaluates HTTP(S) requests through configured WAF rules. Choose rules and attachment points from the application traffic that needs inspection.
 
   - IP Set: up to 10,000 IP addresses – use multiple Rules for more IPs
   - HTTP headers, HTTP body, or URI strings Protects from common attack - SQL injection and Cross-Site Scripting (XSS)
@@ -7049,7 +7293,7 @@ Global Accelerator can expose static anycast addresses in front of an ALB protec
 
 <!-- pdf-page: 576 -->
 
-DDoS: Distributed Denial of Service – many requests at the same time
+Shield addresses distributed-denial-of-service threats at supported AWS resources. Compare the protection and operational features of its service tiers.
 
 - AWS Shield Standard:
   - Free service that is activated for every AWS customer
@@ -7065,7 +7309,7 @@ DDoS: Distributed Denial of Service – many requests at the same time
 
 <!-- pdf-page: 577 -->
 
-Kinesis Data Streams
+Stream security combines permitted producers and consumers, encrypted transport, at-rest protection and optional private network paths.
 
   - SSL endpoints using the HTTPS protocol to do encryption in flight
   - AWS KMS provides server-side encryption [Encryption at rest]
@@ -7082,7 +7326,7 @@ Kinesis Data Streams
 
 <!-- pdf-page: 578 -->
 
-Encryption in flight using the HTTPS endpoint
+Queue security must cover message publishers, receivers, encryption keys and resource policies used by service integrations.
 
 - Server Side Encryption using KMS
 - IAM policy must allow usage of SQS
@@ -7094,7 +7338,7 @@ Encryption in flight using the HTTPS endpoint
 
 <!-- pdf-page: 579 -->
 
-AWS IoT policies:
+IoT policies authorize device operations separately from IAM permissions used by other AWS principals. Secure both the device connection and its data destination.
 
   - Attached to X.509 certificates or Cognito Identities
   - Able to revoke any device at any time
@@ -7109,7 +7353,7 @@ AWS IoT policies:
 
 <!-- pdf-page: 580 -->
 
-IAM policies
+S3 protection combines access policies, public-access controls, encryption and appropriate network paths. Use each control for its own boundary.
 
 - S3 bucket policies
 - Access Control Lists (ACLs)
@@ -7126,7 +7370,7 @@ IAM policies
 
 <!-- pdf-page: 581 -->
 
-Data is encrypted in transit using TLS (HTTPS)
+DynamoDB protects requests and stored data through transport encryption, key management and IAM authorization, with optional private access paths.
 
 - DynamoDB tables are encrypted at rest
   - KMS encryption for base tables and secondary indexes
@@ -7141,7 +7385,7 @@ Data is encrypted in transit using TLS (HTTPS)
 
 <!-- pdf-page: 582 -->
 
-VPC provides network isolation
+RDS security separates VPC reachability, database authentication and encryption. Recovery copies and monitoring data also require protection.
 
 - Security Groups control network access to DB Instances
 - KMS provides encryption at rest
@@ -7155,7 +7399,7 @@ VPC provides network isolation
 
 <!-- pdf-page: 583 -->
 
-(very similar to RDS)
+Aurora uses the same broad network, identity and encryption layers as RDS, with permissions and recovery behavior matched to its cluster model.
 
 - VPC provides network isolation
 - Security Groups control network access to DB Instances
@@ -7168,7 +7412,7 @@ VPC provides network isolation
 
 <!-- pdf-page: 584 -->
 
-IAM roles attached to each Lambda function
+A Lambda execution role authorizes the function's AWS calls. Permissions to invoke the function are a separate part of the request path.
 
 - Sources
 - Targets
@@ -7181,7 +7425,7 @@ IAM roles attached to each Lambda function
 
 <!-- pdf-page: 585 -->
 
-IAM policies for the Glue service
+Glue needs permissions for job execution, source and destination data, catalog operations and encryption keys. Scope the execution role to the workflow.
 
 - Configure Glue to only access JDBC through SSL
 - Data Catalog: Encrypted by KMS
@@ -7195,7 +7439,7 @@ IAM policies for the Glue service
 
 <!-- pdf-page: 586 -->
 
-Using Amazon EC2 key pair for SSH credentials
+EMR protection spans cluster access, instance identities, application permissions and encrypted storage or transport. Separate operator access from job access.
 
 - Attach IAM roles to EC2 instances for:
   - proper S3 access
@@ -7233,7 +7477,7 @@ An EMR security configuration controls supported at-rest and in-transit encrypti
 
 <!-- pdf-page: 588 -->
 
-Amazon VPC provides network isolation
+OpenSearch security layers network reachability with supported domain and fine-grained permissions. Encryption alone does not authorize a query.
 
 - OpenSearch policy to manage security further
 - Data security by encrypting data at-rest using KMS
@@ -7245,7 +7489,7 @@ Amazon VPC provides network isolation
 
 <!-- pdf-page: 589 -->
 
-VPC provides network isolation
+Redshift access combines network rules, database permissions and encryption-key access. Audit settings determine which activity is retained for review.
 
 - Cluster security groups
 - Encryption in flight using the JDBC driver enabled with SSL
@@ -7259,7 +7503,7 @@ VPC provides network isolation
 
 <!-- pdf-page: 590 -->
 
-IAM policies to control access to the service
+Athena authorization includes the query service, catalog, data locations and keys. Protect query results with the same care as source data.
 
 - Data is in S3: IAM policies, bucket policies & ACLs
 - Encryption of data according to S3 standards: SSE-S3, SSE- KMS, CSE-KMS
@@ -7270,7 +7514,7 @@ IAM policies to control access to the service
 
 <!-- pdf-page: 591 -->
 
-Standard edition:
+QuickSight security features vary by edition and connection model. Evaluate identity, dataset permissions and source connectivity together.
 
   - IAM users
   - Email based accounts
@@ -7390,11 +7634,11 @@ A site-to-site VPN encrypts over an IP path; Direct Connect provides dedicated c
   - Goes over a private network
   - Takes at least a month to establish
 
-## VPC Closing Comments
+## VPC connectivity review
 
 <!-- pdf-page: 602 -->
 
-VPC: Virtual Private Cloud
+VPC networking connects addressing, subnet routes, gateways and filtering controls. Trace the complete request and return path when explaining connectivity.
 
 - Subnets: Tied to an AZ, network partition of the VPC
 - Internet Gateway: at the VPC level, provide Internet Access
@@ -7421,7 +7665,7 @@ PrivateLink exposes a provider service through an endpoint service and consumer 
 
 <!-- pdf-page: 604 -->
 
-Domain Name System which translates the human friendly hostnames into the machine IP addresses
+DNS resolves human-readable names to records used by clients to locate services. Caching and TTLs influence when a client observes changes.
 
 - www.google.com => 172.217.18.36
 - DNS is the backbone of the Internet
@@ -7463,7 +7707,7 @@ Route 53 answers DNS queries from hosted-zone records; the client's application 
 
 <!-- pdf-page: 608 -->
 
-How you want to route traffic for a domain
+A DNS record combines a name, type, value and routing behavior. Choose the record from the address or service relationship it must represent.
 
 - Each record contains:
   - Domain/subdomain Name – e.g., example.com
@@ -7479,7 +7723,7 @@ How you want to route traffic for a domain
 
 <!-- pdf-page: 609 -->
 
-A – maps a hostname to IPv4
+Record types describe different mappings: A and AAAA provide addresses, while CNAME points one name to another under its documented constraints.
 
 - AAAA – maps a hostname to IPv6
 - CNAME – maps a hostname to another hostname
@@ -7493,7 +7737,7 @@ A – maps a hostname to IPv4
 
 <!-- pdf-page: 610 -->
 
-A container for records that define how to route traffic to a domain and its subdomains
+A hosted zone holds the records for a DNS namespace. Public and private zones serve different resolution scopes.
 
 - Pricing figures on this source page are a dated illustration. Check current Region, usage and feature pricing before making a cost decision.
 - Public Hosted Zones – contains records that specify how to route traffic on the Internet (public domain names) application1.mypublicdomain.com
@@ -7522,7 +7766,7 @@ A CDN serves geographically distributed clients from nearby edge caches while re
 
 <!-- pdf-page: 613 -->
 
-S3 bucket
+A CloudFront origin supplies content that the distribution caches or forwards. S3 and HTTP origins require different access and request configurations.
 
   - For distributing files and caching them at the edge
   - For uploading files to S3 through CloudFront
@@ -7550,7 +7794,7 @@ Origin Access Control authorizes CloudFront access to a private S3 origin while 
 
 <!-- pdf-page: 616 -->
 
-CloudFront:
+CloudFront caches content at edge locations for delivery; cross-Region replication creates separate S3 copies. These solve different access and recovery requirements.
 
   - Global Edge network
   - Files are cached for a TTL (maybe a day)
@@ -7595,7 +7839,7 @@ Updating the origin does not instantly replace cached objects. Invalidation requ
 
 <!-- pdf-page: 621 -->
 
-CloudWatch provides metrics for every service in AWS
+A metric is a time series identified by its namespace, name and dimensions. Select statistics and intervals that answer the operational question.
 
 - Metric is a variable to monitor (CPUUtilization, NetworkIn…)
 - Metrics belong to namespaces
@@ -7620,7 +7864,7 @@ CloudWatch Metric Streams continuously deliver selected metric updates through F
 
 <!-- pdf-page: 623 -->
 
-Log groups: arbitrary name, usually representing an application
+Log groups organize streams and their retention or access settings. Plan collection, storage and querying as separate steps.
 
 - Log stream: instances within application / log files / containers
 - Can define log expiration policies (never expire, 1 day to 10 years…)
@@ -7637,7 +7881,7 @@ Log groups: arbitrary name, usually representing an application
 
 <!-- pdf-page: 624 -->
 
-SDK, CloudWatch Logs Agent, CloudWatch Unified Agent
+Logs reach CloudWatch from agents, SDKs and supported service integrations. The collection path determines what context and permissions are required.
 
 - Elastic Beanstalk: collection of logs from application
 - ECS: collection from containers
@@ -7657,7 +7901,7 @@ Logs Insights queries selected log groups and a time range; results help diagnos
 
 <!-- pdf-page: 626 -->
 
-Search and analyze log data stored in CloudWatch Logs
+Logs Insights queries collected log data to find events, patterns and aggregates. Scope the time range and log groups to the investigation.
 
 - Example: find a specific IP inside a log, count occurrences of “ERROR” in your logs…
 - Provides a purpose-built query language
@@ -7716,7 +7960,7 @@ The CloudWatch agent collects configured host metrics and logs from EC2 or on-pr
 
 <!-- pdf-page: 632 -->
 
-For virtual servers (EC2 instances, on-premises servers…)
+The unified agent collects supported host metrics and logs beyond basic instance monitoring. Configure what to collect and where to publish it.
 
 - CloudWatch Logs Agent
   - Old version of the agent
@@ -7730,7 +7974,7 @@ For virtual servers (EC2 instances, on-premises servers…)
 
 <!-- pdf-page: 633 -->
 
-Collected directly on your Linux server / EC2 instance
+Host-level telemetry can reveal memory, disk, network and process behavior that is not captured by every default service metric.
 
 - CPU (active, guest, idle, system, user, steal)
 - Disk metrics (free, used, total), Disk IO (writes, reads, bytes, iops)
@@ -7744,7 +7988,7 @@ Collected directly on your Linux server / EC2 instance
 
 <!-- pdf-page: 634 -->
 
-Alarms are used to trigger notifications for any metric
+An alarm evaluates a metric over configured periods and changes state when its conditions are met. Missing-data treatment is part of the rule.
 
 - Various options (sampling, %, max, min, etc…)
 - Alarm States:
@@ -7759,7 +8003,7 @@ Alarms are used to trigger notifications for any metric
 
 <!-- pdf-page: 635 -->
 
-Stop, Terminate, Reboot, or Recover an EC2 Instance
+Alarm actions can notify operators or invoke supported recovery and scaling behavior. Match the action to the resource and failure being observed.
 
 - Trigger Auto Scaling Action
 - Send notification to SNS (from which you can do pretty much anything)
@@ -7800,7 +8044,7 @@ A metric filter turns matching log patterns into numeric metrics; an alarm evalu
 
 <!-- pdf-page: 639 -->
 
-Provides governance, compliance and audit for your AWS Account
+CloudTrail records supported AWS API activity for investigation and governance. Event type, collection scope and retention determine the available evidence.
 
 - CloudTrail is enabled by default!
 - Get an history of events / API calls made within your AWS Account by:
@@ -7822,7 +8066,7 @@ CloudTrail records supported account activity across console, CLI and SDK calls 
 
 <!-- pdf-page: 641 -->
 
-Management Events:
+Management events describe control-plane activity; data events cover supported resource-level operations. Enable the event categories needed for the audit question.
 
   - Operations that are performed on resources in your AWS account
   - Examples:
@@ -7868,7 +8112,7 @@ Event history provides a limited management-event window; trails in S3 support l
 
 <!-- pdf-page: 644 -->
 
-NOTE: Now in maintenance mode (but still in exam guide)
+CloudTrail Lake stores selected activity in queryable event data stores. The source labels this offering as maintenance-mode material, so availability needs a dated check.
 
 - Managed data lake for CloudTrail events
 - Integrates collection, storage, preparation, and optimization for analysis & query
@@ -7880,7 +8124,7 @@ NOTE: Now in maintenance mode (but still in exam guide)
 
 <!-- pdf-page: 645 -->
 
-Specify the event types you want to track
+Event data store settings select which activity is collected and retained. Query access and collection configuration are separate controls.
 
 - Note KMS events add up fast and can make your costs blow up
 - Basic event selectors can be selected in the UI
@@ -7921,7 +8165,7 @@ Advanced selectors choose event categories, resource types, event names and reso
 
 <!-- pdf-page: 647 -->
 
-Lake dashboards allow you to visualize events
+CloudTrail Lake SQL and dashboards analyze stored events. Results reflect the event types, retention and permissions configured for the store.
 
 - Roll your own SQL queries
 - Start from sample queries in the CloudTrail Lake Editor
@@ -7931,7 +8175,7 @@ Lake dashboards allow you to visualize events
 
 <!-- pdf-page: 648 -->
 
-Helps with auditing and recording compliance of your AWS resources
+Config records resource configuration and evaluates compliance against rules. It answers different questions from application monitoring or an API activity log.
 
 - Helps record configurations and changes over time
 - Questions that can be solved by AWS Config:
@@ -7947,7 +8191,7 @@ Helps with auditing and recording compliance of your AWS resources
 
 <!-- pdf-page: 649 -->
 
-Can use AWS managed config rules (over 75)
+Config rules evaluate recorded resources with managed or custom logic. A noncompliant result identifies a condition; remediation is another action.
 
 - Can make custom config rules (must be defined in AWS Lambda)
   - Ex: evaluate if each EBS disk is of type gp2
@@ -7992,7 +8236,7 @@ Config changes and compliance events can route through EventBridge; SNS delivery
 
 <!-- pdf-page: 653 -->
 
-CloudWatch
+Use CloudWatch for operational telemetry, CloudTrail for API activity and Config for configuration history and compliance. Combine their evidence when investigating a change.
 
   - Performance monitoring (metrics, CPU, network, etc…) & dashboards
   - Events & Alerting
@@ -8010,7 +8254,7 @@ CloudWatch
 
 <!-- pdf-page: 654 -->
 
-CloudWatch:
+For a load balancer, monitor traffic and errors with CloudWatch, investigate API changes with CloudTrail and evaluate configuration with Config.
 
   - Monitoring Incoming connections metric
   - Visualize error codes as % over time
@@ -8026,7 +8270,7 @@ CloudWatch:
 
 <!-- pdf-page: 655 -->
 
-CloudFormation is a declarative way of outlining your AWS Infrastructure, for any resources (most of them are supported).
+CloudFormation declares infrastructure in templates and manages it as stacks. Review the proposed resources and dependencies before applying a change.
 
 - For example, within a CloudFormation template, you say:
   - I want a security group
@@ -8039,7 +8283,7 @@ CloudFormation is a declarative way of outlining your AWS Infrastructure, for an
 
 <!-- pdf-page: 656 -->
 
-Infrastructure as code
+Infrastructure templates make resource definitions repeatable and reviewable. Stack metadata also helps associate deployed resources with an application and its costs.
 
   - No resources are manually created, which is excellent for control
   - Changes to the infrastructure are reviewed through code
@@ -8052,7 +8296,7 @@ Infrastructure as code
 
 <!-- pdf-page: 657 -->
 
-Productivity
+Reusable templates and change sets support consistent deployment. Automation still requires deliberate permissions, dependency handling and review of destructive changes.
 
   - Ability to destroy and re-create an infrastructure on the cloud on the fly
   - Automated generation of Diagram for your templates!
@@ -8135,7 +8379,7 @@ Advanced-parameter policies can expire a value or notify about expiry and lack o
 
 <!-- pdf-page: 663 -->
 
-https://aws.amazon.com/architecture/well-architected
+Well-Architected reviews start from operational requirements, favor measured decisions and revisit assumptions as the workload changes.
 
 - Stop guessing your capacity needs
 - Test systems at production scale
@@ -8161,7 +8405,7 @@ Review operational excellence, security, reliability, performance efficiency, co
 
 <!-- pdf-page: 665 -->
 
-Free tool to review your architectures against the 6 pillars Well- Architected Framework and adopt architectural best practices
+The Well-Architected Tool records workload reviews against the framework's pillars and tracks improvement items. A review is an ongoing engineering activity.
 
 - How does it work?
   - Select your workload and answer questions
@@ -8173,7 +8417,7 @@ Free tool to review your architectures against the 6 pillars Well- Architected F
 
 <!-- pdf-page: 666 -->
 
-Grafana is a popular open-source platform used to monitor, visualize, and alert on metrics and logs.
+Managed Grafana provides dashboards and alerting over supported observability sources. It visualizes collected telemetry rather than collecting every signal itself.
 
 - Integrated with IAM Identity Center (formerly AWS SSO) and/or SAML for user management and permissions
 - Compatible with Grafana plugins and alerts
@@ -8184,7 +8428,7 @@ Grafana is a popular open-source platform used to monitor, visualize, and alert 
 
 <!-- pdf-page: 667 -->
 
-Integrated with many AWS data sources
+Each Grafana data source needs its own supported connection and authorization. Combine sources when they help explain one workload's behavior.
 
   - CloudWatch, OpenSearch, Timestream, Athena, Redshift, X-Ray
   - Amazon Managed Service for Prometheus (AMP)
@@ -8207,7 +8451,7 @@ Training learns a model from labeled historical examples; inference applies the 
 
 <!-- pdf-page: 670 -->
 
-A “feature” is just a property used to train a machine learning model.
+A feature is an input used by a model. Feature Store organizes reusable feature values for training and supported serving access patterns.
 
   - Like, you might predict someone’s political party based on “features” such as their address, income, age, etc.
 - Machine learning models require fast, secure access to feature data for training.
@@ -8235,7 +8479,7 @@ Feature Store ingestion can populate an online store and an offline S3 store; th
 
 <!-- pdf-page: 674 -->
 
-Encrypted at rest and in transit
+Feature data needs authorized access, encrypted storage and protected network transport, with controls matched to its online and offline paths.
 
 - Works with KMS customer master keys
 - Fine-grained access control with IAM
@@ -8258,7 +8502,7 @@ ML lineage connects input artifacts, processing actions, model artifacts and dep
 
 <!-- pdf-page: 676 -->
 
-Trial component (processing jobs, training jobs, transform jobs)
+Lineage entities describe artifacts, actions and execution components in an ML workflow. Relationships connect the data, processing and model outputs.
 
 - Trial (a model composed of trial components)
 - Experiment (a group of Trials for a given use case)
@@ -8276,7 +8520,7 @@ Trial component (processing jobs, training jobs, transform jobs)
 
 <!-- pdf-page: 677 -->
 
-Use the LineageQuery API from Python
+Lineage queries traverse recorded relationships to investigate dependencies and provenance. The available result depends on which entities and associations were captured.
 
   - Part of the Amazon SageMaker SDK for Python
 - Do things like find all models / endpoints / etc. that use a given artifact
@@ -8299,7 +8543,7 @@ Ground Truth is closed to new customers; existing customers can continue using i
 
 <!-- pdf-page: 679 -->
 
-Sometimes you don’t have training data at all, and it needs to be generated by humans first.
+Human labeling creates training targets when the raw dataset does not contain them. The labeling workflow defines tasks and checks the returned annotations.
 
 - Availability: see the Ground Truth status correction on page 678.
 - Example: training an image classification model. Somebody needs to tag a bunch of images with what they are images of before training a neural network
@@ -8320,7 +8564,7 @@ Ground Truth's active-learning pattern sends uncertain examples to human labelin
 
 <!-- pdf-page: 681 -->
 
-Mechanical Turk
+Labeling workers may come from managed public, private or vendor workforces in the historical workflow. Workforce selection affects privacy, quality and cost.
 
 - Availability: see the Ground Truth status correction on page 678.
 - Your own internal team
@@ -8330,7 +8574,7 @@ Mechanical Turk
 
 <!-- pdf-page: 682 -->
 
-Turnkey solution
+Ground Truth Plus was a managed labeling arrangement distinct from Ground Truth. Its separate end-of-support status matters when interpreting this historical workflow.
 
 - Availability: see the Ground Truth status correction on page 678.
 - “Our team of AWS Experts” manages the workflow and team of labelers
@@ -8343,7 +8587,7 @@ Turnkey solution
 
 <!-- pdf-page: 683 -->
 
-Rekognition
+Existing models can help generate candidate labels, with humans reviewing uncertain or unsuitable outputs. Automated labels still require quality assessment.
 
 - Availability: see the Ground Truth status correction on page 678.
   - AWS service for image recognition
@@ -8357,7 +8601,7 @@ Rekognition
 
 <!-- pdf-page: 684 -->
 
-Crowdsourcing marketplace to perform simple human tasks
+Mechanical Turk matches requesters with workers for small human tasks. Treat task design and result validation as part of the labeling process.
 
 - Availability: see the Ground Truth status correction on page 678.
 - Distributed virtual workforce
@@ -8380,7 +8624,7 @@ A labeling job defines its dataset, labeling instructions and workforce, then co
 
 <!-- pdf-page: 686 -->
 
-No-code machine learning for business analysts
+Canvas offers a visual path for supported ML preparation and prediction tasks. Validate the dataset and model outcome even when little code is required.
 
 - Availability: see the Ground Truth status correction on page 678.
 - Upload csv data (csv only for now), select a column to predict, build it, and make predictions
@@ -8398,7 +8642,7 @@ No-code machine learning for business analysts
 
 <!-- pdf-page: 687 -->
 
-Visual interface (in SageMaker Studio) to prepare data for machine learning
+Data Wrangler prepares ML datasets through visual analysis and transformations. The prepared flow still needs export, execution and appropriate data permissions.
 
 - Availability: see the Ground Truth status correction on page 678.
 - Import data
@@ -8453,7 +8697,7 @@ Export a validated flow to a supported job or pipeline destination for repeatabl
 
 <!-- pdf-page: 695 -->
 
-Make sure your Studio user has appropriate IAM roles
+Troubleshoot preparation work from permissions, connectivity, supported formats and resource capacity before changing transformation logic.
 
 - Make sure permissions on your data sources allow Data Wrangler access
   - Add AmazonSageMakerFullAccess policy
@@ -8466,7 +8710,7 @@ Make sure your Studio user has appropriate IAM roles
 
 <!-- pdf-page: 696 -->
 
-The giant, pre-trained transformer models we are fine tuning for specific tasks, or applying to new applications
+A foundation model is pretrained on broad data and can be adapted or prompted for new tasks. The adaptation method determines what changes inside the model.
 
 - GPT-n (OpenAI)
 - Claude (Anthropic)
@@ -8507,7 +8751,7 @@ The foundation-model names in this course are examples from its date; model acce
 
 <!-- pdf-page: 698 -->
 
-An API for generative AI Foundation Models
+Bedrock exposes supported foundation models through managed APIs. Model access, inference configuration and application authorization remain distinct concerns.
 
   - Invoke chat, text, or image models
   - Pre-built, your own fine-tuned models, or your own models
@@ -8521,7 +8765,7 @@ An API for generative AI Foundation Models
 
 <!-- pdf-page: 699 -->
 
-bedrock: Manage, deploy, train models
+Bedrock uses different endpoint families for management, inference and agent-related operations. Select the API for the operation rather than relying on one generic endpoint.
 
 - bedrock-runtime: Perform inference (execute prompts, generate embeddings) against these models
   - Converse, ConverseStream, InvokeModel, InvokeModelWithResponseStream
@@ -8568,7 +8812,7 @@ Bedrock playgrounds let you explore supported model input/output and inference s
 
 <!-- pdf-page: 703 -->
 
-Adapt an existing large language model to your specific use case!
+Fine-tuning adjusts an existing model using examples for a specific task or behavior. It differs from supplying reference information at inference time.
 
 - Additional training using your own data – potentially lots of it
   - Eliminates need to build up a big conversation to get the results you want (“prompt engineering” / “prompt design”)
@@ -8584,7 +8828,7 @@ Adapt an existing large language model to your specific use case!
 
 <!-- pdf-page: 704 -->
 
-Titan, Cohere, and Meta models may be “fine-tuned”
+Custom-model support varies by provider and model. Choose supported training inputs and deployment options instead of assuming every catalog model can be tuned.
 
 - Text models: provide labeled training pairs of prompts and completions
   - Can be questions and answers
@@ -8599,7 +8843,7 @@ Titan, Cohere, and Meta models may be “fine-tuned”
 
 <!-- pdf-page: 705 -->
 
-Like fine-tuning, but with unlabeled data
+Continued pretraining adapts a model using additional unlabeled material. It has different data and objective requirements from supervised fine-tuning.
 
 - Just feed it text to familiarize the model with
   - Your own business documents
@@ -8635,7 +8879,7 @@ RAG retrieves external evidence and places it in the prompt before generation; i
 
 <!-- pdf-page: 708 -->
 
-Faster & cheaper way to incorporate new or proprietary information into “GenAI” vs. fine- tuning
+RAG supplies retrieved reference material with a prompt, making knowledge easier to update without retraining the model. Retrieval quality becomes a critical dependency.
 
 - Updating info is just a matter of updating a database
 - Can leverage “semantic search” via vector stores
@@ -8658,7 +8902,7 @@ The research illustration encodes a question, retrieves relevant documents and c
 
 <!-- pdf-page: 710 -->
 
-You could just use whatever database is appropriate for the type of data you are retrieving
+Select a retrieval store from the required query pattern, data model and filtering needs. A vector store is one option rather than the only kind of knowledge source.
 
 - Graph database (i.e., Neo4j) for retrieving product recommendations or relationships between items
 - OpenSearch or something for traditional text search (TF/IDF)
@@ -8738,7 +8982,7 @@ A Bedrock RAG application retrieves relevant OpenSearch content and supplies tha
 
 <!-- pdf-page: 716 -->
 
-AKA a vector store
+A knowledge-base workflow ingests documents, prepares chunks and embeddings, and stores them for later retrieval. Each stage influences what context reaches the model.
 
 - Hands-on; let’s use the text of a book I wrote.
 
@@ -8832,7 +9076,7 @@ Semantic chunking uses model-based similarity and a boundary threshold; these se
 
 <!-- pdf-page: 723 -->
 
-Smaller vector sizes are a good way to reduce cost
+Embedding size and storage choices affect cost, latency and retrieval quality. Evaluate the resulting search behavior before reducing representation size.
 
   - I’m talking vector size here, not chunk size
   - Smaller vectors = fewer dimensions per chunk = less cost
@@ -8912,7 +9156,7 @@ Hybrid search combines keyword and vector retrieval, then ranks the combined can
 
 <!-- pdf-page: 728 -->
 
-Top-level engines are Facebook AI Similarity (FAISS,) Non-Metric Space Library (NMSLib) and Apache Lucene.
+OpenSearch vector engines provide different indexing and search implementations. Engine, algorithm and supported parameters must be selected together.
 
 - Exact Nearest Neighbor search
   - This is slow
@@ -8933,7 +9177,7 @@ Top-level engines are Facebook AI Similarity (FAISS,) Non-Metric Space Library (
 
 <!-- pdf-page: 729 -->
 
-Vector compression
+Vector compression reduces the representation's storage or memory footprint. Evaluate the quality and latency effects on the actual retrieval task.
 
   - Different ANN methods have their own techniques (, IVF)
   - Dense embeddings add up fast
@@ -8950,7 +9194,7 @@ Vector compression
 
 <!-- pdf-page: 730 -->
 
-Sharding strategies
+Vector-index shard layout affects memory use, parallelism and distribution of search work. Size it from the dataset and query workload.
 
   - Balance shard size and CPU ratio
   - Larger shards for semantic search (30-50 GB)
@@ -9177,7 +9421,7 @@ CodeDeploy coordinates installation of an application revision on supported comp
 
 <!-- pdf-page: 750 -->
 
-Before pushing the application code to servers, it needs to be stored somewhere
+A source repository stores application history for collaboration and delivery pipelines. Access, branch policy and the chosen hosting service govern how changes are published.
 
 - Developers usually store code in a repository, using the Git technology
 - A famous public offering is GitHub, AWS’ competing product is CodeCommit
@@ -9223,7 +9467,7 @@ CodePipeline orchestrates source, build and deploy stages using configured provi
 
 <!-- pdf-page: 754 -->
 
-Create budget and send alarms when costs exceeds the budget
+Budgets compares configured spending or usage against thresholds and sends notifications or supported actions. A budget alert is not automatically a hard spending cap.
 
 - 4 types of budgets: Usage, Cost, Reservation, Savings Plans
 - For Reserved Instances (RI)
@@ -9238,7 +9482,7 @@ Create budget and send alarms when costs exceeds the budget
 
 <!-- pdf-page: 755 -->
 
-Visualize, understand, and manage your AWS costs and usage over time
+Cost Explorer analyzes usage and cost trends across chosen dimensions. Use filters and time ranges to investigate the source of a change.
 
 - Create custom reports that analyze cost and usage data.
 - Analyze your data at a high level: total costs and usage across all accounts
@@ -9280,7 +9524,7 @@ A REST API accepts a client request, invokes Lambda business logic and accesses 
 
 <!-- pdf-page: 761 -->
 
-AWS Lambda + API Gateway: No infrastructure to manage
+API Gateway exposes managed API endpoints with configurable integrations and access controls. It connects clients to application backends without making every backend serverless.
 
 - Support for the WebSocket Protocol
 - Handle API versioning (v1, v2…)
@@ -9346,1332 +9590,3 @@ API authentication and custom-domain TLS are separate controls; edge-optimized c
   - If using Edge-Optimized endpoint, then the certificate must be in us- east-1
   - If using Regional endpoint, the certificate must be in the API Gateway region
   - Must setup CNAME or A-alias record in Route 53
-
-# Section Personal working notes
-
-<!-- collection: personal -->
-
-Preserved pre-existing personal notes and headings. These remain working study material; unfinished areas are prompts, and source-linked corrections above take precedence where the course or older notes differ. Search this collection separately in the presentation.
-
-# Section Fundamentals
-
-# Types of Data
-
-First step for data engineering is categorise data according to Unestructure vs. structured data
-
-Structured: Data that is organised in a defined manner or schema, typically found on relation databases
-
-Characteristics: Easily Queriable, Organised in rows and columns, has consistent structure
-
-MySQL, CSV files, Excel Spreadsheets that makes logical sense
-
-Unstructured : Doesn't have a predefined structure or schema. No easily queriable may have differents formats
-
-Text files without fixed format, videos, audios,
-images, emails, word processing documents
-
-
-Semi-Structured Data: It's not organised as structure manner but has some level of strucuture in the forms of tags, hierarchies. More flexible than structure but no chaotic as unstructured data
-
-XML, JSON, Log Files, e-mail Headers
-
-
-# Properties of Data
-
-3v's - Velocity, Volume, Variety
-
-Volume: Amount or size of data that organizations are dealing with at any given time.
-(How this is translated in real world companies how data engineers should seek answers about the volume of data dealt.)
-
-May range from gigabytes to petabytes, challanges in storing, processing, and analysing data.
-
-Velocity: Speed on which data is generated and collected, and processed.
-
-It relates to real-time, near-real-time processing depending on the velocity requirements.
-
-Rapid Ingestion and processing can be critical for certain applications.
-
-e.g: Sensors data from IoT generate data each miliseconds
-
-Variety: Refers to the different types, structures, and sources.
-
-Can be structured, semi-structured, or unstructured data can come from multiple sources and in various formats.
-
-E.g Business analysing data from clinical system that could be a database, or unstructured json from an API
-
-# Data Warehouse
-
-Data warehouse is a centralized repository optimized for analysis where data from different sources is stored in a structured format
-
-Optimized for read-heavy operations
-Typically uses star or snowflake schema
-Data is cleaned, transformed, loaded ETL into these repositories
-
-E.g Amazon redshift, google bigquery
-
-# Data Lake
-
-A storage repository that holds vast amounts of raw data in its native format, including structured, semi-structured, and unstructured data.
-
-Can store large volumes of raw data without predefined schema
-Data is loaded as-is no need for preprocessing
-supports batch, real-time, and stream processing
-can be queried fro data transformation or exploration purposes
-
-s3, Azure datalake, HDFS
-
-## Comparisons
-
-Data Warehouse: Schema-on-write (ETL) (predefined schema before writing data)
-
-Data Lake Schema-on-read (schema is defined at the time of reading data) typically uses ELT
-
-Data Types:
-
-Agility: data warehouse is less agile due to requirement of data predefined structure
-
-Cost: Data warehouses typically more expensive because of optimizations for complex query, cost-effective storage solution, but can rise over time and when processing large amounts of data
-
-## When to use datawarehouse:
-- Normally companies uses both, ingest raw data into datalakes and data warehouses in sequence 
-
-# Data Lakehouses
-
-A hybrid data
-
-# Data Mesh
-
-It's more related to organisation and governance. Individual teams own data products within a given domain. These products serve various use cases around the organisation. It's a self-service tooling and infrastructure, federated governance acts as centralised organisation
-
-# ETL Pipelines
-
-It's used to move data across systems into a data warehouse. 
-
-## Extract
-- Retrieve raw data from source systems: databases, crms, flatfiles, apis, etc
-- Ensure data integrity during extraction phase
-- can be done in real-time or in batches, depending on the requirements
-
-# Transform
-Convert extracted data into a format suitable for the target data warehouse
-- Data Cleasing
-- Data Enrichment
-- Format changes, date formatting, string manipulation
-- Aggregations or computations (calculating totals and averages)
-- Handling missing values
-- encoding and decoding data
-
-# Load
-
-Move the transformed data into the target data warehouse or another data repository
-
-- Can be done in batchs or in a streaming manner
-- Ensure to maintain integrity of data once the load is happening
-
-# Managing ETL pipelines
-
-This process must be automated in some reliable way
-- AWS Glue and associated orchestration services like stepfunctions, eventbridge
-
-# Data sources
-
-## JDBC 
-- Java database connectivity
-- platform-independent
-- language-dependent
-
-If you are not on java, an alternative can be use
-## ODBC
-- Open Database Connectivity
-- Platform-dependent (drivers needed)
-- Language-independent
-
-## OTher data sources
-- Raw Logs
--  API's 
--  Streams of Data
-
-
-# Data Formats
-
-## CSV : Text based format that represents data in tabular form where each line corresponds to a row and values are separeted by comma or similar separator
-- for small to medium datasets (around few gigabytes)
-- for data interchange between systems with different technologies
-- for human readable and editable
-- importing and exporting data from databases
-
-## Json
-
-lightweight, text-based, semi-structured and human-readable. based on key-value pairs.
-- Data interchange between webserve and web client
-- Configurations and settings for softwares apps
-- NoSQL databases like mongoDB, Programming Languages
-
-## AVRO
-binary format that store both the data and its schema allowing to be procesed later with different systems
-When to use:
-- Big dfata and real-time processing systems
-- When schema evolution is needed
-- Efficient serialization for data transport between systems
-- Push high throughtput data between systems
-e.g: Apache Kafka, Spark, Flink, Hadoop
-
-## Parquet
-Stored data in columnar format instead of rows, optimized for analytics allows efficient compression and encoding schemes.
-- Analysing large datasets with analytics engines 
-- Use cases where reading specific columns instead of entire records is beneficial
-- Storing data on distributed systerms where IO operations need optimization
-- Hadoop, Spark, Hive, Impala, Redshift Spectrum.
-Use when big columnar archive needs processing and analysing
-
-# Data Modelling
-
-## Star Schema
-## Snowflake
-
-# Data Lineage
-- A visual representation that traces the flow and transformation of data through its lifecycle from its source to its final destination.
-- Help tracks errors
-- Ensures compliance with regulations
-- Provides a clear understanding on how data is moved, transformed, loaded
-
-Obs: Example of capturing data lineage: Uses Spline agent (for spark) attached to glue, to dump lineage data into a Amazon Neptune via lambda. And by using Lineage API you can query this Lineage data generated by the agent.
-
-(I need to see more examples or lineage in aws)
-
-# schema evolution
- The ability to adapt and change the schema of a dataset over time without disrupting existing processes or systems.
- - Ensure data systems can adapt to changing business requirements
- - Allows for the addtion removal or modification of columns fields in a dataset
-
-(How to implement this into pipelines) very desirable skill for production pipelines
-
-# Database Performance Optimization
-- Indexing: Avoid full table scans, eforce data uniqueness and integrity
-- Partitioning: Reduce amount of data scanned, Helps with a data lifecycle management, Enables parallel processing
-- Compression: Speed up data transfer, reduce Storage & Disk reads (Gzip, Lzop, BZIP2, ZSTD (Redshift Examples))
-- Columnar Compression
-
-# Data Sampling Techniques
-
-- Random Sampling - Everything has an equal chance
-- Stratified Sampling - Divide the population into subgroups (strata) random sample within each stratum, ensures representation
-- Systemic Sampling - Have a specific rule for sampling the population for e.g odds samples, or 1 for each 10 samples
-- Others: Systemic Sampling, Cluster, Convenience, Judgmental
-
-# Data Skew mechanisms
-- Data skew refers to unequal distribution or imbalance of data across various nodes or partitions in distributed computer systems
-The celebrity Problem: Popular partitions receives more traffic and could overload the partition access, write
-Causes: Non uniform distribution of data, Inadequate partitioning strategy. Or could be caused by temporal skew more recent partitions in a growing dataset can be more used than older ones.
-
-* Important to monitor data distribution and alert when skew issues arise *
-## Solutions 
-- Adaptive Partitioning: Dynamically adjust partitioning based on data characteristics to ensure a more balanced distribution
-- Salting: introduce a random factor or "salt" to the data to distribute it more uniformly ( Dont know a real example)
-- Repartitioning: Regularly redistribute the data based on its current distribution characteristics
-- Sampling: Use a sample of the data to determine the distribution and adjust the processing strategy accordingly.
-- Custom Partitioning: Define custom rules or functions for partitioning data based on domain knowledge ( Need real scenario)
-
-# Data Validation and Profiling
-
-1. Completeness : Ensures all requried data is present and no essential parts are missing
-    - Missing values, null counts, percentage of populated fields
-    - Can lead to inaccurate analyses
-2. Consistency : ensures data values are consistent across datasets and do not contradict each other.
-    - Cross-field validation, comparing data from different sources or periods
-    - Inconsistent data can cause confusion and incorrect conclusions
-3. Accuracy: Ensures data is correct, reliable, and represents what it is supposed to.
-    - Comparing with trusted soruces, validation against known standards or rules.
-    - Inaccurate data can lead to false insights and poor decsion making
-4. Integrity: Ensures data maintains its correctness and consistency over its lifecycle and across systems
-    - referential integrity (e.g. Foreign Key checks in databases), relationship validations
-    - Ensures relationships between data elements are preserved, and data remains trustworthy over time.
-
-# SQL Pivoting
-- Pivoting is the act of turning row-level data into columnar data. for example, sales table contains sales amounts and the sales person in each row but we want a report by salesperson.
-
-```sql
-    SELECT 
-        salesperson,
-        SUM(CASE WHEN month = 'Jan' THEN sales ELSE 0 END) as JAN_Sales,
-        SUM(CASE WHEN month = 'Feb' THEN sales ELSE 0 END) as FEB_Sales
-    FROM sales
-    GROUP BY salesperson;
-```
-
-# Add a topic about Data Cardinality
-
-# Section Storage
-
-It's advertised as infinitely scaling storage, many websites uses as backbone
-- Backup and storage
-- Disaster Recory
-- Archive
-- Hybrid Cloud Storage
-- App Hosting
-- Media Hosting
-- Datalakes, Big data analytics
-- Software delivery (Software updates)
-- Static websites
-
-Nasdaq uses for backuping 7 years of data in S3 glacier
-Many companies uses to produce analytics reports
-
-## Buckets
-- In March of 2026, AWS relaxed the requirement of S3 bucket names being globally unique. Account regional namespaces now allow you to create buckets within your own reserved namespace.
-
-### Security
-
-- User-based: IAM Policies
-- Resource-based: Bucket Policies, Object ACL, Bucket ACL (less common)
-- objects can be Encripted by security keys
-
-Note: an IAM principal can access an s3 Object 
-IF the user IAM permissions ALLOW It (e.g aws user)
-OR the resource policy ALLOWS It (e.g external user)
-AND theres no explicit DENY
-
-- Bucket settings for Block Public Access is an extra layer to prevent data leaks
-
-### Replication 
-- CRR - cross region replication, used for compliance and low latency
-- SRR - Same region replication, used for live replication between environments
-- After you enable replication, only new objects are replicated
-- You can replicate existing objectsd using s3 Batch Replication
-- Amazon s3 Replication Time Control: extra cost per gigabyte, 99.99% of replicated obj are gonna be there within 15min
-
-### s3 Classes
-
-General Access
-Infrequent Access
-Standard
-Standard IA
-One Zone IA
-Intelligent Tiering
-Glacier Storage Classes - Low-cost for archiving/backup
-GLacier Instant Retrieval
-Glacier Flexible Retrieval
-
-s3 Express One Zone - High performance, single availability zone, very high performance, 10x better than s3 standard, 50% less costs e.g data-intensive apps, training ml, financial data, etc
-
-- LIfecycle rules, transiction actions, expiration actions
-
-
-### s3 Event Notifications
-
-s3:objectcreated, s3:objectrestored, etc
-- as target, sns, sqs, lambda and eventbridge can be used with resource policies  
-
-### s3 Performance
-
-- baseline performance: scales to high request rates, latency 100-200ms
-- 3500 PUT/COPY/POST/DELETE and 5500 GET/HEAD requests per second per prefix
-- Multi-part Upload - Parellize the upload
-- s3 transfer acceleration - Increase transfer speed by transferring file to an aws edge location in order to forward to s3 bucket target region. e.g file in us --> us edge location --AWS private network --> s3 Australia
-- S3 byte-range fetchs - GET Requests are made in parallel parts of a file or certain amount of bytes e.g the header only
-
-### Encryption
-
-- SSE-S3 handled, managed, owned by aws, AES-256, server-side, default
-- SSE-KMS handled, managed by AWS KMS, user control + audit key usage with cloud trail, server-side. Downside is needs access to AWS-KMS service everytime requesting or uploading a file inccour in extra costs and limits
-- DSSE-KMS dual layer, 1st layer KMS key, 2nd layer S3 Managed Key, higher cost than KMS
-- SSE-C handled by customer outside aws, HTTPS must be used, aws do not store the key, 
-- Client side Encryption - Use client libraries such Amazon s3 Client-sideEncryption Library, Customer fully manages the keys and encryption cycle
-- Encryption in transit (SSL/TLS) - HTTPS endpoint encryption in flight
-- Force Encryption in transit aws:SecureTransport in bucket policy
-
-
-### Access Points
-- Enables access across users and teams
-- Each access point have it own security level
-- Simple way to manage security by access point policies
-- can have own dns
-- we can define access point to be accesible only in the vpc
-
-### S3 Tables
-
-- Purpose-built for tabular data, better than just storing data in s3
-- 3x times faster, 10x more transaction rates
-- Table Buckets concepts
-- offers replication across region and accounts
-- centralize analytics by replicating into a single region
-- test/dev environments
-- intelligent tiering can apply to automate costs
-- Security: IAM Identity based policies, resource-based policies and SCP- service control policies
-- Other access management tools : SQL Commands and Lake formation
-- VPC endpoints via Private Link
-- Public access and http are not allowed
-
-### Storage Lens
-
-- Understand analyze and optimze storage across entire aws organisation
-- discover anomalies, identify cost efficiencies,
-- Data protection Metrics
-- Acess Management Metrics
-- Event metrics
-- Performance Metrics
-- Acitivty Metrics
-- Status code Metrics
-
-Free Metrics - Available for all customers, 28 usage metrics, available for 14 days queries
-- Addtional paid metrics, available for 15 months, new features like:
-
-## EBS Elastic Block Store
-- Network drive attached to your instances while they run.
-- Allows instances persist data even after termination
-- mounted at one instance at time
-- can be swapable between EC2 instances one at time per instance
-- It's locked to an AZ
-- Has a provisioned capacity (GBS and IOPS)
-- DELETE on termination attribute - The rrot ebs volume is deleted when instance is terminated
-- By default is not deleted when instance terminated is an add-on
- 
-
-## EFS Elastic file system
-- Managed Network file system that can be mounted on many EC2
-- EFS works with instances in multi-AZ
-- 3x times more costly than gp2 EBS
-- Pay per usage
-- Uses security group to control acess to EFS
-- Compatible with linux based AMI (not windows)
-- Encryption at rest using kms
-- use cases: content management, webserving, data sharing
-- Performance: Performance Mode, Throughput Mode: bursting, provisioned, elastic
-- Storage Classes ( lifecycle management feature after N days, Standar, EFS-IA infrequent, archive)
-- Availability and durability - Standard: Multi-AZ great for Prod, One Zone: great for Dev, hml
-
-## AWS Backup
-
-- Fully managed service
-- Centrally manage and automate backups across AWS services
-- No need to create custom scripts and manual processess
-- Supported by: EC2, EBS, S3, RDS, DocumentDb, Neptune, EFS, FSx (windows file server), AWS storage gateway
-- Supports cross-region backups
-- Supports cross-account backups
-- PITR - point in time recovery
-- On demand and scheduled backups
-- backup policies known as Backup Plans
-- Backup Vault Lock: Enform WORM (write Once Read Many), additional layer of defence agains updates and deletes, even the root cannot delete (for compliance purposes)
-- 
-
-# Section Databases
-
-## DynamoDB (NoSQL DBs)
-
-- do not support query joins or limited support, dont performs aggregations
-- databases scale horizontally can perform more reading and writing
-- fully managed in aws, highly available with replication
-- non relation
-- can deal with million of requests, fast and consistency (low latency)
-
-### Basics
-- is made of tables
-- each table has a primary key (must be decided on creation)
-- each table can have an infinite number of items (=rows)
-- each item has attributed (can be added over time no problems - can be null)
-- Maximum size of an item is 400KB
-- Data types supported are: scalar types (string, number, binery, null, boolean), Document Types (list, map), Set Types (string set, number set, binary set)
-- has classes like standard and Infrequent access on table level
-- Read/Write capacity can be on-demand or provisioned with read and or write auto scaling or manual provisioned.
-- Permit encriptation on rest
-
-### Primary Keys
-- Option 1: Partition Key (HASH): unique for each item, must be diverse, e.g user_id
-- Option 2: partition Key + sort Key (Hash + Range) data is grouped by partition key e.g (users-games user_id for partition key and game_id for sort key)
-
-### DynamoDB use cases
-
-Whenever use when data is hot and small needs high throughput on read and write , low latency and small size since is limited to 400KB
-- GAming
-- Mobile Apps
-- Live voting
-- sensor networks
-- log ingestion
-- E-Commerce shopping carts
-- Web session management
-
-### DynamoDB Anti Pattern
-
-- Prewritten application tied to traditional RDB
-- Joins or complex transactions
-- Binary Large Object (BLOB) data, then is better to store data in s3 and metadata in DynamoDB
-- Large data with low i/O rate : use s3 instead
-
-### Read Capacity Unit and Write Capacity Unit (RCU and WCU)
-
-- RCU Throughput for reads - represents one strongly consistent read per second or two eventually consistent reads per secod for an item up to 4KB
-- WCU throughput for writes - represents one write per second for an item up to 1KB
-- Option auto scaling of throughput to meet demand
-- THroughput can be exceeded temporarly using "burst capacity"
-- If burst capacity has been consumed you'll get a ProvisionedThroughputExceedException
-- It's then advised to retry via exponential backoff
-
-### Strongly Consistent Read vs Eventually Conssistent read
-- Eventually consistent read - if we read just after a write it's possible to read stale date due replication in progress across dynamoDb servers
-- Strongly consistent read - If we read after a write it will always get the last correct data (Set ConsistentRead to true, inccour more RCU usage)
-
-### Partitions Internal
-- Data is stored in partition that goes to a hash function and it's unique
-- WCU and RCU are divided and splitted equally against partititons
-
-### Throttling 
-- If we exceed provisioned RCUs or WCUs we get ProvisionedThroughputExceedException
-Reasons:
-- Hot Keys - a hot key (which leads to a hot partition) occurs when a disproportionate amount of read or write traffic targets a single partition key value
-- Very Large Items - RCU and WCU depends on the size of items
-- Each individual physical partition in DynamoDB has strict, hard throughput limits: 3,000 Read Capacity Units (RCUs) per second, 1,000 Write Capacity Units (WCUs) per second
-Solutions:
-- Exponential backoff
-- Distribute partition keys as much as possible
-- if its a read issue RCU, we can use DynamoDB accelarator DAX
-
-### R/W Capacity Modes - On-Demanda
-- Read/writes scale up/down with workloads
-- no capacity planning
-- unlimited WCU/RCU, no throttling
-- 2.5x more expensive than provisioned
-- E.g Unpredicted workload
-
-### Basic APIs
-
-### DynamoDB – PartiQL
-- SQL compatible query language for DynamoDB
-- Allows you to select, insert, update, and delete data in DynamoDB using SQL
-- Run queries across multiple DynamoDB tables
-- Run PartiQL queries from: AWS Management Console, NoSQL Workbench for DynamoDB, DynamoDB APIs, AWS CLI, AWS SDK
-
-### DynamoDB - Local Secondary Index
-Alternative Sort Key for your table (same Partition Key as that of base table)
-- The Sort Key consists of one scalar attribute (String, Number, or Binary)
-- Up to 5 Local Secondary Indexes per table
-- Must be defined at table creation time
-
-### DynamoDB - GLobal Secondary Indez
-
- Alternative Primary Key (HASH or HASH+RANGE) from the base table
-- Speed up queries on non-key attributes
-- The Index Key consists of scalar attributes (String, Number, or Binary)
-- Attribute Projections – some or all the attributes of the base table (KEYS_ONLY,
-INCLUDE, ALL)
-- Must provision RCUs & WCUs for the index
-- Can be added/modified after table creation
-
-### DynamoDB Accelerator (DAX)
-- Fully-managed, highly available, seamless inmemory cache for DynamoDB
-- Microseconds latency for cached reads & queries
-- Doesn’t require application logic modification (compatible with existing DynamoDB APIs)
-- Solves the “Hot Key” problem (too many reads)
-- 5 minutes TTL for cache (default)
-- Up to 10 nodes in the cluster
-- Multi-AZ (3 nodes minimum recommended for production)
-- You need to create a DAX cluster, selecting family, size, instance type
-
-### Dax vs Elasticache
-- DAX useful for individual objects cache, for query and scan cache to much fast results
-- Elasticache - Useful for store aggregation results that will be computed once and accessed many
-
-### DynamoDB Streams
-- Ordered stream of item-level modifications (create/update/delete) in
-a table
-- Stream records can be: sent to Kinesis Data Streams, Read by AWS Lambda, Read by Kinesis Client Library Applications (KCL)
-- Data retention for up to 24hours
-- use cases: react to changes in real-time (welcome e-mail to users), analytics, insert into derivative tables, insert into opensearch, implement cross-region replication
-
-Ability to choose the information that will be written to the
-stream:
-- KEYS_ONLY – only the key attributes of the modified item
-- NEW_IMAGE – the entire item, as it appears after it was modified
-- OLD_IMAGE – the entire item, as it appeared before it was modified
-- NEW_AND_OLD_IMAGES – both the new and the old images of the item
-- Records are not retroactively populated in a stream after enablingit
-
-### DynamoDB Streams & AWS Lambda
-
-- You need to define an Event Source Mapping to read from a DynamoDB Streams
-- You need to ensure the Lambda function has the appropriate permissions
-- Your Lambda function is invoked synchronously
-
-### DynamoDB – Time To Live (TTL)
-- Automatically delete items after an expiry timestamp
-- Doesn’t consume any WCUs (i.e., no extra cost)
-- The TTL attribute must be a “Number” data type with “Unix Epoch timestamp” value
-- Expired items deleted within few days of expiration
-- Expired items, that haven’t been deleted, appears in reads/queries/scans (if you don’t want them, filter them out)
-- Expired items are deleted from both LSIs and GSIs
-- A delete operation for each expired item enters the DynamoDB Streams (can help recover expired items)
-- Use cases: reduce stored data by keeping only currentitemsadheretoregulatoryobligations
-
-### Use cases Large Objects Pattern / Indexing s3 Objects Metadata
-- Storing image in s3 and metadata in dynamoDb
-
-### DynamoDB security and other features
-- VPC Endpoints available to access DynamoDB without using the internet
-- IAM full control access
-- Encryption at rest using AWS KMS and in-transist using ssl/tls
-- PITR like RDS with no performance impact
-- Global Tables : Multi region, fully replicated, multi-active
-- DynamoDB Loca - for test and locally development
-- Users can interact with dynamoDB directly via identity providers like cognito, google, facebook, etc
-- Using Web Identity Federation or Cognito Identity Pools, each user gets AWS credentials
-- You can assign IAM Role to these users with a condition to limit their API access to dynamoDB
-- Access can be limited at row level by specifing LeadingKeys, so user can only view and modify own data
-- Access can be limited at attribute level as well.
-
-## Amazon RDS - Hosted relational Database
-- Amazon Aurora, MySQL, PostgreSQL, MariaDB, Oracle, SQL Server
-- Not for big data, might appear on exam as an example of what not to use
-- Or in the context of migrating from RDS to Redshift
-- All RDS databases are ACID compliant (Atomicity, Consistency, Isolation, Durability)
-- Atomicity - Transaction is wholeness completed or if some part fail all transaction fail
-- Consistency - Data writen must adhere to all constrains and data rules
-- Isolation - Each transaction is independent itself 
-- Durability - Information are retained properly after transaction 
-
-### Lock command 
-- rlational databases implicitly lock tables to prevent two things writing to it at the same time, or reading while a write is in process to be conformant with atomicity and isolation
-- tables or rows can also be explicitly locked to ensure data integrity
-- LOCK TABLES employees WRITE; -- Locks for write operations
-- UNLOCK TABLES; to release the lock
-- Redshit also has LOCK for same purpose
-- Shared Lock: SELECT * FROM employees WHERE department = 'Finance' FOR SHARE; (FOR UPDATE -- prevent all reads and writes)
-- Using locks might lead to DEADLOCKS when you do not have a way to UNLOCK the resources (dependent locks)
-
-
-### RDS Operational guidelines
-- Cloudwatch to monitor memory, cpu, storage, replica
-- Set TTL on DNS for your db instances to 30 sec or less from your apps to prevent chaching DNS and never hitting the databases
-- Provision enough RAM to include your entire working set
-- Query Optimization in RDS (explain whenever is necessary)
-- Avoid full table scans
-- Use ANALYZE TABLE periodically to check table healths
-- DB-specific tweaks: MariaDB, MySQL: keep tables well under 16TB, ideally under 100GB, try to have less than 10K tables, Use InnoDB fpr Storage
-- PostgreSQL: When loading data disable DB backups and multi-AZ. check and tweak those param: maintenance_work_mem, max_wal_size, checkpoint_timeout. disable synchronous_commit, autovaccum (when loading data, otherwise on), and ensure tables are logged. 
-- SQL Server: deploy into all AZs , use RDS DB Events to monitor DB
-
-### Amazon Aurora
-- MySQL and PostgreSQL - Compatible
-- Up to 5x faster than MySQL, 3x faster than PostgreSQL
-- 1/10 the cost of commercial databases
-- Up to 256TB per database volume automatically grows in 10GB increments
-- Up to 15 read replicas (faster than MySQL sub 10ms replica lag)
-- Constinuous Backup to S3
-- Replication Across regions and AZ
-- Automatic scaling with aurora Serverless
-- vpc network isolation, at-rest with kms (data, backup, snapshots, replicas)
-- Costs 20% more on RDS (Cost efficient)
-- Backtrack: restore data at any point of time without using backups
-- Automated maintence
-
-#### High Availability and Read Scaling
-- Aurora by default: 6 copies of your data across 3AZ
-- It need 4 copies out of 6 for writes, 3 copies out of 6 need for reads
-- self healing with peer-to-peer replication
-- Storage is striped across 1000s of volumes
-- Shared Storage Volume (replication+self healing+auto expading)
-- One Aurora instance takes writes (master)
-- In case of failover for master another one assumes the position in less than 30 secs
-
-#### Aurora DB Cluster
-- 1. Writer Endpoint - Pointing to the master instance
-- 2. Reader Endpoint - connection load balancing between read instances
-
-## DocumentDB (MongoDB) NoSQL
-- MongoDB is used to store, query, and index JSON data
-- Similar ''deployment concepts as Aurorara
-- Fully Managed Highly Available 3AZ
-- Auto Scales to workloads with millions of requests per seconds
-
-## MemoryDB for Redis
-- Redis-comaptible, durable, in-memory database service
-- Durable in-memory data storage
-- mobile apps, online gamming, media streaming
--
-
-## Amazon Keyspaces (For Apache Cassandra) NoSQL
-- Apache Cassandra is an open-source NoSQL distributed database
-- With keyspaces you get a managed Apacha Cassadra-compatible database service
-- Using Cassandra Query Language
-- use cases: IoT decvices info, time-series data
-
-## Amazon Neptune
-
-##
-
-##
-
-## Amazon Redshift
-
-### Redshift Spectrum
-- Columnar format
-
-### Redshift Durability
-- 
-
-### Resource Scaling in Redshift Serverless
-- Capacity Measured in Redshift processing Units (RPU's)
-- You pay for RPU-hours (per second) plus storage
-
-### Redshift Serverless
-
-Does everything that Redshift can, except:
-- Parameter Groups
-- Workload Management
-- AWS partner integration
-- Maintenance windows / version tracks
-- Must access within VPC (no public endpoints)
-
-###  Serverless Monitoring
-- Monitoring views: SYS_QUERY_HISTORY, SYS_LOAD_HISTORY, SYS_SERVERLESS_USAGE
-- Cloudwatch Logs and Metrics
-
-### Redshift Materialized Views
-
-- Pre computed results based on SQL queries over one or more base tables. 
-- Provide a way to speed up complex queries
-- Query return results faster since they use precomputed results without accessing base tables
-- CREATE A MATERIALIZED VIEW vw_name AS SELECT...
-- You can either refresh by: REFRESH MATERIALIZED VIEW or AUTO REFRESH on creation
-- Materialized views can be built from other materialized views
-
-### Data Sharing
-- Securely Share live data across redshift clusters for read purposes
-- Why? Workload Isolation, cross-group collaboration, licessing data access in aws data exchange (marketplace), sharing between environments
-- Can share DB's, schemas, tables, views and or UDF's
-- Follows producer/consumer architecture (Producer controls security, isolation to producer and consumer performance)
-
-### Redshift Lambda UDF
-
-Use custom functions in AWS lambda inside SQL queries
-- Use any language
-- Do anything you want
-- Register with CREATE EXTERNAL FUNCTION
-- Must GRANT USAGE ON LANGUAGE EXFUNC for permissions
- 
-### Redshift Federated Queries
-- Query and analyze across databases, warehouses, and lakes
-- for example ties RDS and Amazon Aurora into redshift
-- Incorporate live data into redshift queries and avoids the need for ETL pipelines
-- Make sure connections are available between Redshift and Aurora, and RDS. Also include secrets in aws secrets manager
-- Read only access to external data sources
-- Costs will be incurred on external DB's
-- You can query RDS/Aurora in Redshift but not the other way around
-
-### Redshift System Tables and Views
-- Contains Informartion about how redshift is functioning
-- SYS views, STV tables (transient data containing snapshots of current system data), SVV views (metadata about DB objects for STV tables), STL views, SVL, 
-
-### Redshift Data API
-Secure HTTP endpoint for SQL Statements to redshift clusters 
-- provisioned or serverless
-- individual or batch
-- assynchronous
-- Application integration (REST endpoints)
-- It can also integrate with a variety of other services
-- ETL orchestration with StepFunctions, Sagemaker notebooks, Eventbridge, Event Stream with lambda
-
-### Maximum for Data API: 
-- Query duration 24hours
-- Active queries: 500
-- Query result size (gziped): 100MB
-- Result retention time 24hours
-- API Calls: ExecuteStatement, BatchExecuteStatement, ...
-- Cluster must be in a VPC
- 
-# Migration And Transfer
-
-## AWS Database Migration Service
-- Sources: On-premises, EC2 Instances Database (Oracle, MariaDB, PostgreSQL, MongoDB), Azure SQL Database, 
-- Amazon s3
-- Amazon RDS (Aurora Including)
-- DocumentDB
-
-Tagerts: On-premises
-- RDS
-- Redshift
-- DynamoDB
-- OpenSearch Service
-- Kinesis Data Streams
-- Apache Kafka, etc
-
-### AWS Schema Conversion Tool (SCT)
-- Convert your Database Schema from one engine to another
-- Source DB --> DMS + SCT --> Target DB (different engine)
-- No need to use SCT for same engine on-premises PostgreSQL to RDS PostgreSQL
-- For DMS continuous Replication (Build the Diagram:) oracleDB (source) --> AWS SCT --> Amazon RDS (MySQL)
-and oracleDB (source) --data migration--> AWS DMS Replication Instance (Full load + CDC) --> Amazon RDS (MySQL)
-
-## AWS DataSync
-- Move large amount of data to and from 
-- On premises / Other cloud to AWS
-- AWS to AWS
-
-## AWS Snow Family
-- Currently being phased out from the exam, but let's keep for context
-- Highly-secure, portable devices to collect and process data at the edge, and migrate data into AWS and out of AWS
-- A physical device shipped to your location and shipped back to aws to transfer data to cloud
-- Useful for edge computing: Process data while its being created on an edge location: mining site, on the road, ship, etc
-
-## AWS Data Exchange
-- Find, subscribe to, and use third-party data in the cloud
-- Reuters, who curate data from over 2.2 million unique news stories
-- Change Healthcare, who process and anonymize more than 14 billion healthcare transactions
-Dun & Bradstreet, who maintain a databse of more than 330 million global business records
-- Data Exchange for Redshift
-- Data exchange for APIs (find and subscribe to third-party APIs with a consistent access using AWS SDKs)
-
-after subscribe you can use data exchange api to load data into s3 an then analyze it with the AWS analytics tools
-
-## AWS Transfer Family
-- Fully managed service for file transfers into and out of Amazon s3 or Amazon EFS using the FTP protocol
-- AWS Transfer for FTP (File Transfer Protocol)
-- FTPS File Transfer Protocol over SSL (encrypted)
-- SFTP (Secure File Transfer Protocol) (encrypted)
-- INtegrate with authetication providers
-- Manages user credentials otherwise
-- 
-
-# Computing
-
-## EC2
--
-
-## AWS Graviton
-- Amazon's own family of processors
-- Offers best price performance
-- Option for many data engineering services: MSK, RDS, MemoryDB, ElasticCache
-
-## AWS Lambda
-- Serveless Continuous Scaling
-- Often used to process data as it's moved around
-- Serverless Website (Amazon API Gateway, DynamoDB, Amazon cognito)
-- e.g Order History app (Server logs--> Kinesis Data Streams --> Lambda --> DynamoDB --> ClientApp)
-- Lambda can act as a glue between services that do not natively speak
-- • Synchronous Invocations: Capped at a maximum of 15 minutes (900 seconds).
-• Asynchronous and Event Source Mapping (ESM): Up to 90 minutes (5,400 seconds) when running on AWS Lambda Managed Instances.
-
-Why not just run a server?
-- Server management
-- Servers can be cheap but scaling gets expensive really fast
-- You don't pay for processing time you don't use in lambda
-
-Main use cases of Lambda
-- Real-time file processing
-- Real time stream processing
-- ETL
-- Cron Replacement
-- Process AWS Events
-- Lambda Triggers has an extensive liste of services that can trigger lambda functions.
-
-### Lambda Architectures
-- Lambda and Amazon OpenSearch Architecture: build your version of google analytics
-- amazon s3 --> AWS lambda triggered --> Amazon Elastic Service (visualize & query)
-- Lambda and data pipeline triggered by s3
-- Lambda and Redshift: Best practice is trhough COPY command but you can use lambda if you need to respond to new data that shows up at any time, can also use Amazon dynamoDb to keep track of what's been loaded.
-- Lambda and Kinesis: Lambda receives an event with a batch of stream records, you specify
-
-### Lambda - File Systems Mounting
-- Lambda can access EFS file systems if they are running in a vpc
-- Storage options: Ephemeral /tmp , Lambda Layers, Amazon s3, Amazon EFS
-
-### Lambda - SAM
-- Serverless Application Model
-- Framework for developing and deploying serverless application
-- All config is handled in Yaml
-- Generate complex cloud formation templates and deploy implementations
-- SAM - Recipe: Transform: 'AWS::Serverless-2016-10-31', AWS::Serverless::Function, AWS::Serverless::Api
-- SAM Accelerate (SAM sync)
-- SAM Accelerate is a set of features to reduce latency while deploying resources to AWS
-- can be used to deploy lambda easily and quicker: `sam sync`, `sam sync --code`, etc.
-
- ## AWS BATCH
- - Run batch jobs as docker images
- - dynamic provisioning of the instances
- - No need to manage clusters, fully serverless
- - You just pay for the underlying EC2 instance
- - Orchestrate or Invoke in Stepfunction
-
-### AWS BATCH vs Glue
-- Glue: Run Apache Spark code, Scala or Python focus on ETL, Do not worry about configuring or managin the resources, Needs Data catalog to make data available to athena or Redshift
-- Batch: For any computing job regardless of the job (Docker Image), Resources are created in your account, managed by batch.
-
-# Containers
-
-## Docker
-- Docker is a software development platform to deploy apps
-- Apps are packaged in containers that can be run on any OS
-- Any machine, No compatibility issues, predicatable behavior, less work, easier to maintain
-- Server --> Docker --> Containers (Java, Node, MySQL) on same server
-- Docker Images are stored in Docker Repositories
-- Docker Hub: Public Repository, ECR: Private/Public repository
-- Resources are shared with the host -> Many Containers one Server
-- Starting with docker: Build file, Docker daemon to build, Run on Server
-
-## AWS ECS
-- Elastic container Service
-- Launch docker containers on AWS means Launch ECS Tasks on ECS Cluster
-- Launch Type: EC2, each instance is an EC2 server running the docker agent
-- Fargate Launch Type: You don't provision the infrastrutucre, just create task definitions, AWS runs ECS tasks based on the CPU/RAM you need, Serverless
-
-### ECS - IAM roles
-
-- EC2 instance profile (EC2 launch type), pull image from ECR, send logs to Cloudwatch, Makes API calls to ECS service
-- ECS Task Role: Allows each task to have specific role. Defined in task definition
-- ECS Data volumes can use EFS, compatible with both EC2 and Fargate
-- Fargate + EFS = Serverless
-- Tasks running in any AZ will sahre same data
-
-### ECR
-- Elastic Container Registry
-- Store and manage docker images on AWS
-- Fully integrated with ECS backed by Amazon s3
-- 
-
-### EKS
-- Amazon Elastic Kubernetes Service
-- It is a way to launch managed Kubernetes clusters on AWS
-- Kubernetes is a nopen-source system for automatic deployment, scaling and management of containerized (usually docker) application
-- It's an alternative to ECS, similar goal but different API
-- EKS supports EC2 and Fargate
-- If your company is already using kubernetes on premises or in another cloud
-- Cloud Agnostic
-- Managed Node groups
-- Self managed Nodes
-- AWS Fargate, no maintaince or nodes
-
-# Analytics
-
-## AWS Glue
-- Managed service for serverless discovery and definition of table definitions and schema
-- S3 "data lakes", RDS, Redshift, Other SQL databases
-- CUstom eTL Jobs like: trigger-diven, schedule, or on demand
-- GLue + Hive = Hive lets you run SQL-like queries from EMR
-- glue data catalog can serve as hive metastore and you can also import a hive metastore into glue
-- Glue ETL: (add definitions)
-- Uses DPU's (data processing units) to process data, and you can check in glue metrics monitor
-- Glue Scheduler, Glue triggers
-- A DynamicFrame is a collection fo DynamicRecords
-- have a schema, much alike a spark dataframe but with more ETL stuff
-
-## AWS Glue Transformations
-- DropFields, DropNullFields
-- Filter - Specify a function to filter records
-- Join - to enrich data
-- Map - add fields, delete fields, perform external lookups
-- FindMatches ML: Identify duplicate or matching records in your dataset, even when the records do not have a common unique identifier and no fields match exactly.
-- Format conversions: CSV, JSON, AVRO, PARQUET
-- Apache Spark Transformations (K-means)
-- ResolveChoice - Deals with ambiguities in dynamicFrame and returns a new one (e.g "price":"100.00", price":"$100.00") 
-
-## AWS Glue Modifying Data Catalog
-- ETL scrips can update your schema and partitions
-- Addning new partitions
-- updating table schema
-- Creating new tables (enableU)
-- S3 Only, 
-
-## AWS Running Glue Jobs
-- Time-based Schedules
-- Job Bookmarks (persists state from the job run, allows you to process new data only when re-running on a schedule))
-- Cloudwatch Events (Fire off a lambda function or SNS notification when ETL Succeeds or fails)
-
-## AWS Glue Cost Model
-- Billed by the second for crawler and ETL Jobs
-- First millions objects stored and accesses are free for the glue data catalog
-- Development endpoints for developing ETL code charged by the minute
-- Anti patterns: Multiple ETL engines, if you want to use other engines (HIVE, pig, etc)
-try to go for DATA pipeline or EM
-- Glue ETL supports serverless streaming ETL (Consumes from kinesis or kafka)
-- Clean and transform in-flight
-- Store results into s3 or other data stores
-- Run on APAche Spark Structure Streaming
-
-## AWS Glue Flex Jobs
-- Execution class ("FLEX") for non-urgent ETL Workload
-- Uses spare compute capacity instead of dedicated workers
-- Might have to wait for capacity to become available
-- Not supported: Python shell jobs, stramining jobs, glue ML Jobs
-
-## AWS Glue Studio
-- Visual interface for ETL workflows
-- Creat DAG's for complex workflows,
-- Sources can include s4, Kinesis, Kafka, JDBC
-- Transforms sample and join date
-- Visual job dashboard
-
-## AWS Glue Data Quality
-- Data quality rules may be created manually or recommended automatically
-- Integrates into Glue Jobs
-- Uses the Data quality definition language DQDL which consists of a ruleset
-- Rules = [isComplete "order-id", IsUnique "order-id"]
-- Lots of build in rules types (Mean, Sum, CustomSQL)
-- Compositive rules (and,or)
-
-```
-Rules = [
-    RowCount >= 100,
-    IsComplete "customer_id",
-    IsUnique "order_id",
-]
-```
-## AWS Glue DataBrew
-- a visual data preparation tool
-- UI for pre-processing large data sets
-- input from S3, data warehouse, or database
-- Output to s3
-- Over 250 ready-made transformations
-- You create "recipes" of transformations that can be saved as jobs within a larger project
-- May define data quality rules
-- May create datasets with custom SQL from Redshift and snowflakes
-
-## Handling PII in DataBRew Transformations
-- Substitution (REPLACE_WITH_RANDOM)
-- Shuffling (SHUFFLE_ROWS)
-- Deterministic Encryption (DETERMINISTIC_ENCRYPT)
-- Probabilistic Encryption (ENCRYPT)
-- Decryption (DECRYPT)
-
-## Glue Workflows
-- Design multi-job, Multi-crawler ETL processes run together
-- Create from AWS Glue blueprint, from the console or API
-- This is only for orchestrating complex ETL workflows
-- Triggers within workflows can: start jobs, crawlers, schedule, on demand, evenbridge events
-
-## AWS Lake Formation
-- Makes it easy to setup a secure datalake in days
-- Loading data and monitoring data flows
-- Setting up partitions
-- Encryption and managign Keys
-- Defining transformations jobs and monitoring them
-- access control
-- auditing
-- built on top of glue
-- Theres no cost on lake formation but the underlying services costs
-
-## Data Permissions in Lake formation
-
-- Cross-account Lake Formation permissions> Recipient must be setup as datalake administrator
-- Can use AWS Resource Manager, IAM Permissions for cross-account access
-- Lake formation does not support manifests in athena
-- IAM Permissions needed to create blueprints and workflows
-- Can tie to IAM users/roles or SAML or external aws accounts
-- Can use policy tags
-- can select specific permissions for tables or columns
-
-## Data filters in Lake Formation
-- Column, row or cell-level security
-- Apply when granting select permission on tables
-- all columns + row filter = row-level security
-- all rows + specific columns = column-level security
-- Creates filter over UI or API
-
-## Amazon Athena
-- Serverless interactive query service for s3
-- Presto Under the hood
-- Supports main data formats and compressions 
-- Unstructured, Semi-structured or structured
-- e.g: Ad-hoc queries of weblogs, querying stagin data before loading to redshift, integration with quicksight, integration with ODBC/JDBC, Analyze Cloudtrail/Cloudfront
-- Pay as you go: $5 per TB scanned
-- Save LOTS of money by using columnar formats (money and performance)
-- Glue and s3 have their own charges
-- No charge for DDL
-- Successful or Cancelled queries counts, failed queries do not
-- Small number of large files performs better than large number of small files
-- Partitions use improves performance
-- Able to use CTAS table creation ( can be used to convert data stored in s3)
-- 
-
-## Athena + Glue
--   amazon s3 --> glue --> athena --> quicksight
-
-### Athena Workgroups
-- Organise users/teams/apps workloads into workgroups
-- Can control query access and track costs by workgroup-
-- Each workgroup can have its own: Query history, Data Limits, IAM policies, Encryption Settings
-
-## Athena Security
-- Access control
-- Encrypt Results at rest in s3 staging directory (SSE-s3, SSE-KMS, CSE-KMS)
-- cross-account access in s3 bucket policy possible
-- transport layer security (TLS) encrypts in-transit (between athena and s3)
-- Athena Anti-patterns : Highly formatted reports/visualisations, ETL use glue Instead
-- You can have IAM policies to restrict access to alter, create, drop, repair, show databses, show tables. It's necessary to mapa each operations to their IAM Actions
-
-
-## Athena ACID transactions
-- Powered by Apache Iceberg only for iceberg tables
-- Concurrent users can safely make row-level modifications
-- Removes need for custom record locking
-- Compatible with EMR, Spark, anything that supports iceberg
-- Time travel operations
-- Periodic compaction to preserve performance
-
-## Apache Spark
-- Distributed processing framework for big data
-- in-memory caching, optimised query execution
-- supports java, scala, python and r
-- supports code reuse across: batch processing, interactive queries, real-time analytics, machine learning, graph processing
-- Spark streaming: integrated with kinesis, kafka, on EMR
-- Spark is not meant for OLTP
-- Spark apps are run as independent processes on a cluster
-- the SparkContext (driver program) coordinates them
-- SparkContext Works through a cluster Manager 
-Make a diagram here about spark
-- Executors run computations and store data
-
-### Spark Structured Streaming
-- It's a constantly geowing DataSet
-- Data stream --> Unbounded table (new data in stream = new rows appended to input table)
-```python
-spark.readstream.json ("s3://logs")
-inputDF.groupBy($"action", window($"time", "1 hour")).count())
-    .writeStream.format("jdbc").start("jdbc:mysql//...")
-```
-- Spark Streaming + Kinesis (Kinesis Producer --> Amazon Kinesis data Streams <-- Spark Dataset implemented from KCL)
-- Spark + Redshift : Allows spark datasets from Redshift, useful for ETL using Spark
-
-### Spark + Athena
-- Can run jupyter notebooks with Spark within athena console (Notebooks may be encrypted auto or with KMS)
-- Uses firecracker for quickly spinning up spark resources
-- Programmatic API /CLI access as well (create-work-group, create-notebook,...)
-- Can adjust DPU's for coordinatior and executor
-
-### Athena Federated Queries
-- Query data from sources other than s3
-- Data source connectors translate between source and athena 
-- Connectors: Cloudwatch, DynamoDB, DocumentDB, OpenSearch, RDS
-- Support for views on federated data sources
-- Can use with AWS Secrets Manager
-- Some connectors may be integrated with AWS Glue
-- Cross-account federated queries are possible
-- Passthrough Queries allow you to use the native query language of the data source
-
-## AWS EMR
-- Elastic Mapreduce
-- Managed Hadoop framework on EC2
-- Includes Spark, HBase, Presto, Flink
-- EMR Notebooks
-- Several integration points with AWS
-- Master Node: manages the cluster, track status of tasks
-- Core Node: Hosts HDFS data and runs tasks, can be scaled up and down but with some risks
-- Task Node: Runs tasks, does not host data, No risk of data loss when removing, good use of spot instances
-- ENR Charges by the hour plus EC2 Charges
-- Provisions new nodes if a core node fails
-- cAN ADD AND REMOVe tasks nodes on the fly (Increase process capacity but not HDFS)
-- Can resize a running cluster's core nodes (Increase both processing and HDFS capacity)
-- Core nodes can also be aadded or remoted (Leads to risk of data loss)
-
-### EMR Usage
-- Transisent: clusters terminate once all steps are complete. Loading data, processing, storing and then shutdown
-- Long running clusters must be manually terminated: Basically a data warehouse with periodic processing on large datasets, auto-termination off.
-- Frameworks and applications are specified at cluster launch
-- connect directly to master to run jobs directly
-- Or, submit ordered steps via the console, process data in s3 or HDFS, output data to X, can be invoked via the console
-- Integration with Amazon EC2 : for instances that compromise the nodes in the cluster
-- Integration with Amazon VPC : 
-- Amaozn S3 : To store input and output data
-- Amazon Cloudwatch to monitor cluster performance
-
-### EMR Storage
-- HDFS (Distributed file System, Multiple coies stored across cluster instances for redundancy, files stored as blocks, 128MB is the default, Ephemeral - HDFS data is lost when cluster is terminated, but useful for caching intermediate results)
-- EMRFS : Access s3 as if it were HDFS, allows persistent storage after cluster termination, EMRFS Consistent View: Optional for s3 consistency, Uses dynamoDB to track consistency (since 2021 s3 guarantees consistent)
-- Local File system: suitable only for temporary data (Buffers, cache, etc)
-- EBS for HDFS --> Allows use of emr on EBS-pnly types (M4-C4)
-
-### AWS EMR Managed Scaling
-- EMR Automatic Scaling (Old way of doing, custom scaling rules, supports instance groups only)
-- EMR Managed Scaling (Introduced in 2020, supports groups and instance fleets, scales spot, on-demand, and instances in savings plan)
-- Scale-up Strategy first adds core nodes then task nodes
-- Scale-down Strategy (first removes task-nodes then core-nodes, spot nodes always removed before on-demand instnaces)
-
-### Hadoop
-- Mapreduce: Framework for distributed data processing maps data to key/value pairs, reduces intermediate results to final output, largely supplanted by spark these days
-- YARN : tet another resource Negotiator: Manages cluster resources for multiple data processing frameworks
-- HDFS : Hadoop distributed file systems, distributes data blocks across cluster in a redundant manner, data lost on termination
-
-### EMR Serverless
-- do not need to provision clusters, and provision resources
-- Put diagram to initialize
-- Put diagram to Lifecycle (Must call API's such as createApplication, StartApplication, StopApplication to avoid excess charges)
-- Spark adds 10% overhead to memory requested for drivers and executors
-- Be sure initial capacity is at least 10% more than requested by the job.
-- EMRFS (s3 encryption SSE or CSE at rest)
-- TLS in transit between EMR nodes and s3
-- Local disk encryption
-- Spark communication between drivers and executors is encrypted
-
-### EMR On EKS
-- Allows submitting spark job on Elastic kubernetes service without provisioning clusters
-- fully managed
-- share resources between spark and other apps on kubernets
-
-## Amazon Kinesis Data Streams
-- Made by multiple shards 1... shard N
-- Producers: Send data to kinesis data streams (apps, client, sdk, kinesis agent). produce records
-- Records are partition key and data Blob (up to 1MB)
-- Producers can send 1MB/sec or 1000msgs/sec per shard
-- Consumers: Apps, Lambda, Kinesis Data firehose, Kinesis data analytics
-- Receive Records: Partition key, sequence no., Data blob (2MB/sec shared all consumers, or 2MB/sec (enhanced per shard per consumers))
-- Retention between 1 day to 365 days
-- Ability to reprocess (replay) data
-- Once data is inserted in kinesis it cant be deleted (Immutability)
-- Data that shares the same partition goes to the same shard (ordering)
-- Provisioned Mode: Choose the number of shards provisioned, scale manually or API, Each shard gets 1MB/s IN, 2MB/s OUT, you pay pershard per hour
-- On-demand Mode: No need to provision or manage the capacity, default capacity provisioned (4MB/s in or 4000 Records/s), Scales automatically based on observed throughput peak during last 30 days, pay per stream per hour and data in/out per gb
-- Encryption in flight using HTTPS
-- Encryption in rest using KMS
-- VPC endpoints available for Kinesiss to access within VPC
-- Client Side encryption must be manually implemented
-
-## Kinesis data streams security
-- Control acces/authorization using IAM policies
-- Encryption in flight using HTTPS
-- Encryption at rest using KMS
-
-## Kinesis Producers
-- SDK (allow to write code or use the CLI to directly send data to Kinesis data streams)
-- KPL: Advanced (ability to write custom codes, better code and enhanced features)
-- Kinesis Agent: Linux server (get a log file and send reliable to kinesis data streams )
-- Kafka Connect and Spark: Using custom library ommands to send data
-
-### SDK 
-- PutRecord - Put one record
-- PutRecords - Put many records
-- ProvisionedThroughputExceeded if we go over limits (Happens when sending more data exceeding MB/s or TPS for any shard)
-- To solve: make sure you don't have hot shard (Bad partition key and too much data goes there), Retries with backoff, increase shards (scaling), Ensure your partition key is a good one
-- Use case: low throughput, higher latency, simple API, AWS Lambda
-- Managed AWS sources for Kinesis Data Streams: AWS Iot, Cloudwatch Logs
-
-### KPL (Kinesis Producer Library)
-- Easy to use and highly config (C++ and JAVA)
-- Used for bulding high performance, long-running producers
-- automated and config retry mechanism
-- synchronous (Same as SDK) or asynchronous API (Better performance for async)
-- able to submits metrics to cloudWatch for monitoring
-- Batching mechanism - Increase throughput, decrease cost:
-    - Collect - Records and write to multiple shards in the same PutRecords API call
-    - Aggregate - Ability to store multiple records in one record ( go over 1000 records per second limit), Increase payload size and improve throughput
-- Compression might be implemented by the user 
-- KPL records must be decoded using KCL or special helper library
-- 1. 2KB to kinesis --> wait --> 40KB --> 500KB --> aggregate into One record < 1MB
-- 2. Instead of sending this big record waits a little bit more and aggregate again to send via Collection (PutRecords) using only 1 api call
-Put the diagram here
-- We can influence the batching efficiency by introducing some delay with RecordMaxBufferedTime (default 100ms) adds latency to processing
-
-### Anti pattern:
-- KPL can incur an additional processing delay of up to RecordMaxBufferedTime
-- Larger values of RecordMaxBufferedTime results in higher packing efficiencies and better perfomance
-- Application that cannot torelate this additional delay mayu need to use the AWS SDK directly
--
-
-### Kinesis Agent
-- Monitor log files and sends them to kinesis data streams
-- Java based agent, bult on top of KPL
-- Install in linux based server environments
-- Write from multiple directiores and wreite to multiple strams
-- routing feature based on directory/log file
-- Pre-process data before sending to streams
-- the agend handles file rotation, checkpointing, and retry uplon failures
-- emits metrics to cloudwatch for monitoring
-
-## Kinesis Consumers - Classic
-### Kinesis SDK
-- Classic Kinesis - records are polled by consumers from a shard
-- Each shard has 2MB total aggregate throughput
-- GetRecords returns up to 10MB of data (then throttle for 5 seconds or up to 10000 records)
-- Maximum of 5 GetRecords API calls per shard per second = 200ms latency
-- if 5 consumers application consume from the same shard means every consumer can poll once a second and receive less than 400KB/s
-
-### Kinesis Client Library (KCL)
-- Java first library but exists for other languages: python, go rube, node
-- Read records from Kinesis produced with the KPL (de-aggregation)
-- Share multiple shards with multiple consumers in one group, shard discovery
-- checkpointing feature to resume progress
-- Leverages DynamoDB for coordination and checkpointings (One row per shard)
-    - Make sure you provision enough WCU/RCU
-    - Or use on-demand for dynamo
-    - Otherwise DynamoDB may slow down KCL
-- Record processors will process the data
-- ExpiredIteratorException => Needs increase on the WCU
-
-### Kinesis Connector Library
-- Older Java library (2016) leverages the KCL library
-- Write data to : S3, DynamoDB, Redshift, Opensearch
-- Kinesis firehose replaces the connector library for a few of these targets, lambda for others
-
-### Kinesis Firehose
-- 
-
-### AWS Lambda
-- Read records from Kinesis data streams
-
-### Kinesis Enhanced Fan out
-- Each consumer get 2MB/s of provisioned througput per shard
-- No more 2MB/s limit pershard per consumer
-- ables multiple consumers
-- Enhanced fan out pushs data to consumers over HTTP/S
-- Reduced latency (70ms)
-- use cases: Multiple consumer applications for sma stream
-- Low latency req, higher costs, default limit of 20 consumers using enhanced fade out per shard
-
-### Kinesis Operations - Adding Sharts
--  Also called Shard Splitting
-- Can be used to increase the Stream Capacity (1MB data in per shard)
-- Can be uysed to divide a "hot shard"
-- the old shard is closed and will be deleted once the data is expired
-
-### Merging Sharts
-- Decrease the stream capacity and save costs
-- Opposite to adding sharts
-- can be used to group two shards with low traffic
-- Old shards are closed and deleted based on data expiration
-
-### Out of order records after resahrding
-- When you are creating new shards the data from the child shard can be consumed before the original data on a new consumer
-- e.g if you start reading the child before completing reading the parent shard, you could read data for a particular hash key out of order
-- In order to prevent data: after a reshard read entirely from the parent until you dont have new records
-- Note: KCL has this logic already built-in even after resharding operations
-
-### Kinesis Operations - Auto Scaling
-- Auto scaling is not a native feature
-- the API ...
-- ...
-- ..
-- Kinesis Scaling Limititions: Resharding cannot be done in parallel. Plan capacity in advance
-- Other limitations: 
-
-### Kinesis Handling duplicates for Producers
-- Producer retires can create duplicates due to network timeouts on sending ACK back to producer
-- In order to fix: embed unique record ID in the data to de-duplicate on the consumer side
-
-### Kinesis Handling duplicates for consumers
-- Consumers retries can make your application read the same data twice
-- Can happen when record processors restart: 1 Worker terminates unexepctedly, Worker instances are added or removed, shards are merged or split, the application is destroyed
-- Fixes: Make your consumer app idempotent
-- If the final destination can handle duplicates, it's recommended to do it there
-
-## Kinesis Data Firehose
-- Can read records from producers and transform using lambda, and output batch writes to s3, redshift, or opensearch
-- Also to 3rd party: splunk, datadog, new relic and custom http endpoint
-- All or failed data can be sent to a s3 bucket
-- Fully managed service
-- Near real time (buffer based on time and size)
-- Load data into Redshift / Amazon s3 / Opensearch / Splunk
-- Automatic Scaling
-- Can compress data when s3 is the target
-- Pay for the amount of data going through Firehose
-- Spark and KCL do not read from KDF
-
-### Kinesis Firehose Buffer Sizing
-- Firehose accumulates records in a buffer
-- the buffer is flushed based on time and size rules
-- Buffer Size: if that buffer size is reached is flushed
-- Buffer time: if that time is reached is flushed
-- Fire hose can auto increase the buffer size to icrease throughput
-
-### Kinesis Data Streams vs Firehose
-
-### Troubleshooting Kinesis data stream producers
-- Performance: writing is too slow
-- 
-
-### Troubleshooting Kinesis data stream Consumers

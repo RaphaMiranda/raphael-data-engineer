@@ -12,7 +12,7 @@ A static portfolio for Raphael Miranda, with case studies and a focused AWS Cert
 
 ## Study deck
 
-The AWS deck keeps the Markdown document as its source of truth. The course collection covers the supplied PDF through physical page 765; the personal collection preserves the existing working notes and unfinished prompts. Search by topic or PDF page, use Previous/Next or arrow keys, and open the topic map with `O`. Slides show brief key points with expandable full notes, tables and code. The notes are a personal study aid; validate exam-critical details against current AWS documentation. See the [coverage and writing review](docs/aws-study-review.md).
+The AWS deck keeps the Markdown document as its source of truth. Personal notes and the supplied PDF through physical page 765 are merged into one paraphrased guide, with unfinished prompts retained. The deck starts with the substantive topics; the right-side menu groups title-only rows into expandable sections. Search by topic or source page, use Previous/Next or arrow keys, and show/hide topics with `O`. Slides show brief points with expandable full notes, tables and code. The notes are a personal study aid; validate exam-critical details against current AWS documentation. See the [coverage and writing review](docs/aws-study-review.md).
 
 ### Visuals and diagrams
 

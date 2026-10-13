@@ -1,5 +1,17 @@
 # AI session log
 
+## 2026-10-13 - Merged AWS notes and expandable topic sections
+
+- **Branch:** `feature/merged-aws-study-notes`.
+- **Goal:** Combine the PDF and personal notes through paraphrasing, remove introductory study guidance, and organize the right-side topics into expandable section sublists without page prefixes.
+- **Changed files:** `docs/aws-data-eng-associate.md`, `docs/aws-study-source-coverage.json`, `docs/aws-study-review.md`, `assets/js/aws-study-guide.js`, `assets/css/aws-study-guide.css`, `aws-study-guide.html`, `tests/aws-study-guide.test.js`, `tests/aws-study-guide-browser.js`, `tests/site-navigation-browser.js`, `README.md`, `ai-session.md`.
+- **Content:** Integrated all 174 original headings into their relevant subject sections, including the indented AWS BATCH heading. Merged overlapping topics with rewritten takeaways and retained practical examples, DQDL, SQL and review questions. Labeled unfinished headings as prompts. Removed Study approach, Course orientation and How to use this study guide from the presentation. The single sequence has 738 topics in 15 sections, including 724 source-page topics and original prompts; all 329 source diagrams remain mapped. The 765-page coverage index now records 37 context pages and four non-study pages.
+- **References:** Resolved conflicting S3 namespace, DynamoDB PartiQL/change-capture, Lambda timeout/retry and RDS tuning claims against linked primary AWS documentation. Retained source-specific technical details and distinguished hard limits from performance guidance. Other dated course figures retain their study-snapshot qualification.
+- **Menu:** Added native section disclosures with nested title-only topic buttons, compact rows and visible keyboard focus. Search opens matching groups and restores expansion choices when cleared. Navigation opens the selected group; direct PDF-page links and original review-prompt links work. Removed collection selection and the opening orientation slide. Retained the visible 44px sidebar arrow and reduced-motion support.
+- **Verification:** All 20 Node tests and production/test JavaScript syntax checks pass. Chrome at 1440x1000 and 375x812 passed 177 study-deck assertions each, covering grouped topics, search restoration, page navigation, diagrams, zoom/fit, text alternatives, code/tables, original DQDL, unfinished prompts and library fallback. Shared-navigation checks passed at both widths (15 desktop / 19 mobile). Real Enter/Space expansion and collapse, Tab skipping collapsed children, and arrow-key focus behavior passed with visible focus. Inspected expanded/collapsed desktop and full mobile screenshots; no study-deck horizontal overflow or browser runtime errors. All 29 local page/asset/documentation paths return HTTP 200 and fragment targets exist. Scoped whitespace checks pass.
+- **Preserved work:** Working tree was clean before this task. No unrelated files or diagram models changed; source PDF, extraction files and temporary authoring tools remain excluded. No new website dependencies.
+- **Commit:** `feat: merge AWS study notes and group topics by section`.
+
 ## 2026-10-13 - PDF-backed AWS study material
 
 - **Branch:** `feature/pdf-study-material`.

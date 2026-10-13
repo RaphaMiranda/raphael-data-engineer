@@ -5,7 +5,6 @@
   const pause = () => new Promise(resolve => setTimeout(resolve, 80));
   const slide = document.getElementById('slide');
   const search = document.getElementById('topic-search');
-  const collection = document.getElementById('study-collection');
   for (let i = 0; i < 100 && !document.querySelector('[data-slide-index]'); i++) await pause();
   const searchFor = query => { search.value = query; search.dispatchEvent(new Event('input', { bubbles: true })); };
   async function page(n) {
@@ -13,8 +12,32 @@
     await pause();
     assert(slide.querySelector('.slide-index').textContent.includes('PDF page ' + n), 'Direct page navigation: ' + n);
     assert(document.querySelectorAll('.site-header a[aria-current="page"]').length === 2, 'Page links preserve the active study-guide menu item: ' + n);
+    assert(document.querySelector('[data-slide-index][aria-current="true"]').closest('.topic-section').open, 'Navigation expands the selected section: ' + n);
   }
-  assert(document.querySelectorAll('[data-slide-index]').length > 730, 'Complete course sequence loads');
+  assert(document.querySelectorAll('[data-slide-index]').length > 724, 'Merged source topics and original review prompts load together');
+  assert(!document.getElementById('study-collection'), 'There is one merged guide without separate collections');
+  assert(slide.querySelector('h2').textContent === 'Types of Data', 'The guide opens directly with substantive notes');
+  const groups = [...document.querySelectorAll('.topic-section')];
+  assert(groups.length === 15 && groups.every(group => group.querySelector(':scope > summary') && group.querySelector(':scope > ul')), 'Each section has an expandable sublist');
+  assert(groups.filter(group => group.open).length === 1 && groups[0].open, 'Only the active section starts expanded');
+  assert([...document.querySelectorAll('[data-slide-index]')].every(button => button.children.length === 1 && button.firstElementChild.matches('.topic-title') && !/\bp\.\s*\d/i.test(button.textContent)), 'Topic rows contain only a title, without repeated sections or page numbers');
+  const databases = groups.find(group => group.dataset.section === 'Databases');
+  databases.querySelector('summary').click();
+  assert(databases.open && databases.querySelector('button').checkVisibility(), 'Expanding a section reveals its topics');
+  databases.querySelector('summary').click();
+  assert(!databases.open && !databases.querySelector('button').checkVisibility(), 'Collapsing a section hides its topics');
+  const storage = groups.find(group => group.dataset.section === 'Storage');
+  storage.querySelector('summary').click();
+  await pause();
+  const expandedBefore = groups.filter(group => group.open).map(group => group.dataset.section).join('|');
+  searchFor('DynamoDB');
+  assert(databases.open && groups.filter(group => !group.hidden).every(group => group.open && [...group.querySelectorAll('button')].some(button => !button.hidden && /dynamodb/i.test(button.textContent))) && groups.some(group => group.hidden), 'Search opens matching sections and hides unrelated sections');
+  await pause();
+  searchFor('');
+  assert(groups.filter(group => group.open).map(group => group.dataset.section).join('|') === expandedBefore, 'Clearing search restores section expansion choices');
+  searchFor('no-such-study-topic');
+  assert(groups.every(group => group.hidden) && document.getElementById('topic-results').textContent.startsWith('No matching'), 'Search has an explicit empty state');
+  searchFor('');
   searchFor('765');
   let visible = [...document.querySelectorAll('[data-slide-index]')].filter(button => !button.hidden);
   assert(visible.length === 1 && visible[0].textContent.includes('API Gateway'), 'Exact physical-page search');
@@ -57,6 +80,9 @@
   await page(54);
   slide.querySelector('.notes-details').open = true;
   assert(slide.querySelector('code').textContent.includes('GROUP BY department_id'), 'Image-only SQL example is readable code');
+  await page(351);
+  slide.querySelector('.notes-details').open = true;
+  assert(slide.querySelector('code').textContent.includes('RowCount >= 100'), 'Original DQDL example is merged into the related PDF topic');
   await page(53);
   assert(slide.querySelector('.source-reference a').href.startsWith('https://docs.aws.amazon.com/'), 'Dated correction links to primary documentation');
 
@@ -67,16 +93,15 @@
   assert(slide.querySelector('.diagram-text').open && slide.querySelectorAll('.diagram-text li').length > 5, 'Fallback includes full components and relationships');
   window.go = goLibrary;
 
-  collection.value = 'personal';
-  collection.dispatchEvent(new Event('change', { bubbles: true }));
-  assert(document.querySelectorAll('[data-slide-index]').length > 100 && document.querySelectorAll('[data-slide-index]').length < 250, 'Personal working notes remain a separate collection');
   searchFor('Cardinality');
   visible = [...document.querySelectorAll('[data-slide-index]')].filter(button => !button.hidden);
   assert(visible.length === 1, 'Unfinished personal heading remains searchable');
   visible[0].click();
   assert(slide.querySelector('.empty-note'), 'Unfinished topic is labeled instead of invented');
+  location.hash = 'note-81';
+  await pause();
+  assert(slide.querySelector('h2').textContent === 'Database review prompt 1' && slide.querySelector('.empty-note'), 'Blank original headings remain labeled review prompts');
   await page(543);
-  assert(collection.value === 'course', 'Page links restore the course collection');
   const arrow = document.getElementById('overview-toggle').getBoundingClientRect();
   const stage = document.querySelector('.study-stage').getBoundingClientRect();
   assert(arrow.left >= stage.left && arrow.right <= stage.right && arrow.width >= 44, 'Sidebar arrow and touch target fit');

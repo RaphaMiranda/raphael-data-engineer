@@ -10,7 +10,7 @@ vm.createContext(sandbox);
 vm.runInContext(fs.readFileSync('assets/js/aws-study-visuals.js', 'utf8'), sandbox);
 // Exercise the production parser and render helpers without starting a browser.
 const guide = fs.readFileSync('assets/js/aws-study-guide.js', 'utf8').replace('  fetch(sourcePath)',
-  '  window.studyTest = { parseMarkdown, formatText, renderList, renderVisual, renderTables, splitPoints, getVisual };\n  fetch(sourcePath)');
+  '  window.studyTest = { parseMarkdown, formatText, renderList, renderVisual, renderTables, splitPoints, getVisual, groupTopics, matchesTopic };\n  fetch(sourcePath)');
 vm.runInContext(guide, sandbox);
 const helpers = sandbox.window.studyTest;
 const slides = helpers.parseMarkdown(notes);
@@ -27,13 +27,38 @@ test('all 765 physical pages are accounted for, with no material beyond the requ
   assert.equal(slides.find(s => s.sourcePage === 765).title, 'API Gateway – Security');
 });
 
-test('all original headings, duplicates and unfinished prompts remain in the personal collection', () => {
-  const personal = notes.split('<!-- collection: personal -->')[1];
-  const headings = personal.replace(/\r/g, '').match(/^#{1,6}[^\n]*/gm);
-  assert.deepEqual(headings, coverage.preservedHeadings);
-  assert.ok(slides.some(s => s.collection === 'personal' && /Cardinality/.test(s.title)));
-  assert.ok(slides.some(s => s.collection === 'personal' && s.title === 'Data Lakehouses'));
+test('original headings and prompts are integrated into one paraphrased guide without the removed introductions', () => {
+  const headings = notes.replace(/\r/g, '').match(/^ {0,3}#{1,6}[^\n]*/gm);
+  const counts = list => list.reduce((result, heading) => result.set(heading, (result.get(heading) || 0) + 1), new Map());
+  const actual = counts(headings);
+  for (const [heading, count] of counts(coverage.preservedHeadings)) assert.ok(actual.get(heading) >= count, heading);
+  assert.equal(slides.filter(s => s.originalNote !== undefined).length, coverage.originalNoteMerge.length);
+  assert.ok(slides.some(s => /cardinality/i.test(s.title) && s.unexpanded));
+  assert.ok(slides.some(s => s.title === 'Data Lakehouses' && s.sourcePage === 27));
   assert.equal(slides.find(s => s.sourcePage === 204).title, 'RDS best practices: unexpanded source heading');
+  assert.doesNotMatch(notes, /collection: personal|collection: course|# Section Study approach|# Section Course orientation|## How to use this study guide/);
+  assert.match(notes, /clinical-system database records with JSON/);
+  assert.match(notes, /RowCount >= 100/);
+  assert.ok(slides.find(s => s.sourcePage === 22).paragraphs[0].startsWith('A warehouse brings curated'));
+  for (const page of [4, 7, 8, 9, 10, 11]) assert.equal(coverage.pages[page - 1].status, 'context');
+});
+
+test('topics form ordered section sublists while numeric and text searches retain their meaning', () => {
+  const topics = slides.filter(s => !s.isSection);
+  const groups = helpers.groupTopics(topics);
+  assert.equal(groups.length, 15);
+  assert.equal(groups[0].section, 'Fundamentals');
+  assert.equal(topics[0].sourcePage, 13, 'The presentation starts with substantive notes');
+  assert.equal(groups.reduce((count, group) => count + group.topics.length, 0), topics.length);
+  for (const group of groups) for (const topic of group.topics) {
+    assert.equal(topic.slide, topics[topic.index]);
+    assert.equal(topic.slide.section, group.section);
+  }
+  assert.ok(helpers.matchesTopic(topics.find(s => s.sourcePage === 765), '765'));
+  assert.ok(!helpers.matchesTopic(topics.find(s => s.sourcePage === 764), '765'));
+  assert.ok(helpers.matchesTopic(topics.find(s => s.sourcePage === 162), 'dynamodb'));
+  assert.ok(helpers.matchesTopic(topics[0], 'fundamentals'));
+  assert.ok(slides.find(s => s.originalNote === 110).title === 'AWS Batch', 'Indented original headings parse correctly');
 });
 
 test('every source schematic has a corresponding note, unique ID and complete graph endpoints', () => {
@@ -92,11 +117,9 @@ test('presentation stays brief while the complete nested reference outline remai
   assert.ok(split.main.every(i => i.indent === 0));
   assert.deepEqual(Array.from(split.rest.map(i => i.text)), items.map(i => i.text));
   assert.equal(helpers.splitPoints([], 4).main.length, 0);
-  const structured = slides.find(s => s.sourcePage === 14);
-  const structuredPoints = helpers.splitPoints(structured.listItems, 4);
-  assert.match(structuredPoints.main[0].text, /Characteristics: Easily queryable/);
-  assert.match(structuredPoints.main[1].text, /Examples: Database tables/);
-  assert.equal(structuredPoints.rest.length, structured.listItems.length, 'Summaries keep the complete original outline in details');
+  const categories = helpers.splitPoints([{ indent: 0, text: 'Characteristics:' }, { indent: 2, text: 'Queryable' }, { indent: 2, text: 'Consistent fields' }], 4);
+  assert.match(categories.main[0].text, /Characteristics: Queryable; Consistent fields/);
+  assert.equal(categories.rest.length, 3, 'Summaries keep the complete original outline in details');
   const sql = slides.find(s => s.sourcePage === 54);
   assert.match(sql.code[0], /WHERE join_date/);
   assert.ok(slides.find(s => s.sourcePage === 540).code[0].includes('hello >> airflow()'));
@@ -129,4 +152,7 @@ test('selected source corrections replace the inaccurate claims in their course 
   assert.match(pageText(500), /floating point is approximate/);
   assert.match(pageText(678), /Ground Truth Plus is a separate/);
   assert.match(pageText(740), /not a requirement/);
+  assert.doesNotMatch(pageText(180), /Run queries across multiple DynamoDB tables/);
+  assert.match(pageText(187), /separate change-capture option/);
+  assert.match(pageText(291), /Managed Instances supports up to 5,400 seconds/);
 });

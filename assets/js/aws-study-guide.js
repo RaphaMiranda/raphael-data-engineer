@@ -3,7 +3,7 @@
   "use strict";
 
   const sourcePath = "/docs/aws-data-eng-associate.md";
-  const state = { slides: [], topics: [], collection: "course", index: 0, diagram: null, diagramObserver: null };
+  const state = { slides: [], index: 0, expandedSections: new Set(), diagram: null, diagramObserver: null };
   const visualsByTitle = window.studyVisuals || {};
   const elements = {
     slide: document.getElementById("slide"), previous: document.getElementById("previous"),
@@ -12,7 +12,7 @@
     overview: document.getElementById("topic-overview"), overviewToggle: document.getElementById("overview-toggle"),
     topicList: document.getElementById("topic-list"),
     workspace: document.getElementById("study-workspace"), search: document.getElementById("topic-search"),
-    collection: document.getElementById("study-collection"), results: document.getElementById("topic-results")
+    results: document.getElementById("topic-results")
   };
 
   function escapeHtml(value) {
@@ -33,7 +33,6 @@
     const slides = [];
     let current = null;
     let currentSection = "Study guide";
-    let collection = "course";
     let table = null;
     let inCodeBlock = false;
     let codeLines = [];
@@ -53,13 +52,14 @@
       }
       if (inCodeBlock) { codeLines.push(line); return; }
 
-      const heading = line.match(/^(#{1,4})\s+(.+)$/);
+      const heading = line.match(/^ {0,3}(#{1,4})(?:[ \t]+(.*))?$/);
       if (heading) {
         flushParagraph();
-        const rawTitle = heading[2].trim();
-        const title = cleanTitle(rawTitle);
-        if (/^Section\s+/i.test(rawTitle)) currentSection = title;
-        current = { level: heading[1].length, title: title, section: currentSection, collection: collection, listItems: [], paragraphs: [], code: [], tables: [] };
+        const rawTitle = (heading[2] || "").trim();
+        const title = cleanTitle(rawTitle) || "Unexpanded topic";
+        const isSection = /^Section\s+/i.test(rawTitle);
+        if (isSection) currentSection = title;
+        current = { level: heading[1].length, title: title, section: currentSection, isSection: isSection, unexpanded: !rawTitle, listItems: [], paragraphs: [], code: [], tables: [] };
         table = null;
         slides.push(current);
         return;
@@ -68,8 +68,12 @@
       if (!line.trim()) { flushParagraph(); table = null; return; }
       const sourcePage = line.match(/^<!-- pdf-page: (\d+) -->$/);
       if (sourcePage) { current.sourcePage = Number(sourcePage[1]); return; }
-      const sourceCollection = line.match(/^<!-- collection: (course|personal) -->$/);
-      if (sourceCollection) { collection = sourceCollection[1]; current.collection = collection; return; }
+      const displayTitle = line.match(/^<!-- title: (.+) -->$/);
+      if (displayTitle) { current.title = displayTitle[1]; return; }
+      const originalNote = line.match(/^<!-- original-note: (\d+) -->$/);
+      if (originalNote) { current.originalNote = Number(originalNote[1]); return; }
+      if (line === "<!-- section -->") { current.isSection = true; currentSection = current.title; current.section = currentSection; return; }
+      if (line === "<!-- unexpanded -->") { current.unexpanded = true; return; }
       if (/^\|.*\|$/.test(line.trim())) {
         flushParagraph();
         const cells = line.trim().slice(1, -1).split("|").map(function (cell) { return cell.trim(); });
@@ -120,16 +124,6 @@
       index = group.index;
     }
     return html;
-  }
-
-  function buildTitleSlide(topicCount, sectionCount) {
-    return {
-      title: "AWS Data Engineer Associate", isTitle: true, section: "Start here", level: 0,
-      listItems: [], code: [], tables: [], topicCount: topicCount, sectionCount: sectionCount,
-      paragraphs: [state.collection === "personal"
-        ? "Your preserved working notes, including unfinished study prompts. Use Course notes for the page-linked PDF sequence and dated corrections."
-        : "Study the takeaway, explain the diagram, then test the tradeoff. Search by topic or physical PDF page; expand the detailed notes for examples and references."]
-    };
   }
 
   function renderVisual(slide) {
@@ -249,9 +243,7 @@
 
   function renderSlide() {
     const current = state.slides[state.index];
-    const isTitle = current.isTitle;
     const section = current.section;
-    const titleTag = isTitle ? "h1" : "h2";
     const points = splitPoints(current.listItems, 4);
     const notes = renderList(points.main);
     const visual = renderVisual(current);
@@ -260,21 +252,20 @@
     const paragraphs = current.paragraphs.slice(1).filter(function (paragraph) { return !references.includes(paragraph); });
     const detail = renderList(points.rest) + paragraphs.map(function (paragraph) { return '<p class="detail-note">' + formatText(paragraph) + '</p>'; }).join("") + renderTables(current.tables) + code;
     const details = detail ? '<details class="notes-details"><summary>Detailed notes' + (current.code.length || current.tables.length ? ' and examples' : '') + '</summary>' + detail + '</details>' : '';
-    const empty = !isTitle && !notes && !current.paragraphs.length && !code
+    const empty = current.unexpanded || !notes && !current.paragraphs.length && !code
       ? "<p class=\"empty-note\">This topic is marked in the source notes but has not been expanded yet. Use it as a prompt for deeper study.</p>" : "";
-    const titleStats = isTitle ? "<div class=\"title-stats\"><span>" + current.topicCount + " note topics</span><span>" + current.sectionCount + " study sections</span><span>Keyboard ready</span></div>" : "";
 
     disposeDiagram();
     elements.slide.classList.remove("entering");
     void elements.slide.offsetWidth;
-    elements.slide.innerHTML = "<div class=\"" + (isTitle ? "title-slide" : "") + "\">"
-      + "<p class=\"slide-index\">" + (isTitle ? "Interactive study deck" : current.sourcePage ? "PDF page " + current.sourcePage + " · course snapshot" : "Topic " + String(state.index).padStart(2, "0")) + "</p>"
+    elements.slide.innerHTML = "<div>"
+      + "<p class=\"slide-index\">" + (current.sourcePage ? "PDF page " + current.sourcePage : "Study notes") + "</p>"
       + "<p class=\"slide-section\">" + escapeHtml(section) + "</p>"
-      + "<" + titleTag + ">" + (isTitle ? "AWS Data Engineer <span class=\"accent\">Associate</span>" : escapeHtml(current.title)) + "</" + titleTag + ">"
-      + "<p class=\"slide-lede\">" + formatText(current.paragraphs[0] || (isTitle ? current.paragraphs[0] : "Key notes from your source document.")) + "</p>"
+      + "<h2>" + escapeHtml(current.title) + "</h2>"
+      + (current.paragraphs[0] ? "<p class=\"slide-lede\">" + formatText(current.paragraphs[0]) + "</p>" : "")
       + notes + visual + details
       + references.map(function (reference) { return '<p class="source-reference">' + formatText(reference) + '</p>'; }).join("")
-      + empty + titleStats + "</div>";
+      + empty + "</div>";
     elements.slide.classList.add("entering");
     elements.count.textContent = (state.index + 1) + " / " + state.slides.length;
     elements.section.textContent = section;
@@ -291,10 +282,36 @@
     elements.slide.focus({ preventScroll: true });
   }
 
+  function groupTopics(slides) {
+    const groups = new Map();
+    slides.forEach(function (slide, index) {
+      if (!groups.has(slide.section)) groups.set(slide.section, { section: slide.section, topics: [] });
+      groups.get(slide.section).topics.push({ slide: slide, index: index });
+    });
+    return Array.from(groups.values());
+  }
+
+  function matchesTopic(slide, query) {
+    return /^\d+$/.test(query) ? slide.sourcePage === Number(query)
+      : (slide.title + " " + slide.section).toLowerCase().includes(query.toLowerCase());
+  }
+
   function renderOverview() {
-    elements.topicList.innerHTML = state.slides.map(function (slide, index) {
-      return "<button class=\"topic-button\" type=\"button\" data-slide-index=\"" + index + "\"><small>" + escapeHtml(slide.section + (slide.sourcePage ? " · p. " + slide.sourcePage : "")) + "</small><strong class=\"topic-title\">" + escapeHtml(slide.title) + "</strong></button>";
+    elements.topicList.innerHTML = groupTopics(state.slides).map(function (group) {
+      return '<details class="topic-section" data-section="' + escapeHtml(group.section) + '"><summary><span class="topic-section-title">'
+        + escapeHtml(group.section) + '</span><span class="topic-section-count"></span></summary><ul class="section-topics">'
+        + group.topics.map(function (topic) {
+          return '<li><button class="topic-button" type="button" data-slide-index="' + topic.index + '"><strong class="topic-title">'
+            + escapeHtml(topic.slide.title) + '</strong></button></li>';
+        }).join("") + '</ul></details>';
     }).join("");
+    elements.topicList.querySelectorAll(".topic-section").forEach(function (group) {
+      group.addEventListener("toggle", function () {
+        if (elements.search.value.trim()) return;
+        if (group.open) state.expandedSections.add(group.dataset.section);
+        else state.expandedSections.delete(group.dataset.section);
+      });
+    });
     elements.topicList.querySelectorAll("[data-slide-index]").forEach(function (button) {
       button.addEventListener("click", function () { goTo(Number(button.dataset.slideIndex)); });
     });
@@ -304,47 +321,62 @@
   function filterOverview() {
     const query = elements.search.value.trim().toLowerCase();
     let count = 0;
-    elements.topicList.querySelectorAll("[data-slide-index]").forEach(function (button) {
-      const slide = state.slides[Number(button.dataset.slideIndex)];
-      const matches = /^\d+$/.test(query) ? slide.sourcePage === Number(query)
-        : (slide.title + " " + slide.section).toLowerCase().includes(query);
-      button.hidden = !matches;
-      if (matches) count++;
+    let sections = 0;
+    elements.topicList.querySelectorAll(".topic-section").forEach(function (group) {
+      let matches = 0;
+      group.querySelectorAll("[data-slide-index]").forEach(function (button) {
+        const show = matchesTopic(state.slides[Number(button.dataset.slideIndex)], query);
+        button.hidden = !show;
+        button.parentElement.hidden = !show;
+        if (show) matches++;
+      });
+      group.hidden = !matches;
+      group.open = query ? matches > 0 : state.expandedSections.has(group.dataset.section);
+      const badge = group.querySelector(".topic-section-count");
+      badge.textContent = String(matches);
+      badge.setAttribute("aria-label", matches + " topics");
+      if (matches) sections++;
+      count += matches;
     });
-    elements.results.textContent = count ? count + " topics" : "No matching topics. Try a service name or PDF page.";
-  }
-
-  function selectCollection(collection, page, index) {
-    state.collection = collection;
-    const topics = state.topics.filter(function (topic) { return topic.collection === collection; });
-    const sectionCount = new Set(topics.map(function (topic) { return topic.section; })).size;
-    state.slides = [buildTitleSlide(topics.length, sectionCount)].concat(topics);
-    elements.collection.value = collection;
-    elements.search.value = "";
-    const pageIndex = page ? state.slides.findIndex(function (slide) { return slide.sourcePage === page; }) : -1;
-    state.index = pageIndex >= 0 ? pageIndex : Math.max(0, Math.min(index || 0, state.slides.length - 1));
-    renderOverview();
-    renderSlide();
+    elements.results.textContent = count ? count + " topics in " + sections + " sections" : "No matching topics. Try a service name or PDF page.";
   }
 
   function showLocation() {
     const page = location.hash.match(/^#page-(\d+)$/);
-    const topic = location.hash.match(/^#(course|personal)-topic-(\d+)$/);
-    if (page) selectCollection("course", Number(page[1]));
-    else if (topic) selectCollection(topic[1], null, Number(topic[2]));
-    else selectCollection("course");
+    const topic = location.hash.match(/^#(?:course-)?topic-(\d+)$/);
+    const original = location.hash.match(/^#note-(\d+)$/);
+    const target = page ? state.slides.findIndex(function (slide) { return slide.sourcePage === Number(page[1]); })
+      : original ? state.slides.findIndex(function (slide) { return slide.originalNote === Number(original[1]); })
+        : topic ? Number(topic[1]) : 0;
+    state.index = Math.max(0, Math.min(target, state.slides.length - 1));
+    elements.search.value = "";
+    filterOverview();
+    renderSlide();
   }
 
   function updateOverviewSelection() {
     elements.topicList.querySelectorAll("[data-slide-index]").forEach(function (button) {
       button.setAttribute("aria-current", String(Number(button.dataset.slideIndex) === state.index));
     });
+    const current = state.slides[state.index];
+    state.expandedSections.add(current.section);
+    elements.topicList.querySelectorAll(".topic-section").forEach(function (group) {
+      group.dataset.current = String(group.dataset.section === current.section);
+      if (group.dataset.section === current.section) group.open = true;
+    });
+    if (window.matchMedia("(min-width: 861px)").matches) {
+      const active = elements.topicList.querySelector('[aria-current="true"]');
+      const item = active.getBoundingClientRect(), list = elements.topicList.getBoundingClientRect();
+      if (item.top < list.top) elements.topicList.scrollTop -= list.top - item.top;
+      else if (item.bottom > list.bottom) elements.topicList.scrollTop += item.bottom - list.bottom;
+    }
   }
 
   function goTo(index) {
     state.index = Math.max(0, Math.min(index, state.slides.length - 1));
     const slide = state.slides[state.index];
-    history.replaceState(null, "", slide.sourcePage ? "#page-" + slide.sourcePage : "#" + state.collection + "-topic-" + state.index);
+    if (!matchesTopic(slide, elements.search.value.trim())) { elements.search.value = ""; filterOverview(); }
+    history.replaceState(null, "", slide.sourcePage ? "#page-" + slide.sourcePage : slide.originalNote !== undefined ? "#note-" + slide.originalNote : "#topic-" + state.index);
     renderSlide();
   }
 
@@ -363,15 +395,11 @@
     elements.next.addEventListener("click", function () { if (state.index < state.slides.length - 1) goTo(state.index + 1); });
     elements.overviewToggle.addEventListener("click", function () { toggleOverview(elements.workspace.classList.contains("sidebar-hidden")); });
     elements.search.addEventListener("input", filterOverview);
-    elements.collection.addEventListener("change", function () {
-      selectCollection(elements.collection.value);
-      history.replaceState(null, "", "#" + state.collection + "-topic-0");
-    });
     window.addEventListener("hashchange", showLocation);
     document.addEventListener("keydown", function (event) {
       if (event.defaultPrevented || event.target.closest(".site-header, input, select, textarea, [contenteditable='true']")) return;
       if (event.key === "Escape" && !elements.workspace.classList.contains("sidebar-hidden")) { toggleOverview(false); return; }
-      if (event.target.closest("button, .study-diagram") && (event.key === "ArrowLeft" || event.key === "ArrowRight")) return;
+      if (event.target.closest("button, summary, .study-diagram") && (event.key === "ArrowLeft" || event.key === "ArrowRight")) return;
       if (event.key === "ArrowRight") goTo(state.index + 1);
       if (event.key === "ArrowLeft") goTo(state.index - 1);
       if (event.key.toLowerCase() === "o") toggleOverview(elements.workspace.classList.contains("sidebar-hidden"));
@@ -381,7 +409,8 @@
   fetch(sourcePath)
     .then(function (response) { if (!response.ok) throw new Error("Study notes could not be loaded."); return response.text(); })
     .then(function (markdown) {
-      state.topics = parseMarkdown(markdown);
+      state.slides = parseMarkdown(markdown).filter(function (topic) { return !topic.isSection; });
+      renderOverview();
       showLocation();
       bindEvents();
     })
