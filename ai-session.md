@@ -1,5 +1,15 @@
 # AI session log
 
+## 2026-10-14 - Planned data contracts case study
+
+- **Branch:** `feature/data-contracts-case-study`.
+- **Goal:** Explain how contracts and monitoring can prevent and surface source changes that affect data pipelines.
+- **Changed files:** `case-studies/data-contracts-monitoring.html`, `index.html`, `design/DESIGN.md`, `ai-session.md`.
+- **Changes:** Added a proposed-project case study that distinguishes approved expectations from observed schema snapshots, compares the live schema with both, traces downstream impact to responsible owners, and covers freshness, quality, brownfield onboarding, alert context and human review. Added a balanced full-width concept card with a compact four-step flow. Marked the Git repository and implementation as future work; selected no stack and claimed no measured outcomes. Linked standards and tools as references to evaluate, not dependencies.
+- **Verification:** Existing site-navigation browser checks pass on the homepage and case-study page at 1440x1000 and 375x812 (9/10/13/14 assertions), with no horizontal overflow. The concept link has visible keyboard focus and opens with Enter; mobile navigation opens/closes with Enter/Escape and restores focus. Desktop and mobile layouts inspected. 34 local page, asset and documentation paths return HTTP 200 and local fragments resolve. HTML ID/encoding checks and scoped `git diff --check` pass. No page errors; the existing Tailwind CDN emits its production-use warning.
+- **Preserved work:** The existing user edit in `docs/aws-data-eng-associate.md` remains untouched and excluded from the commit.
+- **Commit:** `feat: document data contract monitoring concept`.
+
 ## 2026-10-13 - Vertical internet/NAT gateway diagram
 
 - **Branch:** `feature/frontend-design-review`.

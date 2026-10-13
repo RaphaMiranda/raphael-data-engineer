@@ -75,13 +75,13 @@ Do not truncate study topics to make them look short. Preserve original headings
 
 ## 4. Component Stylings
 
-**Navigation.** Use the same 80px header, brand, destination order and current-page state on all nine pages. The container is at most 1440px wide. Desktop links have a 44px minimum height. Below 1100px, use a real 44px menu button with `aria-expanded`, a controlled menu and Escape/outside-click handling. Constrain the expanded menu to the available dynamic viewport and let it scroll in short windows.
+**Navigation.** Use the same 80px header, brand, destination order and current-page state on all ten pages. The container is at most 1440px wide. Desktop links have a 44px minimum height. Below 1100px, use a real 44px menu button with `aria-expanded`, a controlled menu and Escape/outside-click handling. Constrain the expanded menu to the available dynamic viewport and let it scroll in short windows.
 
 **Actions.** Use rounded rectangles with a `.75rem` (12px) radius. Homepage actions retain their original 1rem vertical padding; Start Explorer is at least 56px high; tool controls are at least 44px. Give the primary action clear dark-on-light contrast. The homepage secondary action retains its transparent outlined treatment. Use links for navigation and buttons for in-page actions. Keep one dominant action per context.
 
 **Focus.** Use a visible cyan ring, normally 3px with a 3px offset; page-specific study controls may use 2px. Leave room for the outline. Never hide focus or clip the 44px study-sidebar arrow. Initial study loading leaves focus at the document; explicit slide navigation moves focus to the slide.
 
-**Project cards.** Use an Editorial Layer surface, 1rem (16px) corners and generous padding. The leading project includes its existing architectural image and spans the complete two-column grid; the remaining four projects fill two rows. Hover changes tone and raises the card by at most 3px. Keep project titles, technologies and destinations real. Existing results require evidence before editorial changes.
+**Project cards.** Use an Editorial Layer surface, 1rem (16px) corners and generous padding. The lakehouse and planned data-contracts concept span the complete two-column grid; the lakehouse keeps its architectural image and the concept uses a compact monitoring-flow diagram. The remaining four projects fill two rows. Hover changes tone and raises the card by at most 3px. Keep project status, titles, technologies and destinations accurate. Existing results require evidence before editorial changes.
 
 **Article code.** Code retains its whitespace inside a keyboard-focusable `pre` with horizontal scrolling. Grid/flex children use `min-width: 0`; the panel stays within the page. Prose can wrap long tokens. Keep the focus ring visible when readers use arrow keys to inspect long lines.
 
@@ -104,7 +104,7 @@ Portfolio composition:
 - Preserve the original 921px minimum-height hero, 1280px container, 2rem side gutters, two equal columns from 768px and 3rem column gap. The main container retains the review's 80px fixed-header clearance.
 - The original headline, opportunity indicator, introduction, illustrative pipeline terminal and decorative background remain. The terminal illustrates a workflow; it is not live telemetry.
 - Below 768px, hide the terminal and use the original single-column text/actions. Keep both case-study and résumé destinations.
-- Five project cards retain the reviewed two-column grid: one full-width feature plus four regular cells. `grid-auto-flow: dense` avoids an empty corner. Below 768px use one column.
+- Six project cards retain the reviewed two-column grid: the lakehouse and planned data-contracts concept span the full width, followed by four regular cells. `grid-auto-flow: dense` avoids an empty corner. Below 768px use one column.
 - Case-study articles use controlled title widths, 65ch paragraphs, generous section spacing and smaller mobile padding. Preserve their individual content structure.
 
 Workspace boundaries:
@@ -125,7 +125,7 @@ Use `100dvh` for viewport-aware shells. The desktop study shell keeps the slide 
 
 Image direction for future work: tactile infrastructure, organized cable paths, machined metal, cool light and dark negative space. The generated `assets/images/infrastructure-editorial.webp` is retained as an unused illustration recorded in the design review; the restored hero does not load it. The featured project retains the reviewed crop of the existing lakehouse artwork. Explorer keeps its static schematic SVG background behind a contrast-preserving navy wash.
 
-Performance for new media: prioritize hero images, lazy-load below-fold media, and reserve dimensions. The homepage and five case-study pages retain the reviewed alphabetically sorted **52-symbol Material Symbols subset** with `display=block`; update their requests together when adding a glyph. See [Google's subsetting guidance](https://developers.google.com/fonts/docs/material_symbols). Existing Tailwind and font CDN requests remain part of the current static implementation.
+Performance for new media: prioritize hero images, lazy-load below-fold media, and reserve dimensions. The homepage and six case-study pages retain the reviewed alphabetically sorted **52-symbol Material Symbols subset** with `display=block`; update their requests together when adding a glyph. See [Google's subsetting guidance](https://developers.google.com/fonts/docs/material_symbols). Existing Tailwind and font CDN requests remain part of the current static implementation.
 
 ## 6. Motion & Interaction
 
