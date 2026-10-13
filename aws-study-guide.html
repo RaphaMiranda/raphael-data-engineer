@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html class="dark" lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="description" content="An interactive, topic-by-topic study guide for the AWS Certified Data Engineer – Associate exam." />
+  <title>AWS Data Engineer Associate | Study Deck</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&family=Space+Grotesk:wght@500;600;700&display=swap" rel="stylesheet" />
+  <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='14' fill='%230b1326'/%3E%3Cpath d='M14 43 25 19l8 16 6-10 11 18' fill='none' stroke='%235de6ff' stroke-width='5' stroke-linecap='round' stroke-linejoin='round'/%3E%3Ccircle cx='25' cy='19' r='4' fill='%234edea3'/%3E%3C/svg%3E" />
+  <link rel="stylesheet" href="/assets/css/styles.css" />
+  <link rel="stylesheet" href="/assets/css/aws-study-guide.css" />
+  <script defer src="/assets/js/main.js"></script>
+</head>
+<body>
+  <main class="study-shell">
+    <h1 class="sr-only">AWS Data Engineer Associate study guide</h1>
+    <header class="site-header">
+      <nav class="site-nav" aria-label="Primary navigation">
+        <a class="site-brand" href="/">Raphael Miranda Mata</a>
+        <div class="site-links">
+          <a data-nav href="/">Home</a>
+          <a data-nav href="/#timeline">Timeline</a>
+          <a data-nav href="/#skills">Skills</a>
+          <a data-nav href="/#case-studies">Case Studies</a>
+          <a data-nav href="/aws-study-guide.html" aria-current="page">AWS DE-01 Guide</a>
+          <a data-nav href="/aws-study-guide/explorer.html">Service Explorer</a>
+          <a class="site-contact" href="/#contact">Get in Touch</a>
+        </div>
+        <button class="site-menu-toggle" id="menu-toggle" type="button" aria-label="Open navigation menu" aria-expanded="false" aria-controls="mobile-menu">
+          <svg id="menu-icon-open" viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="M4 6h16M4 12h16M4 18h16" /></svg>
+          <svg id="menu-icon-close" viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true" hidden><path d="m6 6 12 12M6 18 18 6" /></svg>
+        </button>
+      </nav>
+      <nav id="mobile-menu" class="site-mobile" aria-label="Mobile navigation" hidden>
+          <a data-nav href="/">Home</a>
+          <a data-nav href="/#timeline">Timeline</a>
+          <a data-nav href="/#skills">Skills</a>
+          <a data-nav href="/#case-studies">Case Studies</a>
+          <a data-nav href="/aws-study-guide.html" aria-current="page">AWS DE-01 Guide</a>
+          <a data-nav href="/aws-study-guide/explorer.html">Service Explorer</a>
+        <a class="site-contact" href="/#contact">Get in Touch</a>
+      </nav>
+    </header>
+
+    <div class="study-workspace" id="study-workspace">
+      <section class="study-stage" aria-label="Study slide">
+        <div class="ambient-grid" aria-hidden="true"></div>
+        <button class="sidebar-toggle" id="overview-toggle" type="button" aria-label="Hide topic list" aria-expanded="true" aria-controls="topic-overview">&gt;</button>
+        <div class="slide" id="slide" tabindex="-1" aria-live="polite" aria-atomic="true">
+          <p class="loading">Loading the study notes…</p>
+        </div>
+      </section>
+      <aside class="topic-sidebar" id="topic-overview" aria-hidden="false" aria-labelledby="overview-heading">
+        <div class="overview-heading">
+          <div>
+            <p class="eyebrow">Study notes</p>
+            <h2 id="overview-heading">Study navigation</h2>
+          </div>
+        </div>
+        <div class="topic-filters">
+          <label for="topic-search">Find a topic or PDF page</label>
+          <input id="topic-search" type="search" placeholder="e.g. DynamoDB or 765" autocomplete="off" aria-controls="topic-list">
+          <p id="topic-results" role="status"></p>
+        </div>
+        <nav class="topic-list" id="topic-list" aria-label="Study topics"></nav>
+      </aside>
+    </div>
+
+    <footer class="study-controls">
+      <div class="progress-group">
+        <p id="section-name">Preparing guide</p>
+        <div class="progress-track" aria-hidden="true"><span id="progress-bar"></span></div>
+        <p class="slide-count" id="slide-count">0 / 0</p>
+      </div>
+      <div class="control-group" aria-label="Slide controls">
+        <button class="control-button" id="previous" type="button">Previous</button>
+        <button class="control-button primary-control" id="next" type="button">Next</button>
+      </div>
+      <p class="keyboard-hint"><kbd>←</kbd><kbd>→</kbd> navigate <kbd>O</kbd> topics</p>
+    </footer>
+  </main>
+  <script defer src="https://cdn.jsdelivr.net/npm/gojs@4.0.5/release/go.js"></script>
+  <script defer src="/assets/js/aws-study-visuals.js"></script>
+  <script defer src="/assets/js/aws-study-guide.js"></script>
+</body>
+</html>

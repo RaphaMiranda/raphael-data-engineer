@@ -1,37 +1,47 @@
-## Welcome to GitHub Pages
+# Raphael Miranda Mata — Data Engineer portfolio
 
-You can use the [editor on GitHub](https://github.com/RaphaMiranda/personalweb/edit/main/README.md) to maintain and preview the content for your website in Markdown files.
+A static portfolio for Raphael Miranda Mata, with case studies and a focused AWS Certified Data Engineer – Associate study deck.
 
-Whenever you commit to this repository, GitHub Pages will run [Jekyll](https://jekyllrb.com/) to rebuild the pages in your site, from the content in your Markdown files.
+## Pages
 
-### Markdown
+- `/` — portfolio, professional timeline, skills, and case studies.
+- `/case-studies/*.html` — individual project case studies.
+- `/aws-study-guide.html` — interactive, keyboard-friendly study deck generated from the notes in `docs/aws-data-eng-associate.md`.
+- `/aws-study-guide/explorer.html` - explorer introduction with a hero and **Start Explorer** link into the workspace.
+- `/aws-study-guide/service-explorer.html` — source-backed AWS service flashcards and an interactive relationship map. Covers 75 distinct entries from the retrieved DEA-C01 scope and 63 curated relationships. See [coverage and maintenance notes](docs/aws-service-explorer.md).
 
-Markdown is a lightweight and easy-to-use syntax for styling your writing. It includes conventions for
+## Study deck
 
-```markdown
-Syntax highlighted code block
+The AWS deck keeps the Markdown document as its source of truth. Personal notes and the supplied PDF through physical page 765 are merged into one paraphrased guide, with unfinished prompts retained. The deck starts with the substantive topics; the right-side menu groups title-only rows into expandable sections. Search by topic or source page, use Previous/Next or arrow keys, and show/hide topics with `O`. Slides show brief points with expandable full notes, tables and code. The notes are a personal study aid; validate exam-critical details against current AWS documentation. See the [coverage and writing review](docs/aws-study-review.md).
 
-# Header 1
-## Header 2
-### Header 3
+### Visuals and diagrams
 
-- Bulleted
-- List
+`assets/js/aws-study-visuals.js` contains 329 course schematics keyed by `pdf:<physical page>` plus the two existing title-keyed personal-note visuals. Match a source topic with `<!-- pdf-page: 543 -->` in Markdown. Add an `image` entry with a root-relative path or a `diagram` with node/link data. Set structural links' `relation` flag to omit data-flow arrowheads. Diagrams include readable text and keyboard zoom/fit controls; their text remains available when the canvas library cannot load.
 
-1. Numbered
-2. List
+For an explicitly positioned vertical diagram, set `layout: "vertical"` and give each regular node a `loc: "x y"`. Define containers with `isGroup: true` and assign member nodes their container's key through `group`. A link's `bidirectional: true` adds a second arrowhead and a matching two-way text alternative. Page 595 demonstrates these options with a dashed AZ boundary; diagrams without them retain the standard horizontal layout.
 
-**Bold** and _Italic_ and `Code` text
+GoJS is loaded from a version-pinned CDN and is proprietary. Its current non-commercial terms allow personal learning use but retain a watermark; commercial or organisation use requires an appropriate GoJS licence. See the [GoJS deployment guidance](https://gojs.net/latest/learn/deployment).
 
-[Link](url) and ![Image](src)
+## Local preview
+
+This repository has no build step. Open the folder in VS Code with Live Server, or serve it from the repository root:
+
+```powershell
+npx serve .
 ```
 
-For more details see [GitHub Flavored Markdown](https://guides.github.com/features/mastering-markdown/).
+Then open the local address printed by the server. Serving the folder is needed for the study deck to load its Markdown source.
 
-### Jekyll Themes
+## Conventions
 
-Your Pages site will use the layout and styles from the Jekyll theme you have selected in your [repository settings](https://github.com/RaphaMiranda/personalweb/settings). The name of this theme is saved in the Jekyll `_config.yml` configuration file.
+Explorer checks use Node's built-in runner: `node --test tests/aws-explorer.test.js`. Browser interaction checks and official-source verification are documented in [the explorer guide](docs/aws-service-explorer.md).
 
-### Support or Contact
+- Plain HTML, CSS, and vanilla JavaScript only.
+- Shared styles belong in `assets/css/styles.css`; shared behaviour belongs in `assets/js/main.js`.
+- Page-specific code uses descriptive sibling files in `assets/css` and `assets/js`.
+- Design guidance lives in [design/DESIGN.md](design/DESIGN.md); contributor guidance is in [AGENTS.md](AGENTS.md).
+- The [frontend design review](docs/frontend-design-review.md) records responsive fixes, skill adaptations, accessibility checks and measured loading limitations.
 
-Having trouble with Pages? Check out our [documentation](https://docs.github.com/categories/github-pages-basics/) or [contact support](https://support.github.com/contact) and we’ll help you sort it out.
+## Deployment
+
+`vercel.json` configures clean static URLs for Vercel. Deploy the repository as a static site; no dependency installation or build command is required.

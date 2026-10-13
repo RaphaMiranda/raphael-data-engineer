@@ -3,14 +3,14 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <meta name="description" content="AI Pair Programming for Data Engineering — Raphael Miranda's approach using Claude Code, Codex, and Antigravity to accelerate data platform development." />
-  <title>AI Pair Programming | Raphael Miranda</title>
+  <meta name="description" content="AI Pair Programming for Data Engineering — Raphael Miranda Mata's approach using Claude Code, Codex, and Antigravity to accelerate data platform development." />
+  <title>AI Pair Programming | Raphael Miranda Mata</title>
 
   <!-- Fonts -->
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet" />
-  <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet" />
+  <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&icon_names=api,arrow_forward,bar_chart,bolt,build,chat,check_circle,cleaning_services,cloud,code,compare_arrows,content_copy,database,dataset,deployed_code,double_arrow,download,draw,explore,forum,group,history,history_edu,hub,lock,manage_search,masks,merge_type,modeling,monitoring,open_in_new,person,policy,present_to_all,raw_on,rocket_launch,search,security,settings_ethernet,settings_input_component,shield_lock,smart_toy,speed,storage,terminal,trending_up,verified,verified_user,visibility_off,warning,water_drop,workspace_premium&display=block" rel="stylesheet" />
 
   <!-- Tailwind CDN + shared config -->
   <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
@@ -18,28 +18,39 @@
 
   <!-- Custom styles -->
   <link rel="stylesheet" href="/assets/css/styles.css" />
+  <link rel="stylesheet" href="/assets/css/case-studies.css" />
 </head>
 
-<body class="bg-background text-on-surface font-body selection:bg-primary/30">
+<body class="case-study bg-background text-on-surface font-body selection:bg-primary/30">
 
   <!-- ╔══════════════════════════════════════╗ -->
   <!-- ║  Navigation                          ║ -->
   <!-- ╚══════════════════════════════════════╝ -->
-  <header class="bg-slate-950/80 backdrop-blur-xl fixed top-0 w-full z-50 border-b border-white/10 shadow-[0_8px_32px_0_rgba(99,102,241,0.06)]">
-    <nav class="flex justify-between items-center max-w-7xl mx-auto px-8 h-20">
-      <a href="/" class="text-2xl font-bold bg-gradient-to-br from-indigo-300 to-indigo-500 bg-clip-text text-transparent font-headline tracking-tight">
-        Raphael Miranda
-      </a>
-      <div class="hidden md:flex items-center gap-8">
-        <a data-nav href="/" class="text-slate-400 font-medium hover:text-slate-200 transition-colors font-headline">Home</a>
-        <a data-nav href="/#case-studies" class="text-indigo-400 font-bold border-b-2 border-indigo-400 pb-1 font-headline">Case Studies</a>
-        <a data-nav href="/#skills" class="text-slate-400 font-medium hover:text-slate-200 transition-colors font-headline">Skills</a>
-        <a data-nav href="/#timeline" class="text-slate-400 font-medium hover:text-slate-200 transition-colors font-headline">Timeline</a>
-        <button data-contact-cta class="bg-gradient-to-br from-primary to-primary-container text-on-primary px-6 py-2.5 rounded-lg font-bold hover:scale-105 active:scale-95 transition-all">Get in Touch</button>
+  <header class="site-header site-header--fixed">
+    <nav class="site-nav" aria-label="Primary navigation">
+      <a class="site-brand" href="/">Raphael Miranda Mata</a>
+      <div class="site-links">
+        <a data-nav href="/">Home</a>
+        <a data-nav href="/#timeline">Timeline</a>
+        <a data-nav href="/#skills">Skills</a>
+        <a data-nav href="/#case-studies" aria-current="location">Case Studies</a>
+        <a data-nav href="/aws-study-guide.html">AWS DE-01 Guide</a>
+        <a data-nav href="/aws-study-guide/explorer.html">Service Explorer</a>
+        <a class="site-contact" href="/#contact">Get in Touch</a>
       </div>
-      <a href="/#case-studies" class="md:hidden flex items-center gap-2 text-slate-400 hover:text-slate-200 transition-colors text-sm font-headline">
-        <span class="material-symbols-outlined text-base">arrow_back</span> Back
-      </a>
+      <button class="site-menu-toggle" id="menu-toggle" type="button" aria-label="Open navigation menu" aria-expanded="false" aria-controls="mobile-menu">
+        <svg id="menu-icon-open" viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="M4 6h16M4 12h16M4 18h16" /></svg>
+        <svg id="menu-icon-close" viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true" hidden><path d="m6 6 12 12M6 18 18 6" /></svg>
+      </button>
+    </nav>
+    <nav id="mobile-menu" class="site-mobile" aria-label="Mobile navigation" hidden>
+        <a data-nav href="/">Home</a>
+        <a data-nav href="/#timeline">Timeline</a>
+        <a data-nav href="/#skills">Skills</a>
+        <a data-nav href="/#case-studies" aria-current="location">Case Studies</a>
+        <a data-nav href="/aws-study-guide.html">AWS DE-01 Guide</a>
+        <a data-nav href="/aws-study-guide/explorer.html">Service Explorer</a>
+      <a class="site-contact" href="/#contact">Get in Touch</a>
     </nav>
   </header>
 
@@ -114,7 +125,7 @@
               </div>
               <span class="text-xs font-mono opacity-40 uppercase tracking-widest">claude-session</span>
             </div>
-            <pre class="font-mono text-sm leading-relaxed text-on-surface-variant"><span class="text-tertiary"># Scaffold a new Iceberg table pipeline</span>
+            <pre tabindex="0" aria-label="Code example" class="font-mono text-sm leading-relaxed text-on-surface-variant"><span class="text-tertiary"># Scaffold a new Iceberg table pipeline</span>
 <span class="text-primary">$</span> claude "Create a Bronze-to-Silver
   PySpark job for the patients table.
   Use SCD Type 2 with Iceberg MERGE.
@@ -312,7 +323,7 @@
   <!-- ╚══════════════════════════════════════╝ -->
   <footer class="bg-slate-950 w-full py-12 px-8 border-t border-white/5 mt-24">
     <div class="flex flex-col md:flex-row justify-between items-center max-w-7xl mx-auto gap-8">
-      <div class="text-lg font-bold text-slate-200 font-headline">© 2025 Raphael Miranda · Data Engineer</div>
+      <div class="text-lg font-bold text-slate-200 font-headline">© 2025 Raphael Miranda Mata · Data Engineer</div>
       <div class="flex gap-8">
         <a href="https://linkedin.com/in/raphaelmiranda0" target="_blank" rel="noopener" class="text-slate-500 hover:text-indigo-300 transition-colors text-sm underline decoration-indigo-500/30 underline-offset-4">LinkedIn</a>
         <a href="https://github.com/RaphaMiranda" target="_blank" rel="noopener" class="text-slate-500 hover:text-indigo-300 transition-colors text-sm underline decoration-indigo-500/30 underline-offset-4">GitHub</a>

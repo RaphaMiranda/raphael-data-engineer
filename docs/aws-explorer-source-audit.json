@@ -1,0 +1,1455 @@
+{
+  "retrievalDate": "2026-10-08",
+  "sources": [
+    {
+      "url": "https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/Welcome.html",
+      "finalUrl": "https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/Welcome.html",
+      "status": 200,
+      "title": "What is CloudFormation? - AWS CloudFormation",
+      "retrieved": "2026-10-08T04:33:10.252513+00:00",
+      "sha256": "45456ae7648acb2e9c2fb6c140452cf8f0b2d3014fd2a0c84b549d3441af92b7",
+      "characters": 4730
+    },
+    {
+      "url": "https://docs.aws.amazon.com/AWSEC2/latest/UserGuide/concepts.html",
+      "finalUrl": "https://docs.aws.amazon.com/AWSEC2/latest/UserGuide/concepts.html",
+      "status": 200,
+      "title": "What is Amazon EC2? - Amazon Elastic Compute Cloud",
+      "retrieved": "2026-10-08T04:33:10.285349+00:00",
+      "sha256": "55e44e6092826f51f92c091afa5dc87bd9f32477217b6f8eaebe1f36e1de1e6d",
+      "characters": 9770
+    },
+    {
+      "url": "https://docs.aws.amazon.com/AWSSimpleQueueService/latest/SQSDeveloperGuide/sqs-visibility-timeout.html",
+      "finalUrl": "https://docs.aws.amazon.com/AWSSimpleQueueService/latest/SQSDeveloperGuide/sqs-visibility-timeout.html",
+      "status": 200,
+      "title": "Amazon SQS visibility timeout - Amazon Simple Queue Service",
+      "retrieved": "2026-10-08T04:33:10.285783+00:00",
+      "sha256": "bac1ddd7349065223d1a93a3b864c27b9153abfd27a4531ed358972f10ed8510",
+      "characters": 8989
+    },
+    {
+      "url": "https://docs.aws.amazon.com/AWSSimpleQueueService/latest/SQSDeveloperGuide/welcome.html",
+      "finalUrl": "https://docs.aws.amazon.com/AWSSimpleQueueService/latest/SQSDeveloperGuide/welcome.html",
+      "status": 200,
+      "title": "What is Amazon Simple Queue Service? - Amazon Simple Queue Service",
+      "retrieved": "2026-10-08T04:33:10.285215+00:00",
+      "sha256": "f178312a606490d4be5993b99699c42bfb14b6618ee359523ab974d19a500e32",
+      "characters": 6428
+    },
+    {
+      "url": "https://docs.aws.amazon.com/AmazonCloudFront/latest/DeveloperGuide/Introduction.html",
+      "finalUrl": "https://docs.aws.amazon.com/AmazonCloudFront/latest/DeveloperGuide/Introduction.html",
+      "status": 200,
+      "title": "What is Amazon CloudFront? - Amazon CloudFront",
+      "retrieved": "2026-10-08T04:33:10.223496+00:00",
+      "sha256": "3c8eebd192f26659f4191ccc094e9144fb7e3482c59bf17c5345a17d5e735f2e",
+      "characters": 8340
+    },
+    {
+      "url": "https://docs.aws.amazon.com/AmazonCloudWatch/latest/logs/SubscriptionFilters.html",
+      "finalUrl": "https://docs.aws.amazon.com/AmazonCloudWatch/latest/logs/SubscriptionFilters.html",
+      "status": 200,
+      "title": "Log group-level subscription filters - Amazon CloudWatch Logs",
+      "retrieved": "2026-10-08T04:33:10.252609+00:00",
+      "sha256": "ae71e202bfb9d9d0e9b3074c6efee2c1caf40a5082d72e0a7eb97d4c5eddbc91",
+      "characters": 25726
+    },
+    {
+      "url": "https://docs.aws.amazon.com/AmazonCloudWatch/latest/logs/WhatIsCloudWatchLogs.html",
+      "finalUrl": "https://docs.aws.amazon.com/AmazonCloudWatch/latest/logs/WhatIsCloudWatchLogs.html",
+      "status": 200,
+      "title": "What is Amazon CloudWatch Logs? - Amazon CloudWatch Logs",
+      "retrieved": "2026-10-08T04:33:10.227133+00:00",
+      "sha256": "e13db9d9c821e8195c1c5e20b59ab732a32c780a17c0489caac3571cbb542da0",
+      "characters": 9738
+    },
+    {
+      "url": "https://docs.aws.amazon.com/AmazonCloudWatch/latest/monitoring/Notify_Users_Alarm_Changes.html",
+      "finalUrl": "https://docs.aws.amazon.com/AmazonCloudWatch/latest/monitoring/Notify_Users_Alarm_Changes.html",
+      "status": 200,
+      "title": "Notifying users on alarm changes - Amazon CloudWatch",
+      "retrieved": "2026-10-08T04:33:10.285330+00:00",
+      "sha256": "a4f035eca3d023520cc1ca55977bd740c7ef16225f7ac9407174bd4c97c8200e",
+      "characters": 13105
+    },
+    {
+      "url": "https://docs.aws.amazon.com/AmazonCloudWatch/latest/monitoring/WhatIsCloudWatch.html",
+      "finalUrl": "https://docs.aws.amazon.com/AmazonCloudWatch/latest/monitoring/WhatIsCloudWatch.html",
+      "status": 200,
+      "title": "What is Amazon CloudWatch? - Amazon CloudWatch",
+      "retrieved": "2026-10-08T04:33:10.490637+00:00",
+      "sha256": "3107d0db58ff8e9e1d6bc3ad130cbf4a6ddb37da332e37d6783850872b4fe40f",
+      "characters": 11402
+    },
+    {
+      "url": "https://docs.aws.amazon.com/AmazonECR/latest/userguide/what-is-ecr.html",
+      "finalUrl": "https://docs.aws.amazon.com/AmazonECR/latest/userguide/what-is-ecr.html",
+      "status": 200,
+      "title": "What is Amazon Elastic Container Registry? - Amazon ECR",
+      "retrieved": "2026-10-08T04:33:10.426643+00:00",
+      "sha256": "f560a39794da4d6568c9e8f8646e5d21dbde63cb40880a4c79330788f2410d2f",
+      "characters": 4890
+    },
+    {
+      "url": "https://docs.aws.amazon.com/AmazonECS/latest/developerguide/Welcome.html",
+      "finalUrl": "https://docs.aws.amazon.com/AmazonECS/latest/developerguide/Welcome.html",
+      "status": 200,
+      "title": "What is Amazon Elastic Container Service? - Amazon Elastic Container Service",
+      "retrieved": "2026-10-08T04:33:10.520577+00:00",
+      "sha256": "4804254e74cb22518973a37c7eedc006f04a5d689180463de9b3b8f11aceb493",
+      "characters": 5196
+    },
+    {
+      "url": "https://docs.aws.amazon.com/AmazonECS/latest/developerguide/task_execution_IAM_role.html",
+      "finalUrl": "https://docs.aws.amazon.com/AmazonECS/latest/developerguide/task_execution_IAM_role.html",
+      "status": 200,
+      "title": "Amazon ECS task execution IAM role - Amazon Elastic Container Service",
+      "retrieved": "2026-10-08T04:33:10.554536+00:00",
+      "sha256": "d7da7387c38986de745ca5c53c69a2c3c5b049d564a7f5e5fc489e32a15878d6",
+      "characters": 14624
+    },
+    {
+      "url": "https://docs.aws.amazon.com/AmazonRDS/latest/AuroraUserGuide/CHAP_AuroraOverview.html",
+      "finalUrl": "https://docs.aws.amazon.com/AmazonRDS/latest/AuroraUserGuide/CHAP_AuroraOverview.html",
+      "status": 200,
+      "title": "What is Amazon Aurora? - Amazon Aurora",
+      "retrieved": "2026-10-08T04:33:10.533306+00:00",
+      "sha256": "cbdfd91c7d48d12256f358091462f2c8f0d4c963c4db34c9862ac57cbcb5cca9",
+      "characters": 4628
+    },
+    {
+      "url": "https://docs.aws.amazon.com/AmazonRDS/latest/UserGuide/Welcome.html",
+      "finalUrl": "https://docs.aws.amazon.com/AmazonRDS/latest/UserGuide/Welcome.html",
+      "status": 200,
+      "title": "What is Amazon Relational Database Service (Amazon RDS)? - Amazon Relational Database Service",
+      "retrieved": "2026-10-08T04:33:10.572502+00:00",
+      "sha256": "49c38ca7bbf712cb3153a3f301fa7830671ce1356047cce72b9b05f87f66f3b9",
+      "characters": 20453
+    },
+    {
+      "url": "https://docs.aws.amazon.com/AmazonS3/latest/userguide/EventBridge.html",
+      "finalUrl": "https://docs.aws.amazon.com/AmazonS3/latest/userguide/EventBridge.html",
+      "status": 200,
+      "title": "Using EventBridge - Amazon Simple Storage Service",
+      "retrieved": "2026-10-08T04:33:10.557382+00:00",
+      "sha256": "ae9d427b28cfb0841ca990c0ef2d3797e8b167eef1bd5b7ce178dea1b258295a",
+      "characters": 4698
+    },
+    {
+      "url": "https://docs.aws.amazon.com/AmazonS3/latest/userguide/UsingKMSEncryption.html",
+      "finalUrl": "https://docs.aws.amazon.com/AmazonS3/latest/userguide/UsingKMSEncryption.html",
+      "status": 200,
+      "title": "Using server-side encryption with AWS KMS keys (SSE-KMS) - Amazon Simple Storage Service",
+      "retrieved": "2026-10-08T04:33:10.557247+00:00",
+      "sha256": "5b929f09a107adb0845ee42f8acc0e8f7fce7bbfa01337055c19821e3ea559fc",
+      "characters": 16563
+    },
+    {
+      "url": "https://docs.aws.amazon.com/AmazonS3/latest/userguide/Welcome.html",
+      "finalUrl": "https://docs.aws.amazon.com/AmazonS3/latest/userguide/Welcome.html",
+      "status": 200,
+      "title": "What is Amazon S3? - Amazon Simple Storage Service",
+      "retrieved": "2026-10-08T04:33:10.652106+00:00",
+      "sha256": "37eda5874f5577bc02552d465e45ecf935b2048b880212de47f65242cb1e16f1",
+      "characters": 34876
+    },
+    {
+      "url": "https://docs.aws.amazon.com/AmazonS3/latest/userguide/access-management.html",
+      "finalUrl": "https://docs.aws.amazon.com/AmazonS3/latest/userguide/access-management.html",
+      "status": 200,
+      "title": "Access control in Amazon S3 - Amazon Simple Storage Service",
+      "retrieved": "2026-10-08T04:33:10.724889+00:00",
+      "sha256": "5efd94ced39b0c6a5c43aebdbe71c2553419166a60bbb6de1dd4cca8a5086772",
+      "characters": 45920
+    },
+    {
+      "url": "https://docs.aws.amazon.com/AmazonS3/latest/userguide/object-lifecycle-mgmt.html",
+      "finalUrl": "https://docs.aws.amazon.com/AmazonS3/latest/userguide/object-lifecycle-mgmt.html",
+      "status": 200,
+      "title": "Managing the lifecycle of objects - Amazon Simple Storage Service",
+      "retrieved": "2026-10-08T04:33:10.807370+00:00",
+      "sha256": "a2b47f7e7d97c35983f12a5e78bdcfeb088553c750ab4bb25262067d835f5018",
+      "characters": 6400
+    },
+    {
+      "url": "https://docs.aws.amazon.com/AmazonS3/latest/userguide/restoring-objects.html",
+      "finalUrl": "https://docs.aws.amazon.com/AmazonS3/latest/userguide/restoring-objects.html",
+      "status": 200,
+      "title": "Restoring an archived object - Amazon Simple Storage Service",
+      "retrieved": "2026-10-08T04:33:10.829900+00:00",
+      "sha256": "be5e1cb55b1a1a4c98137f58368d63b642cc43fb40c5a96695f1be7678b2710c",
+      "characters": 15194
+    },
+    {
+      "url": "https://docs.aws.amazon.com/AmazonS3/latest/userguide/s3-tables-integrating-aws.html",
+      "finalUrl": "https://docs.aws.amazon.com/AmazonS3/latest/userguide/s3-tables-integrating-aws.html",
+      "status": 200,
+      "title": "Integrating Amazon S3 Tables with AWS analytics services - Amazon Simple Storage Service",
+      "retrieved": "2026-10-08T04:33:10.830007+00:00",
+      "sha256": "8b0587465b6db6a617e973515bc196ed857ba742b593986b74082876cb541453",
+      "characters": 7133
+    },
+    {
+      "url": "https://docs.aws.amazon.com/AmazonS3/latest/userguide/s3-tables-integration-overview.html",
+      "finalUrl": "https://docs.aws.amazon.com/AmazonS3/latest/userguide/s3-tables-integration-overview.html",
+      "status": 200,
+      "title": "Amazon S3 Tables integration with AWS analytics services overview - Amazon Simple Storage Service",
+      "retrieved": "2026-10-08T04:33:10.834915+00:00",
+      "sha256": "ba394c2e976906a79655a1d5ce8dd309db3f07d4d85dd0618e31921e823d7869",
+      "characters": 4270
+    },
+    {
+      "url": "https://docs.aws.amazon.com/AmazonS3/latest/userguide/s3-tables.html",
+      "finalUrl": "https://docs.aws.amazon.com/AmazonS3/latest/userguide/s3-tables.html",
+      "status": 200,
+      "title": "Working with Amazon S3 Tables and table buckets - Amazon Simple Storage Service",
+      "retrieved": "2026-10-08T04:33:10.814812+00:00",
+      "sha256": "ea3d8238819345569790f869ad0630e26f4479926066ac695acf161756e2e2f3",
+      "characters": 7659
+    },
+    {
+      "url": "https://docs.aws.amazon.com/AmazonS3/latest/userguide/storage-class-intro.html",
+      "finalUrl": "https://docs.aws.amazon.com/AmazonS3/latest/userguide/storage-class-intro.html",
+      "status": 200,
+      "title": "Understanding and managing Amazon S3 storage classes - Amazon Simple Storage Service",
+      "retrieved": "2026-10-08T04:33:10.849943+00:00",
+      "sha256": "1a91afdbff395cb5472e1e690ddb054569000ff183c99397c66656e0c9d3ab2c",
+      "characters": 18412
+    },
+    {
+      "url": "https://docs.aws.amazon.com/IAM/latest/UserGuide/introduction.html",
+      "finalUrl": "https://docs.aws.amazon.com/IAM/latest/UserGuide/introduction.html",
+      "status": 200,
+      "title": "What is IAM? - AWS Identity and Access Management",
+      "retrieved": "2026-10-08T04:33:10.919159+00:00",
+      "sha256": "0b05ce16085793e6747bd721df75ec0dd278b22df6ff7450dc92fb22e9edf605",
+      "characters": 4834
+    },
+    {
+      "url": "https://docs.aws.amazon.com/IAM/latest/UserGuide/reference_policies_evaluation-logic.html",
+      "finalUrl": "https://docs.aws.amazon.com/IAM/latest/UserGuide/reference_policies_evaluation-logic.html",
+      "status": 200,
+      "title": "Policy evaluation logic - AWS Identity and Access Management",
+      "retrieved": "2026-10-08T04:33:10.992149+00:00",
+      "sha256": "c89f839064a26a0832b99613f691ef312edd02778f951ff24e577766cb822b2f",
+      "characters": 3931
+    },
+    {
+      "url": "https://docs.aws.amazon.com/Route53/latest/DeveloperGuide/Welcome.html",
+      "finalUrl": "https://docs.aws.amazon.com/Route53/latest/DeveloperGuide/Welcome.html",
+      "status": 200,
+      "title": "What is Amazon Route\u00a053? - Amazon Route 53",
+      "retrieved": "2026-10-08T04:33:11.070872+00:00",
+      "sha256": "8682dd049e4315193ae5d2e34ca5ba406fec62db47646c28fce4c5acc285305a",
+      "characters": 4176
+    },
+    {
+      "url": "https://docs.aws.amazon.com/amazondynamodb/latest/developerguide/Introduction.html",
+      "finalUrl": "https://docs.aws.amazon.com/amazondynamodb/latest/developerguide/Introduction.html",
+      "status": 200,
+      "title": "What is Amazon DynamoDB? - Amazon DynamoDB",
+      "retrieved": "2026-10-08T04:33:11.059730+00:00",
+      "sha256": "6f8e7f11b88d918b911c78978ddecc9e464f9a601e5935cd6f1eba1bd4229c72",
+      "characters": 17693
+    },
+    {
+      "url": "https://docs.aws.amazon.com/amazondynamodb/latest/developerguide/S3DataExport.HowItWorks.html",
+      "finalUrl": "https://docs.aws.amazon.com/amazondynamodb/latest/developerguide/S3DataExport.HowItWorks.html",
+      "status": 200,
+      "title": "DynamoDB data export to Amazon S3: how it works - Amazon DynamoDB",
+      "retrieved": "2026-10-08T04:33:11.096796+00:00",
+      "sha256": "4a0d2f39d17500485b25c797d72139ba7db67828eadac93b0c9ede22d66e675d",
+      "characters": 3264
+    },
+    {
+      "url": "https://docs.aws.amazon.com/amazondynamodb/latest/developerguide/Streams.html",
+      "finalUrl": "https://docs.aws.amazon.com/amazondynamodb/latest/developerguide/Streams.html",
+      "status": 200,
+      "title": "Change data capture for DynamoDB Streams - Amazon DynamoDB",
+      "retrieved": "2026-10-08T04:33:11.101171+00:00",
+      "sha256": "432686737abf3290dd08823e50e2622a8ce479d5a66d317e96a9a287d51e13dd",
+      "characters": 13419
+    },
+    {
+      "url": "https://docs.aws.amazon.com/amazondynamodb/latest/developerguide/TTL.html",
+      "finalUrl": "https://docs.aws.amazon.com/amazondynamodb/latest/developerguide/TTL.html",
+      "status": 200,
+      "title": "Using time to live (TTL) in DynamoDB - Amazon DynamoDB",
+      "retrieved": "2026-10-08T04:33:11.100858+00:00",
+      "sha256": "be4547f657d2f3eabe3bf794cfbe3cd0d20ff9dd6a374554c67ab85c8e47e4b8",
+      "characters": 3064
+    },
+    {
+      "url": "https://docs.aws.amazon.com/amazonq/latest/qbusiness-ug/what-is.html",
+      "finalUrl": "https://docs.aws.amazon.com/amazonq/latest/qbusiness-ug/what-is.html",
+      "status": 200,
+      "title": "What is Amazon Q Business? - Amazon Q Business",
+      "retrieved": "2026-10-08T04:33:11.120340+00:00",
+      "sha256": "56e256b3d10eeca5c056f773102e3baccf6536dafa429c4359db02d021352d53",
+      "characters": 7931
+    },
+    {
+      "url": "https://docs.aws.amazon.com/amazonq/latest/qdeveloper-ug/what-is.html",
+      "finalUrl": "https://docs.aws.amazon.com/amazonq/latest/qdeveloper-ug/what-is.html",
+      "status": 200,
+      "title": "What is Amazon Q Developer? - Amazon Q Developer",
+      "retrieved": "2026-10-08T04:33:11.110755+00:00",
+      "sha256": "254d88209eeeed92d67a040eda3b78a30946dc6cb04c8ee6029f99fe578d774b",
+      "characters": 3729
+    },
+    {
+      "url": "https://docs.aws.amazon.com/apigateway/latest/developerguide/set-up-lambda-integrations.html",
+      "finalUrl": "https://docs.aws.amazon.com/apigateway/latest/developerguide/set-up-lambda-integrations.html",
+      "status": 200,
+      "title": "Lambda integrations for REST APIs in API Gateway - Amazon API Gateway",
+      "retrieved": "2026-10-08T04:33:11.228932+00:00",
+      "sha256": "e97cb7f2197c91c225f18411be74147294115257bf69d901428d73f177d508e4",
+      "characters": 1522
+    },
+    {
+      "url": "https://docs.aws.amazon.com/apigateway/latest/developerguide/welcome.html",
+      "finalUrl": "https://docs.aws.amazon.com/apigateway/latest/developerguide/welcome.html",
+      "status": 200,
+      "title": "What is Amazon API Gateway? - Amazon API Gateway",
+      "retrieved": "2026-10-08T04:33:11.252662+00:00",
+      "sha256": "a8a34ed3346f5828b6d4101321960e9a5fd6a4c3a6a8a914c62c6c34f083f1dd",
+      "characters": 6197
+    },
+    {
+      "url": "https://docs.aws.amazon.com/appflow/latest/userguide/s3.html",
+      "finalUrl": "https://docs.aws.amazon.com/appflow/latest/userguide/s3.html",
+      "status": 200,
+      "title": "Amazon S3 - Amazon AppFlow",
+      "retrieved": "2026-10-08T04:33:11.380023+00:00",
+      "sha256": "4608dacc00e8c1effa7f54e0689a04a3d06f95b561db9e9ecfb04448fab47617",
+      "characters": 5411
+    },
+    {
+      "url": "https://docs.aws.amazon.com/appflow/latest/userguide/what-is-appflow.html",
+      "finalUrl": "https://docs.aws.amazon.com/appflow/latest/userguide/what-is-appflow.html",
+      "status": 200,
+      "title": "What is Amazon AppFlow? - Amazon AppFlow",
+      "retrieved": "2026-10-08T04:33:11.379988+00:00",
+      "sha256": "8a4ec549d56b670abe9789ebb5c5010a171a99fa61f5de47a425162797b845b4",
+      "characters": 6993
+    },
+    {
+      "url": "https://docs.aws.amazon.com/application-discovery/latest/userguide/what-is-appdiscovery.html",
+      "finalUrl": "https://docs.aws.amazon.com/application-discovery/latest/userguide/what-is-appdiscovery.html",
+      "status": 200,
+      "title": "What is AWS Application Discovery Service? - AWS Application Discovery Service",
+      "retrieved": "2026-10-08T04:33:11.380869+00:00",
+      "sha256": "695fb38c2baee23721be9d42e1660d64116c7f724c1316113413f863ebd1b120",
+      "characters": 9557
+    },
+    {
+      "url": "https://docs.aws.amazon.com/athena/latest/ug/columnar-storage.html",
+      "finalUrl": "https://docs.aws.amazon.com/athena/latest/ug/columnar-storage.html",
+      "status": 200,
+      "title": "Use columnar storage formats - Amazon Athena",
+      "retrieved": "2026-10-08T04:33:11.379893+00:00",
+      "sha256": "18bb3f519e57d117dfe1ab00135fc755e01644a63fad522875c7966b7eb481ab",
+      "characters": 4181
+    },
+    {
+      "url": "https://docs.aws.amazon.com/athena/latest/ug/data-sources-glue.html",
+      "finalUrl": "https://docs.aws.amazon.com/athena/latest/ug/data-sources-glue.html",
+      "status": 200,
+      "title": "Use AWS Glue Data Catalog to connect to your data - Amazon Athena",
+      "retrieved": "2026-10-08T04:33:11.380222+00:00",
+      "sha256": "cc1413b16628d682584bdbc7e4840737cfc74f6e07c1964989ddd90bae16695c",
+      "characters": 2454
+    },
+    {
+      "url": "https://docs.aws.amazon.com/athena/latest/ug/security-athena-lake-formation.html",
+      "finalUrl": "https://docs.aws.amazon.com/athena/latest/ug/security-athena-lake-formation.html",
+      "status": 200,
+      "title": "Use Athena to query data registered with AWS Lake Formation - Amazon Athena",
+      "retrieved": "2026-10-08T04:33:11.387282+00:00",
+      "sha256": "3c730c5b1b11bcca4718787fac3371bd9ba9194bd1f98dea7d2bf2389b2bfabf",
+      "characters": 3938
+    },
+    {
+      "url": "https://docs.aws.amazon.com/athena/latest/ug/what-is.html",
+      "finalUrl": "https://docs.aws.amazon.com/athena/latest/ug/what-is.html",
+      "status": 200,
+      "title": "What is Amazon Athena? - Amazon Athena",
+      "retrieved": "2026-10-08T04:33:11.444709+00:00",
+      "sha256": "2c2c45127212218dcf6ad7caf871f49c1828e83f453a56673b999854789bae2f",
+      "characters": 1844
+    },
+    {
+      "url": "https://docs.aws.amazon.com/aws-backup/latest/devguide/backup-feature-availability.html",
+      "finalUrl": "https://docs.aws.amazon.com/aws-backup/latest/devguide/backup-feature-availability.html",
+      "status": 200,
+      "title": "AWS Backup feature availability - AWS Backup",
+      "retrieved": "2026-10-08T04:33:11.611404+00:00",
+      "sha256": "5a2ac5d5c6553ab1492eb3bcf1ea13ebd9f1afbf7c1001028dfc39a186e8a3c2",
+      "characters": 14000
+    },
+    {
+      "url": "https://docs.aws.amazon.com/aws-backup/latest/devguide/whatisbackup.html",
+      "finalUrl": "https://docs.aws.amazon.com/aws-backup/latest/devguide/whatisbackup.html",
+      "status": 200,
+      "title": "What is AWS Backup? - AWS Backup",
+      "retrieved": "2026-10-08T04:33:11.577751+00:00",
+      "sha256": "6cfa00788dc990c80457a0f2d1faff9e1d752976d20fb5eed755cdad460c3d86",
+      "characters": 13378
+    },
+    {
+      "url": "https://docs.aws.amazon.com/aws-certification/latest/data-engineer-associate-01/data-engineer-associate-01-domain1.html",
+      "finalUrl": "https://docs.aws.amazon.com/aws-certification/latest/data-engineer-associate-01/data-engineer-associate-01-domain1.html",
+      "status": 200,
+      "title": "Content Domain 1: Data Ingestion and Transformation - AWS Certified Data Engineer - Associate",
+      "retrieved": "2026-10-08T04:33:11.439542+00:00",
+      "sha256": "23ce1fe115269addd051a5cd97b5d8d4e7655df3755a3561737376fafe89b70f",
+      "characters": 4675,
+      "taskAnchors": [
+        "data-engineer-associate-01-domain1-task1",
+        "data-engineer-associate-01-domain1-task2",
+        "data-engineer-associate-01-domain1-task3",
+        "data-engineer-associate-01-domain1-task4"
+      ]
+    },
+    {
+      "url": "https://docs.aws.amazon.com/aws-certification/latest/data-engineer-associate-01/data-engineer-associate-01-domain2.html",
+      "finalUrl": "https://docs.aws.amazon.com/aws-certification/latest/data-engineer-associate-01/data-engineer-associate-01-domain2.html",
+      "status": 200,
+      "title": "Content Domain 2: Data Store Management - AWS Certified Data Engineer - Associate",
+      "retrieved": "2026-10-08T04:33:11.660821+00:00",
+      "sha256": "0971ef055f11ad0e523ce717365a36a1429dd25d53a96a4df643a8b3573d0905",
+      "characters": 3825,
+      "taskAnchors": [
+        "data-engineer-associate-01-domain2-task1",
+        "data-engineer-associate-01-domain2-task2",
+        "data-engineer-associate-01-domain2-task3",
+        "data-engineer-associate-01-domain2-task4"
+      ]
+    },
+    {
+      "url": "https://docs.aws.amazon.com/aws-certification/latest/data-engineer-associate-01/data-engineer-associate-01-domain3.html",
+      "finalUrl": "https://docs.aws.amazon.com/aws-certification/latest/data-engineer-associate-01/data-engineer-associate-01-domain3.html",
+      "status": 200,
+      "title": "Content Domain 3: Data Operations and Support - AWS Certified Data Engineer - Associate",
+      "retrieved": "2026-10-08T04:33:11.657712+00:00",
+      "sha256": "4c7c4bc80186fd4df2d1bdaa117d18ae3c23c117003063e913388a4d71865fd3",
+      "characters": 3305,
+      "taskAnchors": [
+        "data-engineer-associate-01-domain3-task1",
+        "data-engineer-associate-01-domain3-task2",
+        "data-engineer-associate-01-domain3-task3",
+        "data-engineer-associate-01-domain3-task4"
+      ]
+    },
+    {
+      "url": "https://docs.aws.amazon.com/aws-certification/latest/data-engineer-associate-01/data-engineer-associate-01-domain4.html",
+      "finalUrl": "https://docs.aws.amazon.com/aws-certification/latest/data-engineer-associate-01/data-engineer-associate-01-domain4.html",
+      "status": 200,
+      "title": "Content Domain 4: Data Security and Governance - AWS Certified Data Engineer - Associate",
+      "retrieved": "2026-10-08T04:33:11.629304+00:00",
+      "sha256": "5267f775834b57971b77e481ef60145e9f4c702823420b5114c6fe4eec2a95c0",
+      "characters": 3743,
+      "taskAnchors": [
+        "data-engineer-associate-01-domain4-task1",
+        "data-engineer-associate-01-domain4-task2",
+        "data-engineer-associate-01-domain4-task3",
+        "data-engineer-associate-01-domain4-task4",
+        "data-engineer-associate-01-domain4-task5"
+      ]
+    },
+    {
+      "url": "https://docs.aws.amazon.com/aws-certification/latest/data-engineer-associate-01/dea-01-in-scope-services.html",
+      "finalUrl": "https://docs.aws.amazon.com/aws-certification/latest/data-engineer-associate-01/dea-01-in-scope-services.html",
+      "status": 200,
+      "title": "In-Scope AWS Services - AWS Certified Data Engineer - Associate",
+      "retrieved": "2026-10-08T04:33:11.657350+00:00",
+      "sha256": "73587acaf3562d5229f75db491df09760ee93c4f7b25e7a5257a8eb34da3612b",
+      "characters": 2770,
+      "scopeEntries": [
+        "Analytics",
+        "Application Integration",
+        "Cloud Financial Management",
+        "Compute",
+        "Containers",
+        "Database",
+        "Developer Tools",
+        "Web and Mobile",
+        "Machine Learning",
+        "Management and Governance",
+        "Migration and Transfer",
+        "Networking and Content Delivery",
+        "Security, Identity, and Compliance",
+        "Storage",
+        "Amazon Athena",
+        "Amazon EMR",
+        "AWS Glue",
+        "AWS Glue DataBrew",
+        "AWS Lake Formation",
+        "Amazon Kinesis Data Firehose",
+        "Amazon Kinesis Data Streams",
+        "Amazon Managed Service for Apache Flink",
+        "Amazon Managed Streaming for Apache Kafka (Amazon MSK)",
+        "Amazon OpenSearch Service",
+        "Amazon Quick",
+        "Amazon SageMaker AI",
+        "Amazon AppFlow",
+        "Amazon EventBridge",
+        "Amazon Managed Workflows for Apache Airflow (Amazon MWAA)",
+        "Amazon SNS",
+        "Amazon SQS",
+        "AWS Step Functions",
+        "AWS Budgets",
+        "AWS Cost Explorer",
+        "AWS Batch",
+        "Amazon EC2",
+        "AWS Lambda",
+        "AWS SAM",
+        "Amazon ECR",
+        "Amazon ECS",
+        "Amazon EKS",
+        "Amazon DocumentDB",
+        "Amazon DynamoDB",
+        "Amazon Keyspaces",
+        "Amazon MemoryDB for Redis",
+        "Amazon Neptune",
+        "Amazon RDS",
+        "Amazon Aurora",
+        "Amazon Redshift",
+        "AWS CLI",
+        "AWS CloudFormation",
+        "AWS CDK",
+        "AWS CodeBuild",
+        "AWS CodeDeploy",
+        "AWS CodePipeline",
+        "Amazon Q",
+        "Amazon API Gateway",
+        "Amazon SageMaker AI",
+        "Amazon Bedrock",
+        "Amazon Kendra",
+        "AWS CloudTrail",
+        "Amazon CloudWatch",
+        "Amazon CloudWatch Logs",
+        "AWS Config",
+        "Amazon Managed Grafana",
+        "AWS Systems Manager",
+        "AWS Well-Architected Tool",
+        "AWS Data Exchange",
+        "AWS Application Discovery Service",
+        "AWS Application Migration Service",
+        "AWS DMS",
+        "AWS DataSync",
+        "AWS Snow Family",
+        "AWS Transfer Family",
+        "Amazon CloudFront",
+        "AWS PrivateLink",
+        "Amazon Route 53",
+        "Amazon VPC",
+        "IAM",
+        "AWS KMS",
+        "Amazon Macie",
+        "AWS Secrets Manager",
+        "AWS Shield",
+        "AWS WAF",
+        "AWS Backup",
+        "Amazon EBS",
+        "Amazon EFS",
+        "Amazon S3",
+        "Amazon S3 Tables",
+        "Amazon S3 Glacier",
+        "Amazon S3 Tables"
+      ]
+    },
+    {
+      "url": "https://docs.aws.amazon.com/awscloudtrail/latest/userguide/cloudtrail-user-guide.html",
+      "finalUrl": "https://docs.aws.amazon.com/awscloudtrail/latest/userguide/cloudtrail-user-guide.html",
+      "status": 200,
+      "title": "What Is AWS CloudTrail? - AWS CloudTrail",
+      "retrieved": "2026-10-08T04:33:11.658122+00:00",
+      "sha256": "92ca8fba6b9e4f419348db66902346b18bcc188ac401a6c6974de66f950f22d2",
+      "characters": 7293
+    },
+    {
+      "url": "https://docs.aws.amazon.com/awscloudtrail/latest/userguide/create-s3-bucket-policy-for-cloudtrail.html",
+      "finalUrl": "https://docs.aws.amazon.com/awscloudtrail/latest/userguide/create-s3-bucket-policy-for-cloudtrail.html",
+      "status": 200,
+      "title": "Amazon S3 bucket policy for CloudTrail - AWS CloudTrail",
+      "retrieved": "2026-10-08T04:33:11.749707+00:00",
+      "sha256": "44e806588624c6610e6409f4440a3e73d1b0d7628bda00218f9717a71a8a5dc1",
+      "characters": 12027
+    },
+    {
+      "url": "https://docs.aws.amazon.com/awscloudtrail/latest/userguide/logging-data-events-with-cloudtrail.html",
+      "finalUrl": "https://docs.aws.amazon.com/awscloudtrail/latest/userguide/logging-data-events-with-cloudtrail.html",
+      "status": 200,
+      "title": "Logging data events - AWS CloudTrail",
+      "retrieved": "2026-10-08T04:33:11.919920+00:00",
+      "sha256": "b9bcee2c1c0b98d16791904ce90a3b91396fe5877051a6f91601b381219aa813",
+      "characters": 86125
+    },
+    {
+      "url": "https://docs.aws.amazon.com/batch/latest/userguide/what-is-batch.html",
+      "finalUrl": "https://docs.aws.amazon.com/batch/latest/userguide/what-is-batch.html",
+      "status": 200,
+      "title": "What is AWS Batch? - AWS Batch",
+      "retrieved": "2026-10-08T04:33:11.922812+00:00",
+      "sha256": "02601dfd64be5464b2184424819edc231e43b5aaae62da2b6f3c0175ce4a0604",
+      "characters": 4682
+    },
+    {
+      "url": "https://docs.aws.amazon.com/bedrock/latest/userguide/knowledge-base-ds.html",
+      "finalUrl": "https://docs.aws.amazon.com/bedrock/latest/userguide/knowledge-base-ds.html",
+      "status": 200,
+      "title": "Prerequisites for your Amazon Bedrock knowledge base data - Amazon Bedrock",
+      "retrieved": "2026-10-08T04:33:11.922463+00:00",
+      "sha256": "96a788a53e7cc87bd305944900304de33fb9847eb360fa3088cca4fca3fa9cab",
+      "characters": 2202
+    },
+    {
+      "url": "https://docs.aws.amazon.com/bedrock/latest/userguide/knowledge-base.html",
+      "finalUrl": "https://docs.aws.amazon.com/bedrock/latest/userguide/knowledge-base.html",
+      "status": 200,
+      "title": "Retrieve data and generate AI responses with Amazon Bedrock Knowledge Bases - Amazon Bedrock",
+      "retrieved": "2026-10-08T04:33:11.928250+00:00",
+      "sha256": "3d5e82f52d89d7f426f7c167b9653effc7389501c836d69762ba56805878d78d",
+      "characters": 5211
+    },
+    {
+      "url": "https://docs.aws.amazon.com/bedrock/latest/userguide/what-is-bedrock.html",
+      "finalUrl": "https://docs.aws.amazon.com/bedrock/latest/userguide/what-is-bedrock.html",
+      "status": 200,
+      "title": "Overview - Amazon Bedrock",
+      "retrieved": "2026-10-08T04:33:11.880701+00:00",
+      "sha256": "c289d938311e30081099d079a0b58621fd2f8fd63216c408252ee0effbe86433",
+      "characters": 5403
+    },
+    {
+      "url": "https://docs.aws.amazon.com/cdk/v2/guide/home.html",
+      "finalUrl": "https://docs.aws.amazon.com/cdk/v2/guide/home.html",
+      "status": 200,
+      "title": "What is the AWS CDK? - AWS Cloud Development Kit (AWS CDK) v2",
+      "retrieved": "2026-10-08T04:33:11.945981+00:00",
+      "sha256": "4cc9a8f2cb19befa6091f2eb4310cc4564d6d2e29288207327a411e247efc034",
+      "characters": 12821
+    },
+    {
+      "url": "https://docs.aws.amazon.com/cli/latest/userguide/cli-chap-welcome.html",
+      "finalUrl": "https://docs.aws.amazon.com/cli/latest/userguide/cli-chap-welcome.html",
+      "status": 200,
+      "title": "What is the AWS Command Line Interface? - AWS Command Line Interface",
+      "retrieved": "2026-10-08T04:33:11.881557+00:00",
+      "sha256": "d53c773403cfc6b1b65fc54e684c92d1331a12e1ca088b454e7d6ca7fb3306e1",
+      "characters": 4212
+    },
+    {
+      "url": "https://docs.aws.amazon.com/codebuild/latest/userguide/welcome.html",
+      "finalUrl": "https://docs.aws.amazon.com/codebuild/latest/userguide/welcome.html",
+      "status": 200,
+      "title": "What is AWS CodeBuild? - AWS CodeBuild",
+      "retrieved": "2026-10-08T04:33:12.018368+00:00",
+      "sha256": "8609e9a7abe32bea3684cc05fce308de1339076533b6f34851e2dead79296e00",
+      "characters": 3506
+    },
+    {
+      "url": "https://docs.aws.amazon.com/codedeploy/latest/userguide/welcome.html",
+      "finalUrl": "https://docs.aws.amazon.com/codedeploy/latest/userguide/welcome.html",
+      "status": 200,
+      "title": "What is CodeDeploy? - AWS CodeDeploy",
+      "retrieved": "2026-10-08T04:33:12.182442+00:00",
+      "sha256": "9f1e8c4c1524d6023a51b00111d6aba92e02ade7e0ce20b3263ec2b188bdced6",
+      "characters": 22354
+    },
+    {
+      "url": "https://docs.aws.amazon.com/codepipeline/latest/userguide/action-reference-CodeBuild.html",
+      "finalUrl": "https://docs.aws.amazon.com/codepipeline/latest/userguide/action-reference-CodeBuild.html",
+      "status": 200,
+      "title": "AWS CodeBuild build and test action reference - AWS CodePipeline",
+      "retrieved": "2026-10-08T04:33:12.171761+00:00",
+      "sha256": "e81853684138adb3e787fe2e9aad8fd1e06a323246bfa0ee87315d4b7debdc6e",
+      "characters": 12633
+    },
+    {
+      "url": "https://docs.aws.amazon.com/codepipeline/latest/userguide/welcome.html",
+      "finalUrl": "https://docs.aws.amazon.com/codepipeline/latest/userguide/welcome.html",
+      "status": 200,
+      "title": "What is AWS CodePipeline? - AWS CodePipeline",
+      "retrieved": "2026-10-08T04:33:12.182766+00:00",
+      "sha256": "bc68d108e14140a1a9f5d158e82fa0c2ced609cb0131ff319562a64da2d038e9",
+      "characters": 1358
+    },
+    {
+      "url": "https://docs.aws.amazon.com/config/latest/developerguide/WhatIsConfig.html",
+      "finalUrl": "https://docs.aws.amazon.com/config/latest/developerguide/WhatIsConfig.html",
+      "status": 200,
+      "title": "What Is AWS Config? - AWS Config",
+      "retrieved": "2026-10-08T04:33:12.204875+00:00",
+      "sha256": "0f94b72758bd2240241dc553b395936dddc4dd85f0b9d4c6f05b5b4dd09f9101",
+      "characters": 6568
+    },
+    {
+      "url": "https://docs.aws.amazon.com/cost-management/latest/userguide/budgets-managing-costs.html",
+      "finalUrl": "https://docs.aws.amazon.com/cost-management/latest/userguide/budgets-managing-costs.html",
+      "status": 200,
+      "title": "Managing your costs with AWS Budgets - AWS Cost Management",
+      "retrieved": "2026-10-08T04:33:12.182407+00:00",
+      "sha256": "0900bb0edc8588e440b1d4d9ddfad188b961c6f40f2114b609661b74653eb139",
+      "characters": 5795
+    },
+    {
+      "url": "https://docs.aws.amazon.com/cost-management/latest/userguide/ce-what-is.html",
+      "finalUrl": "https://docs.aws.amazon.com/cost-management/latest/userguide/ce-what-is.html",
+      "status": 200,
+      "title": "Analyzing your costs and usage with AWS Cost Explorer - AWS Cost Management",
+      "retrieved": "2026-10-08T04:33:12.185508+00:00",
+      "sha256": "e66a8046950b8c4252439836a9ea334cadc5f92b783180dd8800e3d2b69dc58f",
+      "characters": 3511
+    },
+    {
+      "url": "https://docs.aws.amazon.com/data-exchange/latest/userguide/what-is.html",
+      "finalUrl": "https://docs.aws.amazon.com/data-exchange/latest/userguide/what-is.html",
+      "status": 200,
+      "title": "What is AWS Data Exchange? - AWS Data Exchange User Guide",
+      "retrieved": "2026-10-08T04:33:12.228744+00:00",
+      "sha256": "6d2f785b37abf77d59d99ee13254094d6b3c24142104dfe777a97db76b78fec8",
+      "characters": 9565
+    },
+    {
+      "url": "https://docs.aws.amazon.com/databrew/latest/dg/what-is.html",
+      "finalUrl": "https://docs.aws.amazon.com/databrew/latest/dg/what-is.html",
+      "status": 200,
+      "title": "What is AWS Glue DataBrew? - AWS Glue DataBrew Developer Guide",
+      "retrieved": "2026-10-08T04:33:12.317969+00:00",
+      "sha256": "b69089997da36ec933fcdc8fd5dc694ccb9e57ef570f8e5934cc3e6ca4a67166",
+      "characters": 2958
+    },
+    {
+      "url": "https://docs.aws.amazon.com/datasync/latest/userguide/create-s3-location.html",
+      "finalUrl": "https://docs.aws.amazon.com/datasync/latest/userguide/create-s3-location.html",
+      "status": 200,
+      "title": "Configuring AWS DataSync transfers with Amazon S3 - AWS DataSync",
+      "retrieved": "2026-10-08T04:33:12.468692+00:00",
+      "sha256": "dda0cd208aa54d0d593cb4f7613ec69cf5a9ee59d63e665448b6e213d2b7955c",
+      "characters": 40074
+    },
+    {
+      "url": "https://docs.aws.amazon.com/datasync/latest/userguide/what-is-datasync.html",
+      "finalUrl": "https://docs.aws.amazon.com/datasync/latest/userguide/what-is-datasync.html",
+      "status": 200,
+      "title": "What is AWS DataSync? - AWS DataSync",
+      "retrieved": "2026-10-08T04:33:12.486875+00:00",
+      "sha256": "4024f308bd50d7098f0770e3c14c1788313fc5b931e7287627dc781fcfaf6721",
+      "characters": 4085
+    },
+    {
+      "url": "https://docs.aws.amazon.com/dms/latest/userguide/CHAP_Source.html",
+      "finalUrl": "https://docs.aws.amazon.com/dms/latest/userguide/CHAP_Source.html",
+      "status": 200,
+      "title": "Sources for data migration - AWS Database Migration Service",
+      "retrieved": "2026-10-08T04:33:12.447500+00:00",
+      "sha256": "81074ee3038cbbc6c63ae4009a9cd37a8c6727f24d97a71d45d7681977587ffd",
+      "characters": 2092
+    },
+    {
+      "url": "https://docs.aws.amazon.com/dms/latest/userguide/CHAP_Target.Redshift.html",
+      "finalUrl": "https://docs.aws.amazon.com/dms/latest/userguide/CHAP_Target.Redshift.html",
+      "status": 200,
+      "title": "Using an Amazon Redshift database as a target for AWS Database Migration Service - AWS Database Migration Service",
+      "retrieved": "2026-10-08T04:33:12.501776+00:00",
+      "sha256": "f41d30029033349c9700011bc45fe383c3ad410f55660b086b892e9bff09e572",
+      "characters": 39502
+    },
+    {
+      "url": "https://docs.aws.amazon.com/dms/latest/userguide/CHAP_Target.S3.html",
+      "finalUrl": "https://docs.aws.amazon.com/dms/latest/userguide/CHAP_Target.S3.html",
+      "status": 200,
+      "title": "Using Amazon S3 as a target for AWS Database Migration Service - AWS Database Migration Service",
+      "retrieved": "2026-10-08T04:33:12.490030+00:00",
+      "sha256": "8d9e6fd3d98c019615ed37b0981a21f21d6cc3e0685d36aedd5fa640c5dca3a7",
+      "characters": 68165
+    },
+    {
+      "url": "https://docs.aws.amazon.com/dms/latest/userguide/Welcome.html",
+      "finalUrl": "https://docs.aws.amazon.com/dms/latest/userguide/Welcome.html",
+      "status": 200,
+      "title": "What is AWS Database Migration Service? - AWS Database Migration Service",
+      "retrieved": "2026-10-08T04:33:12.500645+00:00",
+      "sha256": "1e9dadef6c7337e334599bb62ace7c00ffa771a8529ef50de53e2d370018d3e0",
+      "characters": 6221
+    },
+    {
+      "url": "https://docs.aws.amazon.com/documentdb/latest/devguide/what-is.html",
+      "finalUrl": "https://docs.aws.amazon.com/documentdb/latest/devguide/what-is.html",
+      "status": 200,
+      "title": "What is Amazon DocumentDB (with MongoDB compatibility) - Amazon DocumentDB",
+      "retrieved": "2026-10-08T04:33:12.521072+00:00",
+      "sha256": "506c67812f12d09cf5e79bd5e4494a6f6080c3d73da51f6cea2869a373e1baa2",
+      "characters": 16914
+    },
+    {
+      "url": "https://docs.aws.amazon.com/ebs/latest/userguide/ebs-volumes.html",
+      "finalUrl": "https://docs.aws.amazon.com/ebs/latest/userguide/ebs-volumes.html",
+      "status": 200,
+      "title": "Amazon EBS volumes - Amazon EBS",
+      "retrieved": "2026-10-08T04:33:12.521114+00:00",
+      "sha256": "9cb206e9d18d4b3398712aefc3ec8077f31aa87e50ac41e5efc4026c2717900c",
+      "characters": 2835
+    },
+    {
+      "url": "https://docs.aws.amazon.com/ebs/latest/userguide/what-is-ebs.html",
+      "finalUrl": "https://docs.aws.amazon.com/ebs/latest/userguide/what-is-ebs.html",
+      "status": 200,
+      "title": "What is Amazon Elastic Block Store? - Amazon EBS",
+      "retrieved": "2026-10-08T04:33:12.727973+00:00",
+      "sha256": "f59da8e55c0ed26712eb65f60e5ee37eb9a704e2909e65e51712e915bda0126c",
+      "characters": 6464
+    },
+    {
+      "url": "https://docs.aws.amazon.com/efs/latest/ug/whatisefs.html",
+      "finalUrl": "https://docs.aws.amazon.com/efs/latest/ug/whatisefs.html",
+      "status": 200,
+      "title": "What is Amazon Elastic File System? - Amazon Elastic File System",
+      "retrieved": "2026-10-08T04:33:12.751294+00:00",
+      "sha256": "5af30941ebf771ea17e668065f33c18b16c3de4dfd7926ea0e9dd27b98f7c045",
+      "characters": 5068
+    },
+    {
+      "url": "https://docs.aws.amazon.com/eks/latest/userguide/what-is-eks.html",
+      "finalUrl": "https://docs.aws.amazon.com/eks/latest/userguide/what-is-eks.html",
+      "status": 200,
+      "title": "What is Amazon EKS? - Amazon EKS",
+      "retrieved": "2026-10-08T04:33:12.751832+00:00",
+      "sha256": "c36487cc08e247bfcbf1b12decedcafe41d94685e8185e6e8fca78a332571a37",
+      "characters": 8953
+    },
+    {
+      "url": "https://docs.aws.amazon.com/emr/latest/ManagementGuide/emr-plan-file-systems.html",
+      "finalUrl": "https://docs.aws.amazon.com/emr/latest/ManagementGuide/emr-plan-file-systems.html",
+      "status": 200,
+      "title": "Working with storage and file systems with Amazon EMR - Amazon EMR",
+      "retrieved": "2026-10-08T04:33:12.760857+00:00",
+      "sha256": "786fa845b1386035d878a705a6cc8d2f20d011ed9b7cf1fa5159ecdc0c880e2f",
+      "characters": 5603
+    },
+    {
+      "url": "https://docs.aws.amazon.com/emr/latest/ManagementGuide/emr-what-is-emr.html",
+      "finalUrl": "https://docs.aws.amazon.com/emr/latest/ManagementGuide/emr-what-is-emr.html",
+      "status": 200,
+      "title": "What is Amazon EMR? - Amazon EMR",
+      "retrieved": "2026-10-08T04:33:12.757128+00:00",
+      "sha256": "d5a6e7c08d55cd78a41bc57422edaaf6360b7aef961676c642e3d326ef5e882c",
+      "characters": 1690
+    },
+    {
+      "url": "https://docs.aws.amazon.com/eventbridge/latest/userguide/eb-what-is.html",
+      "finalUrl": "https://docs.aws.amazon.com/eventbridge/latest/userguide/eb-what-is.html",
+      "status": 200,
+      "title": "What Is Amazon EventBridge? - Amazon EventBridge",
+      "retrieved": "2026-10-08T04:33:12.708255+00:00",
+      "sha256": "e1ca5cd7a8ffe54a7c752b94146f2589d6df376cd3699d0bedb6aaca1bed5542",
+      "characters": 3522
+    },
+    {
+      "url": "https://docs.aws.amazon.com/firehose/latest/dev/create-destination.html",
+      "finalUrl": "https://docs.aws.amazon.com/firehose/latest/dev/create-destination.html",
+      "status": 200,
+      "title": "Configure destination settings - Amazon Data Firehose",
+      "retrieved": "2026-10-08T04:33:12.828435+00:00",
+      "sha256": "c9df4b008e2a70af3699d749e2bab80581ec0898f89885211a935a764bf019a2",
+      "characters": 75421
+    },
+    {
+      "url": "https://docs.aws.amazon.com/firehose/latest/dev/data-transformation.html",
+      "finalUrl": "https://docs.aws.amazon.com/firehose/latest/dev/data-transformation.html",
+      "status": 200,
+      "title": "Transform source data in Amazon Data Firehose - Amazon Data Firehose",
+      "retrieved": "2026-10-08T04:33:12.918129+00:00",
+      "sha256": "3bd25a32be35449f8b51f072ef9241ec463526186527727ad03eeb416566c00b",
+      "characters": 2769
+    },
+    {
+      "url": "https://docs.aws.amazon.com/firehose/latest/dev/what-is-this-service.html",
+      "finalUrl": "https://docs.aws.amazon.com/firehose/latest/dev/what-is-this-service.html",
+      "status": 200,
+      "title": "What is Amazon Data Firehose? - Amazon Data Firehose",
+      "retrieved": "2026-10-08T04:33:13.014507+00:00",
+      "sha256": "6d425dbe34654164098ab749548c5c6a51d446b12d451c4ca140fd4dc05e5827",
+      "characters": 3463
+    },
+    {
+      "url": "https://docs.aws.amazon.com/firehose/latest/dev/writing-with-kinesis-streams.html",
+      "finalUrl": "https://docs.aws.amazon.com/firehose/latest/dev/writing-with-kinesis-streams.html",
+      "status": 200,
+      "title": "Configure source settings for Amazon Kinesis Data Streams - Amazon Data Firehose",
+      "retrieved": "2026-10-08T04:33:13.015913+00:00",
+      "sha256": "978a78c27d75016b7bd4d23cc1a65a15687c798eaaa250d61561a2e2530d68dd",
+      "characters": 3351
+    },
+    {
+      "url": "https://docs.aws.amazon.com/glue/latest/dg/aws-glue-programming-etl-connect-jdbc-home.html",
+      "finalUrl": "https://docs.aws.amazon.com/glue/latest/dg/aws-glue-programming-etl-connect-jdbc-home.html",
+      "status": 200,
+      "title": "JDBC connections - AWS Glue",
+      "retrieved": "2026-10-08T04:33:13.048712+00:00",
+      "sha256": "6465300ffccd80b385bf3ca3440e69b82f503c556e3d7431f8aa30a065dd1f01",
+      "characters": 15147
+    },
+    {
+      "url": "https://docs.aws.amazon.com/glue/latest/dg/aws-glue-programming-etl-connect-redshift-home.html",
+      "finalUrl": "https://docs.aws.amazon.com/glue/latest/dg/aws-glue-programming-etl-connect-redshift-home.html",
+      "status": 200,
+      "title": "Redshift connections - AWS Glue",
+      "retrieved": "2026-10-08T04:33:13.040051+00:00",
+      "sha256": "3c4f227b10d6af160d177dd5ce6308a4658a74b51be70898673f2c842c1e695c",
+      "characters": 21123
+    },
+    {
+      "url": "https://docs.aws.amazon.com/glue/latest/dg/connection-properties.html",
+      "finalUrl": "https://docs.aws.amazon.com/glue/latest/dg/connection-properties.html",
+      "status": 200,
+      "title": "AWS Glue connection properties - AWS Glue",
+      "retrieved": "2026-10-08T04:33:13.079758+00:00",
+      "sha256": "c222e4faea7f594ba4dead62f0d33fed739b7add9b644f80dad27081057327b8",
+      "characters": 44187
+    },
+    {
+      "url": "https://docs.aws.amazon.com/glue/latest/dg/glue-data-quality.html",
+      "finalUrl": "https://docs.aws.amazon.com/glue/latest/dg/glue-data-quality.html",
+      "status": 200,
+      "title": "AWS Glue Data Quality - AWS Glue",
+      "retrieved": "2026-10-08T04:33:13.040092+00:00",
+      "sha256": "1ac3ba364f9e88d9c2203fba6dfc7a73b29566f8017b1a22669e5154b62f27a0",
+      "characters": 13064
+    },
+    {
+      "url": "https://docs.aws.amazon.com/glue/latest/dg/monitor-continuations.html",
+      "finalUrl": "https://docs.aws.amazon.com/glue/latest/dg/monitor-continuations.html",
+      "status": 200,
+      "title": "Tracking processed data using job bookmarks - AWS Glue",
+      "retrieved": "2026-10-08T04:33:13.101471+00:00",
+      "sha256": "0e493bf5ee88489e40d484b838583a92845bbf17a882862f33b005d9171ca53f",
+      "characters": 9738
+    },
+    {
+      "url": "https://docs.aws.amazon.com/glue/latest/dg/what-is-glue.html",
+      "finalUrl": "https://docs.aws.amazon.com/glue/latest/dg/what-is-glue.html",
+      "status": 200,
+      "title": "What is AWS Glue? - AWS Glue",
+      "retrieved": "2026-10-08T04:33:13.188274+00:00",
+      "sha256": "3923e5a6ba762d8373d768b79638d98006b518f08eba9e87c74d1e10201e75eb",
+      "characters": 7516
+    },
+    {
+      "url": "https://docs.aws.amazon.com/grafana/latest/userguide/adding-CloudWatch-AWS-config.html",
+      "finalUrl": "https://docs.aws.amazon.com/grafana/latest/userguide/adding-CloudWatch-AWS-config.html",
+      "status": 200,
+      "title": "Use AWS data source configuration to add CloudWatch as a data source - Amazon Managed Grafana",
+      "retrieved": "2026-10-08T04:33:13.289282+00:00",
+      "sha256": "acbf329857774c9e368529a6fa374f1ee5459d4084f5d46e360bebece01ebdc3",
+      "characters": 2411
+    },
+    {
+      "url": "https://docs.aws.amazon.com/grafana/latest/userguide/what-is-Amazon-Managed-Service-Grafana.html",
+      "finalUrl": "https://docs.aws.amazon.com/grafana/latest/userguide/what-is-Amazon-Managed-Service-Grafana.html",
+      "status": 200,
+      "title": "What is Amazon Managed Grafana? - Amazon Managed Grafana",
+      "retrieved": "2026-10-08T04:33:13.288660+00:00",
+      "sha256": "9b85c2cd795b93111d28790b124328062114da7aa1ebbd017f9920abeda80263",
+      "characters": 3981
+    },
+    {
+      "url": "https://docs.aws.amazon.com/kendra/latest/dg/what-is-kendra.html",
+      "finalUrl": "https://docs.aws.amazon.com/kendra/latest/dg/what-is-kendra.html",
+      "status": 200,
+      "title": "What is Amazon Kendra? - Amazon Kendra",
+      "retrieved": "2026-10-08T04:33:13.367243+00:00",
+      "sha256": "294b5c91b2834be3db88ead0fb2ba6c2924dc2612a18983625872f86b731eb3b",
+      "characters": 6474
+    },
+    {
+      "url": "https://docs.aws.amazon.com/keyspaces/latest/devguide/what-is-keyspaces.html",
+      "finalUrl": "https://docs.aws.amazon.com/keyspaces/latest/devguide/what-is-keyspaces.html",
+      "status": 200,
+      "title": "What is Amazon Keyspaces (for Apache Cassandra)? - Amazon Keyspaces (for Apache Cassandra)",
+      "retrieved": "2026-10-08T04:33:13.327114+00:00",
+      "sha256": "018ba5d683a4f0436e92620dd39d68058eb2d9a050be727e51d69b9484cbb196",
+      "characters": 2702
+    },
+    {
+      "url": "https://docs.aws.amazon.com/kms/latest/developerguide/overview.html",
+      "finalUrl": "https://docs.aws.amazon.com/kms/latest/developerguide/overview.html",
+      "status": 200,
+      "title": "AWS Key Management Service - AWS Key Management Service",
+      "retrieved": "2026-10-08T04:33:13.325869+00:00",
+      "sha256": "07358f157e84adc2521026c9848010a6ca71680063f1bcb79d079d2dbb459d44",
+      "characters": 2257
+    },
+    {
+      "url": "https://docs.aws.amazon.com/lake-formation/latest/dg/service-integrations.html",
+      "finalUrl": "https://docs.aws.amazon.com/lake-formation/latest/dg/service-integrations.html",
+      "status": 200,
+      "title": "AWS service integrations with Lake Formation - AWS Lake Formation",
+      "retrieved": "2026-10-08T04:33:13.338267+00:00",
+      "sha256": "2b3b8ee3f8253be7792869d6ae06111469092849044076e76110e51b9e69ab27",
+      "characters": 3303
+    },
+    {
+      "url": "https://docs.aws.amazon.com/lake-formation/latest/dg/what-is-lake-formation.html",
+      "finalUrl": "https://docs.aws.amazon.com/lake-formation/latest/dg/what-is-lake-formation.html",
+      "status": 200,
+      "title": "What is AWS Lake Formation? - AWS Lake Formation",
+      "retrieved": "2026-10-08T04:33:13.366264+00:00",
+      "sha256": "c646cc7554e830b41f25d9cb1af18600648e63fd781eda82327290199ca53a8a",
+      "characters": 12230
+    },
+    {
+      "url": "https://docs.aws.amazon.com/lambda/latest/dg/configuration-filesystem.html",
+      "finalUrl": "https://docs.aws.amazon.com/lambda/latest/dg/configuration-filesystem.html",
+      "status": 200,
+      "title": "Configuring file system access for Lambda functions - AWS Lambda",
+      "retrieved": "2026-10-08T04:33:13.482364+00:00",
+      "sha256": "b2b1eb17b4383be4b11fe181e75d1d5c4f0a2368c29233080a1a0ce5acf6d9a2",
+      "characters": 1315
+    },
+    {
+      "url": "https://docs.aws.amazon.com/lambda/latest/dg/monitoring-cloudwatchlogs.html",
+      "finalUrl": "https://docs.aws.amazon.com/lambda/latest/dg/monitoring-cloudwatchlogs.html",
+      "status": 200,
+      "title": "Sending Lambda function logs to CloudWatch Logs - AWS Lambda",
+      "retrieved": "2026-10-08T04:33:13.501690+00:00",
+      "sha256": "df7abaac1c23c1f57b6933cf1f348caf4e676851810f5e69ebacc8eebf5c6e30",
+      "characters": 2408
+    },
+    {
+      "url": "https://docs.aws.amazon.com/lambda/latest/dg/welcome.html",
+      "finalUrl": "https://docs.aws.amazon.com/lambda/latest/dg/welcome.html",
+      "status": 200,
+      "title": "What is AWS Lambda? - AWS Lambda",
+      "retrieved": "2026-10-08T04:33:13.393875+00:00",
+      "sha256": "64a91d6ecdd03339bc48a950cf5d0edbeaaaf470cb1a24b72b83ff9a57499ebb",
+      "characters": 3939
+    },
+    {
+      "url": "https://docs.aws.amazon.com/lambda/latest/dg/with-ddb.html",
+      "finalUrl": "https://docs.aws.amazon.com/lambda/latest/dg/with-ddb.html",
+      "status": 200,
+      "title": "Using AWS Lambda with Amazon DynamoDB - AWS Lambda",
+      "retrieved": "2026-10-08T04:33:13.602272+00:00",
+      "sha256": "a85ce0088fe32ae0f5056e9222fab0010cfa3b304322bc7f5eed2a3539f3043e",
+      "characters": 6928
+    },
+    {
+      "url": "https://docs.aws.amazon.com/lambda/latest/dg/with-kinesis.html",
+      "finalUrl": "https://docs.aws.amazon.com/lambda/latest/dg/with-kinesis.html",
+      "status": 200,
+      "title": "Using Lambda to process records from Amazon Kinesis Data Streams - AWS Lambda",
+      "retrieved": "2026-10-08T04:33:13.736348+00:00",
+      "sha256": "0719c0b831a90efae4eae2990b13dabb82bae0505b341d5ee1834b88b83f43b0",
+      "characters": 8181
+    },
+    {
+      "url": "https://docs.aws.amazon.com/lambda/latest/dg/with-s3.html",
+      "finalUrl": "https://docs.aws.amazon.com/lambda/latest/dg/with-s3.html",
+      "status": 200,
+      "title": "Process Amazon S3 event notifications with Lambda - AWS Lambda",
+      "retrieved": "2026-10-08T04:33:13.602901+00:00",
+      "sha256": "32811cc9cab2301c44e99e44e783c5d078914526ad92d0f6b15b46df59f0b564",
+      "characters": 3267
+    },
+    {
+      "url": "https://docs.aws.amazon.com/lambda/latest/dg/with-sqs.html",
+      "finalUrl": "https://docs.aws.amazon.com/lambda/latest/dg/with-sqs.html",
+      "status": 200,
+      "title": "Using Lambda with Amazon SQS - AWS Lambda",
+      "retrieved": "2026-10-08T04:33:13.624632+00:00",
+      "sha256": "1aa8cf413c7563b70e83198f634af1614934b5d8c33ec9a78ccf2724bc181ae5",
+      "characters": 13436
+    },
+    {
+      "url": "https://docs.aws.amazon.com/macie/latest/user/what-is-macie.html",
+      "finalUrl": "https://docs.aws.amazon.com/macie/latest/user/what-is-macie.html",
+      "status": 200,
+      "title": "What is Amazon Macie? - Amazon Macie",
+      "retrieved": "2026-10-08T04:33:13.644209+00:00",
+      "sha256": "5d02acaf53377d2d893e86d50dd2608465a518e98dab9635c023c7914a9a5b3f",
+      "characters": 15620
+    },
+    {
+      "url": "https://docs.aws.amazon.com/managed-flink/latest/java/how-sources.html",
+      "finalUrl": "https://docs.aws.amazon.com/managed-flink/latest/java/how-sources.html",
+      "status": 200,
+      "title": "Add streaming data sources to Managed Service for Apache Flink - Managed Service for Apache Flink",
+      "retrieved": "2026-10-08T04:33:13.684268+00:00",
+      "sha256": "2b7e27f50c9dc56a3e7d302c7994a4b2260697755ea5c0ceae6e3a4f5735109c",
+      "characters": 4014
+    },
+    {
+      "url": "https://docs.aws.amazon.com/managed-flink/latest/java/what-is.html",
+      "finalUrl": "https://docs.aws.amazon.com/managed-flink/latest/java/what-is.html",
+      "status": 200,
+      "title": "What is Amazon Managed Service for Apache Flink? - Managed Service for Apache Flink",
+      "retrieved": "2026-10-08T04:33:13.760942+00:00",
+      "sha256": "ed22d14caeca071c5ca95d14f9e1f61ecc1ddc08a103daee47c759c5ca0a182d",
+      "characters": 7204
+    },
+    {
+      "url": "https://docs.aws.amazon.com/memorydb/latest/devguide/what-is-memorydb.html",
+      "finalUrl": "https://docs.aws.amazon.com/memorydb/latest/devguide/what-is-memorydb.html",
+      "status": 200,
+      "title": "What is MemoryDB - Amazon MemoryDB",
+      "retrieved": "2026-10-08T04:33:13.769538+00:00",
+      "sha256": "4e02001a5b61280442e3b1036d53cac9ce7b58b6724d42ab33e556d94505bbd5",
+      "characters": 1726
+    },
+    {
+      "url": "https://docs.aws.amazon.com/mgn/latest/ug/what-is-mgn.html",
+      "finalUrl": "https://docs.aws.amazon.com/mgn/latest/ug/what-is-mgn.html",
+      "status": 200,
+      "title": "What Is AWS Transform MGN? - AWS Transform MGN",
+      "retrieved": "2026-10-08T04:33:13.905474+00:00",
+      "sha256": "6959a039b54d8c80902d0c4e7454a914266a3ec6cde8acbb9a1ea0b28e3ce2a9",
+      "characters": 4291
+    },
+    {
+      "url": "https://docs.aws.amazon.com/msk/latest/developerguide/msk-connect.html",
+      "finalUrl": "https://docs.aws.amazon.com/msk/latest/developerguide/msk-connect.html",
+      "status": 200,
+      "title": "Understand MSK Connect - Amazon Managed Streaming for Apache Kafka",
+      "retrieved": "2026-10-08T04:33:13.861321+00:00",
+      "sha256": "b433a52990b8003c49168cf57da1b635c3cf4ca0d6c71f8af7a530ffb11afbfe",
+      "characters": 5247
+    },
+    {
+      "url": "https://docs.aws.amazon.com/msk/latest/developerguide/what-is-msk.html",
+      "finalUrl": "https://docs.aws.amazon.com/msk/latest/developerguide/what-is-msk.html",
+      "status": 200,
+      "title": "Welcome to the Amazon MSK Developer Guide - Amazon Managed Streaming for Apache Kafka",
+      "retrieved": "2026-10-08T04:33:13.909801+00:00",
+      "sha256": "aebed1b6cf3e9d55f7f33f4ddc92da1078fe16ab3480639dec814a0a17e32ae3",
+      "characters": 4471
+    },
+    {
+      "url": "https://docs.aws.amazon.com/mwaa/latest/mwaa-serverless-userguide/operators.html",
+      "finalUrl": "https://docs.aws.amazon.com/mwaa/latest/mwaa-serverless-userguide/operators.html",
+      "status": 200,
+      "title": "Supported operators - Amazon Managed Workflows for Apache Airflow Serverless",
+      "retrieved": "2026-10-08T04:33:13.922463+00:00",
+      "sha256": "b3b25e14a040922859f3d44914359d0ac1d89d57cd97d3e58e40723850d85601",
+      "characters": 20092
+    },
+    {
+      "url": "https://docs.aws.amazon.com/mwaa/latest/userguide/what-is-mwaa.html",
+      "finalUrl": "https://docs.aws.amazon.com/mwaa/latest/userguide/what-is-mwaa.html",
+      "status": 200,
+      "title": "What Is Amazon Managed Workflows for Apache Airflow? - Amazon Managed Workflows for Apache Airflow",
+      "retrieved": "2026-10-08T04:33:13.909779+00:00",
+      "sha256": "7d30c0edfb88e33c583396b819d619c979625e52694601f83da9a1785ca2b509",
+      "characters": 7140
+    },
+    {
+      "url": "https://docs.aws.amazon.com/neptune/latest/userguide/intro.html",
+      "finalUrl": "https://docs.aws.amazon.com/neptune/latest/userguide/intro.html",
+      "status": 200,
+      "title": "What Is Amazon Neptune? - Amazon Neptune",
+      "retrieved": "2026-10-08T04:33:13.987305+00:00",
+      "sha256": "2ea022b763a885bad8b4c9a444ac8bc5fa877906403c9926219d5d8cc34c0817",
+      "characters": 6075
+    },
+    {
+      "url": "https://docs.aws.amazon.com/opensearch-service/latest/developerguide/what-is.html",
+      "finalUrl": "https://docs.aws.amazon.com/opensearch-service/latest/developerguide/what-is.html",
+      "status": 200,
+      "title": "What is Amazon OpenSearch Service? - Amazon OpenSearch Service",
+      "retrieved": "2026-10-08T04:33:13.960708+00:00",
+      "sha256": "77cd8393eba9c6847fdd07768a3a8aa62d7e5620d69afd98f86ead9aaf64b83d",
+      "characters": 15610
+    },
+    {
+      "url": "https://docs.aws.amazon.com/quick/latest/userguide/managing-spice-capacity.html",
+      "finalUrl": "https://docs.aws.amazon.com/quick/latest/userguide/managing-spice-capacity.html",
+      "status": 200,
+      "title": "Configure SPICE memory capacity - Amazon Quick",
+      "retrieved": "2026-10-08T04:33:14.168735+00:00",
+      "sha256": "087e28271d17e54cfa64d662d5bca4cbcda2814d8544dd66bf73cc9d352e1e12",
+      "characters": 12119
+    },
+    {
+      "url": "https://docs.aws.amazon.com/quick/latest/userguide/prepare-database-data.html",
+      "finalUrl": "https://docs.aws.amazon.com/quick/latest/userguide/prepare-database-data.html",
+      "status": 200,
+      "title": "Preparing a dataset based on database data - Amazon Quick",
+      "retrieved": "2026-10-08T04:33:14.119602+00:00",
+      "sha256": "772ef089796ed0f0ccf1ad2bec4bd9c42accb3e780e6a3dbbd60e9363cf66653",
+      "characters": 4139
+    },
+    {
+      "url": "https://docs.aws.amazon.com/quick/latest/userguide/what-is.html",
+      "finalUrl": "https://docs.aws.amazon.com/quick/latest/userguide/what-is.html",
+      "status": 200,
+      "title": "What is Amazon Quick? - Amazon Quick",
+      "retrieved": "2026-10-08T04:33:14.175987+00:00",
+      "sha256": "d9b9f053b1fa0b5cf24d39835a53e2eacf6fae7b184e05f9c684fac691307845",
+      "characters": 3559
+    },
+    {
+      "url": "https://docs.aws.amazon.com/redshift/latest/dg/c-spectrum-considerations.html",
+      "finalUrl": "https://docs.aws.amazon.com/redshift/latest/dg/c-spectrum-considerations.html",
+      "status": 200,
+      "title": "Amazon Redshift Spectrum limitations - Amazon Redshift",
+      "retrieved": "2026-10-08T04:33:14.203393+00:00",
+      "sha256": "0f4cf41dda99157780fd1bd7cc0a2662bcf29848b67905009a3370c657475712",
+      "characters": 3589
+    },
+    {
+      "url": "https://docs.aws.amazon.com/redshift/latest/dg/c-spectrum-external-tables.html",
+      "finalUrl": "https://docs.aws.amazon.com/redshift/latest/dg/c-spectrum-external-tables.html",
+      "status": 200,
+      "title": "External tables for Redshift Spectrum - Amazon Redshift",
+      "retrieved": "2026-10-08T04:33:14.190059+00:00",
+      "sha256": "15ee89f9efb3f5b4c21375c9f6b9d9e2e95e0174f616b4d446bec733713f0625",
+      "characters": 24805
+    },
+    {
+      "url": "https://docs.aws.amazon.com/redshift/latest/dg/federated-create-secret-iam-role.html",
+      "finalUrl": "https://docs.aws.amazon.com/redshift/latest/dg/federated-create-secret-iam-role.html",
+      "status": 200,
+      "title": "Creating a secret and an IAM role to use federated queries - Amazon Redshift",
+      "retrieved": "2026-10-08T04:33:14.198849+00:00",
+      "sha256": "18d8d130dca382382f8e9352ec11c9c41786c12462d109002ecf19e66a74b380",
+      "characters": 4135
+    },
+    {
+      "url": "https://docs.aws.amazon.com/redshift/latest/dg/federated-limitations.html",
+      "finalUrl": "https://docs.aws.amazon.com/redshift/latest/dg/federated-limitations.html",
+      "status": 200,
+      "title": "Considerations when accessing federated data with Amazon Redshift - Amazon Redshift",
+      "retrieved": "2026-10-08T04:33:14.222850+00:00",
+      "sha256": "db913866aa59a2361aa3050a44fddea8dd705712d0370295d74f611683c41e0e",
+      "characters": 5213
+    },
+    {
+      "url": "https://docs.aws.amazon.com/redshift/latest/dg/federated-overview.html",
+      "finalUrl": "https://docs.aws.amazon.com/redshift/latest/dg/federated-overview.html",
+      "status": 200,
+      "title": "Querying data with federated queries in Amazon Redshift - Amazon Redshift",
+      "retrieved": "2026-10-08T04:33:14.267217+00:00",
+      "sha256": "909b280cc8ae0b30c9eb23cfe6344a0bf15f422a53352292acb80398dfed40f4",
+      "characters": 3165
+    },
+    {
+      "url": "https://docs.aws.amazon.com/redshift/latest/dg/federated_query_example.html",
+      "finalUrl": "https://docs.aws.amazon.com/redshift/latest/dg/federated_query_example.html",
+      "status": 200,
+      "title": "Examples of using a federated query - Amazon Redshift",
+      "retrieved": "2026-10-08T04:33:14.393391+00:00",
+      "sha256": "eac30611cf83fbc1fbf4d31c14ef7c074608377a639d4bd98af30872bc35b674",
+      "characters": 7433
+    },
+    {
+      "url": "https://docs.aws.amazon.com/redshift/latest/dg/r_COPY.html",
+      "finalUrl": "https://docs.aws.amazon.com/redshift/latest/dg/r_COPY.html",
+      "status": 200,
+      "title": "COPY - Amazon Redshift",
+      "retrieved": "2026-10-08T04:33:14.486350+00:00",
+      "sha256": "0a888eedf67708e11455f31cf52428f9633b2110159f42b90c066bc807820de2",
+      "characters": 8273
+    },
+    {
+      "url": "https://docs.aws.amazon.com/redshift/latest/dg/r_UNLOAD.html",
+      "finalUrl": "https://docs.aws.amazon.com/redshift/latest/dg/r_UNLOAD.html",
+      "status": 200,
+      "title": "UNLOAD - Amazon Redshift",
+      "retrieved": "2026-10-08T04:33:14.489581+00:00",
+      "sha256": "918984a27d1c1c7beb5cb85ed10b08baac7551e138d603326224f4520d65881b",
+      "characters": 26627
+    },
+    {
+      "url": "https://docs.aws.amazon.com/redshift/latest/mgmt/welcome.html",
+      "finalUrl": "https://docs.aws.amazon.com/redshift/latest/mgmt/welcome.html",
+      "status": 200,
+      "title": "What is Amazon Redshift? - Amazon Redshift",
+      "retrieved": "2026-10-08T04:33:14.490650+00:00",
+      "sha256": "b6a42057c53f47f35d85cf040589fd1f4eb71c7e21e42688ef9408d2a65032ce",
+      "characters": 3306
+    },
+    {
+      "url": "https://docs.aws.amazon.com/sagemaker/latest/dg/processing-job.html",
+      "finalUrl": "https://docs.aws.amazon.com/sagemaker/latest/dg/processing-job.html",
+      "status": 200,
+      "title": "Data transformation workloads with SageMaker Processing - Amazon SageMaker AI",
+      "retrieved": "2026-10-08T04:33:14.489981+00:00",
+      "sha256": "24f3114e2bdbe9ef968528874880773452391928ccbc9851e5216050a4574e63",
+      "characters": 4605
+    },
+    {
+      "url": "https://docs.aws.amazon.com/sagemaker/latest/dg/whatis.html",
+      "finalUrl": "https://docs.aws.amazon.com/sagemaker/latest/dg/whatis.html",
+      "status": 200,
+      "title": "What is Amazon SageMaker AI? - Amazon SageMaker AI",
+      "retrieved": "2026-10-08T04:33:14.490251+00:00",
+      "sha256": "4353c208fe9085e373662ec6e5123a4c1f0895ace1bf8a63108ab09a3b167f5e",
+      "characters": 4069
+    },
+    {
+      "url": "https://docs.aws.amazon.com/secretsmanager/latest/userguide/intro.html",
+      "finalUrl": "https://docs.aws.amazon.com/secretsmanager/latest/userguide/intro.html",
+      "status": 200,
+      "title": "What is AWS Secrets Manager? - AWS Secrets Manager",
+      "retrieved": "2026-10-08T04:33:14.446861+00:00",
+      "sha256": "cc5f063d80825d59ebd305ac9a0e00137f9877a814f9aca75b9ba10db9e5f9f5",
+      "characters": 4363
+    },
+    {
+      "url": "https://docs.aws.amazon.com/serverless-application-model/latest/developerguide/what-is-sam.html",
+      "finalUrl": "https://docs.aws.amazon.com/serverless-application-model/latest/developerguide/what-is-sam.html",
+      "status": 200,
+      "title": "What is the AWS Serverless Application Model (AWS SAM)? - AWS Serverless Application Model",
+      "retrieved": "2026-10-08T04:33:14.534121+00:00",
+      "sha256": "b49ed667565041dee9311fdb8c97267593c32873e66c04b798528cf471f63441",
+      "characters": 4734
+    },
+    {
+      "url": "https://docs.aws.amazon.com/snowball/latest/developer-guide/doc-history.html",
+      "finalUrl": "https://docs.aws.amazon.com/snowball/latest/developer-guide/doc-history.html",
+      "status": 200,
+      "title": "Document history - AWS Snowball Edge Developer Guide",
+      "retrieved": "2026-10-08T04:33:14.677503+00:00",
+      "sha256": "2c08a88dfef59a2098093f8fc047fb4ab24795ecfc02788828dca1b3d6088130",
+      "characters": 8454
+    },
+    {
+      "url": "https://docs.aws.amazon.com/sns/latest/dg/sns-sqs-as-subscriber.html",
+      "finalUrl": "https://docs.aws.amazon.com/sns/latest/dg/sns-sqs-as-subscriber.html",
+      "status": 200,
+      "title": "Fanout Amazon SNS notifications to Amazon SQS queues for asynchronous processing - Amazon Simple Notification Service",
+      "retrieved": "2026-10-08T04:33:14.726457+00:00",
+      "sha256": "032d76b83eba971481e8fca7a90f24406f00396827c17150acfa089305182514",
+      "characters": 2453
+    },
+    {
+      "url": "https://docs.aws.amazon.com/sns/latest/dg/welcome.html",
+      "finalUrl": "https://docs.aws.amazon.com/sns/latest/dg/welcome.html",
+      "status": 200,
+      "title": "What is Amazon SNS? - Amazon Simple Notification Service",
+      "retrieved": "2026-10-08T04:33:14.742800+00:00",
+      "sha256": "9c66ba9d878b38bc393ca7d3ba5d716f701a324d1b9b339af3f8354f52d08bd8",
+      "characters": 5929
+    },
+    {
+      "url": "https://docs.aws.amazon.com/step-functions/latest/dg/connect-glue.html",
+      "finalUrl": "https://docs.aws.amazon.com/step-functions/latest/dg/connect-glue.html",
+      "status": 200,
+      "title": "Start an AWS Glue job with Step Functions - AWS Step Functions",
+      "retrieved": "2026-10-08T04:33:14.794413+00:00",
+      "sha256": "61301c4eb2677938432f6f3025a5849582ebc19df7eac16133270d6988ab1402",
+      "characters": 2407
+    },
+    {
+      "url": "https://docs.aws.amazon.com/step-functions/latest/dg/welcome.html",
+      "finalUrl": "https://docs.aws.amazon.com/step-functions/latest/dg/welcome.html",
+      "status": 200,
+      "title": "What is Step Functions? - AWS Step Functions",
+      "retrieved": "2026-10-08T04:33:14.754020+00:00",
+      "sha256": "00b2b6ca937d32e829f05ce735218ae5d739771f2070ecb24f8bdd0cb277d8ed",
+      "characters": 10002
+    },
+    {
+      "url": "https://docs.aws.amazon.com/streams/latest/dev/introduction.html",
+      "finalUrl": "https://docs.aws.amazon.com/streams/latest/dev/introduction.html",
+      "status": 200,
+      "title": "What is Amazon Kinesis Data Streams? - Amazon Kinesis Data Streams",
+      "retrieved": "2026-10-08T04:33:14.769518+00:00",
+      "sha256": "fc409fa73adbd1550a3613b79ee2f6ee5019d225ee3760160eaea118d4e69f44",
+      "characters": 5318
+    },
+    {
+      "url": "https://docs.aws.amazon.com/streams/latest/dev/key-concepts.html",
+      "finalUrl": "https://docs.aws.amazon.com/streams/latest/dev/key-concepts.html",
+      "status": 200,
+      "title": "Amazon Kinesis Data Streams Terminology and concepts - Amazon Kinesis Data Streams",
+      "retrieved": "2026-10-08T04:33:14.753773+00:00",
+      "sha256": "426abc2f424e859000ed0b07abfe1e8159c9c3494b2f7cd762f09d3643b08aa8",
+      "characters": 10041
+    },
+    {
+      "url": "https://docs.aws.amazon.com/streams/latest/dev/monitoring-with-cloudwatch.html",
+      "finalUrl": "https://docs.aws.amazon.com/streams/latest/dev/monitoring-with-cloudwatch.html",
+      "status": 200,
+      "title": "Monitor the Amazon Kinesis Data Streams service with Amazon CloudWatch - Amazon Kinesis Data Streams",
+      "retrieved": "2026-10-08T04:33:14.823819+00:00",
+      "sha256": "ba8567cebb0c4ccd23cbf1beb70eb3a1a16f4f0c8c60db83f32dafebd6d50876",
+      "characters": 18668
+    },
+    {
+      "url": "https://docs.aws.amazon.com/systems-manager/latest/userguide/what-is-systems-manager.html",
+      "finalUrl": "https://docs.aws.amazon.com/systems-manager/latest/userguide/what-is-systems-manager.html",
+      "status": 200,
+      "title": "What is AWS Systems Manager? - AWS Systems Manager",
+      "retrieved": "2026-10-08T04:33:14.956765+00:00",
+      "sha256": "8b506815892c86c03101e7b169ec113fdd3114a8083805b13dca04f75b8919a2",
+      "characters": 8735
+    },
+    {
+      "url": "https://docs.aws.amazon.com/transfer/latest/userguide/what-is-aws-transfer-family.html",
+      "finalUrl": "https://docs.aws.amazon.com/transfer/latest/userguide/what-is-aws-transfer-family.html",
+      "status": 200,
+      "title": "What is AWS Transfer Family? - AWS Transfer Family",
+      "retrieved": "2026-10-08T04:33:15.028338+00:00",
+      "sha256": "56f48be9a430620b3d0df3547c9468b600f6421b00df9f976a52aa1fbf7b14b8",
+      "characters": 11244
+    },
+    {
+      "url": "https://docs.aws.amazon.com/vpc/latest/privatelink/vpc-endpoints-s3.html",
+      "finalUrl": "https://docs.aws.amazon.com/vpc/latest/privatelink/vpc-endpoints-s3.html",
+      "status": 200,
+      "title": "Gateway endpoints for Amazon S3 - Amazon Virtual Private Cloud",
+      "retrieved": "2026-10-08T04:33:14.957072+00:00",
+      "sha256": "617af77f8fc883059d377890ad2f590b58a8f957c46830f895fa97dcb95cbc2d",
+      "characters": 15481
+    },
+    {
+      "url": "https://docs.aws.amazon.com/vpc/latest/privatelink/what-is-privatelink.html",
+      "finalUrl": "https://docs.aws.amazon.com/vpc/latest/privatelink/what-is-privatelink.html",
+      "status": 200,
+      "title": "What is AWS PrivateLink? - Amazon Virtual Private Cloud",
+      "retrieved": "2026-10-08T04:33:15.038461+00:00",
+      "sha256": "ede63552a00c38ec42fa944df8fdb95d3d4ee9aae3bc3f5fa46d2d216337b5a9",
+      "characters": 3645
+    },
+    {
+      "url": "https://docs.aws.amazon.com/vpc/latest/userguide/what-is-amazon-vpc.html",
+      "finalUrl": "https://docs.aws.amazon.com/vpc/latest/userguide/what-is-amazon-vpc.html",
+      "status": 200,
+      "title": "What is Amazon VPC? - Amazon Virtual Private Cloud",
+      "retrieved": "2026-10-08T04:33:15.051823+00:00",
+      "sha256": "229e4d45835eab1cd2f035ee6c549dd2dec86e7f6b9aa0123e02bd8aa20bd320",
+      "characters": 7335
+    },
+    {
+      "url": "https://docs.aws.amazon.com/waf/latest/developerguide/shield-chapter.html",
+      "finalUrl": "https://docs.aws.amazon.com/waf/latest/developerguide/shield-chapter.html",
+      "status": 200,
+      "title": "AWS Shield - AWS WAF, AWS Firewall Manager, AWS Shield Advanced, and AWS Shield network security director",
+      "retrieved": "2026-10-08T04:33:15.038605+00:00",
+      "sha256": "996f21aa1b31e91767ba5e8112abb815db2a68101431fc89a088433db689ce48",
+      "characters": 3503
+    },
+    {
+      "url": "https://docs.aws.amazon.com/waf/latest/developerguide/what-is-aws-waf.html",
+      "finalUrl": "https://docs.aws.amazon.com/waf/latest/developerguide/what-is-aws-waf.html",
+      "status": 200,
+      "title": "What are AWS WAF, AWS Shield Advanced, AWS Shield network security director and AWS Firewall Manager? - AWS WAF, AWS Firewall Manager, AWS Shield Advanced, and AWS Shield network security director",
+      "retrieved": "2026-10-08T04:33:15.054976+00:00",
+      "sha256": "095d63c8316fab1e36d7d4d8a6e877b4c40b0b96914f2131aec076af4153d77f",
+      "characters": 7562
+    },
+    {
+      "url": "https://docs.aws.amazon.com/wellarchitected/latest/userguide/tool.html",
+      "finalUrl": "https://docs.aws.amazon.com/wellarchitected/latest/userguide/tool.html",
+      "status": 200,
+      "title": "What is AWS Well-Architected Tool? - AWS Well-Architected",
+      "retrieved": "2026-10-08T04:33:15.123352+00:00",
+      "sha256": "2327a83d8c4af0e305a56301f1f30a8240342d52007d969693a8b1135d35faad",
+      "characters": 2880
+    }
+  ]
+}

@@ -1,0 +1,18 @@
+/* Shared article layout. Allow prose to shrink; scroll code within its panel. */
+.case-study main :where(.grid, .flex) > * { min-width: 0; }
+.case-study main { overflow-wrap: anywhere; }
+.case-study main > section:first-child h1 { max-width: 22ch; font-size: clamp(2.25rem, 4.7vw, 4.25rem); line-height: 1.12; letter-spacing: -.035em; text-wrap: balance; }
+.case-study main h2 { font-size: clamp(1.75rem, 3vw, 2.25rem); line-height: 1.2; }
+.case-study main p { max-width: 65ch; }
+.case-study pre { min-width: 0; max-width: 100%; overflow-x: auto; padding-bottom: .75rem; overscroll-behavior-x: contain; overflow-wrap: normal; }
+.case-study main .grid { grid-auto-flow: dense; }
+.case-study main .gradient-text { background: none; -webkit-text-fill-color: currentColor; color: #c0c1ff; }
+@media (max-width: 767px) {
+  .case-study main { padding-top: 7rem; }
+  .case-study main > section { padding-inline: 1.25rem; }
+  .case-study main > section.grid { gap: 2rem; }
+  .case-study main .grid-cols-2 { grid-template-columns: minmax(0, 1fr); }
+  .case-study main > section:first-child h1 { font-size: clamp(2rem, 8.5vw, 3rem); }
+  .case-study main .p-16 { padding: 2rem 1.25rem; }
+  .case-study main .p-10 { padding: 1.75rem; }
+}
