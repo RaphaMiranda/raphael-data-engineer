@@ -74,6 +74,13 @@
     assert(slide.querySelectorAll(':scope > div > .note-list > li').length <= 4, 'Presentation shows at most four key points: ' + n);
   }
 
+  await page(521);
+  const fanOutPoints = [...slide.querySelectorAll(':scope > div > .note-list > li')].map(point => point.textContent);
+  const fanOutDetails = slide.querySelector('.notes-details');
+  assert(fanOutPoints.length === 4, 'Fan-out card shows four key points');
+  assert(fanOutDetails.querySelectorAll('li').length === 1 && fanOutDetails.textContent.includes('destination queue policy'), 'Fan-out details contain the additional queue-policy point');
+  assert(fanOutPoints.every(point => !fanOutDetails.textContent.includes(point)), 'Fan-out details do not repeat the card points');
+
   await page(306);
   slide.querySelector('.notes-details').open = true;
   assert(slide.querySelectorAll('table tbody tr').length === 4, 'Storage comparison is a semantic table');

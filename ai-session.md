@@ -1,5 +1,15 @@
 # AI session log
 
+## 2026-10-13 - Remove repeated flat-list slide notes
+
+- **Branch:** `feature/frontend-design-review`.
+- **Goal:** Remove card-text repetition from Detailed notes on SNS + SQS: Fan Out.
+- **Changed files:** `assets/js/aws-study-guide.js`, `tests/aws-study-guide.test.js`, `tests/aws-study-guide-browser.js`, `ai-session.md`.
+- **Changes:** Flat lists now put only points beyond the four-point card summary into Detailed notes. Page 521 retains its four visible points and shows only the additional destination-queue policy below. Nested outlines retain their parent context; source notes and diagrams remain unchanged. Added regression checks for page 521 and flat lists that fit entirely on the card.
+- **Verification:** The new regression failed before the fix (five repeated detail points instead of one) and passes afterward. All 21 Node tests and changed JavaScript syntax checks pass. Chrome study checks pass 183 assertions each at 1440x1000 and 375x812. Real Enter opens Detailed notes with visible focus; both sizes show the single additional point without horizontal overflow or runtime errors. Desktop/mobile screenshots inspected. All 33 referenced local paths return HTTP 200 and fragment targets exist; scoped whitespace checks pass.
+- **Preserved work:** Working tree was clean at the start. No source content, layout, service data, homepage or unrelated files changed.
+- **Commit:** `fix: avoid repeated flat-list study details`.
+
 ## 2026-10-13 - Limit the homepage rollback to its hero
 
 - **Branch:** `feature/frontend-design-review`.

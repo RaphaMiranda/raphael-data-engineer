@@ -126,6 +126,17 @@ test('presentation stays brief while the complete nested reference outline remai
   assert.equal(slides.find(s => s.sourcePage === 306).tables[0].length, 5);
 });
 
+test('flat slide details add only the points not already shown on the card', () => {
+  const fanOut = slides.find(slide => slide.sourcePage === 521);
+  assert.equal(fanOut.title, 'SNS + SQS: Fan Out');
+  const split = helpers.splitPoints(fanOut.listItems, 4);
+  assert.equal(split.main.length, 4);
+  assert.equal(split.rest.length, 1);
+  assert.match(split.rest[0].text, /destination queue policy/);
+  assert.ok(split.main.every(point => !split.rest.some(detail => detail.text === point.text)));
+  assert.equal(helpers.splitPoints(fanOut.listItems.slice(0, 4), 4).rest.length, 0, 'A complete card needs no repeated list in details');
+});
+
 test('inline links, tables and code remain HTML-safe', () => {
   const text = helpers.formatText('<script>alert(1)</script> [bad](javascript:alert) [AWS](https://docs.aws.amazon.com/)');
   assert.doesNotMatch(text, /<script>|href="javascript:/);

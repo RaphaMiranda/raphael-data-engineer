@@ -170,9 +170,10 @@
         .map(function (child) { return child.text; }).join("; ");
       return Object.assign({}, item, { text: item.text + " " + summary });
     });
-    // A complete outline in the disclosure keeps nested explanations with their
-    // parent; the presentation itself shows at most four top-level points.
-    return { main: main, rest: items.length > main.length ? items : [] };
+    // Nested explanations need their parent outline; flat lists only need the
+    // additional points that were not already presented on the card.
+    const nested = items.some(function (item) { return item.indent > root; });
+    return { main: main, rest: nested ? items : items.slice(limit) };
   }
 
   function disposeDiagram() {
