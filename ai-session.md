@@ -1,5 +1,14 @@
 # AI session log
 
+## 2026-10-14 - Opened cumulative AWS study pull request
+
+- **Branch:** `feature/aws-explorer-first-use-tour`.
+- **Goal:** Publish the completed AWS study deck, Service Explorer, Data Contracts case study and tutorial work for review.
+- **Changed files:** `ai-session.md`.
+- **Changes:** Pushed the feature branch and opened [pull request #1](https://github.com/RaphaMiranda/raphael-data-engineer/pull/1) from `feature/aws-explorer-first-use-tour` into the repository's `main` branch. `main` is an ancestor of the feature branch; GitHub shows the PR as open with 25 implementation commits and 46 changed files at creation.
+- **Verification:** Confirmed `origin/main` is the only primary remote ref (there is no `master` ref), that it is an ancestor of the feature branch, and that the GitHub PR page reports the intended base and compare branches. The existing scope's static and browser checks are documented in the preceding feature entries.
+- **Commit:** `docs: record AWS study pull request`.
+
 ## 2026-10-14 - First-use AWS explorer tutorial
 
 - **Branch:** `feature/aws-explorer-first-use-tour`.
