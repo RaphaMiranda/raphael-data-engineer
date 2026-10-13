@@ -38,6 +38,7 @@ Explorer checks use Node's built-in runner: `node --test tests/aws-explorer.test
 - Shared styles belong in `assets/css/styles.css`; shared behaviour belongs in `assets/js/main.js`.
 - Page-specific code uses descriptive sibling files in `assets/css` and `assets/js`.
 - Design guidance lives in [design/DESIGN.md](design/DESIGN.md); contributor guidance is in [AGENTS.md](AGENTS.md).
+- The [frontend design review](docs/frontend-design-review.md) records responsive fixes, skill adaptations, accessibility checks and measured loading limitations.
 
 ## Deployment
 

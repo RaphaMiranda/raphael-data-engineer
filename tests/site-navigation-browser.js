@@ -53,6 +53,9 @@
     assert(buttons.every(b => parseFloat(getComputedStyle(b).minHeight) >= 44) && [...topicList.querySelectorAll('.topic-section > summary')].every(summary => summary.getBoundingClientRect().height >= 44), 'Topic and section touch targets remain at least 44px');
   }
   assert([...header.querySelectorAll('a, button')].filter(e => e.getClientRects().length).every(e => e.getBoundingClientRect().right <= innerWidth), 'No horizontal header overflow');
-  if (!location.pathname.startsWith('/case-studies/')) assert(document.documentElement.scrollWidth <= innerWidth, 'No horizontal page overflow');
+  assert(document.documentElement.scrollWidth <= innerWidth, 'No horizontal page overflow');
+  if (document.body.classList.contains('case-study')) {
+    assert([...document.querySelectorAll('pre')].every(pre => pre.tabIndex === 0 && pre.getBoundingClientRect().right <= innerWidth), 'Code scrolls inside keyboard-reachable article panels');
+  }
   return { page: location.pathname, viewport: innerWidth, checks: results.length, contentOverflow: Math.max(0, document.documentElement.scrollWidth - innerWidth) };
 })();

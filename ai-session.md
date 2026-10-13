@@ -1,5 +1,16 @@
 # AI session log
 
+## 2026-10-13 - Frontend design review and canonical specification
+
+- **Branch:** `feature/frontend-design-review`.
+- **Goal:** Apply gpt-taste and design-taste-frontend to review/fix the frontend, then use stitch-design-taste to generate the design specification.
+- **Changed files:** `index.html`, all five `case-studies/*.html` pages, `aws-study-guide/explorer.html`, `aws-study-guide/service-explorer.html`, `assets/css/styles.css`, `assets/css/portfolio.css`, `assets/css/case-studies.css`, `assets/css/aws-study-guide.css`, `assets/css/aws-service-explorer.css`, `assets/css/aws-explorer-landing.css`, `assets/js/aws-study-guide.js`, `assets/images/infrastructure-editorial.webp`, `tests/site-navigation-browser.js`, `design/DESIGN.md`, `docs/frontend-design-review.md`, `README.md`, `ai-session.md`.
+- **Changes:** Shortened the homepage hero and added a generated editorial infrastructure image; arranged five projects without an empty grid cell; corrected mobile article overflow and keyboard code scrolling; improved study hierarchy and small-diagram placement while keeping larger graphs full width; enlarged notebook copy and visible tool labels; corrected initial focus, footer contrast, preference fallbacks and short-viewport menu scrolling. Subset the existing icon font to 52 symbols across six pages. Rewrote the existing canonical design document using the seven-section Stitch format and documented skill adaptations to the established fonts, palette and static stack.
+- **Verification:** All 20 Node tests and changed JavaScript syntax checks pass. Chrome shared-navigation/layout checks pass across nine pages at 1440x1000 (92 assertions), 375x812 (128) and 320x812 (128), with zero horizontal page overflow. Study checks pass 177 assertions at desktop/mobile; Explorer checks pass 24 plus 25 notebook assertions at each width. Real Tab, Enter, O and code ArrowRight behavior passed with visible focus; Start Explorer loads all 75 services. Notebook tracks remain 480px at 1050/1100px and 720px at 1920px. Emulated reduced motion disables card transitions. Screenshots reviewed for hero, project grid, simple/complex diagrams, case-study code, Explorer entry and notebook. All 34 local paths return HTTP 200 and local fragment targets exist; scoped whitespace checks pass.
+- **Measurements:** Local mobile Lighthouse homepage accessibility 100 and performance 77, FCP 3.6s, LCP 4.1s, CLS 0 and blocking time 0ms. Icon transfer fell from 1,137,571 to 21,683 bytes. These are lab checks, not field measurements; existing runtime Tailwind/external fonts remain a loading limitation. The review records the generated image's exact prompt, mode, asset path and illustrative status.
+- **Preserved work:** Started from a clean tree. Concurrent user edits to `docs/aws-data-eng-associate.md` remain untouched and excluded. Diagram models, Explorer behavior/data and source notes were not edited by this task. No new website dependencies or build tooling. Temporary audit files are excluded.
+- **Commit:** `style: refine frontend layouts and document design system`.
+
 ## 2026-10-13 - Merged AWS notes and expandable topic sections
 
 - **Branch:** `feature/merged-aws-study-notes`.

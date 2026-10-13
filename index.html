@@ -10,7 +10,7 @@
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&family=Inter:wght@300;400;500;600&family=JetBrains+Mono&display=swap" rel="stylesheet" />
-  <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet" />
+  <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&icon_names=api,arrow_forward,bar_chart,bolt,build,chat,check_circle,cleaning_services,cloud,code,compare_arrows,content_copy,database,dataset,deployed_code,double_arrow,download,draw,explore,forum,group,history,history_edu,hub,lock,manage_search,masks,merge_type,modeling,monitoring,open_in_new,person,policy,present_to_all,raw_on,rocket_launch,search,security,settings_ethernet,settings_input_component,shield_lock,smart_toy,speed,storage,terminal,trending_up,verified,verified_user,visibility_off,warning,water_drop,workspace_premium&display=block" rel="stylesheet" />
 
   <!-- Tailwind CDN + shared config -->
   <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
@@ -18,6 +18,7 @@
 
   <!-- Custom styles -->
   <link rel="stylesheet" href="/assets/css/styles.css" />
+  <link rel="stylesheet" href="/assets/css/portfolio.css" />
 </head>
 
 <body class="bg-surface text-on-surface font-body selection:bg-primary-container selection:text-on-primary-container">
@@ -53,87 +54,25 @@
     </nav>
   </header>
 
-  <main class="pt-16">
+  <main class="portfolio-main" id="main-content">
 
     <!-- ╔══════════════════════════════════════╗ -->
     <!-- ║  Hero                                ║ -->
     <!-- ╚══════════════════════════════════════╝ -->
-    <section class="relative min-h-[921px] flex items-center overflow-hidden">
-      <div class="absolute inset-0 grid-overlay opacity-20"></div>
-      <!-- Ambient glows -->
-      <div class="absolute top-1/4 -left-20 w-96 h-96 bg-primary/20 blur-[120px] rounded-full"></div>
-      <div class="absolute bottom-1/4 -right-20 w-96 h-96 bg-secondary/10 blur-[120px] rounded-full"></div>
-
-      <div class="max-w-7xl mx-auto px-8 relative z-10 grid md:grid-cols-2 gap-12 items-center">
-
-        <!-- Copy -->
-        <div>
-          <div class="inline-flex items-center space-x-2 px-3 py-1 rounded-full bg-surface-container-high border border-outline-variant/20 mb-6">
-            <span class="w-2 h-2 rounded-full bg-tertiary animate-pulse"></span>
-            <span class="text-xs font-mono uppercase tracking-widest text-on-surface-variant">Open to New Opportunities</span>
-          </div>
-
-          <h1 class="text-5xl md:text-7xl font-headline font-bold text-on-surface leading-[1.1] mb-6">
-            Let's build your
-            <span class="bg-gradient-to-r from-primary via-secondary to-tertiary bg-clip-text text-transparent">Next Backbone</span> 
-            of Intelligence.
-          </h1>
-
-          <p class="text-lg text-on-surface-variant max-w-lg mb-10 leading-relaxed">
-            Data Engineer with 5+ years designing enterprise platforms on Azure and AWS — from lakehouse migrations to ISO&nbsp;27001 compliance and Power&nbsp;BI analytics at scale.
-          </p>
-
-          <div class="flex flex-wrap gap-4">
-            <a href="#case-studies" class="bg-gradient-to-br from-primary to-primary-container text-on-primary font-bold py-4 px-8 rounded-xl flex items-center gap-2 hover:shadow-[0_0_20px_rgba(192,193,255,0.4)] transition-all">
-              View Case Studies
-              <span class="material-symbols-outlined">arrow_forward</span>
-            </a>
-            <a href="/assets/docs/resume-raphael-miranda.pdf" download class="bg-transparent border border-outline-variant/30 text-on-surface-variant font-bold py-4 px-8 rounded-xl hover:bg-white/5 hover:text-on-surface transition-all flex items-center gap-2">
-              <span class="material-symbols-outlined text-base">download</span>
-              Resume
-            </a>
+    <section class="portfolio-hero" aria-labelledby="hero-title">
+      <div class="portfolio-hero-layout">
+        <div class="portfolio-hero-copy">
+          <p class="portfolio-intro">Data Engineer / Open to new opportunities</p>
+          <h1 id="hero-title">Data platforms.<br><span>Built to last.</span></h1>
+          <p class="portfolio-lede">I build data platforms on Azure and AWS, from lakehouse architecture to governed analytics.</p>
+          <div class="portfolio-actions">
+            <a class="portfolio-primary" href="#case-studies">View Case Studies <span class="material-symbols-outlined" aria-hidden="true">arrow_forward</span></a>
+            <a class="portfolio-secondary" href="/assets/docs/resume-raphael-miranda.pdf" download><span class="material-symbols-outlined" aria-hidden="true">download</span>Resume</a>
           </div>
         </div>
-
-        <!-- Terminal card -->
-        <div class="hidden md:block relative">
-          <div class="glass-panel p-6 rounded-2xl border-t border-l border-white/10 shadow-2xl relative overflow-hidden">
-            <div class="flex items-center justify-between mb-8">
-              <div class="flex gap-1.5">
-                <div class="w-3 h-3 rounded-full bg-error/40"></div>
-                <div class="w-3 h-3 rounded-full bg-secondary-container/40"></div>
-                <div class="w-3 h-3 rounded-full bg-tertiary/40"></div>
-              </div>
-              <span class="text-[10px] font-mono text-outline">PIPELINE_STATUS.sh</span>
-            </div>
-
-            <div class="space-y-4 font-mono text-sm">
-              <div class="flex items-center gap-4 text-tertiary">
-                <span class="text-outline">01</span>
-                <span>[SUCCESS] Databricks cluster "prod-01" — RUNNING</span>
-              </div>
-              <div class="flex items-center gap-4 text-on-surface-variant">
-                <span class="text-outline">02</span>
-                <span>[INFO] Iceberg Medallion ingest: Bronze → Silver</span>
-              </div>
-              <div class="flex items-center gap-4 text-secondary">
-                <span class="text-outline">03</span>
-                <span>[SYNC] AWS Glue job completed: 0 errors</span>
-              </div>
-              <div class="flex items-center gap-4 text-on-surface-variant">
-                <span class="text-outline">04</span>
-                <span>[AUDIT] ISO 27001 control check: PASS</span>
-              </div>
-              <div class="flex items-center gap-4 text-primary">
-                <span class="text-outline">05</span>
-                <span>[DEPLOY] Pulumi stack updated: v3.1.0</span>
-              </div>
-            </div>
-          </div>
-          <!-- Decorative offset border -->
-          <div class="absolute -z-10 -bottom-6 -right-6 w-full h-full border border-primary/20 rounded-2xl"></div>
-        </div>
-
+        <figure class="portfolio-hero-image">
+          <img src="/assets/images/infrastructure-editorial.webp" alt="" width="1448" height="1086" fetchpriority="high" decoding="async">
+        </figure>
       </div>
     </section>
 
@@ -401,10 +340,11 @@
           </div>
         </div>
 
-        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+        <div class="case-grid">
 
           <!-- Lakehouse -->
-          <a href="/case-studies/lakehouse-databricks.html" class="group bg-surface-container-low p-8 rounded-2xl border border-outline-variant/10 hover:border-primary/30 transition-all hover:shadow-[0_0_32px_rgba(192,193,255,0.06)] flex flex-col gap-4">
+          <a href="/case-studies/lakehouse-databricks.html" class="case-feature group bg-surface-container-low p-8 rounded-2xl border border-outline-variant/10 hover:border-primary/30 transition-all hover:shadow-[0_0_32px_rgba(192,193,255,0.06)] flex flex-col gap-4">
+            <div class="case-feature-copy">
             <div class="flex items-center gap-3 mb-2">
               <span class="material-symbols-outlined text-secondary">storage</span>
               <span class="text-xs font-mono uppercase tracking-widest text-secondary">Architecture</span>
@@ -417,6 +357,8 @@
               <span class="text-xs font-mono px-2 py-1 rounded bg-surface-container-high text-secondary border border-secondary/20">AWS Glue</span>
             </div>
             <span class="text-primary text-sm font-bold flex items-center gap-1 group-hover:gap-2 transition-all">Read case study <span class="material-symbols-outlined text-base">arrow_forward</span></span>
+            </div>
+            <img class="case-feature-image" src="/assets/images/lakehouse-databricks.png" width="480" height="1600" alt="" loading="lazy" decoding="async">
           </a>
 
           <!-- Governance -->
@@ -546,9 +488,9 @@
         © 2025 Raphael Miranda · Data Engineer
       </div>
       <div class="flex gap-8">
-        <a href="https://linkedin.com/in/raphaelmiranda0" target="_blank" rel="noopener" class="text-slate-500 hover:text-indigo-300 transition-colors font-label text-sm tracking-wide underline decoration-indigo-500/30 underline-offset-4 hover:translate-x-1 duration-200">LinkedIn</a>
-        <a href="https://github.com/RaphaMiranda" target="_blank" rel="noopener" class="text-slate-500 hover:text-indigo-300 transition-colors font-label text-sm tracking-wide underline decoration-indigo-500/30 underline-offset-4 hover:translate-x-1 duration-200">GitHub</a>
-        <a href="#case-studies" class="text-slate-500 hover:text-indigo-300 transition-colors font-label text-sm tracking-wide underline decoration-indigo-500/30 underline-offset-4 hover:translate-x-1 duration-200">Case Studies</a>
+        <a href="https://linkedin.com/in/raphaelmiranda0" target="_blank" rel="noopener" class="hover:text-indigo-300 transition-colors font-label text-sm tracking-wide underline decoration-indigo-500/30 underline-offset-4 hover:translate-x-1 duration-200">LinkedIn</a>
+        <a href="https://github.com/RaphaMiranda" target="_blank" rel="noopener" class="hover:text-indigo-300 transition-colors font-label text-sm tracking-wide underline decoration-indigo-500/30 underline-offset-4 hover:translate-x-1 duration-200">GitHub</a>
+        <a href="#case-studies" class="hover:text-indigo-300 transition-colors font-label text-sm tracking-wide underline decoration-indigo-500/30 underline-offset-4 hover:translate-x-1 duration-200">Case Studies</a>
       </div>
     </div>
   </footer>

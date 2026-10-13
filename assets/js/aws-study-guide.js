@@ -241,12 +241,16 @@
     }
   }
 
-  function renderSlide() {
+  function renderSlide(shouldFocus) {
     const current = state.slides[state.index];
     const section = current.section;
     const points = splitPoints(current.listItems, 4);
     const notes = renderList(points.main);
     const visual = renderVisual(current);
+    const visualData = getVisual(current);
+    const wideDiagram = visualData && visualData.type === "diagram" && visualData.nodes.length > 3;
+    const compactDiagram = visualData && visualData.type === "diagram" && !wideDiagram;
+    const introduction = current.paragraphs[0] ? "<p class=\"slide-lede\">" + formatText(current.paragraphs[0]) + "</p>" : "";
     const code = current.code.map(function (snippet) { return "<pre class=\"code-block\"><code>" + escapeHtml(snippet) + "</code></pre>"; }).join("");
     const references = current.paragraphs.filter(function (paragraph) { return paragraph.startsWith("**Current reference"); });
     const paragraphs = current.paragraphs.slice(1).filter(function (paragraph) { return !references.includes(paragraph); });
@@ -257,13 +261,13 @@
 
     disposeDiagram();
     elements.slide.classList.remove("entering");
+    elements.slide.classList.toggle("slide--split", Boolean(compactDiagram));
     void elements.slide.offsetWidth;
     elements.slide.innerHTML = "<div>"
       + "<p class=\"slide-index\">" + (current.sourcePage ? "PDF page " + current.sourcePage : "Study notes") + "</p>"
       + "<p class=\"slide-section\">" + escapeHtml(section) + "</p>"
       + "<h2>" + escapeHtml(current.title) + "</h2>"
-      + (current.paragraphs[0] ? "<p class=\"slide-lede\">" + formatText(current.paragraphs[0]) + "</p>" : "")
-      + notes + visual + details
+      + (compactDiagram ? '<div class="slide-copy">' + introduction + notes + '</div>' + visual : introduction + (wideDiagram ? visual + notes : notes + visual)) + details
       + references.map(function (reference) { return '<p class="source-reference">' + formatText(reference) + '</p>'; }).join("")
       + empty + "</div>";
     elements.slide.classList.add("entering");
@@ -279,7 +283,7 @@
     initializeDiagram(current);
     elements.slide.scrollTop = 0;
     if (window.matchMedia("(max-width: 860px)").matches) window.scrollTo({ top: 0, left: 0, behavior: "instant" });
-    elements.slide.focus({ preventScroll: true });
+    if (shouldFocus !== false) elements.slide.focus({ preventScroll: true });
   }
 
   function groupTopics(slides) {
@@ -341,7 +345,7 @@
     elements.results.textContent = count ? count + " topics in " + sections + " sections" : "No matching topics. Try a service name or PDF page.";
   }
 
-  function showLocation() {
+  function showLocation(shouldFocus) {
     const page = location.hash.match(/^#page-(\d+)$/);
     const topic = location.hash.match(/^#(?:course-)?topic-(\d+)$/);
     const original = location.hash.match(/^#note-(\d+)$/);
@@ -351,7 +355,7 @@
     state.index = Math.max(0, Math.min(target, state.slides.length - 1));
     elements.search.value = "";
     filterOverview();
-    renderSlide();
+    renderSlide(shouldFocus !== false);
   }
 
   function updateOverviewSelection() {
@@ -411,7 +415,7 @@
     .then(function (markdown) {
       state.slides = parseMarkdown(markdown).filter(function (topic) { return !topic.isSection; });
       renderOverview();
-      showLocation();
+      showLocation(false);
       bindEvents();
     })
     .catch(function (error) {
