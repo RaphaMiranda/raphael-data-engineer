@@ -17,7 +17,11 @@ Scope retrieved **8 October 2026** from the [official DEA-C01 service list](http
 
 The explorer is a single map workspace with a compact search/filter toolbar and a collapsible available-service list above it. Search and category/domain changes open the list automatically. Active category/domain filter counts remain visible when the filters collapse. Zoom and relationship selection sit directly below the diagram; optional map settings, example connections and scope notes start collapsed.
 
+The first visit opens a three-step tutorial: choose Athena, inspect its related services, then add Amazon Quick (the QuickSuite / QuickSight example) to study the query-to-dashboard connection. A dark overlay and pointing callout leave the current click target available. **Skip tutorial** or Escape restores the previous selection, search, filters, chosen relationship and neighborhood setting; completion retains Athena + Quick and focuses the relationship notebook. **Show tutorial** replays it at any time. Completion and skipping are remembered in this browser using `localStorage` key `aws-explorer-tutorial-v1`. If browser storage is blocked or cleared, the tutorial may appear again; it remains skippable. Background controls are inert during the walkthrough and Tab stays among its target and actions.
+
 Search accepts service names, aliases and capability terms. Category and exam-domain filters combine. List buttons and SVG nodes toggle the same working set. Chips remove one service; Clear all restores the starting state. Filter changes preserve selections and keep selected services on the map.
+
+With one service selected, a compact related-services list lets you add another participant from its documented patterns. Sharing a pattern does not imply a direct integration between every pair; the notebook identifies the exact flows and additional participants. An empty list honestly reports missing verified relationships.
 
 Selection opens an embedded notebook card in the map surface. One service shows its description and selection guidance. Multiple services show one relationship, its first two explicit flow steps and tradeoffs; the relationship selector updates the graph and preview together. Subset previews and additional participants remain explicitly labeled. **More details** reveals the full service notes, recall disclosure and sources, or all-selected matches followed by a clearly labeled subset section. A new selection or relationship starts with the compact answer again. Unverified combinations show an honest empty state.
 
@@ -36,6 +40,7 @@ Drag the background to pan; use toolbar controls or `+`/`-` to zoom, `0` to fit,
 - `assets/js/aws-explorer-data.js`: structured service records and relationships; separate from rendering. Each record declares tasks, source URLs and verification date. Relationship roles and directed flows retain hyperedges without manufacturing pairwise integrations. `kind` distinguishes features, integrations and composed architecture patterns.
 - `assets/js/aws-explorer-core.js`: pure filtering, selection, neighborhood and all/subset matching.
 - `assets/js/aws-service-explorer.js` and `assets/css/aws-service-explorer.css`: page interactions and styling.
+- `assets/js/aws-explorer-tutorial.js`: first-use walkthrough, spotlight positioning, keyboard isolation, replay and browser-local completion state. It uses the page's existing selection controls.
 - `docs/aws-explorer-source-audit.json`: source URLs, resolved URLs, HTTP status, page titles, retrieval timestamps, hashes and the retrieved scope entries. This is retrieval evidence; HTTP success alone does not establish claim accuracy.
 - `assets/js/aws-explorer-sources.js`: generated official source titles for readable documentation links.
 - `scripts/verify-aws-explorer-sources.py`: standard-library source retrieval/audit helper. It caches full source text in ignored `.tmp-aws-sources/` for human/agent review and fails on errors, short landing pages or redirects. No credentials are used.
@@ -47,6 +52,7 @@ When editing technical content, read the current relevant AWS page, correct redi
 ```powershell
 node --test tests/aws-explorer.test.js
 node --check assets/js/aws-service-explorer.js
+node --check assets/js/aws-explorer-tutorial.js
 python scripts/verify-aws-explorer-sources.py
 python -m http.server 8765 --bind 127.0.0.1
 ```
@@ -54,6 +60,8 @@ python -m http.server 8765 --bind 127.0.0.1
 The source helper requires internet access. Node tests use the checked-in retrieval snapshot and no network. They check exact deduplicated scope, card/data completeness, source retrieval evidence, valid role/flow references, all/subset matching, unsupported-pair behavior, selection/filter behavior and both required examples.
 
 `tests/aws-explorer-browser.js` checks all 75 service cards plus 24 interaction/layout assertions. `tests/aws-explorer-relationships-browser.js` checks all 63 relationship cards, roles and synchronized previews. `tests/aws-explorer-notebook-browser.js` checks the initial collapsed state, progressive disclosure, search opening, filter indicators and reserved map space (run on a fresh page). With the optional `agent-browser` testing CLI (kept outside project dependencies), fetch the scripts through the local server to avoid Windows command-length limits:
+
+`tests/aws-explorer-tutorial-browser.js` checks all three steps, target/callout bounds, modal keyboard focus, real selection results, persistence, skip restoration, replay and blocked-storage handling. Run it after removing `aws-explorer-tutorial-v1` from localStorage and reloading the page. The other browser suites dismiss an active tutorial before checking the normal workspace. Also reload after completing or skipping to confirm the remembered state suppresses automatic replay.
 
 ```powershell
 agent-browser --session aws-explorer open http://127.0.0.1:8765/aws-study-guide/service-explorer.html

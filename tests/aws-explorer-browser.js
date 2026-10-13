@@ -4,6 +4,7 @@
   const results = [];
   const assert = (condition, message) => { if (!condition) throw new Error(message); results.push(message); };
   const $ = id => document.getElementById(id);
+  if (!$('explorer-tutorial').hidden) $('tutorial-skip').click();
   const clickService = id => document.querySelector(`#service-list [data-service="${id}"]`).click();
   const details = () => $('study-details').textContent;
   const change = (id, value, type = 'change') => { $(id).value = value; $(id).dispatchEvent(new Event(type, { bubbles: true })); };

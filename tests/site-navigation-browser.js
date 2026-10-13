@@ -1,5 +1,7 @@
 /* Run inside each rendered page at desktop and mobile widths. */
 (async () => {
+  const tour = document.getElementById('explorer-tutorial');
+  if (tour && !tour.hidden) document.getElementById('tutorial-skip').click();
   const results = [];
   const assert = (ok, message) => { if (!ok) throw new Error(message); results.push(message); };
   const header = document.querySelector('.site-header');

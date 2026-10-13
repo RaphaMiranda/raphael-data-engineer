@@ -1,5 +1,6 @@
 /* Run separately from interaction checks to stay within Windows CLI limits. */
 (() => {
+  if (!document.getElementById('explorer-tutorial').hidden) document.getElementById('tutorial-skip').click();
   document.getElementById('clear-selection').click();
   document.getElementById('reset-filters').click();
   const start = performance.now();

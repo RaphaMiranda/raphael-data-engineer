@@ -1,6 +1,7 @@
 /* Execute in a fresh rendered page. Checks progressive disclosure and map space. */
 (() => {
   const $ = id => document.getElementById(id);
+  if (!$('explorer-tutorial').hidden) $('tutorial-skip').click();
   const checks = [];
   const assert = (ok, label) => { if (!ok) throw new Error(label); checks.push(label); };
   const change = (id, value, type = 'change') => {

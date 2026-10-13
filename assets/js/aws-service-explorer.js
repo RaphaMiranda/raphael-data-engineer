@@ -64,6 +64,12 @@
     $('graph-pattern').innerHTML = '<option value="">All relationships</option><option value="suggested">Suggested relationship</option>' + relevant.map(r => `<option value="${r.id}">${esc(r.name)}</option>`).join('');
     $('graph-pattern').value = pattern;
     $('graph-pattern').disabled = !relevant.length;
+    $('related-services').hidden = selected.length !== 1;
+    if (selected.length === 1) {
+      const related = [...new Set(relevant.flatMap(r => r.participants))].filter(id => id !== selected[0]).sort((a, b) => byId.get(a).name.localeCompare(byId.get(b).name));
+      $('related-heading').textContent = `Related to ${shortName(selected[0])}`;
+      $('related-service-list').innerHTML = related.length ? related.map(id => `<button type="button" data-service="${id}">${esc(byId.get(id).name)}</button>`).join('') : '<p class="small muted">No verified relationships are recorded for this service yet.</p>';
+    }
     renderDetails();
     renderServices();
   }
@@ -185,7 +191,12 @@
   }
   document.addEventListener('click', event => {
     const service = event.target.closest('[data-service]');
-    if (service) { setSelection(core.toggleSelection(selected, service.dataset.service)); return; }
+    if (service) {
+      const fromRelated = service.closest('#related-services');
+      setSelection(core.toggleSelection(selected, service.dataset.service));
+      if (fromRelated) $('details-heading').focus();
+      return;
+    }
     const remove = event.target.closest('[data-remove]');
     if (remove) {
       const index = selected.indexOf(remove.dataset.remove);

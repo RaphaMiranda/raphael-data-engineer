@@ -1,6 +1,6 @@
 # Design System: Architectural Precision
 
-Canonical specification for Raphael Miranda Mata's portfolio, case studies and AWS learning workspace. Updated 2026-10-13 from the implemented frontend. Use this document as context when generating screens in Google Stitch or changing the static site.
+Canonical specification for Raphael Miranda Mata's portfolio, case studies and AWS learning workspace. Updated 2026-10-14 from the implemented frontend. Use this document as context when generating screens in Google Stitch or changing the static site.
 
 Only the homepage's first-screen hero is restored from `feature/merged-aws-study-notes`, as clarified by the user. Its headline, illustrative terminal and original hero treatment are intentional exceptions to the newer composition guidance. Everything around and below that hero retains the frontend design review: featured project grid, footer contrast, icon-font subset, shared accessibility improvements and refined case-study/learning-tool layouts.
 
@@ -92,6 +92,8 @@ Do not truncate study topics to make them look short. Preserve original headings
 **Search and filters.** Put a persistent visible label above the field, with .4rem spacing. Use a recessed surface, readable placeholder, 44px control height and cyan focus. Secondary filters remain behind a disclosure. Matching services open the catalog; active selections remain visible as removable chips.
 
 **Embedded notebook.** Keep the notebook within the map workspace. Start with a service name, a short explanation and usage guidance; put deeper notes, recall prompts and sources behind a disclosure. Use 15px body copy and a visible Choose services link. On large screens retain the wide reading panel; on mobile stack it beneath the map inside the same workspace.
+
+**Explorer walkthrough.** On first use, teach one service, its related-service list and a two-service connection in three steps. Dim the page with a navy overlay; keep a cyan spotlight around the actual target and a pointing, bounded callout. Make Skip tutorial and Escape available, remember dismissal locally, and expose Show tutorial for replay. Keep background controls inert and keyboard focus within the target and tutorial actions. A single selected service exposes a compact related-services row; explain that co-participants can require additional services rather than implying direct pairwise integration.
 
 **Loading, empty and error states.** Preserve the existing source-loading message, explicit unfinished-topic prompts, no-result feedback and diagram-library text fallback. Unsupported service combinations must say there is no verified relationship. Keep errors inline and actionable. Do not invent progress, service uptime, plausible relationships or decorative loading loops.
 

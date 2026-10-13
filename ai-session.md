@@ -1,5 +1,16 @@
 # AI session log
 
+## 2026-10-14 - First-use AWS explorer tutorial
+
+- **Branch:** `feature/aws-explorer-first-use-tour`.
+- **Goal:** Guide new users through Athena, its related services and the Amazon Quick visualization connection in three clickable steps.
+- **Changed files:** `aws-study-guide/service-explorer.html`, `assets/js/aws-service-explorer.js`, `assets/js/aws-explorer-tutorial.js`, `assets/css/aws-service-explorer.css`, `tests/aws-explorer-tutorial-browser.js`, `tests/aws-explorer-browser.js`, `tests/aws-explorer-notebook-browser.js`, `tests/aws-explorer-relationships-browser.js`, `tests/site-navigation-browser.js`, `docs/aws-service-explorer.md`, `design/DESIGN.md`, `ai-session.md`.
+- **Changes:** Added a first-visit walkthrough with a dark overlay, cyan spotlight, pointing callouts and actual service-selection targets. Added a compact single-service related list from documented co-participants. Skip and Escape restore the previous selections, filters, relationship choice and neighborhood setting; completion keeps Athena + Quick and focuses its notebook. Browser-local state remembers completion/skipping and Show tutorial allows replay. Background controls are inert, Tab cycles among tour controls, storage failures remain skippable, and callouts use side placement for short landscape windows. No dependencies added.
+- **Factual review:** Confirmed the Athena-to-BI explanation against [AWS Athena connection documentation](https://docs.aws.amazon.com/quick/latest/userguide/athena.html) and [Amazon Quick Sight visualization documentation](https://docs.aws.amazon.com/quick/latest/userguide/quick-bi.html). The tour clarifies the catalog's Amazon Quick label alongside QuickSuite / QuickSight; related co-participants are not described as universal pairwise integrations.
+- **Verification:** All 11 explorer Node tests and changed JavaScript syntax checks pass. Dedicated tutorial browser checks pass 37 assertions each at 1440x1000, 375x812 and 812x375, including real pointer-hit targets, focus isolation, all steps, skip restoration, replay, blocked storage and visible notebook focus after related-service selection. Existing notebook (25 assertions), interaction/card (24 assertions; all 75 services), relationship (all 63) and shared-navigation (9/13 assertions) suites pass at desktop/mobile sizes. Screenshots inspected; real pointer Athena selection and real Tab/Enter Quick selection pass with visible focus. Completion and skipping remain dismissed after reload; live resizing rebinds the spotlight. No browser page errors or horizontal overflow. All 35 local referenced paths return HTTP 200 and fragments resolve; scoped whitespace checks pass.
+- **Preserved work:** The existing user edit in `docs/aws-data-eng-associate.md` remains untouched and excluded from the commit.
+- **Commit:** `feat: add first-use AWS explorer tutorial`.
+
 ## 2026-10-14 - Planned data contracts case study
 
 - **Branch:** `feature/data-contracts-case-study`.

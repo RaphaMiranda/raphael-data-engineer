@@ -15,6 +15,7 @@
   <script defer src="/assets/js/aws-explorer-core.js"></script>
   <script defer src="/assets/js/aws-service-explorer.js"></script>
   <script defer src="/assets/js/main.js"></script>
+  <script defer src="/assets/js/aws-explorer-tutorial.js"></script>
 </head>
 <body>
   <a class="skip-link" href="#service-search">Skip to service search</a>
@@ -48,7 +49,7 @@
   <main class="explorer-shell">
     <section class="intro" aria-labelledby="page-title">
       <div><p class="eyebrow">DEA-C01 / Architecture lab</p><h1 id="page-title">AWS service explorer</h1><p class="lede">Choose services. See how they connect.</p></div>
-      <p id="coverage" class="mono">Loading coverage…</p>
+      <div class="intro-tools"><p id="coverage" class="mono">Loading coverage…</p><button id="show-tutorial" type="button">Show tutorial</button></div>
     </section>
     <div class="workspace">
       <div class="search-toolbar">
@@ -70,6 +71,11 @@
         <div id="selection-chips"><span class="muted">No services selected</span></div>
         <button id="clear-selection" type="button" disabled>Clear all</button>
         <a id="notebook-link" class="small" href="#details-heading" hidden>View notebook ↓</a>
+      </section>
+      <section id="related-services" class="related-services" aria-labelledby="related-heading" hidden>
+        <h2 id="related-heading">Related services</h2>
+        <p class="small muted">These services share documented patterns. The notebook explains the exact flows and any extra services needed.</p>
+        <div id="related-service-list" class="related-service-list"></div>
       </section>
       <section class="system-map" aria-labelledby="map-heading">
         <div class="panel-heading"><h2 id="map-heading">System map</h2><span class="mono" id="graph-count"></span></div>
@@ -105,6 +111,20 @@
       <details><summary>About this study material</summary><p>Editorial study summaries verified against linked AWS sources. Exam mappings are study guidance. Scope retrieved <time datetime="2026-10-08">8 October 2026</time>. AWS’s list is non-exhaustive and subject to change; this explorer does not cover every possible service combination.</p><a href="https://docs.aws.amazon.com/aws-certification/latest/data-engineer-associate-01/dea-01-in-scope-services.html">Official service scope ↗</a><a href="/docs/aws-explorer-source-audit.json">Source retrieval audit</a><a href="/docs/aws-service-explorer.md">Content & maintenance notes</a></details>
     </footer>
     <noscript><p>This interactive explorer requires JavaScript. Read the <a href="https://docs.aws.amazon.com/aws-certification/latest/data-engineer-associate-01/dea-01-in-scope-services.html">official AWS service list</a> and <a href="/docs/aws-service-explorer.md">coverage notes</a>.</p></noscript>
+    <div id="explorer-tutorial" class="explorer-tutorial" hidden>
+      <div class="tutorial-shade tutorial-shade-top" aria-hidden="true"></div>
+      <div class="tutorial-shade tutorial-shade-left" aria-hidden="true"></div>
+      <div class="tutorial-shade tutorial-shade-right" aria-hidden="true"></div>
+      <div class="tutorial-shade tutorial-shade-bottom" aria-hidden="true"></div>
+      <div class="tutorial-spotlight" aria-hidden="true"></div>
+      <span id="tutorial-arrow" class="tutorial-arrow" aria-hidden="true"></span>
+      <section id="tutorial-card" class="tutorial-card" aria-labelledby="tutorial-title">
+        <div class="tutorial-toolbar"><p id="tutorial-progress" class="eyebrow">Step 1 of 3</p><button id="tutorial-skip" type="button">Skip tutorial</button></div>
+        <h2 id="tutorial-title" tabindex="-1"></h2>
+        <p id="tutorial-text"></p>
+        <button id="tutorial-action" class="tutorial-action" type="button"></button>
+      </section>
+    </div>
   </main>
 </body>
 </html>
