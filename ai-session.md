@@ -1,5 +1,15 @@
 # AI session log
 
+## 2026-10-13 - Restore the previous homepage
+
+- **Branch:** `feature/frontend-design-review`.
+- **Goal:** Restore the home screen from `feature/merged-aws-study-notes` while retaining the case-study, AWS study-deck and Explorer refinements.
+- **Changed files:** `index.html`, `assets/css/portfolio.css` (removed), `design/DESIGN.md`, `docs/frontend-design-review.md`, `ai-session.md`.
+- **Changes:** Restored `index.html` exactly from the requested branch, including its hero, illustrative terminal, original project grid, footer and icon-font request. Removed the unused homepage stylesheet. Updated the canonical design specification and marked the earlier homepage audit/measurements as historical. Retained the unused generated image for its existing audit record.
+- **Verification:** The restored homepage has no diff against `feature/merged-aws-study-notes`. Chrome homepage navigation/layout checks pass at 1440x1000 (9 assertions) and 375x812 (13 assertions), with zero horizontal overflow and no runtime errors. Desktop/mobile screenshots inspected; real Tab shows visible header focus, and mobile Enter/Escape opens/closes the menu with focus restoration. All 32 referenced local page/asset/documentation paths return HTTP 200 and fragment targets exist. New documentation passes whitespace checks; the restored HTML intentionally retains its source branch's existing trailing space.
+- **Preserved work:** Current user edits in `docs/aws-data-eng-associate.md` remain untouched and excluded. Shared focus, reduced-motion and menu improvements remain, together with all case-study and AWS-tool changes.
+- **Commit:** `revert: restore homepage from merged AWS study branch`.
+
 ## 2026-10-13 - Frontend design review and canonical specification
 
 - **Branch:** `feature/frontend-design-review`.
