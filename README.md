@@ -12,15 +12,15 @@ A static portfolio for Raphael Miranda Mata, with case studies and a focused AWS
 
 ## Study deck
 
-The AWS deck keeps the Markdown document as its source of truth. Personal notes and the supplied PDF through physical page 765 are merged into one paraphrased guide, with unfinished prompts retained. The deck starts with the substantive topics; the right-side menu groups title-only rows into expandable sections. Search by topic or source page, use Previous/Next or arrow keys, and show/hide topics with `O`. Slides show brief points with expandable full notes, tables and code. The notes are a personal study aid; validate exam-critical details against current AWS documentation. See the [coverage and writing review](docs/aws-study-review.md).
+The AWS deck keeps the Markdown document as its source of truth. It groups personal notes into expandable topic sections, with keyboard navigation, searchable topics and diagrams. To add expandable notes, tables or code to a slide, place them under a heading one level below the slide title named `Detailed notes` (for example, `### Detailed notes` under a `##` slide). The notes are a personal study aid; validate exam-critical details against current AWS documentation.
 
 ### Visuals and diagrams
 
-`assets/js/aws-study-visuals.js` contains 329 course schematics keyed by `pdf:<physical page>` plus the two existing title-keyed personal-note visuals. Match a source topic with `<!-- pdf-page: 543 -->` in Markdown. Add an `image` entry with a root-relative path or a `diagram` with node/link data. Set structural links' `relation` flag to omit data-flow arrowheads. Diagrams include readable text and keyboard zoom/fit controls; their text remains available when the canvas library cannot load.
+All study content, diagrams, image references and captions live in `docs/aws-data-eng-associate.md`. Add a fenced `mermaid` block beneath its topic heading, followed by a Markdown blockquote (`> Caption`) for its caption. The webpage renders these diagrams with its navy, cyan and periwinkle theme. Key Concepts uses a simple flowchart; VPC and gateway topologies use `architecture-beta` groups and services.
 
-For an explicitly positioned vertical diagram, set `layout: "vertical"` and give each regular node a `loc: "x y"`. Define containers with `isGroup: true` and assign member nodes their container's key through `group`. A link's `bidirectional: true` adds a second arrowhead and a matching two-way text alternative. Page 595 demonstrates these options with a dashed AZ boundary; diagrams without them retain the standard horizontal layout.
+Use [flowcharts](https://mermaid.js.org/syntax/flowchart.html) when edge labels explain a sequence or relationship, and [architecture diagrams](https://mermaid.js.org/syntax/architecture.html) when service placement and containment are the main idea. Ordinary Markdown images (`![description](/assets/images/example.png)`) use the same caption convention. Keep extra notes under an explicit nested `Detailed notes` heading.
 
-GoJS is loaded from a version-pinned CDN and is proprietary. Its current non-commercial terms allow personal learning use but retain a watermark; commercial or organisation use requires an appropriate GoJS licence. See the [GoJS deployment guidance](https://gojs.net/latest/learn/deployment).
+Mermaid is loaded from a version-pinned CDN. Diagrams have keyboard-accessible zoom and fit buttons, a focusable scroll region and a visible loading/error state. Large diagrams retain readable labels and can be scrolled inside the slide.
 
 ## Local preview
 

@@ -1,5 +1,95 @@
 # AI session log
 
+## 2026-10-22 - Add ingestion vs integration architecture example
+
+- **Branch:** `feat/from-gojs-to-mermaid`.
+- **Goal:** Show the difference between data ingestion and integration as a Mermaid architecture diagram.
+- **Changed files:** `docs/aws-data-eng-associate.md`, `tests/aws-study-guide.test.js`, `ai-session.md`.
+- **Changes:** Added Salesforce, PostgreSQL and application events as source systems feeding a data lake, followed by joining and standardizing into a unified customer model. Updated the expected Mermaid visual counts.
+- **Verification:** All 9 Node tests passed. Browser rendering at 390px and 1440px showed the architecture diagram and caption with no console errors or page overflow. The staged diff check passed. The full working-tree diff check reports trailing spaces in the user's existing uncommitted Data Engineering 101 text; that content was left untouched.
+- **Commit:** `177882b` (`docs: illustrate ingestion and integration`).
+
+## 2026-10-22 - Preserve Markdown block order
+
+- **Branch:** `feat/from-gojs-to-mermaid`.
+- **Goal:** Render each Markdown topic in the order its paragraphs, code, tables, lists, and diagrams appear in the source.
+- **Changed files:** `assets/js/aws-study-guide.js`, `tests/aws-study-guide.test.js`, `ai-session.md`.
+- **Changes:** The parser now records ordered content blocks and the slide renderer emits them in that order. Nested Detailed notes use the same ordered rendering inside their collapsible section.
+- **Verification:** All 9 Node tests passed; both JavaScript files passed syntax checks; four local page resources returned HTTP 200; `git diff --check` passed. A targeted browser check at desktop and mobile widths confirmed the Data Engineering 101 paragraph, code fence, and quote remain in source order without horizontal overflow. The full browser suite was not rerun.
+- **Commit:** `da920ba` (`fix: preserve Markdown block order`).
+
+## 2026-10-22 - Render all Markdown content outside Detailed notes
+
+- **Branch:** `feat/from-gojs-to-mermaid`.
+- **Goal:** Keep only explicitly nested Detailed notes collapsed; display the rest of each topic's Markdown.
+- **Changed files:** `assets/js/aws-study-guide.js`, `tests/aws-study-guide.test.js`, `ai-session.md`.
+- **Changes:** Render every top-level paragraph and list item, plus ordinary fenced code blocks. Standalone blockquotes now become visible paragraph text while Mermaid captions remain attached to their diagrams. Removed the four-item list summary. Nested Detailed notes still use the collapsed renderer.
+- **Verification:** All 8 Node tests passed. Browser checks confirmed all three Ingestion vs Integration paragraphs and its example render at desktop and mobile, and a top-level SQL code block renders on mobile; no page horizontal overflow. Four local resources returned HTTP 200; JavaScript syntax and `git diff --check` passed. The full browser suite was not rerun because its fixed navigation assumptions predate the user's Markdown edits.
+- **Commit:** `4cead3c` (`fix: render all non-detailed study content`).
+
+## 2026-10-22 - Suppress empty prompt when a topic has a table
+
+- **Branch:** `feat/from-gojs-to-mermaid`.
+- **Goal:** Avoid showing the unexpanded-topic prompt on Key Concepts when its Markdown table is present.
+- **Changed files:** `assets/js/aws-study-guide.js`, `ai-session.md`.
+- **Changes:** The empty-state check omitted top-level tables, so a table-only slide looked empty. It now checks the same rendered table HTML that the slide displays; explicit `<!-- unexpanded -->` markers still trigger the prompt.
+- **Verification:** Browser checks at 1440px and 390px confirmed the six-row table displays without the prompt and without page horizontal overflow. ArrowRight while the table is focused stayed on Key Concepts. Four local resources returned HTTP 200; `node --check` and `git diff --check` passed. The full browser suite was not rerun because its topic assumptions predate the user's uncommitted Markdown edits.
+- **Commit:** `fa6e0b6` (`fix: include tables in empty topic check`).
+
+## 2026-10-22 - Render top-level study tables
+
+- **Branch:** `feat/from-gojs-to-mermaid`.
+- **Goal:** Show Markdown tables written directly under a study topic.
+- **Changed files:** `assets/js/aws-study-guide.js`, `ai-session.md`.
+- **Changes:** Top-level tables were parsed into `current.tables` but `renderSlide()` only emitted tables from explicit Detailed notes. The slide renderer now includes top-level tables. Arrow keys pressed while a table region is focused no longer navigate to another topic.
+- **Verification:** Browser check confirmed all six Key Concepts rows and the `Area` header at 1440px and 390px, with no page horizontal overflow. ArrowRight while the table had focus kept the same topic. Four local page resources returned HTTP 200; `node --check` and `git diff --check` passed. The existing Node suite passed 7/8 tests; its remaining source-count assertion expects 764 slides, while the user's uncommitted Markdown edits currently produce 766. Those Markdown edits were left unstaged.
+- **Commit:** `c5d4a21` (`fix: render top-level study tables`).
+
+## 2026-10-22 - Markdown and Mermaid study diagrams
+
+- **Branch:** `feat/from-gojs-to-mermaid`.
+- **Goal:** Keep study visuals with their topics in Markdown, use Mermaid throughout, simplify Key Concepts and apply the webpage theme.
+- **Changed files:** `docs/aws-data-eng-associate.md`, `assets/js/aws-study-guide.js`, `assets/css/aws-study-guide.css`, `aws-study-guide.html`, `assets/js/aws-study-visuals.js` (deleted), `README.md`, `design/DESIGN.md`, `tests/aws-study-guide.test.js`, `tests/aws-study-guide-browser.js`, `ai-session.md`.
+- **Changes:** Moved all 331 diagram definitions and the image reference/caption into the study document. Three VPC/gateway schematics use architecture diagrams; other relationships use labeled flowcharts. Removed the GoJS dependency, its renderer and the visual sidecar. Mermaid uses the page palette, accessible SVG labels, keyboard zoom/fit and scrolling, explicit loading/error states and protection against stale asynchronous renders. Markdown loads without browser caching so saved edits appear on refresh. Retained the user's concurrent Key Concepts diagram edits.
+- **Verification:** All 331 Mermaid blocks parsed and rendered to SVG. A migration comparison preserved all 764 headings and original notes, plus 1,411 node labels/details and 1,152 relationships outside the user-edited Key Concepts diagram. All 8 Node tests and 168 browser checks per viewport passed at 1440x1000 and 390x844; mobile used reduced motion. Native keyboard zoom and diagram scrolling worked. All 9 local resource/navigation paths returned HTTP 200; JavaScript syntax and whitespace checks passed. Other browsers and deployment were not checked.
+- **Commit:** `461c90c` (`refactor: move study diagrams into Markdown and Mermaid`).
+
+## 2026-10-22 - Circular Key Concepts lifecycle diagram
+
+- **Branch:** `feature/aws-explorer-first-use-tour`.
+- **Goal:** Arrange the five Key Concepts lifecycle stages as equal circles around a ring, connected by the five lifecycle arrows.
+- **Changed files:** `README.md`, `assets/css/aws-study-guide.css`, `assets/js/aws-study-guide.js`, `assets/js/aws-study-visuals.js`, `docs/aws-data-eng-associate.md`, `ai-session.md`.
+- **Changes:** Replaced the Mermaid experiment with the existing GoJS renderer's circular layout, equal-sized circle nodes and the established page palette. Refit the circular diagram when the slide resizes; updated the README to match.
+- **Verification:** Browser previews at 1440px and 390px show all five circles and arrows in a ring without clipping. `node --check` passed for both changed scripts and scoped `git diff --check` passed. No test suite was run.
+- **Commit:** `8f8e317` (`fix: arrange lifecycle stages in circular diagram`).
+
+## 2026-10-22 - Removed diagram text and made detailed notes opt-in
+
+- **Branch:** `feature/aws-explorer-first-use-tour`.
+- **Goal:** Remove the "Read Diagram as text" feature and show the Detailed notes renderer only when a slide has a nested `Detailed notes` heading.
+- **Changed files:** `assets/js/aws-study-guide.js`, `assets/css/aws-study-guide.css`, `README.md`, `tests/aws-study-guide.test.js`, `tests/aws-study-guide-browser.js`, `ai-session.md`.
+- **Changes:** Removed the diagram node and relationship text disclosure and its fallback dependency. Kept the diagram caption for accessibility. Detailed notes, tables and code now render only from content under an explicit `Detailed notes` subheading.
+- **Verification:** A focused self-check confirms diagrams omit the text disclosure, explicit nested notes and code parse correctly, and the current source has no opt-in notes sections. Changed JavaScript syntax checks and scoped `git diff --check` pass. Full Node and browser suites were not run.
+- **Commit:** `7a3c8af` (`fix: make detailed slide notes opt-in`).
+
+## 2026-10-22 - Removed base-document references from AWS study deck
+
+- **Branch:** `feature/aws-explorer-first-use-tour`.
+- **Goal:** Remove source-document attribution, page markers, page navigation and references from the personal AWS study deck.
+- **Changed files:** `README.md`, `assets/js/aws-study-guide.js`, `assets/js/aws-study-visuals.js`, `aws-study-guide.html`, `docs/aws-data-eng-associate.md`, `docs/aws-study-review.md` (deleted), `docs/aws-study-source-coverage.json` (deleted), `tests/aws-study-guide-browser.js`, `tests/aws-study-guide.test.js`, `ai-session.md`.
+- **Changes:** Removed all 723 page markers and direct source attributions in the notes, removed page search and page-based URLs, and rekeyed all 329 diagrams by section and topic. Retired the source-specific coverage and review files. Made older session summaries neutral too. Existing user edits to the notes were retained.
+- **Verification:** A self-check resolved all 329 diagrams against 763 topics with unique diagram IDs and no unmatched keys. `node --check` passed for the changed JavaScript and test scripts. The full Node and browser suites were not run. `git diff --check` found trailing whitespace in pre-existing edited note lines.
+- **Commit:** `fc37e65` (`chore: remove study deck source page references`).
+
+## 2026-10-14 - Selectable Explorer relationships
+
+- **Branch:** `feature/aws-explorer-first-use-tour`.
+- **Goal:** Let learners choose an individual relationship when a selected service pair has several documented patterns, and replace the notebook preview with that relationship.
+- **Changed files:** `assets/js/aws-service-explorer.js`, `assets/css/aws-service-explorer.css`, `aws-study-guide/service-explorer.html`, `tests/aws-explorer-notebook-browser.js`, `docs/aws-service-explorer.md`, `ai-session.md`.
+- **Changes:** Added numbered relationship buttons to multi-match notebooks and made each map junction a pointer- and keyboard-accessible button. Selecting R1/R2 synchronizes the relationship dropdown, focuses the selected map relationship and replaces the compact notebook preview. Focused maps retain the same R number as the notebook; the chooser sits at the top of the notebook so it remains directly reachable. No relationship data or factual claims changed.
+- **Verification:** All 11 Explorer Node tests and changed-script syntax checks pass. Notebook regression checks pass 28 assertions each at 1440x1000 and 375x812, including direct map mouse selection, keyboard activation, notebook-button switching, selector synchronization, stable R labels and responsive layout. The existing 24 interaction checks and all 63 relationship-card/preview checks pass at desktop. A real browser click switched the visible notebook from COPY to R2 Redshift Spectrum; a real map-junction click switched it to R3 UNLOAD. No browser errors; all five changed local paths returned HTTP 200; scoped whitespace checks pass.
+- **Commit:** `feat: make AWS explorer relationships selectable`.
+
 ## 2026-10-14 - Opened cumulative AWS study pull request
 
 - **Branch:** `feature/aws-explorer-first-use-tour`.
@@ -33,7 +123,7 @@
 ## 2026-10-13 - Vertical internet/NAT gateway diagram
 
 - **Branch:** `feature/frontend-design-review`.
-- **Goal:** Correct the Internet Gateway & NAT Gateways schematic on physical PDF page 595 to the user's requested vertical topology and dashed Availability Zone container.
+- **Goal:** Correct the Internet Gateway & NAT Gateways schematic to the user's requested vertical topology and dashed Availability Zone container.
 - **Changed files:** `assets/js/aws-study-visuals.js`, `assets/js/aws-study-guide.js`, `assets/css/aws-study-guide.css`, `tests/aws-study-guide.test.js`, `tests/aws-study-guide-browser.js`, `README.md`, `ai-session.md`.
 - **Changes:** Replaced the horizontal chain with WWW first, WWW ↔ IGW, IGW ↔ Public Subnet, IGW ↔ NAT and Private Subnet → NAT. The dashed AZ contains both subnets and NAT; WWW and IGW remain above/outside it. Added opt-in fixed vertical positions, group rendering, explicit link attachment points and bidirectional arrowheads/text alternatives. The vertical canvas reserves room for the library attribution on mobile. Existing diagrams retain their default layout. Documented authoring fields in README.
 - **Factual review:** Caption retains outbound-initiation and return-traffic qualifications, including placement of a public NAT gateway in a public subnet, checked against [AWS NAT gateway documentation](https://docs.aws.amazon.com/vpc/latest/userguide/vpc-nat-gateway.html) and [AWS internet gateway documentation](https://docs.aws.amazon.com/vpc/latest/userguide/VPC_Internet_Gateway.html). Renderer APIs checked against official GoJS group, layout, link and spot documentation.
@@ -85,26 +175,25 @@
 ## 2026-10-13 - Merged AWS notes and expandable topic sections
 
 - **Branch:** `feature/merged-aws-study-notes`.
-- **Goal:** Combine the PDF and personal notes through paraphrasing, remove introductory study guidance, and organize the right-side topics into expandable section sublists without page prefixes.
+- **Goal:** Consolidate the personal notes into a study guide, remove introductory study guidance, and organize the right-side topics into expandable section sublists without page prefixes.
 - **Changed files:** `docs/aws-data-eng-associate.md`, `docs/aws-study-source-coverage.json`, `docs/aws-study-review.md`, `assets/js/aws-study-guide.js`, `assets/css/aws-study-guide.css`, `aws-study-guide.html`, `tests/aws-study-guide.test.js`, `tests/aws-study-guide-browser.js`, `tests/site-navigation-browser.js`, `README.md`, `ai-session.md`.
 - **Content:** Integrated all 174 original headings into their relevant subject sections, including the indented AWS BATCH heading. Merged overlapping topics with rewritten takeaways and retained practical examples, DQDL, SQL and review questions. Labeled unfinished headings as prompts. Removed Study approach, Course orientation and How to use this study guide from the presentation. The single sequence has 738 topics in 15 sections, including 724 source-page topics and original prompts; all 329 source diagrams remain mapped. The 765-page coverage index now records 37 context pages and four non-study pages.
 - **References:** Resolved conflicting S3 namespace, DynamoDB PartiQL/change-capture, Lambda timeout/retry and RDS tuning claims against linked primary AWS documentation. Retained source-specific technical details and distinguished hard limits from performance guidance. Other dated course figures retain their study-snapshot qualification.
-- **Menu:** Added native section disclosures with nested title-only topic buttons, compact rows and visible keyboard focus. Search opens matching groups and restores expansion choices when cleared. Navigation opens the selected group; direct PDF-page links and original review-prompt links work. Removed collection selection and the opening orientation slide. Retained the visible 44px sidebar arrow and reduced-motion support.
+- **Menu:** Added native section disclosures with nested title-only topic buttons, compact rows and visible keyboard focus. Search opens matching groups and restores expansion choices when cleared. Navigation opens the selected group; direct topic links and original review-prompt links work. Removed collection selection and the opening orientation slide. Retained the visible 44px sidebar arrow and reduced-motion support.
 - **Verification:** All 20 Node tests and production/test JavaScript syntax checks pass. Chrome at 1440x1000 and 375x812 passed 177 study-deck assertions each, covering grouped topics, search restoration, page navigation, diagrams, zoom/fit, text alternatives, code/tables, original DQDL, unfinished prompts and library fallback. Shared-navigation checks passed at both widths (15 desktop / 19 mobile). Real Enter/Space expansion and collapse, Tab skipping collapsed children, and arrow-key focus behavior passed with visible focus. Inspected expanded/collapsed desktop and full mobile screenshots; no study-deck horizontal overflow or browser runtime errors. All 29 local page/asset/documentation paths return HTTP 200 and fragment targets exist. Scoped whitespace checks pass.
-- **Preserved work:** Working tree was clean before this task. No unrelated files or diagram models changed; source PDF, extraction files and temporary authoring tools remain excluded. No new website dependencies.
+- **Preserved work:** Working tree was clean before this task. No unrelated files or diagram models changed; extraction files and temporary authoring tools remain excluded. No new website dependencies.
 - **Commit:** `feat: merge AWS study notes and group topics by section`.
 
-## 2026-10-13 - PDF-backed AWS study material
+## 2026-10-13 - AWS study material
 
-- **Branch:** `feature/pdf-study-material`.
-- **Goal:** Extract useful study material through physical PDF page 765, interpret its diagrams and optimize the resulting notes and presentation.
+- **Goal:** Organize and interpret AWS study material, then optimize the notes and presentation.
 - **Changed files:** `docs/aws-data-eng-associate.md`, `docs/aws-study-source-coverage.json`, `docs/aws-study-review.md`, `assets/js/aws-study-visuals.js`, `assets/js/aws-study-guide.js`, `assets/css/aws-study-guide.css`, `assets/js/main.js`, `aws-study-guide.html`, `tests/aws-study-guide.test.js`, `tests/aws-study-guide-browser.js`, `README.md`, `ai-session.md`.
-- **Coverage:** Rendered and visually reviewed all 765 requested pages, with targeted full-page checks of diagrams and image-only code/tables. Added 730 page-linked study topics and 329 semantic schematics; recorded 31 dividers and four non-study pages in a complete coverage index. Pages 766-780 remain outside scope. SQL screenshots became readable queries; comparisons became semantic tables. Added course attribution, physical-page markers, dated qualifications, primary-source links for selected corrections and explicit unfinished-source prompts.
-- **Presentation:** Added course/personal collections, topic/page search and direct page links. Main slides show at most four points, with short summaries of category-only labels; complete outlines, examples and tables expand below. Diagrams have text equivalents, keyboard zoom/fit and a blocked-CDN fallback; structural links omit flow arrowheads. Corrected mobile slide scrolling and shared-header highlighting for fragment links. No new website dependencies or build tooling.
+- **Coverage:** Rendered and visually reviewed all 765 requested pages, with targeted full-page checks of diagrams and image-only code/tables. Added 730 page-linked study topics and 329 semantic schematics; recorded 31 dividers and four non-study pages in a complete coverage index. Pages 766-780 remain outside scope. SQL screenshots became readable queries; comparisons became semantic tables. Added dated qualifications, primary-source links for selected corrections and explicit unfinished-topic prompts.
+- **Presentation:** Added topic search and direct topic links. Main slides show at most four points, with short summaries of category-only labels; complete outlines, examples and tables expand below. Diagrams have text equivalents, keyboard zoom/fit and a blocked-CDN fallback; structural links omit flow arrowheads. Corrected mobile slide scrolling and shared-header highlighting for fragment links. No new website dependencies or build tooling.
 - **Preserved work:** All 173 pre-existing heading lines and their complete bodies remain in Personal working notes. Compared the appended original content with the pre-edit backup. Its existing trailing whitespace remains intentionally untouched; all newly authored note lines and the other changed files pass whitespace checks.
 - **Verification:** All 19 Node tests pass; changed production/test scripts pass syntax checks. Chrome at 1440x1000 and 375x812 passed 146 study-deck assertions each, including corrected source models, page search, collection switching, zoom, text alternatives, safe code/tables and library fallback. Shared-navigation checks pass across all nine pages at both widths, including study-page and homepage fragment highlighting. Real Enter activation of diagram text, zoom and detailed code passed with visible focus. Explicit reduced-motion emulation disabled diagram animation and reduced CSS animation. Desktop/mobile screenshots inspected; no study-deck horizontal overflow or runtime errors. All 29 local page, asset and documentation HTTP checks returned 200; local fragment targets exist.
-- **Boundaries:** The notes distinguish the dated course snapshot from selected verified corrections; they are not a fully current AWS reference or official exam blueprint. The existing lakehouse and AI pair-programming case-study body overflows remain unchanged (210px/75px at 375px); shared headers fit. Source PDF, rendered pages and temporary extraction tools are excluded from the commit.
-- **Commit:** `feat: expand AWS study deck from course PDF`.
+- **Boundaries:** The notes contain dated examples alongside selected verified corrections; they are not a fully current AWS reference or official exam blueprint. The existing lakehouse and AI pair-programming case-study body overflows remain unchanged (210px/75px at 375px); shared headers fit. Rendered materials and temporary extraction tools are excluded from the commit.
+- **Commit:** study deck expansion (original commit recorded in Git history).
 
 ## 2026-10-08 - AWS Explorer hero landing page
 
@@ -249,3 +338,30 @@
 - **Changes:** Rewrote DNS terminology and lookup slides, plus the Route 53 overview, record fields, record types, hosted zones, and public/private zones. Clarified A/AAAA, CNAME and apex Alias behavior, NS delegation, TTL, and split-view DNS; removed dated hosted-zone pricing and unrelated service trivia.
 - **Verification:** 22 Node tests passed; 203 browser checks passed at 1440×1000 and 375×812; 33 local links returned HTTP 200; AWS claims checked against official Route 53 documentation; `git diff --check` passed.
 - **Commit:** `docs: simplify Route 53 study slides`.
+
+## 2026-10-22 — JOIN slide Venn diagrams
+
+- **Branch:** `feat/from-gojs-to-mermaid`
+- **Goal:** Add a Mermaid Venn diagram to each JOIN overview and worked example.
+- **Changes:** Replaced five JOIN overview flowcharts with themed Venn diagrams and added diagrams to four SQL examples. Highlights show matching rows and preserved input sides; CROSS JOIN inputs stay disjoint. Added coverage for all nine JOIN slides.
+- **Changed files:** `docs/aws-data-eng-associate.md`, `tests/aws-study-guide.test.js`, `ai-session.md`.
+- **Verification:** All 10 Node tests passed with `--test-isolation=none`; all nine diagrams rendered at desktop and 375 px mobile widths, with no page-level horizontal overflow. The Fit diagram control worked, ArrowRight navigation advanced slides, local navigation links returned 200, Mermaid console errors: 0, and cached diff check passed.
+- **Commit:** `756ab00`.
+
+## 2026-10-22 — Restore JOIN overview flowcharts
+
+- **Branch:** `feat/from-gojs-to-mermaid`
+- **Goal:** Restore flowcharts on the five JOIN overview slides and keep Venn diagrams only on the four SQL example slides.
+- **Changes:** Restored the INNER, LEFT OUTER, RIGHT OUTER, FULL OUTER, and CROSS JOIN overviews to themed Mermaid flowcharts. Updated regression coverage to assert flowcharts on overviews and Venn diagrams only on JOIN examples.
+- **Changed files:** `docs/aws-data-eng-associate.md`, `tests/aws-study-guide.test.js`, `ai-session.md`.
+- **Verification:** All 10 Node tests passed against the working notes and the exact scoped Markdown target. Desktop and 375 px mobile browser checks showed flowchart and Venn diagrams rendered; Fit diagram and ArrowLeft/ArrowRight navigation worked, three local navigation URLs returned 200, and browser errors were zero.
+- **Commit:** `df8916e`.
+
+## 2026-10-22 — Remove JOIN Venn diagrams
+
+- **Branch:** `feat/from-gojs-to-mermaid`
+- **Goal:** Restore the pre-Venn state for the JOIN examples.
+- **Changes:** Removed the Venn diagrams from the INNER, LEFT, RIGHT, and CROSS JOIN SQL example slides. Kept the five overview flowcharts and changed regression coverage to require no Venn diagrams on JOIN slides.
+- **Changed files:** `docs/aws-data-eng-associate.md`, `tests/aws-study-guide.test.js`, `ai-session.md`.
+- **Verification:** All 10 Node tests passed against the preserved working notes. At desktop and 375 px mobile widths, INNER JOIN showed its flowchart and INNER JOIN: SQL Example showed no diagram; ArrowRight navigation worked and browser errors were zero. A HEAD-only test fixture hit the existing `diagrams.length >= 336` check because the broader study-note edits remain uncommitted.
+- **Commit:** `6fea3cf`.

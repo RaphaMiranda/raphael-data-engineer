@@ -60,8 +60,8 @@
           </div>
         </div>
         <div class="topic-filters">
-          <label for="topic-search">Find a topic or PDF page</label>
-          <input id="topic-search" type="search" placeholder="e.g. DynamoDB or 765" autocomplete="off" aria-controls="topic-list">
+          <label for="topic-search">Find a topic</label>
+          <input id="topic-search" type="search" placeholder="e.g. DynamoDB or Redshift" autocomplete="off" aria-controls="topic-list">
           <p id="topic-results" role="status"></p>
         </div>
         <nav class="topic-list" id="topic-list" aria-label="Study topics"></nav>
@@ -81,8 +81,31 @@
       <p class="keyboard-hint"><kbd>←</kbd><kbd>→</kbd> navigate <kbd>O</kbd> topics</p>
     </footer>
   </main>
-  <script defer src="https://cdn.jsdelivr.net/npm/gojs@4.0.5/release/go.js"></script>
-  <script defer src="/assets/js/aws-study-visuals.js"></script>
+  <script type="module">
+    try {
+      const { default: mermaid } = await import("https://cdn.jsdelivr.net/npm/mermaid@11.17.0/dist/mermaid.esm.min.mjs");
+      mermaid.initialize({
+        startOnLoad: false, securityLevel: "strict", suppressErrorRendering: true,
+        theme: "base", fontFamily: "Space Grotesk, Inter, sans-serif",
+        themeVariables: {
+          darkMode: true, background: "#060e20", fontSize: "16px",
+          primaryColor: "#2d3449", primaryTextColor: "#dae2fd", primaryBorderColor: "#5de6ff",
+          secondaryColor: "#173947", secondaryTextColor: "#dae2fd", secondaryBorderColor: "#5de6ff",
+          tertiaryColor: "#242d52", tertiaryTextColor: "#dae2fd", tertiaryBorderColor: "#c0c1ff",
+          lineColor: "#5de6ff", textColor: "#dae2fd", mainBkg: "#2d3449",
+          clusterBkg: "#131b2e", clusterBorder: "#464554", edgeLabelBackground: "#060e20",
+          titleColor: "#c0c1ff"
+        },
+        flowchart: { htmlLabels: true, curve: "basis", padding: 16 },
+        architecture: { iconSize: 64, nodeSeparation: 60, idealEdgeLengthMultiplier: 1.5 }
+      });
+      window.mermaid = mermaid;
+      window.dispatchEvent(new Event("study-mermaid-ready"));
+    } catch (error) {
+      window.studyMermaidError = true;
+      window.dispatchEvent(new Event("study-mermaid-error"));
+    }
+  </script>
   <script defer src="/assets/js/aws-study-guide.js"></script>
 </body>
 </html>
