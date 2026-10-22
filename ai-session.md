@@ -1,5 +1,14 @@
 # AI session log
 
+## 2026-10-22 - Markdown and Mermaid study diagrams
+
+- **Branch:** `feat/from-gojs-to-mermaid`.
+- **Goal:** Keep study visuals with their topics in Markdown, use Mermaid throughout, simplify Key Concepts and apply the webpage theme.
+- **Changed files:** `docs/aws-data-eng-associate.md`, `assets/js/aws-study-guide.js`, `assets/css/aws-study-guide.css`, `aws-study-guide.html`, `assets/js/aws-study-visuals.js` (deleted), `README.md`, `design/DESIGN.md`, `tests/aws-study-guide.test.js`, `tests/aws-study-guide-browser.js`, `ai-session.md`.
+- **Changes:** Moved all 331 diagram definitions and the image reference/caption into the study document. Three VPC/gateway schematics use architecture diagrams; other relationships use labeled flowcharts. Removed the GoJS dependency, its renderer and the visual sidecar. Mermaid uses the page palette, accessible SVG labels, keyboard zoom/fit and scrolling, explicit loading/error states and protection against stale asynchronous renders. Markdown loads without browser caching so saved edits appear on refresh. Retained the user's concurrent Key Concepts diagram edits.
+- **Verification:** All 331 Mermaid blocks parsed and rendered to SVG. A migration comparison preserved all 764 headings and original notes, plus 1,411 node labels/details and 1,152 relationships outside the user-edited Key Concepts diagram. All 8 Node tests and 168 browser checks per viewport passed at 1440x1000 and 390x844; mobile used reduced motion. Native keyboard zoom and diagram scrolling worked. All 9 local resource/navigation paths returned HTTP 200; JavaScript syntax and whitespace checks passed. Other browsers and deployment were not checked.
+- **Commit:** `461c90c` (`refactor: move study diagrams into Markdown and Mermaid`).
+
 ## 2026-10-22 - Circular Key Concepts lifecycle diagram
 
 - **Branch:** `feature/aws-explorer-first-use-tour`.
