@@ -1,5 +1,14 @@
 # AI session log
 
+## 2026-10-22 - Add ingestion vs integration architecture example
+
+- **Branch:** `feat/from-gojs-to-mermaid`.
+- **Goal:** Show the difference between data ingestion and integration as a Mermaid architecture diagram.
+- **Changed files:** `docs/aws-data-eng-associate.md`, `tests/aws-study-guide.test.js`, `ai-session.md`.
+- **Changes:** Added Salesforce, PostgreSQL and application events as source systems feeding a data lake, followed by joining and standardizing into a unified customer model. Updated the expected Mermaid visual counts.
+- **Verification:** All 9 Node tests passed. Browser rendering at 390px and 1440px showed the architecture diagram and caption with no console errors or page overflow. The staged diff check passed. The full working-tree diff check reports trailing spaces in the user's existing uncommitted Data Engineering 101 text; that content was left untouched.
+- **Commit:** `177882b` (`docs: illustrate ingestion and integration`).
+
 ## 2026-10-22 - Preserve Markdown block order
 
 - **Branch:** `feat/from-gojs-to-mermaid`.
