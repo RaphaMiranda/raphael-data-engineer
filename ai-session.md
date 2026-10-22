@@ -1,5 +1,14 @@
 # AI session log
 
+## 2026-10-22 - Suppress empty prompt when a topic has a table
+
+- **Branch:** `feat/from-gojs-to-mermaid`.
+- **Goal:** Avoid showing the unexpanded-topic prompt on Key Concepts when its Markdown table is present.
+- **Changed files:** `assets/js/aws-study-guide.js`, `ai-session.md`.
+- **Changes:** The empty-state check omitted top-level tables, so a table-only slide looked empty. It now checks the same rendered table HTML that the slide displays; explicit `<!-- unexpanded -->` markers still trigger the prompt.
+- **Verification:** Browser checks at 1440px and 390px confirmed the six-row table displays without the prompt and without page horizontal overflow. ArrowRight while the table is focused stayed on Key Concepts. Four local resources returned HTTP 200; `node --check` and `git diff --check` passed. The full browser suite was not rerun because its topic assumptions predate the user's uncommitted Markdown edits.
+- **Commit:** `fa6e0b6` (`fix: include tables in empty topic check`).
+
 ## 2026-10-22 - Render top-level study tables
 
 - **Branch:** `feat/from-gojs-to-mermaid`.
