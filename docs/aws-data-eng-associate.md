@@ -4076,72 +4076,66 @@ flowchart LR
 
 # Section Computing
 
-<!-- original-note: 103 -->
-<!-- title: Compute -->
-<!-- section -->
 
 ## EC2
 
-<!-- original-note: 104 -->
+**EC2 provides configurable compute for data workloads. Select instance resources and purchase options from utilization, runtime and interruption tolerance.**
 
-EC2 provides configurable compute for data workloads. Select instance resources and purchase options from utilization, runtime and interruption tolerance.
+- **On demand, Spot & Reserved instances:** Spot: can tolerate loss, low cost => checkpointing feature (ML, etc); Reserved: long running clusters, databases (over a year); On demand: remaining workloads
+- **Auto Scaling:** Leverage for EMR, etc; Automated for DynamoDB, Auto Scaling Groups, etc…
+- **EC2 is behind EMR:** Master Nodes; Compute Nodes (contain data) + Tasks Nodes (do not contain data)
 
-- On demand, Spot & Reserved instances:
-  - Spot: can tolerate loss, low cost => checkpointing feature (ML, etc)
-  - Reserved: long running clusters, databases (over a year)
-  - On demand: remaining workloads
-- Auto Scaling:
-  - Leverage for EMR, etc
-  - Automated for DynamoDB, Auto Scaling Groups, etc…
-- EC2 is behind EMR
-  - Master Nodes
-  - Compute Nodes (contain data) + Tasks Nodes (do not contain data)
+```mermaid
+flowchart TD
+  A[EC2 workload] --> B{Interruption tolerant?}
+  B -->|Yes| C[Spot capacity]
+  B -->|No| D[On-Demand / commitment options]
+  C --> E[Checkpoint and retry]
+  D --> F[Plan steady utilization]
+```
+
 
 ## AWS Graviton
 
-<!-- original-note: 105 -->
+**Graviton is AWS's Arm-based processor family. Compare compatible instance and service options using the application's actual workload rather than a universal performance ratio.**
 
-Graviton is AWS's Arm-based processor family. Compare compatible instance and service options using the application's actual workload rather than a universal performance ratio.
-
-  - General purpose: M7, T4
-  - Compute optimized: C7, C6
-  - Memory optimized: R7, X2
-  - Storage optimized: Im4, Is4
-  - Accelerated computing (game streaming, ML inference): G5
+- General purpose: M7, T4
+- Compute optimized: C7, C6
+- Memory optimized: R7, X2
+- Storage optimized: Im4, Is4
+- Accelerated computing (game streaming, ML inference): G5
 - Offers best price performance
-- Option for many data engineering services
-  - MSK, RDS, MemoryDB, ElastiCache, OpenSearch, EMR, Lambda, Fargate
+
 
 ## AWS Lambda
 
-<!-- original-note: 106 -->
+**AWS Lambda runs event-driven code without managing servers, using different invocation models for APIs, events and streams.**
 
-Lambda executes event-driven code in managed environments. It is useful for file, stream, API and orchestration tasks that fit the selected execution model.
-
-- A way to run code snippets “in the cloud”
-  - Serverless
-  - Continuous scaling
-- Often used to process data as it’s moved around
-
-- Execution limit: default-capacity invocations are limited to 900 seconds. Managed Instances supports up to 5,400 seconds for asynchronous and eligible event-source-mapping invocations; synchronous, Amazon MQ and DocumentDB paths retain the 15-minute limit.
-
-**Current reference (checked 2026-10-13):** [Lambda timeout by execution model](https://docs.aws.amazon.com/lambda/latest/dg/configuration-timeout.html).
-
-### Lambda Architectures
-
-<!-- original-note: 107 -->
-
-Common Lambda patterns process object events, update derived records from streams or expose an API. Identify the trigger, durable state and retry boundary in each architecture.
-
-## Example: Serverless Website
-
-
-A serverless API resolves its domain, accepts HTTP requests, invokes business logic and accesses persistent storage.
-
+- **Good fits:** S3 file events, API handlers, scheduled tasks and lightweight stream processing.
+- **Limits:** execution timeout, payload, concurrency, memory and retry configuration.
+- **Durable state:** use S3, DynamoDB, EFS or other persistent systems—not in-memory invocation state.
 
 ```mermaid
 flowchart LR
-  accTitle: Example: Serverless Website
+  A[S3 / API / EventBridge / streams] --> B[Lambda function]
+  B --> C[Process and validate]
+  C --> D[S3 / DynamoDB / downstream API]
+```
+
+<!-- Source reference: https://docs.aws.amazon.com/lambda/latest/dg/configuration-timeout.html -->
+
+
+## Lambda Architectures
+
+**Common Lambda patterns process object events, update derived records from streams or expose an API. Identify the trigger, durable state and retry boundary in each architecture.**
+
+
+## Example: Serverless Website
+
+**A serverless API resolves its domain, accepts HTTP requests, invokes business logic and accesses persistent storage.**
+
+```mermaid
+flowchart LR
   n0["Route 53"]
   n1["API Gateway"]
   n2["Lambda"]
@@ -4151,17 +4145,13 @@ flowchart LR
   n2 -->|"authorized data access"| n3
 ```
 
-> A serverless API resolves its domain, accepts HTTP requests, invokes business logic and accesses persistent storage.
 
 ## Example: Order history app
 
-
-Streaming events can update an application-facing table asynchronously; client reads are a separate path.
-
+**Streaming events can update an application-facing table asynchronously; client reads are a separate path.**
 
 ```mermaid
 flowchart LR
-  accTitle: Example: Order history app
   n0["Log producers"]
   n1["Kinesis Data Streams"]
   n2["Lambda"]
@@ -4173,21 +4163,15 @@ flowchart LR
   n4 -->|"read through authorized API"| n3
 ```
 
-> Streaming events can update an application-facing table asynchronously; client reads are a separate path.
 
 ## Example: Transaction rate alarm
 
+**Historical architecture: Kinesis SQL analytics processed an input stream and emitted results for alerting. Use a supported engine for new work.**
 
-Historical architecture: Kinesis SQL analytics processed an input stream and emitted results for alerting. Use a supported engine for new work.
-
-- Historical: Kinesis SQL applications were discontinued; deletion began January 27, 2026. Use a supported engine for new deployments.
-
-**Current reference (checked 2026-10-13):** [Kinesis SQL discontinuation](https://docs.aws.amazon.com/kinesisanalytics/latest/dev/what-is.html).
-
+- Historical: Kinesis SQL applications were discontinued; deletion began January 27, 2026. Use a supported engine for new deployments
 
 ```mermaid
 flowchart TB
-  accTitle: Example: Transaction rate alarm
   n0["Logs"]
   n1["Kinesis input"]
   n2["Retired SQL analytics"]
@@ -4201,21 +4185,29 @@ flowchart TB
   n4 -->|"notify"| n5
 ```
 
-> Historical architecture: Kinesis SQL analytics processed an input stream and emitted results for alerting. Use a supported engine for new work.
+<!-- Source reference: https://docs.aws.amazon.com/kinesisanalytics/latest/dev/what-is.html -->
+
 
 ## Why not just run a server?
 
-
-Managed execution removes much host administration, but the economic choice still depends on utilization, scaling behavior and the work that must stay running.
+**Managed execution removes much host administration, but the economic choice still depends on utilization, scaling behavior and the work that must stay running.**
 
 - Servers can be cheap, but scaling gets expensive really fast
-- You don’t pay for processing time you don’t use
+- You don't pay for processing time you don't use
 - Easier to split up development between front-end and back-end
 
-## Main uses of Lambda
+```mermaid
+flowchart TB
+  A{Workload pattern?} -->|Bursty / event driven| B[Managed event compute]
+  A -->|Constant / specialized| C[Long-running compute]
+  B --> D[Pay for executions and resources]
+  C --> E[Optimize sustained utilization]
+```
 
 
-Lambda commonly handles event-driven file, stream, API and application tasks.
+## AWS Lambda — Common Uses
+
+**Lambda commonly handles event-driven file, stream, API and application tasks.**
 
 - Real-time file processing
 - Real-time stream processing
@@ -4223,30 +4215,27 @@ Lambda commonly handles event-driven file, stream, API and application tasks.
 - Cron replacement
 - Process AWS events
 
-## Supported languages
 
+## AWS Lambda — Supported Runtimes
 
-Lambda runtime support depends on language and runtime version; distinguish managed runtimes from custom-runtime options.
+**Lambda runtime support depends on language and runtime version; distinguish managed runtimes from custom-runtime options.**
 
 - Node.js
 - Python
 - Java
 - C#
-- Go: verify the supported custom-runtime/container approach rather than assuming a current managed runtime.
-- Powershell: verify the supported custom-runtime/container approach rather than assuming a current managed runtime.
-- Ruby
+- Go: verify the supported custom-runtime/container approach rather than assuming a current managed runtime
+- Powershell: verify the supported custom-runtime/container approach rather than assuming a current managed runtime
 
-**Current reference (checked 2026-10-13):** [Current Lambda runtimes](https://docs.aws.amazon.com/lambda/latest/dg/lambda-runtimes.html).
+<!-- Source reference: https://docs.aws.amazon.com/lambda/latest/dg/lambda-runtimes.html -->
+
 
 ## Lambda triggers
 
-
-Lambda integrations include request/response invocations, asynchronous events and polled event sources; these invocation models have different retry behavior.
-
+**Lambda integrations include request/response invocations, asynchronous events and polled event sources; these invocation models have different retry behavior.**
 
 ```mermaid
 flowchart LR
-  accTitle: Lambda triggers
   n0["API / synchronous caller"]
   n1["Event / asynchronous source"]
   n2["Queue / stream"]
@@ -4258,17 +4247,13 @@ flowchart LR
   n3 -->|"invoke batch"| n4
 ```
 
-> Lambda integrations include request/response invocations, asynchronous events and polled event sources; these invocation models have different retry behavior.
 
 ## Lambda and Amazon OpenSearch Service
 
-
-An S3 upload can trigger Lambda to extract and index content in OpenSearch.
-
+**An S3 upload can trigger Lambda to extract and index content in OpenSearch.**
 
 ```mermaid
 flowchart LR
-  accTitle: Lambda and Amazon OpenSearch Service
   n0["S3 object"]
   n1["Lambda"]
   n2["OpenSearch index"]
@@ -4276,17 +4261,13 @@ flowchart LR
   n1 -->|"index searchable content"| n2
 ```
 
-> An S3 upload can trigger Lambda to extract and index content in OpenSearch.
 
 ## Lambda and Redshift
 
-
-An event-driven loader can submit a Redshift COPY from S3 and track processed objects in DynamoDB; retry-safe bookkeeping is essential.
-
+**An event-driven loader can submit a Redshift COPY from S3 and track processed objects in DynamoDB; retry-safe bookkeeping is essential.**
 
 ```mermaid
 flowchart LR
-  accTitle: Lambda and Redshift
   n0["S3 object"]
   n1["Lambda loader"]
   n2["Redshift COPY"]
@@ -4297,26 +4278,17 @@ flowchart LR
   n1 -->|"record processing state"| n3
 ```
 
-> An event-driven loader can submit a Redshift COPY from S3 and track processed objects in DynamoDB; retry-safe bookkeeping is essential.
 
 ## Lambda + Kinesis
 
+**The Lambda event source mapping reads Kinesis shards and invokes batches, preserving order within a shard subject to configured parallelization.**
 
-The Lambda event source mapping reads Kinesis shards and invokes batches, preserving order within a shard subject to configured parallelization.
-
-- Your Lambda code receives an event with a batch of stream records
-  - You specify a batch size when setting up the trigger (up to 10,000 records)
-  - Too large a batch size can cause timeouts!
-  - Batches may also be split beyond Lambda’s payload limit (6 MB)
-- Lambda will retry the batch until it succeeds or the data expires
-  - This can stall the shard if you don’t handle errors properly
-  - Use more shards to ensure processing isn’t totally held up by errors
+- **Your Lambda code receives an event with a batch of stream records:** You specify a batch size when setting up the trigger (up to 10,000 records); Too large a batch size can cause timeouts!; Batches may also be split beyond Lambda's payload…
+- **Lambda will retry the batch until it succeeds or the data expires:** This can stall the shard if you don't handle errors properly; Use more shards to ensure processing isn't totally held up by errors
 - Lambda processes shard data synchronously
-
 
 ```mermaid
 flowchart LR
-  accTitle: Lambda + Kinesis
   n0["Kinesis shard"]
   n1["Event source mapping"]
   n2["Lambda batch handler"]
@@ -4324,59 +4296,50 @@ flowchart LR
   n1 -->|"invoke batch"| n2
 ```
 
-> The Lambda event source mapping reads Kinesis shards and invokes batches, preserving order within a shard subject to configured parallelization.
 
-## Cost Model
+## AWS Lambda — Cost Model
 
+**Lambda cost depends on request volume, execution duration, configured resources and optional capabilities.**
 
-Lambda cost depends on request volume, execution duration, configured resources and optional capabilities.
-
-- “Pay for what you use”
+- "Pay for what you use"
 - Generous free tier (1M requests / month, 400K GB-seconds compute time)
 - $0.20 / million requests
 - $.00001667 per GB/second
 
-## Other promises
+
+## AWS Lambda — Scaling & Reliability
+
+**Managed scaling and availability do not remove the need to configure concurrency, permissions and recovery behavior.**
+
+- Configure the invocation timeout for the selected capacity mode and invocation type
+- Default-capacity functions have a 15-minute maximum. Managed Instances allows up to 90 minutes for asynchronous and eligible event-source-mapping invocations, with documented exceptions
+- Retry behavior depends on the invocation path and configuration; there is no universal rule that every failure is retried three times
+- Account and function concurrency controls can throttle work. Managed scaling is not unlimited capacity
+- Keep durable application state outside one execution environment
+
+<!-- Source reference: https://docs.aws.amazon.com/lambda/latest/dg/configuration-timeout.html | https://docs.aws.amazon.com/lambda/latest/dg/lambda-managed-instances-execution-environment.html -->
 
 
-Managed scaling and availability do not remove the need to configure concurrency, permissions and recovery behavior.
+## AWS Lambda — Anti-Patterns
 
-- Configure the invocation timeout for the selected capacity mode and invocation type.
-- Default-capacity functions have a 15-minute maximum. Managed Instances allows up to 90 minutes for asynchronous and eligible event-source-mapping invocations, with documented exceptions.
-- Retry behavior depends on the invocation path and configuration; there is no universal rule that every failure is retried three times.
-- Account and function concurrency controls can throttle work. Managed scaling is not unlimited capacity.
-- Keep durable application state outside one execution environment.
+**Long-running or locally stateful workloads need a different execution/state design than one short Lambda invocation.**
 
-**Current reference (checked 2026-10-13):** [Lambda timeout by execution model](https://docs.aws.amazon.com/lambda/latest/dg/configuration-timeout.html); [Managed Instances timeout and retries](https://docs.aws.amazon.com/lambda/latest/dg/lambda-managed-instances-execution-environment.html).
-
-## Anti-patterns
+- **Long-running applications:** Use EC2 instead, or chain functions
+- **Dynamic websites:** Although Lambda can be used to develop "serverless" apps that rely on client-side AJAX
+- **Stateful applications:** But you can work in DynamoDB or S3 to keep track of state
 
 
-Long-running or locally stateful workloads need a different execution/state design than one short Lambda invocation.
+## Lambda - File Systems Mounting
 
-- Long-running applications
-  - Use EC2 instead, or chain functions
-- Dynamic websites
-  - Although Lambda can be used to develop “serverless” apps that rely on client-side AJAX
-- Stateful applications
-  - But you can work in DynamoDB or S3 to keep track of state
-
-### Lambda - File Systems Mounting
-
-<!-- original-note: 108 -->
-<!-- title: Lambda filesystem access -->
-
-Lambda can mount EFS through a configured VPC connection. Distinguish shared persistent files from local scratch space, packaged layers and S3 objects.
+**Lambda can mount EFS through a configured VPC connection. Distinguish shared persistent files from local scratch space, packaged layers and S3 objects.**
 
 - Lambda functions can access EFS file systems if they are running in a VPC
 - Configure Lambda to mount EFS file systems to local directory during initialization
 - Must leverage EFS Access Points
 - Limitations: watch out for the EFS connection limits (one function instance = one connection) and connection burst limits
 
-
 ```mermaid
 flowchart LR
-  accTitle: Lambda filesystem access
   n0["Lambda VPC attachment"]
   n1["EFS access point"]
   n2["AZ mount targets"]
@@ -4386,17 +4349,10 @@ flowchart LR
   n2 -->|"shared files"| n3
 ```
 
-> VPC-connected Lambda mounts EFS through an access point and mount targets; routing and security groups must permit NFS.
 
 ## Lambda storage choices
 
-
-Separate per-environment scratch space, packaged dependencies, object storage and shared filesystem storage.
-
-- /tmp is writable and local to an execution environment; warm reuse is possible but durability is not guaranteed.
-- Layers package immutable dependencies; they are not a shared writable filesystem between invocations.
-- S3 persists objects independently of Lambda; EFS provides shared NFS access with VPC configuration.
-- The source lists up to 10,240 MB for /tmp and five layers within the unzipped package limit. Extra ephemeral storage can incur charges; it is not all included.
+**Separate per-environment scratch space, packaged dependencies, object storage and shared filesystem storage.**
 
 | Option | Persistence / sharing | Use |
 | --- | --- | --- |
@@ -4405,14 +4361,24 @@ Separate per-environment scratch space, packaged dependencies, object storage an
 | S3 | Durable objects; authorized callers | Datasets, artifacts, large objects |
 | EFS | Shared persistent filesystem | Shared files with NFS semantics |
 
-**Current reference (checked 2026-10-13):** [Lambda ephemeral storage](https://docs.aws.amazon.com/lambda/latest/dg/configuration-ephemeral-storage.html).
+- /tmp is writable and local to an execution environment; warm reuse is possible but durability is not guaranteed
+- Layers package immutable dependencies; they are not a shared writable filesystem between invocations
+- S3 persists objects independently of Lambda; EFS provides shared NFS access with VPC configuration
 
-### Lambda - SAM
+```mermaid
+flowchart TB
+  A[Lambda data] --> B[/tmp: local scratch]
+  A --> C[Layers: packaged dependencies]
+  A --> D[S3: durable objects]
+  A --> E[EFS: shared filesystem]
+```
 
-<!-- original-note: 109 -->
-<!-- title: AWS SAM -->
+<!-- Source reference: https://docs.aws.amazon.com/lambda/latest/dg/configuration-ephemeral-storage.html -->
 
-SAM describes serverless resources in templates and builds on CloudFormation deployment. Its local development and synchronization commands shorten the edit-test cycle.
+
+## Lambda - SAM
+
+**SAM describes serverless resources in templates and builds on CloudFormation deployment. Its local development and synchronization commands shorten the edit-test cycle.**
 
 - Framework for developing and deploying serverless applications
 - All the configuration is YAML code
@@ -4421,28 +4387,22 @@ SAM describes serverless resources in templates and builds on CloudFormation dep
 - SAM can use CodeDeploy to deploy Lambda functions
 - SAM can help you to run Lambda, API Gateway, DynamoDB locally
 
+
 ## AWS SAM – Recipe
 
+**A SAM template declares its transform and serverless resource types, then supplies the properties used to build and deploy the application.**
 
-A SAM template declares its transform and serverless resource types, then supplies the properties used to build and deploy the application.
+- **Write Code:** AWS::Serverless::Function, AWS::Serverless::Api, AWS::Serverless::SimpleTable
+- Package & Deploy: sam deploy (optionally preceded by "sam package")
+- Quickly sync local changes to AWS Lambda (SAM Accelerate): sam sync
 
-  - Transform: 'AWS::Serverless-2016-10-31'
-- Write Code
-  - AWS::Serverless::Function
-  - AWS::Serverless::Api
-  - AWS::Serverless::SimpleTable
-- Package & Deploy: sam deploy (optionally preceded by “sam package”)
-- Quickly sync local changes to AWS Lambda (SAM Accelerate): sam sync --
 
 ## Deep Dive into SAM Deployment
 
-
-SAM builds and packages application artifacts, then deploys the transformed infrastructure through CloudFormation.
-
+**SAM builds and packages application artifacts, then deploys the transformed infrastructure through CloudFormation.**
 
 ```mermaid
 flowchart LR
-  accTitle: Deep Dive into SAM Deployment
   n0["SAM template + code"]
   n1["sam build"]
   n2["S3 artifacts"]
@@ -4454,22 +4414,16 @@ flowchart LR
   n3 -->|"create / update stack"| n4
 ```
 
-> SAM builds and packages application artifacts, then deploys the transformed infrastructure through CloudFormation.
 
 ## SAM Accelerate (sam sync)
 
-
-SAM sync accelerates development: eligible code updates use service APIs, while infrastructure changes still use CloudFormation.
+**SAM sync accelerates development: eligible code updates use service APIs, while infrastructure changes still use CloudFormation.**
 
 - SAM Accelerate is a set of features to reduce latency while deploying resources to AWS
-- sam sync
-  - Synchronizes your project declared in SAM templates to AWS
-  - Synchronizes code changes to AWS without updating infrastructure (uses service APIs & bypass CloudFormation)
-
+- **sam sync:** Synchronizes your project declared in SAM templates to AWS; Synchronizes code changes to AWS without updating infrastructure (uses service APIs & bypass CloudFormation)
 
 ```mermaid
 flowchart LR
-  accTitle: SAM Accelerate (sam sync)
   n0["Source change"]
   n1["sam sync"]
   n2["Service code API"]
@@ -4479,30 +4433,19 @@ flowchart LR
   n1 -->|"infrastructure update"| n3
 ```
 
-> SAM sync accelerates development: eligible code updates use service APIs, while infrastructure changes still use CloudFormation.
 
-## SAM Accelerate (sam sync) – Examples
+## SAM Accelerate — Sync Examples
 
+**Watch mode monitors local changes and selects the supported sync route; it is a development workflow.**
 
-Watch mode monitors local changes and selects the supported sync route; it is a development workflow.
-
-- sam sync (no options)
-  - Synchronize code and infrastructure
-- sam sync --code
-  - Synchronize code changes without updating infrastructure (bypass CloudFormation, update in seconds)
-- sam sync --code --resource AWS::Serverless::Function
-  - Synchronize only all Lambda functions and their dependencies
-- sam sync --code --resource-id HelloWorldLambdaFunction
-  - Synchronize only a specific resource by its ID
-- sam sync --watch
-  - Monitor for file changes and automatically synchronize when changes are detected
-  - If changes include configuration, it uses sam sync
-  - If changes are code only, it uses sam sync --code
-
+- **sam sync --code --resource AWS::Serverless::Function:** Synchronize only all Lambda functions and their dependencies
+- **sam sync --code --resource-id HelloWorldLambdaFunction:** Synchronize only a specific resource by its ID
+- **sam sync --watch:** Monitor for file changes and automatically synchronize when changes are detected; If changes include configuration, it uses sam sync; If changes are code only, it uses sam sync --code
+- Dynamic provisioning of the instances (EC2 & Spot Instances)
+- You just pay for the underlying EC2 instances
 
 ```mermaid
 flowchart LR
-  accTitle: SAM Accelerate (sam sync) – Examples
   n0["Local file watcher"]
   n1["Code change"]
   n2["Infrastructure change"]
@@ -4514,38 +4457,26 @@ flowchart LR
   n2 -->|"stack update"| n4
 ```
 
-> Watch mode monitors local changes and selects the supported sync route; it is a development workflow.
 
- ## AWS BATCH
+## AWS Batch vs AWS Glue
 
-<!-- original-note: 110 -->
-<!-- title: AWS Batch -->
+**Use Glue for managed data preparation and ETL; use AWS Batch for general-purpose scheduled or queued container jobs.**
 
-Batch schedules containerized jobs and provisions supported compute to run them. Resource management is handled by the service, while jobs still consume billable compute.
+- **Glue:** data connectors, Spark ETL, Data Catalog, analytics integration.
+- **Batch:** job queues, compute environments and container images; supports non-ETL workloads.
+- **Decision:** choose by execution requirements, orchestration and compute/runtime control.
 
-- Dynamic provisioning of the instances (EC2 & Spot Instances)
-- Optimal quantity and type based on volume and requirements
-- No need to manage clusters, fully serverless
-- You just pay for the underlying EC2 instances
-- Schedule Batch Jobs using CloudWatch Events
-- Orchestrate Batch Jobs using AWS Step Functions
+```mermaid
+flowchart TB
+  A{Job type?} -->|Managed Spark ETL and catalog| G[AWS Glue]
+  A -->|General container batch job| B[AWS Batch]
+  G --> C[Glue ETL jobs]
+  B --> D[Container job queue + compute]
+```
 
-### AWS BATCH vs Glue
 
-<!-- original-note: 111 -->
-<!-- title: AWS Batch and Glue -->
 
-Choose Glue for its managed ETL and catalog integration. Choose Batch for broader containerized computation whose runtime and resource needs do not fit that ETL model.
-
-  - Glue ETL - Run Apache Spark code, Scala or Python based, focus on the ETL
-  - Glue ETL - Do not worry about configuring or managing the resources
-  - Data Catalog to make the data available to Athena or Redshift Spectrum
-- Batch:
-  - For any computing job regardless of the job (must provide Docker image)
-  - Resources are created in your account, managed by Batch
-  - For any non-ETL related work, Batch is probably better
-
-# Containers
+# Section Containers
 
 <!-- original-note: 112 -->
 <!-- section -->
@@ -4944,7 +4875,7 @@ flowchart LR
 
 > Kubernetes persistent-volume claims use a compatible CSI driver to provision or mount the selected AWS storage backend.
 
-# Analytics
+# Section Analytics
 
 <!-- original-note: 118 -->
 <!-- section -->
