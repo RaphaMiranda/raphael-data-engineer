@@ -31,9 +31,9 @@ test('topics are grouped and searchable by section and title', () => {
 test('all migrated visuals are owned by their Markdown topics', () => {
   const diagrams = slides.flatMap(slide => slide.visuals).filter(visual => visual.type === 'mermaid');
   const images = slides.flatMap(slide => slide.visuals).filter(visual => visual.type === 'image');
-  assert.equal(diagrams.length, 331);
+  assert.equal(diagrams.length, 332);
   assert.equal(images.length, 1);
-  assert.equal(diagrams.filter(visual => visual.source.startsWith('architecture-beta')).length, 3);
+  assert.equal(diagrams.filter(visual => visual.source.startsWith('architecture-beta')).length, 4);
   assert.ok(diagrams.every(visual => visual.caption && visual.source));
   assert.ok(slides.length >= 764);
   assert.equal(fs.existsSync('assets/js/aws-study-visuals.js'), false);

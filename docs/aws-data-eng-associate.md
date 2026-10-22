@@ -32,7 +32,35 @@ flowchart LR
 
 > Generation, storage, ingestion, transformation and serving are stages of the Data Engineering lifecycle.
 
+## Ingestion vs Integration
 
+**Data ingestion** is primarily about movement: getting data from A to B.
+
+**Data integration** is about unification: making data from different systems work together coherently.
+
+```mermaid
+architecture-beta
+  group sources(cloud)[Source systems]
+  service salesforce(server)[Salesforce] in sources
+  service postgres(database)[PostgreSQL] in sources
+  service events(server)[Application events] in sources
+
+  group platform(cloud)[Data platform]
+  service lake(database)[Data lake] in platform
+  service standardize(server)[Join and standardize] in platform
+  service customer(database)[Unified customer model] in platform
+
+  align column salesforce postgres events
+  align row lake standardize customer
+
+  salesforce:R --> L:lake
+  postgres:R --> L:lake
+  events:R --> L:lake
+  lake:R --> L:standardize
+  standardize:R --> L:customer
+```
+
+> For example, copying Salesforce, PostgreSQL and application events into a lake is ingestion. Joining and standardizing customer information from those three sources into a unified customer model is integration.
 
 ## Types of Data
 
