@@ -37,6 +37,7 @@
     let inDetailedNotes = false;
     let table = null;
     let inCodeBlock = false;
+    let codeLanguage = "";
     let codeLines = [];
     let paragraphLines = [];
 
@@ -51,8 +52,18 @@
     markdown.replace(/\r/g, "").split("\n").forEach(function (line) {
       if (line.trim().startsWith("```")) {
         flushParagraph();
-        inCodeBlock = !inCodeBlock;
-        if (!inCodeBlock && current && codeLines.length) { contentTarget().code.push(codeLines.join("\n")); codeLines = []; }
+        if (!inCodeBlock) {
+          inCodeBlock = true;
+          codeLanguage = line.trim().slice(3).trim().toLowerCase();
+        } else {
+          inCodeBlock = false;
+          if (current && codeLines.length) {
+            if (codeLanguage === "mermaid" && !inDetailedNotes) current.mermaid = codeLines.join("\n");
+            else contentTarget().code.push(codeLines.join("\n"));
+          }
+          codeLanguage = "";
+          codeLines = [];
+        }
         return;
       }
       if (inCodeBlock) { codeLines.push(line); return; }
@@ -147,6 +158,7 @@
   }
 
   function renderVisual(slide) {
+    if (slide.mermaid) return '<figure class="slide-visual"><pre class="mermaid study-mermaid" data-study-mermaid>' + escapeHtml(slide.mermaid) + '</pre><figcaption>' + escapeHtml(slide.title + " diagram") + '</figcaption></figure>';
     const visual = getVisual(slide);
     if (!visual) return "";
     if (visual.type === "image") {
@@ -192,6 +204,11 @@
   }
 
   function initializeDiagram(slide) {
+    const mermaidHost = elements.slide.querySelector("[data-study-mermaid]");
+    if (slide.mermaid && mermaidHost && window.mermaid) {
+      window.mermaid.run({ nodes: [mermaidHost] }).catch(function () {});
+      return;
+    }
     const visual = getVisual(slide);
     if (!visual || visual.type !== "diagram") return;
     const host = document.getElementById(visual.id);
@@ -308,6 +325,11 @@
     if (window.matchMedia("(max-width: 860px)").matches) window.scrollTo({ top: 0, left: 0, behavior: "instant" });
     if (shouldFocus !== false) elements.slide.focus({ preventScroll: true });
   }
+
+  window.addEventListener("study-mermaid-ready", function () {
+    const current = state.slides[state.index];
+    if (current && current.mermaid) initializeDiagram(current);
+  });
 
   function groupTopics(slides) {
     const groups = new Map();

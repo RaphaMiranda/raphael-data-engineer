@@ -7,7 +7,22 @@ Personal AWS data engineering study notes. Technical details that change over ti
 <!-- original-note: 0 -->
 <!-- section -->
 
-# Types of Data
+## Key Concepts
+
+Data Engineering lifecycle is a subset of **Data lifecycle**.
+
+```mermaid
+flowchart LR
+  accTitle: Data Engineering Lifecycle
+  accDescr: Cyclical stages for generating, storing, ingesting, transforming and serving data.
+  generation[Generation] --> storage[Storage]
+  storage --> ingestion[Ingestion]
+  ingestion --> transformation[Transformation]
+  transformation --> serving[Serving]
+  serving --> generation
+```
+
+## Types of Data
 
 <!-- original-note: 1 -->
 
