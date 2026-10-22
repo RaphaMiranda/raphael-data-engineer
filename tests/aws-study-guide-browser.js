@@ -17,6 +17,7 @@
     assert(slide.querySelector('.slide-index').textContent === 'Study notes', 'Slide has no source-page label');
     assert(slide.querySelector('h2').textContent === titleFor(key), 'Topic navigation selects the requested heading');
     assert(group.open, 'Navigation expands the selected topic section');
+    assert(!slide.querySelector('.notes-details'), 'Detailed notes stay hidden without an explicit nested heading');
   }
   assert(document.querySelectorAll('[data-slide-index]').length > 700, 'Personal study topics load');
   assert(!document.getElementById('study-collection'), 'There is one study guide');
@@ -52,9 +53,7 @@
     slide.querySelector('[data-diagram-zoom="in"]').click();
     assert(model.scale > scale, 'Diagram zoom button works');
     slide.querySelector('[data-diagram-fit]').click();
-    const text = slide.querySelector('.diagram-text');
-    text.open = true;
-    assert(text.querySelectorAll('li').length === visual.nodes.length + visual.links.length, 'Diagram has a complete text alternative');
+    assert(!slide.querySelector('.diagram-text'), 'Diagram text disclosure is absent');
     assert(document.documentElement.scrollWidth <= innerWidth, 'No horizontal overflow');
     if (key.includes('Internet Gateway & NAT Gateways')) {
       const az = model.findNodeForKey('az');

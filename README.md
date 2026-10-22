@@ -12,11 +12,11 @@ A static portfolio for Raphael Miranda Mata, with case studies and a focused AWS
 
 ## Study deck
 
-The AWS deck keeps the Markdown document as its source of truth. It groups personal notes into expandable topic sections, with keyboard navigation, searchable topics, detailed notes, tables, code and diagrams. The notes are a personal study aid; validate exam-critical details against current AWS documentation.
+The AWS deck keeps the Markdown document as its source of truth. It groups personal notes into expandable topic sections, with keyboard navigation, searchable topics and diagrams. To add expandable notes, tables or code to a slide, place them under a heading one level below the slide title named `Detailed notes` (for example, `### Detailed notes` under a `##` slide). The notes are a personal study aid; validate exam-critical details against current AWS documentation.
 
 ### Visuals and diagrams
 
-`assets/js/aws-study-visuals.js` contains study diagrams keyed by section and topic. Add an `image` entry with a root-relative path or a `diagram` with node/link data. Set structural links' `relation` flag to omit data-flow arrowheads. Diagrams include readable text and keyboard zoom/fit controls; their text remains available when the canvas library cannot load.
+`assets/js/aws-study-visuals.js` contains study diagrams keyed by section and topic. Add an `image` entry with a root-relative path or a `diagram` with node/link data. Set structural links' `relation` flag to omit data-flow arrowheads. Diagrams include keyboard zoom/fit controls and a caption.
 
 For an explicitly positioned vertical diagram, set `layout: "vertical"` and give each regular node a `loc: "x y"`. Define containers with `isGroup: true` and assign member nodes their container's key through `group`. A link's `bidirectional: true` adds a second arrowhead and a matching two-way text alternative. The Internet Gateway & NAT Gateways topic demonstrates these options.
 

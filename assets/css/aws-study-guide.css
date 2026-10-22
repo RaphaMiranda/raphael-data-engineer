@@ -104,9 +104,8 @@ button:focus-visible, a:focus-visible { outline: 2px solid var(--cyan); outline-
 .topic-filters input { min-width: 0; width: 100%; min-height: 44px; padding: .65rem .7rem; border: 1px solid rgba(70, 69, 84, .2); border-radius: .5rem; background: var(--surface); color: var(--text); font: .875rem var(--font-body); }
 .topic-filters input:focus-visible, summary:focus-visible, .study-table:focus-visible { outline: 2px solid var(--cyan); outline-offset: 3px; }
 .topic-filters p { margin: .15rem 0 0; min-height: 1.2rem; color: var(--muted); font-size: .72rem; }
-.notes-details, .diagram-text { margin-top: 1.5rem; padding: 1rem; border-radius: .7rem; background: rgba(6, 14, 32, .4); color: var(--muted); line-height: 1.65; }
-.notes-details summary, .diagram-text summary { width: fit-content; min-height: 44px; padding: .6rem 0; cursor: pointer; color: var(--cyan); font-size: .88rem; }
-.diagram-text li { margin-bottom: .55rem; overflow-wrap: anywhere; }
+.notes-details { margin-top: 1.5rem; padding: 1rem; border-radius: .7rem; background: rgba(6, 14, 32, .4); color: var(--muted); line-height: 1.65; }
+.notes-details summary { width: fit-content; min-height: 44px; padding: .6rem 0; cursor: pointer; color: var(--cyan); font-size: .88rem; }
 .diagram-controls { display: flex; flex-wrap: wrap; gap: .4rem; }
 .diagram-controls button { min-width: 44px; min-height: 44px; }
 .diagram-controls button:disabled { opacity: .45; cursor: default; }

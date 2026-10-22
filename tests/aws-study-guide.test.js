@@ -6,10 +6,10 @@ const vm = require('node:vm');
 const notes = fs.readFileSync('docs/aws-data-eng-associate.md', 'utf8');
 const sandbox = { window: { studyVisuals: {} }, document: { getElementById: () => null }, fetch: () => new Promise(() => {}) };
 vm.createContext(sandbox);
-const guide = fs.readFileSync('assets/js/aws-study-guide.js', 'utf8').replace('  fetch(sourcePath)',
-  '  window.studyTest = { parseMarkdown, formatText, renderList, renderVisual, renderTables, splitPoints, getVisual, groupTopics, matchesTopic };\n  fetch(sourcePath)');
-vm.runInContext(guide, sandbox);
 vm.runInContext(fs.readFileSync('assets/js/aws-study-visuals.js', 'utf8'), sandbox);
+const guide = fs.readFileSync('assets/js/aws-study-guide.js', 'utf8').replace('  fetch(sourcePath)',
+  '  window.studyTest = { parseMarkdown, formatText, renderList, renderVisual, renderTables, summaryPoints, getVisual, groupTopics, matchesTopic };\n  fetch(sourcePath)');
+vm.runInContext(guide, sandbox);
 const helpers = sandbox.window.studyTest;
 const slides = helpers.parseMarkdown(notes);
 const visuals = sandbox.window.studyVisuals;
@@ -44,7 +44,7 @@ test('topic-keyed diagrams resolve to a note and have complete graph endpoints',
     assert.equal(nodeKeys.size, visual.nodes.length, key);
     assert.ok(visual.nodes.every(node => node.text && typeof node.detail === 'string'), key);
     assert.ok(visual.links.every(link => nodeKeys.has(link.from) && nodeKeys.has(link.to) && link.label), key);
-    assert.match(helpers.renderVisual(slide), /Read diagram as text/);
+    assert.doesNotMatch(helpers.renderVisual(slide), /diagram-text/);
   }
   assert.ok(visuals['Data Lakehouses'] && visuals['DynamoDB Streams']);
 });
@@ -68,19 +68,25 @@ test('Internet Gateway and NAT diagram keeps its vertical AZ layout', () => {
   assert.match(html, /Private Subnet â€” initiates outbound traffic â†’ NAT/);
 });
 
-test('presentation summaries retain nested notes, tables, code and safe links', () => {
+test('slide summaries stay concise and tables and links remain safe', () => {
   const items = [0, 2, 0, 2, 0, 0, 2, 0, 2].map((indent, index) => ({ indent, text: String(index), ordered: false }));
-  const split = helpers.splitPoints(items, 4);
-  assert.equal(split.main.length, 4);
-  assert.deepEqual(Array.from(split.rest.map(item => item.text)), items.map(item => item.text));
-  assert.equal(helpers.splitPoints([], 4).main.length, 0);
-  const categories = helpers.splitPoints([{ indent: 0, text: 'Characteristics:' }, { indent: 2, text: 'Queryable' }, { indent: 2, text: 'Consistent fields' }], 4);
-  assert.match(categories.main[0].text, /Characteristics: Queryable; Consistent fields/);
-  assert.equal(categories.rest.length, 3);
+  const points = helpers.summaryPoints(items, 4);
+  assert.equal(points.length, 4);
+  assert.equal(helpers.summaryPoints([], 4).length, 0);
+  const categories = helpers.summaryPoints([{ indent: 0, text: 'Characteristics:' }, { indent: 2, text: 'Queryable' }, { indent: 2, text: 'Consistent fields' }], 4);
+  assert.match(categories[0].text, /Characteristics: Queryable; Consistent fields/);
   const text = helpers.formatText('<script>alert(1)</script> [bad](javascript:alert) [AWS](https://docs.aws.amazon.com/)');
   assert.doesNotMatch(text, /<script>|href="javascript:/);
   assert.match(text, /href="https:\/\/docs.aws.amazon.com\//);
   const html = helpers.renderTables([[['Field', 'Meaning'], ['<img src=x>', '**Important**']]]);
   assert.doesNotMatch(html, /<img/);
   assert.match(html, /<strong>Important<\/strong>/);
+});
+
+test('detailed material renders only under an explicit nested heading', () => {
+  const fixture = helpers.parseMarkdown('## Topic\n- Summary point\n- Hidden unless expanded\n\n### Detailed notes\n- Expanded point\n\n## Another topic\n- Another summary');
+  assert.equal(fixture.length, 2);
+  assert.deepEqual(Array.from(fixture[0].listItems.map(item => item.text)), ['Summary point', 'Hidden unless expanded']);
+  assert.deepEqual(Array.from(fixture[0].detailedNotes.listItems.map(item => item.text)), ['Expanded point']);
+  assert.equal(fixture[1].detailedNotes, undefined);
 });

@@ -32,14 +32,19 @@
   function parseMarkdown(markdown) {
     const slides = [];
     let current = null;
+    let detailOwner = null;
     let currentSection = "Study guide";
+    let inDetailedNotes = false;
     let table = null;
     let inCodeBlock = false;
     let codeLines = [];
     let paragraphLines = [];
 
+    function contentTarget() { return inDetailedNotes ? detailOwner.detailedNotes : current; }
+
     function flushParagraph() {
-      if (current && paragraphLines.length) current.paragraphs.push(paragraphLines.join(" "));
+      const target = current && contentTarget();
+      if (target && paragraphLines.length) target.paragraphs.push(paragraphLines.join(" "));
       paragraphLines = [];
     }
 
@@ -47,7 +52,7 @@
       if (line.trim().startsWith("```")) {
         flushParagraph();
         inCodeBlock = !inCodeBlock;
-        if (!inCodeBlock && current && codeLines.length) { current.code.push(codeLines.join("\n")); codeLines = []; }
+        if (!inCodeBlock && current && codeLines.length) { contentTarget().code.push(codeLines.join("\n")); codeLines = []; }
         return;
       }
       if (inCodeBlock) { codeLines.push(line); return; }
@@ -57,6 +62,15 @@
         flushParagraph();
         const rawTitle = (heading[2] || "").trim();
         const title = cleanTitle(rawTitle) || "Unexpanded topic";
+        if (current && title.toLowerCase() === "detailed notes" && heading[1].length > current.level) {
+          if (!current.detailedNotes) current.detailedNotes = { listItems: [], paragraphs: [], code: [], tables: [] };
+          detailOwner = current;
+          inDetailedNotes = true;
+          table = null;
+          return;
+        }
+        detailOwner = null;
+        inDetailedNotes = false;
         const isSection = /^Section\s+/i.test(rawTitle);
         if (isSection) currentSection = title;
         current = { level: heading[1].length, title: title, section: currentSection, isSection: isSection, unexpanded: !rawTitle, listItems: [], paragraphs: [], code: [], tables: [] };
@@ -72,11 +86,12 @@
       if (originalNote) { current.originalNote = Number(originalNote[1]); return; }
       if (line === "<!-- section -->") { current.isSection = true; currentSection = current.title; current.section = currentSection; return; }
       if (line === "<!-- unexpanded -->") { current.unexpanded = true; return; }
+      const target = contentTarget();
       if (/^\|.*\|$/.test(line.trim())) {
         flushParagraph();
         const cells = line.trim().slice(1, -1).split("|").map(function (cell) { return cell.trim(); });
         if (cells.every(function (cell) { return /^:?-{3,}:?$/.test(cell); })) return;
-        if (!table) { table = []; current.tables.push(table); }
+        if (!table) { table = []; target.tables.push(table); }
         table.push(cells);
         return;
       }
@@ -84,7 +99,7 @@
       const listItem = line.match(/^(\s*)(?:([-*])|(\d+)\.)\s+(.+)$/);
       if (listItem) {
         flushParagraph();
-        current.listItems.push({ indent: listItem[1].replace(/\t/g, "  ").length, ordered: Boolean(listItem[3]), text: listItem[4].trim() });
+        target.listItems.push({ indent: listItem[1].replace(/\t/g, "  ").length, ordered: Boolean(listItem[3]), text: listItem[4].trim() });
       } else if (!line.trim().startsWith("<!--")) {
         paragraphLines.push(line.trim());
       }
@@ -138,16 +153,7 @@
       return "<figure class=\"slide-visual\"><img src=\"" + escapeHtml(visual.src) + "\" alt=\"" + escapeHtml(visual.alt) + "\" width=\"1200\" height=\"675\" loading=\"lazy\"><figcaption>" + escapeHtml(visual.caption) + "</figcaption></figure>";
     }
     if (visual.type === "diagram") {
-      const relationships = visual.links.map(function (link) {
-        const from = visual.nodes.find(function (node) { return node.key === link.from; });
-        const to = visual.nodes.find(function (node) { return node.key === link.to; });
-        return "<li>" + escapeHtml((from ? from.text : link.from) + " — " + link.label + (link.relation ? " — " : link.bidirectional ? " ↔ " : " → ") + (to ? to.text : link.to)) + "</li>";
-      }).join("");
-      const nodes = visual.nodes.map(function (node) {
-        const group = node.group && visual.nodes.find(function (entry) { return entry.key === node.group; });
-        return "<li>" + escapeHtml(node.text + (node.isGroup ? " (dashed container)" : "") + (node.detail ? ": " + node.detail : "") + (group ? "; inside " + group.text : "")) + "</li>";
-      }).join("");
-      return "<figure class=\"slide-visual\"><div class=\"visual-toolbar\"><p class=\"visual-label\">" + (visual.kind === "structure" ? "Structure" : "Flow") + " diagram</p><div class=\"diagram-controls\"><button class=\"diagram-button\" type=\"button\" data-diagram-zoom=\"out\" aria-label=\"Zoom diagram out\">−</button><button class=\"diagram-button\" type=\"button\" data-diagram-fit=\"" + escapeHtml(visual.id) + "\">Fit diagram</button><button class=\"diagram-button\" type=\"button\" data-diagram-zoom=\"in\" aria-label=\"Zoom diagram in\">+</button></div></div><div class=\"study-diagram\" id=\"" + escapeHtml(visual.id) + "\" aria-hidden=\"true\"></div><p class=\"diagram-fallback\" data-diagram-fallback hidden>Canvas unavailable. The complete diagram is described below.</p><figcaption>" + escapeHtml(visual.caption) + "</figcaption><details class=\"diagram-text\"><summary>Read diagram as text</summary><p>Components</p><ul>" + nodes + "</ul><p>Relationships</p><ul>" + relationships + "</ul></details></figure>";
+      return "<figure class=\"slide-visual\"><div class=\"visual-toolbar\"><p class=\"visual-label\">" + (visual.kind === "structure" ? "Structure" : "Flow") + " diagram</p><div class=\"diagram-controls\"><button class=\"diagram-button\" type=\"button\" data-diagram-zoom=\"out\" aria-label=\"Zoom diagram out\">&minus;</button><button class=\"diagram-button\" type=\"button\" data-diagram-fit=\"" + escapeHtml(visual.id) + "\">Fit diagram</button><button class=\"diagram-button\" type=\"button\" data-diagram-zoom=\"in\" aria-label=\"Zoom diagram in\">+</button></div></div><div class=\"study-diagram\" id=\"" + escapeHtml(visual.id) + "\" role=\"img\" aria-label=\"" + escapeHtml(visual.caption) + "\"></div><p class=\"diagram-fallback\" data-diagram-fallback hidden>Diagram canvas unavailable.</p><figcaption>" + escapeHtml(visual.caption) + "</figcaption></figure>";
     }
     return "";
   }
@@ -164,10 +170,10 @@
     }).join("");
   }
 
-  function splitPoints(items, limit) {
-    if (!items.length) return { main: [], rest: [] };
+  function summaryPoints(items, limit) {
+    if (!items.length) return [];
     const root = Math.min.apply(null, items.map(function (item) { return item.indent; }));
-    const main = items.filter(function (item) { return item.indent === root; }).slice(0, limit).map(function (item) {
+    return items.filter(function (item) { return item.indent === root; }).slice(0, limit).map(function (item) {
       if (!/:$/.test(item.text)) return item;
       const start = items.indexOf(item) + 1;
       const children = [];
@@ -178,10 +184,6 @@
         .map(function (child) { return child.text; }).join("; ");
       return Object.assign({}, item, { text: item.text + " " + summary });
     });
-    // Nested explanations need their parent outline; flat lists only need the
-    // additional points that were not already presented on the card.
-    const nested = items.some(function (item) { return item.indent > root; });
-    return { main: main, rest: nested ? items : items.slice(limit) };
   }
 
   function disposeDiagram() {
@@ -199,7 +201,6 @@
     if (!window.go) {
       host.hidden = true;
       if (fallback) fallback.hidden = false;
-      elements.slide.querySelector(".diagram-text").open = true;
       elements.slide.querySelectorAll(".diagram-controls button").forEach(function (button) { button.disabled = true; });
       return;
     }
@@ -267,19 +268,18 @@
   function renderSlide(shouldFocus) {
     const current = state.slides[state.index];
     const section = current.section;
-    const points = splitPoints(current.listItems, 4);
-    const notes = renderList(points.main);
+    const notes = renderList(summaryPoints(current.listItems, 4));
     const visual = renderVisual(current);
     const visualData = getVisual(current);
     const wideDiagram = visualData && visualData.type === "diagram" && visualData.nodes.length > 3;
     const compactDiagram = visualData && visualData.type === "diagram" && !wideDiagram;
     const introduction = current.paragraphs[0] ? "<p class=\"slide-lede\">" + formatText(current.paragraphs[0]) + "</p>" : "";
-    const code = current.code.map(function (snippet) { return "<pre class=\"code-block\"><code>" + escapeHtml(snippet) + "</code></pre>"; }).join("");
     const references = current.paragraphs.filter(function (paragraph) { return paragraph.startsWith("**Current reference"); });
-    const paragraphs = current.paragraphs.slice(1).filter(function (paragraph) { return !references.includes(paragraph); });
-    const detail = renderList(points.rest) + paragraphs.map(function (paragraph) { return '<p class="detail-note">' + formatText(paragraph) + '</p>'; }).join("") + renderTables(current.tables) + code;
-    const details = detail ? '<details class="notes-details"><summary>Detailed notes' + (current.code.length || current.tables.length ? ' and examples' : '') + '</summary>' + detail + '</details>' : '';
-    const empty = current.unexpanded || !notes && !current.paragraphs.length && !code
+    const detailed = current.detailedNotes;
+    const detailedCode = detailed ? detailed.code.map(function (snippet) { return "<pre class=\"code-block\"><code>" + escapeHtml(snippet) + "</code></pre>"; }).join("") : "";
+    const detail = detailed ? renderList(detailed.listItems) + detailed.paragraphs.map(function (paragraph) { return '<p class="detail-note">' + formatText(paragraph) + '</p>'; }).join("") + renderTables(detailed.tables) + detailedCode : "";
+    const details = detail ? '<details class="notes-details"><summary>Detailed notes</summary>' + detail + '</details>' : '';
+    const empty = current.unexpanded || !notes && !current.paragraphs.length && !detail
       ? "<p class=\"empty-note\">This topic is marked in the source notes but has not been expanded yet. Use it as a prompt for deeper study.</p>" : "";
 
     disposeDiagram();
