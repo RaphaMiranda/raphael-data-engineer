@@ -4478,36 +4478,23 @@ flowchart TB
 
 # Section Containers
 
-<!-- original-note: 112 -->
-<!-- section -->
 
 ## Docker
 
-<!-- original-note: 113 -->
-
-Containers package an application with its dependencies for a compatible runtime. They share a host kernel, so portability still depends on the operating-system and processor environment.
+**Containers package an application with its dependencies for a compatible runtime. They share a host kernel, so portability still depends on the operating-system and processor environment.**
 
 - Apps are packaged in containers that can be run on any OS
-- Apps run the same, regardless of where they’re run
-  - Any machine
-  - No compatibility issues
-  - Predictable behavior
-  - Less work
-  - Easier to maintain and deploy
-  - Works with any language, any OS, any technology
+- **Apps run the same, regardless of where they're run:** Any machine · No compatibility issues · Predictable behavior · Less work · Easier to maintain and deploy · Works with any language, any OS, any technology
 - Use cases: microservices architecture, lift-and-shift apps from on-premises to the AWS cloud, …
+- Portability still requires a compatible operating-system kernel and processor architecture; packaging does not make every image run unchanged on every host
 
-- Portability still requires a compatible operating-system kernel and processor architecture; packaging does not make every image run unchanged on every host.
 
 ## Docker on an OS
 
-
-Containers package applications and dependencies while sharing the host kernel.
-
+**Containers package applications and dependencies while sharing the host kernel.**
 
 ```mermaid
 flowchart LR
-  accTitle: Docker on an OS
   n0["Host OS / kernel"]
   n1["Container runtime"]
   n2["Java container"]
@@ -4519,32 +4506,24 @@ flowchart LR
   n1 ---|"isolated process"| n4
 ```
 
-> Containers package applications and dependencies while sharing the host kernel.
 
-## Where are Docker images stored?
+## Container Image Registries
 
+**A registry stores versioned container images for later deployment. Distinguish a public image source from a private repository with controlled access.**
 
-A registry stores versioned container images for later deployment. Distinguish a public image source from a private repository with controlled access.
+- **Docker Hub (https://hub.docker.com):** Public repository; Find base images for many technologies or OS (e.g., Ubuntu, MySQL, …)
+- **Amazon ECR (Amazon Elastic Container Registry):** Private repository; Public repository (Amazon ECR Public Gallery https://gallery.ecr.aws)
 
-- Docker Hub (https://hub.docker.com)
-  - Public repository
-  - Find base images for many technologies or OS (e.g., Ubuntu, MySQL, …)
-- Amazon ECR (Amazon Elastic Container Registry)
-  - Private repository
-  - Public repository (Amazon ECR Public Gallery https://gallery.ecr.aws)
 
 ## Docker vs. Virtual Machines
 
+**Focus:** Docker vs. Virtual Machines — understand the key capabilities, constraints, and trade-offs.
 
-The source compares a hosted hypervisor stack with containers. Virtual machines include guest operating systems; containers share the host kernel through their runtime.
-
-- Docker is ”sort of” a virtualization technology, but not exactly
+- Docker is "sort of" a virtualization technology, but not exactly
 - Resources are shared with the host => many containers on one server
-
 
 ```mermaid
 flowchart TB
-  accTitle: Docker vs. Virtual Machines
   n0["Hardware"]
   n1["Hosted hypervisor"]
   n2["VM + guest OS"]
@@ -4558,17 +4537,13 @@ flowchart TB
   n4 ---|"container"| n5
 ```
 
-> The source compares a hosted hypervisor stack with containers. Virtual machines include guest operating systems; containers share the host kernel through their runtime.
 
 ## Getting Started with Docker
 
-
-A Dockerfile builds an image. A registry distributes images, and a runtime creates containers from them.
-
+**A Dockerfile builds an image. A registry distributes images, and a runtime creates containers from them.**
 
 ```mermaid
 flowchart LR
-  accTitle: Getting Started with Docker
   n0["Dockerfile"]
   n1["Image"]
   n2["Registry"]
@@ -4579,28 +4554,29 @@ flowchart LR
   n1 -->|"docker run"| n3
 ```
 
-> A Dockerfile builds an image. A registry distributes images, and a runtime creates containers from them.
 
 ## Docker Containers Management on AWS
 
+**ECS and EKS orchestrate containers with different APIs; Fargate supplies supported serverless compute beneath those orchestration choices.**
 
-ECS and EKS orchestrate containers with different APIs; Fargate supplies supported serverless compute beneath those orchestration choices.
+- Amazon's own container platform
+- **Amazon Elastic Kubernetes Service (Amazon EKS):** Amazon's managed Kubernetes (open source)
+- **AWS Fargate:** Amazon's own Serverless container platform; Works with ECS and with EKS
+- **Amazon ECR:** Store container images
 
-  - Amazon’s own container platform
-- Amazon Elastic Kubernetes Service (Amazon EKS)
-  - Amazon’s managed Kubernetes (open source)
-- AWS Fargate
-  - Amazon’s own Serverless container platform
-  - Works with ECS and with EKS
-- Amazon ECR:
-  - Store container images
+```mermaid
+flowchart TB
+  I[Container image in ECR] --> A{Orchestrator}
+  A --> B[ECS: AWS container scheduler]
+  A --> C[EKS: Kubernetes API]
+  B --> D[EC2 or Fargate]
+  C --> D
+```
+
 
 ## AWS ECS
 
-<!-- original-note: 114 -->
-<!-- title: Amazon ECS -->
-
-ECS runs task definitions on a cluster using supported compute options. With EC2 you manage the instance fleet; with Fargate you request task resources without managing those hosts.
+**ECS runs task definitions on a cluster using supported compute options. With EC2 you manage the instance fleet; with Fargate you request task resources without managing those hosts.**
 
 - ECS = Elastic Container Service
 - Launch Docker containers on AWS = Launch ECS Tasks on ECS Clusters
@@ -4608,10 +4584,8 @@ ECS runs task definitions on a cluster using supported compute options. With EC2
 - Each EC2 Instance must run the ECS Agent to register in the ECS Cluster
 - AWS takes care of starting /
 
-
 ```mermaid
 flowchart LR
-  accTitle: Amazon ECS
   n0["ECS cluster"]
   n1["EC2 instance + agent A"]
   n2["EC2 instance + agent B"]
@@ -4623,24 +4597,19 @@ flowchart LR
   n2 ---|"runs task"| n4
 ```
 
-> With the EC2 launch option, ECS places tasks on registered container instances whose capacity you manage.
 
 ## Amazon ECS – Fargate Launch Type
 
-
-Fargate runs ECS tasks without exposing host-instance administration to the application team.
+**Fargate runs ECS tasks without exposing host-instance administration to the application team.**
 
 - Launch Docker containers on AWS
 - You do not provision the infrastructure (no EC2 instances to manage)
-- It’s all Serverless!
+- It's all Serverless!
 - You just create task definitions
-- AWS just runs ECS Tasks for you based on the CPU / RAM you need
 - To scale, just increase the number of tasks. Simple - no more EC2 instances
-
 
 ```mermaid
 flowchart LR
-  accTitle: Amazon ECS – Fargate Launch Type
   n0["ECS task definition"]
   n1["Fargate task A"]
   n2["Fargate task B"]
@@ -4651,30 +4620,16 @@ flowchart LR
   n3 -->|"provides capacity"| n2
 ```
 
-> Fargate runs ECS tasks without exposing host-instance administration to the application team.
 
-### ECS - IAM roles
+## ECS - IAM roles
 
-<!-- original-note: 115 -->
-<!-- title: ECS IAM roles -->
+**Separate the permissions used by container infrastructure from the task role used by application code. Give each workload only the AWS access it needs.**
 
-Separate the permissions used by container infrastructure from the task role used by application code. Give each workload only the AWS access it needs.
-
-- EC2 Instance Profile (EC2 Launch Type only):
-  - Used by the ECS agent
-  - Makes API calls to ECS service
-  - Send container logs to CloudWatch Logs
-  - Pull Docker image from ECR
-  - Reference sensitive data in Secrets Manager or SSM Parameter Store
-- ECS Task Role:
-  - Allows each task to have a specific role
-  - Use different roles for the different ECS Services you run
-  - Task Role is defined in the task definition
-
+- **EC2 Instance Profile (EC2 Launch Type only):** Used by the ECS agent · Makes API calls to ECS service · Send container logs to CloudWatch Logs · Pull Docker image from ECR · Reference sensitive data in Secrets Manager or SSM Parameter Store
+- **ECS Task Role:** Allows each task to have a specific role; Use different roles for the different ECS Services you run; Task Role is defined in the task definition
 
 ```mermaid
 flowchart TB
-  accTitle: ECS IAM roles
   n0["ECS infrastructure"]
   n1["Instance / execution role"]
   n2["ECR / logs / secrets"]
@@ -4687,21 +4642,17 @@ flowchart TB
   n4 -->|"application permissions"| n5
 ```
 
-> Host or execution permissions support infrastructure operations; the task role grants AWS permissions to application code.
 
 ## Amazon ECS – Load Balancer Integrations
 
-
-An Application Load Balancer routes HTTP traffic to registered ECS task targets with health checks.
+**An Application Load Balancer routes HTTP traffic to registered ECS task targets with health checks.**
 
 - Application Load Balancer supported and works for most use cases
 - Network Load Balancer recommended only for high throughput / high performance use cases, or to pair it with AWS Private Link
 - Classic Load Balancer supported but not recommended (no advanced features – no Fargate)
 
-
 ```mermaid
 flowchart LR
-  accTitle: Amazon ECS – Load Balancer Integrations
   n0["Clients"]
   n1["ALB"]
   n2["ECS task A"]
@@ -4711,12 +4662,10 @@ flowchart LR
   n1 -->|"healthy target"| n3
 ```
 
-> An Application Load Balancer routes HTTP traffic to registered ECS task targets with health checks.
 
 ## Amazon ECS – Data Volumes (EFS)
 
-
-ECS tasks on supported EC2 or Fargate configurations can mount a shared EFS filesystem.
+**ECS tasks on supported EC2 or Fargate configurations can mount a shared EFS filesystem.**
 
 - Mount EFS file systems onto ECS tasks
 - Works for both EC2 and Fargate launch types
@@ -4724,10 +4673,8 @@ ECS tasks on supported EC2 or Fargate configurations can mount a shared EFS file
 - Fargate + EFS = Serverless
 - Use cases: persistent multi-AZ shared storage for your containers
 
-
 ```mermaid
 flowchart LR
-  accTitle: Amazon ECS – Data Volumes (EFS)
   n0["EC2-backed task"]
   n1["Fargate task"]
   n2["EFS mount targets"]
@@ -4737,22 +4684,18 @@ flowchart LR
   n2 -->|"shared files"| n3
 ```
 
-> ECS tasks on supported EC2 or Fargate configurations can mount a shared EFS filesystem.
 
 ## Amazon ECS – Data Volumes (S3 Files)
 
-
-The source's S3 Files example mounts a filesystem from Fargate or ECS Managed Instances and synchronizes with an S3 bucket. Verify current feature support before deployment.
+**This example's S3 Files example mounts a filesystem from Fargate or ECS Managed Instances and synchronizes with an S3 bucket. Verify current feature support before deployment.**
 
 - Mount S3 Files file systems onto ECS tasks (S3 bucket exposed as a file system)
 - Works for Fargate and ECS Managed Instances (EC2 launch type is NOT supported)
 - Changes sync automatically to the S3 bucket
 - Use cases: containers needing shared file access to data that already lives in S3
 
-
 ```mermaid
 flowchart LR
-  accTitle: Amazon ECS – Data Volumes (S3 Files)
   n0["ECS Managed Instances tasks"]
   n1["Fargate tasks"]
   n2["S3 Files filesystem"]
@@ -4762,26 +4705,19 @@ flowchart LR
   n2 -->|"automatic synchronization"| n3
 ```
 
-> The source's S3 Files example mounts a filesystem from Fargate or ECS Managed Instances and synchronizes with an S3 bucket. Verify current feature support before deployment.
 
-### ECR
+## ECR
 
-<!-- original-note: 116 -->
-<!-- title: Amazon ECR -->
-
-ECR stores container images for deployment. Image repository access, lifecycle policies and scanning complement the runtime configuration in ECS or EKS.
+**ECR stores container images for deployment. Image repository access, lifecycle policies and scanning complement the runtime configuration in ECS or EKS.**
 
 - ECR = Elastic Container Registry
 - Store and manage Docker images on AWS
 - Private and Public repository (Amazon ECR Public Gallery https://gallery.ecr.aws)
 - Fully integrated with ECS, backed by Amazon S3
 - Access is controlled through IAM (permission errors => policy)
-- Supports image vulnerability scanning, versioning, image tags, image lifecycle, …
-
 
 ```mermaid
 flowchart LR
-  accTitle: Amazon ECR
   n0["ECR image repository"]
   n1["Authorized image pull"]
   n2["ECS task"]
@@ -4789,33 +4725,25 @@ flowchart LR
   n1 -->|"start container"| n2
 ```
 
-> ECS pulls a private ECR image using the appropriate execution/instance permissions, then runs the resulting task.
 
-### EKS
+## EKS
 
-<!-- original-note: 117 -->
-<!-- title: Amazon EKS -->
-
-EKS manages a Kubernetes control plane. Choose node groups or supported serverless compute according to the Kubernetes workload and operational responsibilities.
+**EKS manages a Kubernetes control plane. Choose node groups or supported serverless compute according to the Kubernetes workload and operational responsibilities.**
 
 - It is a way to launch managed Kubernetes clusters on AWS
 - Kubernetes is an open-source system for automatic deployment, scaling and management of containerized (usually Docker) application
-- It’s an alternative to ECS, similar goal but different API
+- It's an alternative to ECS, similar goal but different API
 - EKS supports EC2 if you want to deploy worker nodes or Fargate to deploy serverless containers
 - Use case: if your company is already using Kubernetes on-premises or in another cloud, and wants to migrate to AWS using Kubernetes
 - Kubernetes is cloud-agnostic (can be used in any cloud – Azure, GCP…)
-- For multiple regions, deploy one EKS cluster per region
-- Collect logs and metrics using CloudWatch Container Insights
+
 
 ## Amazon EKS - Diagram
 
-
-EKS separates a managed Kubernetes control plane from worker capacity deployed across AZs; a load balancer exposes selected services.
-
+**EKS separates a managed Kubernetes control plane from worker capacity deployed across AZs; a load balancer exposes selected services.**
 
 ```mermaid
 flowchart LR
-  accTitle: Amazon EKS - Diagram
   n0["Managed control plane"]
   n1["AZ A workers"]
   n2["AZ B workers"]
@@ -4829,39 +4757,39 @@ flowchart LR
   n4 -->|"service traffic"| n3
 ```
 
-> EKS separates a managed Kubernetes control plane from worker capacity deployed across AZs; a load balancer exposes selected services.
 
 ## Amazon EKS – Node Types
 
+**EKS compute options differ in who provisions and maintains nodes. Compare managed groups, self-managed nodes and supported Fargate workloads.**
 
-EKS compute options differ in who provisions and maintains nodes. Compare managed groups, self-managed nodes and supported Fargate workloads.
+- Creates and manages Nodes (EC2 instances) for you
+- Nodes are part of an ASG managed by EKS
+- Supports On-Demand or Spot Instances
+- **Self-Managed Nodes:** Nodes created by you and registered to the EKS cluster and managed by an ASG; You can use prebuilt AMI - Amazon EKS Optimized AMI
+- **AWS Fargate:** No maintenance required; no nodes managed
 
-  - Creates and manages Nodes (EC2 instances) for you
-  - Nodes are part of an ASG managed by EKS
-  - Supports On-Demand or Spot Instances
-- Self-Managed Nodes
-  - Nodes created by you and registered to the EKS cluster and managed by an ASG
-  - You can use prebuilt AMI - Amazon EKS Optimized AMI
-- AWS Fargate
-  - No maintenance required; no nodes managed
+```mermaid
+flowchart TB
+  A[EKS workload] --> B[Managed node group]
+  A --> C[Self-managed EC2]
+  A --> D[Fargate-supported pods]
+  B --> E[EC2 worker responsibility]
+  C --> E
+```
+
 
 ## Amazon EKS – Data Volumes
 
-
-Kubernetes persistent-volume claims use a compatible CSI driver to provision or mount the selected AWS storage backend.
+**Kubernetes persistent-volume claims use a compatible CSI driver to provision or mount the selected AWS storage backend.**
 
 - Need to specify StorageClass manifest on your EKS cluster
 - Leverages a Container Storage Interface (CSI) compliant driver
 - Support for…
 - Amazon EBS
 - Amazon EFS (works with Fargate)
-- Amazon FSx for Lustre
-- Amazon FSx for NetApp ONTAP
-
 
 ```mermaid
 flowchart LR
-  accTitle: Amazon EKS – Data Volumes
   n0["Pod / PVC"]
   n1["CSI driver"]
   n2["EBS"]
@@ -4873,48 +4801,41 @@ flowchart LR
   n1 -->|"driver-specific option"| n4
 ```
 
-> Kubernetes persistent-volume claims use a compatible CSI driver to provision or mount the selected AWS storage backend.
+
 
 # Section Analytics
 
-<!-- original-note: 118 -->
-<!-- section -->
 
 ## AWS Glue
 
-<!-- original-note: 119 -->
+**AWS Glue provides managed ETL, data discovery and the Glue Data Catalog for lake/warehouse workloads.**
 
-Glue combines data discovery, a shared catalog and managed ETL. Crawlers describe datasets; jobs transform their contents; orchestration connects the steps.
-
-  - S3 “data lakes”
-  - RDS
-  - Redshift
-  - DynamoDB
-  - Most other SQL databases
-- Custom ETL jobs
-  - Trigger-driven, on a schedule, or on demand
-  - Fully managed
-
-## Glue Crawler / Data Catalog
-
-
-Glue crawlers discover metadata; query engines use that catalog to interpret data that remains in S3.
-
-- Glue crawler scans data in S3, creates schema
-- Can run periodically
-- Populates the Glue Data Catalog
-  - Stores only table definition
-  - Original data stays in S3
-- Once cataloged, you can treat your unstructured data like it’s structured
-  - Redshift Spectrum
-  - Athena
-  - EMR
-  - Quicksight
-
+- **Crawler:** discovers schema and partitions in supported sources.
+- **Data Catalog:** stores table metadata rather than copying source file contents.
+- **Jobs:** managed Spark/Python and supported streaming workloads.
+- **Consumers:** Athena, Redshift Spectrum, EMR and other integrated services.
 
 ```mermaid
 flowchart LR
-  accTitle: Glue Crawler / Data Catalog
+  A[S3 / databases / events] --> B[Glue crawler]
+  B --> C[Glue Data Catalog]
+  A --> D[Glue Spark ETL]
+  C -.-> D
+  D --> E[Curated S3 / warehouse]
+```
+
+
+## Glue Crawler / Data Catalog
+
+**Glue crawlers discover metadata; query engines use that catalog to interpret data that remains in S3.**
+
+- Glue crawler scans data in S3, creates schema
+- Can run periodically
+- **Populates the Glue Data Catalog:** Stores only table definition, Original data stays in S3
+- **Once cataloged, you can treat your unstructured data like it's structured:** Redshift Spectrum, Athena, EMR, Quicksight
+
+```mermaid
+flowchart LR
   n0["S3 dataset"]
   n1["Glue crawler"]
   n2["Glue Data Catalog"]
@@ -4927,25 +4848,19 @@ flowchart LR
   n3 -->|"query results"| n4
 ```
 
-> Glue crawlers discover metadata; query engines use that catalog to interpret data that remains in S3.
 
 ## Glue and S3 Partitions
 
-
-Partition keys organize data prefixes so a query predicate can prune irrelevant partitions.
+**Partition keys organize data prefixes so a query predicate can prune irrelevant partitions.**
 
 - Glue crawler will extract partitions based on how your S3 data is organized
 - Think up front about how you will be querying your data lake in S3
 - Example: devices send sensor data every hour
-- Do you query primarily by time ranges?
-  - If so, organize your buckets as yyyy/mm/dd/device
-- Do you query primarily by device?
-  - If so, organize your buckets as device/yyyy/mm/dd
-
+- **Do you query primarily by time ranges?:** If so, organize your buckets as yyyy/mm/dd/device
+- **Do you query primarily by device?:** If so, organize your buckets as device/yyyy/mm/dd
 
 ```mermaid
 flowchart LR
-  accTitle: Glue and S3 Partitions
   n0["Dataset"]
   n1["Device"]
   n2["Year"]
@@ -4957,59 +4872,61 @@ flowchart LR
   n3 ---|"scan selected paths"| n4
 ```
 
-> Partition keys organize data prefixes so a query predicate can prune irrelevant partitions.
 
 ## Glue + Hive
 
+**Glue's catalog can act as a Hive metastore for compatible analytics engines, separating shared table metadata from the jobs that process data.**
 
-Glue's catalog can act as a Hive metastore for compatible analytics engines, separating shared table metadata from the jobs that process data.
-
-- The Glue Data Catalog can serve as a Hive “metastore”
+- The Glue Data Catalog can serve as a Hive "metastore"
 - You can also import a Hive metastore into Glue
 
-## Glue ETL
 
+## Glue ETL — Spark Execution
 
-Glue ETL jobs use generated or authored code to read, prepare and write data. A generated script still needs review against the transformation requirements.
+**Glue ETL jobs use generated or authored code to read, prepare and write data. A generated script still needs review against the transformation requirements.**
 
 - Scala or Python
-- Encryption
-  - Server-side (at rest)
-  - SSL (in transit)
+- **Encryption:** Server-side (at rest), SSL (in transit)
 - Can be event-driven
-- Can provision additional “DPU’s” (data processing units) to increase performance of underlying Spark jobs
-  - Enabling job metrics can help you understand the maximum capacity in DPU’s you need
-  - You can plot maximum needed executors vs. maximum allocated executors in the Glue Console (not CloudWatch!), as well as ETL data movement
-- Errors also reported to CloudWatch
-  - Could tie into SNS for notification
-
-## Glue ETL
-
-
-An ETL job cleans and reshapes records for later analysis. Scaling choices and processing abstractions depend on the supported Glue job type.
-
-  - Generate ETL code in Python or Scala, you can modify the code
-  - Can provide your own Spark or PySpark scripts
-  - Target can be S3, JDBC (RDS, Redshift), or in Glue Data Catalog
-- Fully managed, cost effective, pay only for the resources consumed
-- Jobs are run on a serverless Spark platform
-- Glue Scheduler to schedule the jobs
-- Glue Triggers to automate job runs based on “events”
-
-## Glue ETL: The DynamicFrame
-
-
-A DynamicFrame is a distributed collection of self-describing DynamicRecords, allowing inconsistent fields to be resolved during ETL.
-
-- A DynamicFrame is a collection of DynamicRecords
-  - DynamicRecords are self-describing, have a schema
-  - Very much like a Spark DataFrame, but with more ETL stuff
-  - Scala and Python APIs
-
+- **Can provision additional "DPU's" (data processing units) to increase performance of underlying Spark jobs:** Enabling job metrics can help you understand the maximum capacity in DPU's you need; You can plot maximum needed executors vs…
+- **Errors also reported to CloudWatch:** Could tie into SNS for notification
 
 ```mermaid
 flowchart LR
-  accTitle: Glue ETL: The DynamicFrame
+  A[Source] --> B[Read / DynamicFrame]
+  B --> C[Clean / map / join]
+  C --> D[Write to S3 / JDBC]
+  D --> E[Catalog / consumers]
+```
+
+
+## Glue ETL — Jobs & Destinations
+
+**An ETL job cleans and reshapes records for later analysis. Scaling choices and processing abstractions depend on the supported Glue job type.**
+
+- Can provide your own Spark or PySpark scripts
+- Target can be S3, JDBC (RDS, Redshift), or in Glue Data Catalog
+- Fully managed, cost effective, pay only for the resources consumed
+- Jobs are run on a serverless Spark platform
+- Glue Scheduler to schedule the jobs
+
+```mermaid
+flowchart LR
+  A[Source] --> B[Read / DynamicFrame]
+  B --> C[Clean / map / join]
+  C --> D[Write to S3 / JDBC]
+  D --> E[Catalog / consumers]
+```
+
+
+## Glue ETL: The DynamicFrame
+
+**A DynamicFrame is a distributed collection of self-describing DynamicRecords, allowing inconsistent fields to be resolved during ETL.**
+
+- **A DynamicFrame is a collection of DynamicRecords:** DynamicRecords are self-describing, have a schema; Very much like a Spark DataFrame, but with more ETL stuff; Scala and Python APIs
+
+```mermaid
+flowchart LR
   n0["DynamicFrame"]
   n1["DynamicRecord A"]
   n2["DynamicRecord B"]
@@ -5019,41 +4936,38 @@ flowchart LR
   n0 ---|"record"| n3
 ```
 
-> A DynamicFrame is a distributed collection of self-describing DynamicRecords, allowing inconsistent fields to be resolved during ETL.
 
 ## AWS Glue Transformations
 
-<!-- original-note: 120 -->
+**Glue transformations remove or select fields, filter records, join datasets and apply custom mappings. Match the transformation to the quality or modeling problem.**
 
-Glue transformations remove or select fields, filter records, join datasets and apply custom mappings. Match the transformation to the quality or modeling problem.
-
-  - DropFields, DropNullFields – remove (null) fields
-  - Filter – specify a function to filter records
-  - Join – to enrich data
-  - Map - add fields, delete fields, perform external lookups
-- Machine Learning Transformations:
-  - FindMatches ML: identify duplicate or matching records in your dataset, even when the records do not have a common unique identifier and no fields match exactly.
+- DropFields, DropNullFields – remove (null) fields
+- Filter – specify a function to filter records
+- **Machine Learning Transformations:** FindMatches ML: identify duplicate or matching records in your dataset, even when the records do not have a common unique identifier and no fields match exactly
 - Format conversions: CSV, JSON, Avro, Parquet, ORC, XML
-- Apache Spark transformations (example: K-Means)
-  - Can convert between Spark DataFrame and Glue DynamicFrame
+- **Apache Spark transformations (example: K-Means):** Can convert between Spark DataFrame and Glue DynamicFrame
+
+```mermaid
+flowchart LR
+  A[Raw records] --> B[Filter / DropFields]
+  B --> C[ResolveChoice / Map]
+  C --> D[Join / FindMatches]
+  D --> E[Curated records]
+```
+
 
 ## Glue ETL: ResolveChoice
 
-
-ResolveChoice makes a mixed-type field explicit by casting, projecting, creating separate columns or creating a struct.
+**ResolveChoice makes a mixed-type field explicit by casting, projecting, creating separate columns or creating a struct.**
 
 - Deals with ambiguities in a DynamicFrame and returns a new one
-- For example, two fields with the same name.
-- make_cols: creates a new column for each type
-  - price_double, price_string
+- **make_cols: creates a new column for each type:** price_double, price_string
 - cast: casts all values to specified type
 - make_struct: Creates a structure that contains each data type
 - project: Projects every type to a given type, for example project:string
 
-
 ```mermaid
 flowchart LR
-  accTitle: Glue ETL: ResolveChoice
   n0["Mixed-type field"]
   n1["Cast"]
   n2["Project type"]
@@ -5065,106 +4979,77 @@ flowchart LR
   n0 -->|"make_struct"| n4
 ```
 
-> ResolveChoice makes a mixed-type field explicit by casting, projecting, creating separate columns or creating a struct.
 
 ## AWS Glue Modifying Data Catalog
 
-<!-- original-note: 121 -->
+**An ETL job can publish supported schema and partition changes to the Data Catalog. Updating files alone does not necessarily update the metadata used by query engines.**
 
-An ETL job can publish supported schema and partition changes to the Data Catalog. Updating files alone does not necessarily update the metadata used by query engines.
-
-- Adding new partitions
-  - Re-run the crawler, or
-  - Have the script use enableUpdateCatalog and partitionKeys options
-- Updating table schema
-  - Use enableUpdateCatalog / updateBehavior from script
-- Creating new tables
-  - enableUpdateCatalog / updateBehavior with setCatalogInfo
-- Restrictions
-  - S3 only
-  - Json, csv, avro, parquet only
-  - Parquet requires special code
-  - Nested schemas are not supported
-
-## AWS Glue Development Endpoints
+- **Adding new partitions:** Re-run the crawler, or; Have the script use enableUpdateCatalog and partitionKeys options
+- **Updating table schema:** Use enableUpdateCatalog / updateBehavior from script
+- **Creating new tables:** enableUpdateCatalog / updateBehavior with setCatalogInfo
+- **Restrictions:** S3 only, Json, csv, avro, parquet only, Parquet requires special code, Nested schemas are not supported
 
 
-Development endpoints and notebooks illustrate interactive ETL development. Check the supported environment and stop resources that continue accruing charges.
+## AWS Glue — Interactive Development (Legacy)
 
-  - Then create an ETL job that runs your script (using Spark and Glue)
-- Endpoint is in a VPC controlled by security groups, connect via:
-  - Apache Zeppelin on your local machine
-  - Zeppelin notebook server on EC2 (via Glue console)
-  - SageMaker notebook
-  - Terminal window
-  - PyCharm professional edition
-  - Use Elastic IP’s to access a private endpoint address
+**Development endpoints and notebooks illustrate interactive ETL development. Check the supported environment and stop resources that continue accruing charges.**
+
+- Then create an ETL job that runs your script (using Spark and Glue)
+- **Endpoint is in a VPC controlled by security groups, connect via:** Apache Zeppelin on your local machine · Zeppelin notebook server on EC2 (via Glue console) · SageMaker notebook · Terminal window · PyCharm professional edition · Use Elastic…
+
 
 ## AWS Running Glue Jobs
 
-<!-- original-note: 122 -->
-<!-- title: Running Glue jobs -->
+**Run Glue jobs from schedules, triggers or workflows. Bookmarks retain processing state so suitable recurring jobs can identify new input.**
 
-Run Glue jobs from schedules, triggers or workflows. Bookmarks retain processing state so suitable recurring jobs can identify new input.
+- **Job bookmarks:** Persists state from the job run · Prevents reprocessing of old data · Allows you to process new data only when re-running on a schedule · Works with S3 sources in a variety of formats · Works with relational databases via…
+- **CloudWatch Events:** Fire off a Lambda function or SNS notification when ETL succeeds or fails; Invoke EC2 run, send event to Kinesis, activate a Step Function
 
-- Job bookmarks
-  - Persists state from the job run
-  - Prevents reprocessing of old data
-  - Allows you to process new data only when re-running on a schedule
-  - Works with S3 sources in a variety of formats
-  - Works with relational databases via JDBC (if PK’s are in sequential order)
-    - Only handles new rows, not updated rows
-- CloudWatch Events
-  - Fire off a Lambda function or SNS notification when ETL succeeds or fails
-  - Invoke EC2 run, send event to Kinesis, activate a Step Function
+```mermaid
+flowchart LR
+  A[Schedule / event] --> B[Glue job]
+  C[Job bookmarks] -.-> B
+  B --> D[New input processed]
+  D --> E[Persist state for next run]
+```
+
 
 ## AWS Glue Cost Model
 
-<!-- original-note: 123 -->
-
-Glue charges depend on compute time, catalog usage and optional development resources. Estimate the complete workflow rather than one ETL run alone.
+**Glue charges depend on compute time, catalog usage and optional development resources. Estimate the complete workflow rather than one ETL run alone.**
 
 - First million objects stored and accesses are free for the Glue Data Catalog
 - Development endpoints for developing ETL code charged by the minute
 
+
 ## Glue Anti-patterns
 
-
-Choose a different execution environment when the job depends on unsupported engines or runtime behavior. Glue's ETL model does not cover every distributed application.
+**Choose a different execution environment when the job depends on unsupported engines or runtime behavior. Glue's ETL model does not cover every distributed application.**
 
 - Glue ETL is based on Spark
-- If you want to use other engines (Hive, Pig, etc) Data Pipeline EMR would be a better fit.
-
-## No longer an anti-pattern: streaming
+- If you want to use other engines (Hive, Pig, etc) Data Pipeline EMR would be a better fit
 
 
-Glue streaming ETL continuously processes supported Kinesis or Kafka input using Spark Structured Streaming rather than waiting for a bounded batch.
+## AWS Glue Streaming ETL
 
-  - Consumes from Kinesis or Kafka
-  - Clean & transform in-flight
-  - Store results into S3 or other data stores
+**Glue streaming ETL continuously processes supported Kinesis or Kafka input using Spark Structured Streaming rather than waiting for a bounded batch.**
+
+- Consumes from Kinesis or Kafka
+- Clean & transform in-flight
+- Store results into S3 or other data stores
 - Runs on Apache Spark Structured Streaming
+
 
 ## AWS Glue Studio
 
-<!-- original-note: 125 -->
-
-Glue Studio builds and monitors ETL jobs through a visual graph. The graph still represents concrete sources, transformations and targets that need review.
+**Glue Studio builds and monitors ETL jobs through a visual graph. The graph still represents concrete sources, transformations and targets that need review.**
 
 - Visual interface for ETL workflows
-- Visual job editor
-  - Create DAG’s for complex workflows
-  - Sources include S3, Kinesis, Kafka, JDBC
-  - Transform / sample / join data
-  - Target to S3 or Glue Data Catalog
-  - Support partitioning
-- Visual job dashboard
-  - Overviews, status, run times
-
+- **Visual job editor:** Create DAG's for complex workflows · Sources include S3, Kinesis, Kafka, JDBC · Transform / sample / join data · Target to S3 or Glue Data Catalog · Support partitioning
+- **Visual job dashboard:** Overviews, status, run times
 
 ```mermaid
 flowchart LR
-  accTitle: AWS Glue Studio
   n0["Source"]
   n1["Transform / resolve schema"]
   n2["Target"]
@@ -5172,20 +5057,15 @@ flowchart LR
   n1 -->|"transformed output"| n2
 ```
 
-> Glue Studio's visual job is a directed graph of sources, transformations and targets; the generated job still needs correct schema and permissions.
 
-## AWS Glue Data Quality
+## Glue Data Quality — DQDL Rules
 
-<!-- original-note: 126 -->
-
-Glue Data Quality evaluates datasets against rules that you define or refine from recommendations. Integrate the checks into the job's success and failure handling.
+**Glue Data Quality evaluates datasets against rules that you define or refine from recommendations. Integrate the checks into the job's success and failure handling.**
 
 - Data quality rules may be created manually or recommended automatically
 - Integrates into Glue jobs
 - Uses Data Quality Definition Language (DQDL)
 - Results can be used to fail the job, or just be reported to CloudWatch
-
-Example retained from the personal notes:
 
 ```dqdl
 Rules = [
@@ -5195,10 +5075,8 @@ Rules = [
 ]
 ```
 
-
 ```mermaid
 flowchart LR
-  accTitle: AWS Glue Data Quality
   n0["Dataset / catalog table"]
   n1["DQDL ruleset"]
   n2["Data Quality evaluation"]
@@ -5208,35 +5086,25 @@ flowchart LR
   n2 -->|"results"| n3
 ```
 
-> Glue Data Quality evaluates a ruleset against data and produces rule outcomes and quality metrics; catalog integration provides dataset context.
 
 ## More on Data Quality Definition Language (DQDL)
 
+**DQDL expresses quality checks as a ruleset. Read the rule names, thresholds and combined conditions to understand what makes a dataset pass.**
 
-DQDL expresses quality checks as a ruleset. Read the rule names, thresholds and combined conditions to understand what makes a dataset pass.
-
-- A DQDL document consists of a ruleset, for example:
-  - Rules = [IsComplete "order-id", IsUnique "order-id"]
+- **A DQDL document consists of a ruleset, for example:** Rules = [IsComplete "order-id", IsUnique "order-id"]
 - Lots of built-in rule types (Mean, Sum, CustomSQL, Uniqueness, DetectAnomalies…)
-  - Not a bad idea to review them at https://docs.aws.amazon.com/glue/latest/dg/dqdl.html
-- Composite rules (and, or)
-  - (ColumnValues "myCol1" > 1) OR (ColumnValues "myCol2" > 2)
-  - This evaluates left to right and will fail early, unlike SQL
-    - Unless you specify otherwise with additionalOptions for compositeRuleEvaluation
+- **Composite rules (and, or):** (ColumnValues "myCol1" > 1) OR (ColumnValues "myCol2" > 2); This evaluates left to right and will fail early, unlike SQL; Unless you specify otherwise with additionalOptions for compositeRuleEvaluation
 - Expressions (=, !-, >, <, etc.)
 - Filters (where clauses)
 - Constants (storing common SQL snippets)
-- Labels (apply all rules with a given label, like for a given team)
-
-## AWS Glue Data Quality
 
 
-The quality-results screen connects each configured rule to a pass/fail outcome and supporting metrics.
+## Glue Data Quality — Monitoring Results
 
+**The quality-results screen connects each configured rule to a pass/fail outcome and supporting metrics.**
 
 ```mermaid
 flowchart LR
-  accTitle: AWS Glue Data Quality
   n0["Ruleset"]
   n1["Evaluation run"]
   n2["Per-rule results"]
@@ -5246,33 +5114,22 @@ flowchart LR
   n2 -->|"act on failed rules"| n3
 ```
 
-> The quality-results screen connects each configured rule to a pass/fail outcome and supporting metrics.
 
 ## AWS Glue DataBrew
 
-<!-- original-note: 127 -->
+**DataBrew expresses visual data-preparation steps as reusable recipes and jobs. Use profiling and quality checks to evaluate the dataset before publishing the result.**
 
-DataBrew expresses visual data-preparation steps as reusable recipes and jobs. Use profiling and quality checks to evaluate the dataset before publishing the result.
-
-  - UI for pre-processing large data sets
-  - Input from S3, data warehouse, or database
-  - Output to S3
+- UI for pre-processing large data sets
+- Input from S3, data warehouse, or database
+- Output to S3
 - Over 250 ready-made transformations
-- You create “recipes” of transformations that can be saved as jobs within a larger project
-- May define data quality rules
 - May create datasets with custom SQL from Redshift and Snowflake
-- Security
-  - Can integrate with KMS (with customer master keys only)
-  - SSL in transit
-  - IAM can restrict who can do what
-  - CloudWatch & CloudTrail
+- **Security:** Can integrate with KMS (with customer master keys only); SSL in transit; IAM can restrict who can do what; CloudWatch & CloudTrail
 
-## Handling PII in DataBRew Transformations
 
-<!-- original-note: 128 -->
-<!-- title: PII transformations in DataBrew -->
+## DataBrew — PII Transformations
 
-Identify sensitive fields, then choose whether to replace, shuffle or encrypt them. Reversible protection and anonymity are different goals.
+**Identify sensitive fields, then choose whether to replace, shuffle or encrypt them. Reversible protection and anonymity are different goals.**
 
 - Substitution (REPLACE_WITH_RANDOM…)
 - Shuffling (SHUFFLE_ROWS)
@@ -5280,23 +5137,18 @@ Identify sensitive fields, then choose whether to replace, shuffle or encrypt th
 - Probabilistic encryption (ENCRYPT)
 - Decryption (DECRYPT)
 - Nulling out or deletion (DELETE)
-- Masking out (MASK_CUSTOM, _DATE, _DELIMITER, _RANGE)
-- Hashing (CRYPTOGRAPHIC_HASH)
+
 
 ## Glue Workflows
 
-<!-- original-note: 129 -->
-
-Glue Workflows coordinate related jobs and crawlers with dependencies and triggers. Use them for ETL orchestration rather than general application workflows.
+**Glue Workflows coordinate related jobs and crawlers with dependencies and triggers. Use them for ETL orchestration rather than general application workflows.**
 
 - Design multi-job, multi-crawler ETL processes run together
 - Create from AWS Glue blueprint, from the console, or API
 - This is only for orchestrating complex ETL operations using Glue
 
-
 ```mermaid
 flowchart LR
-  accTitle: Glue Workflows
   n0["Start trigger"]
   n1["Crawler"]
   n2["ETL job"]
@@ -5308,42 +5160,27 @@ flowchart LR
   n3 -->|"condition matched"| n4
 ```
 
-> Glue workflows coordinate crawlers and jobs through triggers and run conditions.
 
 ## Glue Workflow Triggers
 
+**Workflow triggers start jobs or crawlers from schedules, requests, events or dependency conditions. A trigger is the activation rule, not the transformation itself.**
 
-Workflow triggers start jobs or crawlers from schedules, requests, events or dependency conditions. A trigger is the activation rule, not the transformation itself.
-
-  - Or can be fired when jobs or crawlers complete
-- Schedule
-  - Based on a cron expression
+- Or can be fired when jobs or crawlers complete
+- **Schedule:** Based on a cron expression
 - On demand
-- EventBridge events
-  - Start on single event or batch of events
-  - For example, arrival of a new object in S3
-  - Optional batch conditions
-    - Batch size (number of events)
-    - Batch window (within X seconds, default is 15 min)
+- **EventBridge events:** Start on single event or batch of events · For example, arrival of a new object in S3 · Optional batch conditions · Batch size (number of events) · Batch window (within X seconds, default is 15 min)
+
 
 ## AWS Glue Flex Jobs
 
-<!-- original-note: 124 -->
+**Flex uses available capacity for eligible nonurgent Glue jobs. Lower cost comes with capacity-dependent startup and execution behavior.**
 
-Flex uses available capacity for eligible nonurgent Glue jobs. Lower cost comes with capacity-dependent startup and execution behavior.
-
-- Execution class (“FLEX”) for non-urgent ETL workloads
-  - Uses spare compute capacity instead of dedicated workers
-  - Might have to wait for capacity to become available
+- **Execution class ("FLEX") for non-urgent ETL workloads:** Uses spare compute capacity instead of dedicated workers; Might have to wait for capacity to become available
 - Appropriate for time-insensitive workloads (testing, one-time loads, etc.)
-- Usually cheaper than standard execution (30- 35% savings)
-  - Billed only for actual workers running and the duration they ran
-  - Note you may end up with fewer workers than expected if capacity is limited
-
+- **Usually cheaper than standard execution (30- 35% savings):** Billed only for actual workers running and the duration they ran; Note you may end up with fewer workers than expected if capacity is limited
 
 ```mermaid
 flowchart LR
-  accTitle: AWS Glue Flex Jobs
   n0["Flex job submitted"]
   n1["Wait for capacity"]
   n2["Workers process data"]
@@ -5356,43 +5193,35 @@ flowchart LR
   n2 -->|"finish when capacity permits"| n4
 ```
 
-> Glue Flex uses spare capacity for eligible nonurgent jobs; startup and completion time can vary when capacity is unavailable or reclaimed.
 
 ## Glue Flex Jobs
 
+**Flex is limited to supported job types. Python shell, streaming and ML-transform jobs in this source comparison use other execution choices.**
 
-Flex is limited to supported job types. Python shell, streaming and ML-transform jobs in this source comparison use other execution choices.
+- Python shell jobs
+- Streaming jobs
+- AWS Glue ML jobs
+- **When to use:** Standard: Dedicated resources, predictable start time & performance, hard SLA's; Flex: Willing to trade off variable performance for cost optimization
 
-  - Python shell jobs
-  - Streaming jobs
-  - AWS Glue ML jobs
-- When to use
-  - Standard: Dedicated resources, predictable start time & performance, hard SLA’s
-  - Flex: Willing to trade off variable performance for cost optimization
 
-## AWS Lake Formation
+## Lake Formation — Governance
 
-<!-- original-note: 130 -->
-
-Lake Formation centralizes governance of a data lake using catalog metadata and access permissions, working with Glue and the underlying storage services.
+**Lake Formation centralizes governance of a data lake using catalog metadata and access permissions, working with Glue and the underlying storage services.**
 
 - Loading data & monitoring data flows
 - Setting up partitions
 - Encryption & managing keys
 - Defining transformation jobs & monitoring them
 - Access control
-- Auditing
 - Built on top of Glue
 
-## AWS Lake Formation
 
+## Lake Formation — Lake Architecture
 
-Lake Formation governs a data lake while supported query engines enforce granted permissions on cataloged data.
-
+**Lake Formation governs a data lake while supported query engines enforce granted permissions on cataloged data.**
 
 ```mermaid
 flowchart LR
-  accTitle: AWS Lake Formation
   n0["Data sources"]
   n1["S3 data lake"]
   n2["Lake Formation + catalog"]
@@ -5403,29 +5232,20 @@ flowchart LR
   n1 -->|"authorized reads"| n3
 ```
 
-> Lake Formation governs a data lake while supported query engines enforce granted permissions on cataloged data.
 
 ## AWS Lake Formation: Pricing
 
+**Estimate Lake Formation together with the storage, processing and optional features used around it. A course statement about the service's price is not a full workload estimate.**
 
-Estimate Lake Formation together with the storage, processing and optional features used around it. A course statement about the service's price is not a full workload estimate.
+- **But underlying services incur charges:** Glue · S3 · EMR · Athena · Redshift
 
-- But underlying services incur charges
-  - Glue
-  - S3
-  - EMR
-  - Athena
-  - Redshift
 
 ## AWS Lake Formation: Building a Data Lake
 
-
-Building a governed lake combines storage registration, discovery, ingestion and permission grants rather than only copying files.
-
+**Building a governed lake combines storage registration, discovery, ingestion and permission grants rather than only copying files.**
 
 ```mermaid
 flowchart LR
-  accTitle: AWS Lake Formation: Building a Data Lake
   n0["Register storage"]
   n1["Discover / catalog"]
   n2["Ingest / transform"]
@@ -5437,35 +5257,29 @@ flowchart LR
   n3 -->|"consume"| n4
 ```
 
-> Building a governed lake combines storage registration, discovery, ingestion and permission grants rather than only copying files.
 
 ## AWS Lake Formation: The Finer Points
 
+**Cross-account governance combines catalog sharing, recipient setup and authorization. Confirm which principal can discover and query the shared data.**
 
-Cross-account governance combines catalog sharing, recipient setup and authorization. Confirm which principal can discover and query the shared data.
-
-  - Recipient must be set up as a data lake administrator
-  - Can use AWS Resource Access Manager for accounts external to your organization
-  - IAM permissions for cross-account access
+- Recipient must be set up as a data lake administrator
+- Can use AWS Resource Access Manager for accounts external to your organization
+- IAM permissions for cross-account access
 - Lake Formation does not support manifests in Athena or Redshift queries
 - IAM permissions on the KMS encryption key are needed for encrypted data catalogs in Lake Formation
 - IAM permissions needed to create blueprints and workflows
 
+
 ## Data Permissions in Lake formation
 
-<!-- original-note: 131 -->
-<!-- title: Lake Formation data permissions -->
-
-Lake Formation grants access to cataloged data at supported scopes. Coordinate those grants with IAM, account sharing and the query engine's access path.
+**Lake Formation grants access to cataloged data at supported scopes. Coordinate those grants with IAM, account sharing and the query engine's access path.**
 
 - Can tie to IAM users/roles, SAML, or external AWS accounts
 - Can use policy tags on databases, tables, or columns
 - Can select specific permissions for tables or columns
 
-
 ```mermaid
 flowchart LR
-  accTitle: Lake Formation data permissions
   n0["Principal"]
   n1["Database / table"]
   n2["Allowed operations"]
@@ -5475,26 +5289,19 @@ flowchart LR
   n1 -->|"engine enforcement"| n3
 ```
 
-> Lake Formation permissions relate a principal to catalog resources and allowed operations.
 
 ## Data filters in Lake Formation
 
-<!-- original-note: 132 -->
-<!-- title: Lake Formation data filters -->
-
-Data filters limit the rows, columns or cells a principal can read. Apply the filter together with the table's SELECT permission.
+**Data filters limit the rows, columns or cells a principal can read. Apply the filter together with the table's SELECT permission.**
 
 - Column, row, or cell-level security
 - Apply when granting SELECT permission on tables
-- “All columns” + row filter = row- level security
-- “All rows” + specific columns = column-level security
+- "All columns" + row filter = row- level security
+- "All rows" + specific columns = column-level security
 - Specific columns + specific rows = cell-level security
-- Create filters via the console (seen here) or via CreateDataCellsFilter API.
-
 
 ```mermaid
 flowchart LR
-  accTitle: Lake Formation data filters
   n0["Table"]
   n1["Row predicate"]
   n2["Column selection"]
@@ -5504,30 +5311,28 @@ flowchart LR
   n2 -->|"authorized cells"| n3
 ```
 
-> Data filters narrow authorized data by rows, columns or cells; a table grant need not expose every value.
 
 ## Amazon Athena
 
-<!-- original-note: 133 -->
+**Athena runs serverless SQL queries on S3 and supported federated sources using catalog metadata.**
 
-Athena runs SQL against data in S3 without a database server to administer. Catalog metadata, file layout and the amount scanned determine much of its usefulness and cost.
+- **Data stays in S3** for ordinary external-table queries.
+- **Formats:** CSV/JSON as well as efficient Parquet/ORC.
+- **Optimize:** partition pruning, compression, file sizing and column projection.
+- **Govern:** permissions for catalog, input data, result bucket and encryption keys.
 
-  - No need to load data, it stays in S3
-- Presto under the hood
-- Serverless!
-- Supports many data formats
-  - CSV, TSV (human readable)
-  - JSON (human readable)
-  - ORC (columnar, splittable)
-  - Parquet (columnar, splittable)
-  - Avro (splittable)
-  - Snappy, Zlib, LZO, Gzip compression
-- Unstructured, semi-structured, or structured
+```mermaid
+flowchart LR
+  S[(S3 data)] --> A[Athena SQL engine]
+  C[Glue catalog] -.-> A
+  A --> R[Query results in S3]
+  R --> B[BI / notebooks]
+```
+
 
 ## Athena workloads
 
-
-Athena suits exploratory SQL over logs, staging datasets and other files, with results available to applications or visualization tools.
+**Athena suits exploratory SQL over logs, staging datasets and other files, with results available to applications or visualization tools.**
 
 - Querying staging data before loading to Redshift
 - Analyze CloudTrail / CloudFront / VPC / ELB etc logs in S3
@@ -5535,16 +5340,13 @@ Athena suits exploratory SQL over logs, staging datasets and other files, with r
 - Integration with QuickSight
 - Integration via ODBC / JDBC with other visualization tools
 
+
 ## Athena + Glue
 
-<!-- original-note: 134 -->
-
-S3 holds the data, Glue describes it, Athena queries it and QuickSight can visualize the results. Metadata discovery is separate from data processing.
-
+**S3 holds the data, Glue describes it, Athena queries it and QuickSight can visualize the results. Metadata discovery is separate from data processing.**
 
 ```mermaid
 flowchart LR
-  accTitle: Athena + Glue
   n0["S3"]
   n1["Glue catalog"]
   n2["Athena"]
@@ -5554,143 +5356,118 @@ flowchart LR
   n2 -->|"results"| n3
 ```
 
-> Athena queries S3 using catalog metadata and can feed QuickSight; it does not require loading the dataset into a dedicated database.
 
-### Athena Workgroups
+## Athena Workgroups
 
-<!-- original-note: 135 -->
-
-Workgroups separate Athena workloads and govern query history, access settings and usage controls for teams or applications.
+**Workgroups separate Athena workloads and govern query history, access settings and usage controls for teams or applications.**
 
 - Can control query access and track costs by Workgroup
 - Integrates with IAM, CloudWatch, SNS
-- Each workgroup can have its own:
-  - Query history
-  - Data limits (you can limit how much data queries may scan by workgroup)
-  - IAM policies
-  - Encryption settings
+- **Each workgroup can have its own:** Query history; Data limits (you can limit how much data queries may scan by workgroup); IAM policies; Encryption settings
+
 
 ## Athena cost model
 
+**Athena query cost depends on the selected capacity or scan-pricing model and supporting services. Reducing unnecessary scans can improve both cost and latency.**
 
-Athena query cost depends on the selected capacity or scan-pricing model and supporting services. Reducing unnecessary scans can improve both cost and latency.
-
-  - $5 per TB scanned
-  - Successful or cancelled queries count, failed queries do not.
-  - No charge for DDL (CREATE/ALTER/DROP etc.)
-- Save LOTS of money by using columnar formats
-  - ORC, Parquet
-  - Save 30-90%, and get better performance
+- $5 per TB scanned
+- Successful or cancelled queries count, failed queries do not
+- No charge for DDL (CREATE/ALTER/DROP etc.)
+- **Save LOTS of money by using columnar formats:** ORC, Parquet; Save 30-90%, and get better performance
 - Glue and S3 have their own charges
+
 
 ## Athena Security
 
-<!-- original-note: 136 -->
+**Athena needs permission to query the catalog, read source data and write results. Protect the result location and encryption keys as well as the source bucket.**
 
-Athena needs permission to query the catalog, read source data and write results. Protect the result location and encryption keys as well as the source bucket.
-
-  - IAM, ACLs, S3 bucket policies
-  - AmazonAthenaFullAccess / AWSQuicksightAthenaAccess
-- Encrypt results at rest in S3 staging directory
-  - Server-side encryption with S3-managed key (SSE-S3)
-  - Server-side encryption with KMS key (SSE-KMS)
-  - Client-side encryption with KMS key (CSE-KMS)
+- IAM, ACLs, S3 bucket policies
+- AmazonAthenaFullAccess / AWSQuicksightAthenaAccess
+- **Encrypt results at rest in S3 staging directory:** Server-side encryption with S3-managed key (SSE-S3); Server-side encryption with KMS key (SSE-KMS); Client-side encryption with KMS key (CSE-KMS)
 - Cross-account access in S3 bucket policy possible
 - Transport Layer Security (TLS) encrypts in- transit (between Athena and S3)
 
+
 ## Athena anti-patterns
 
+**Athena is a query engine rather than a report-layout or general ETL product. Use a visualization tool or processing service when those are the main requirement.**
 
-Athena is a query engine rather than a report-layout or general ETL product. Use a visualization tool or processing service when those are the main requirement.
+- **ETL:** Use Glue instead
 
-  - That’s what QuickSight is for
-- ETL
-  - Use Glue instead
 
 ## Athena: Optimizing performance
 
-
-Columnar formats, compression, useful partitions and sensible file sizes reduce the work Athena must scan to answer a query.
+**Columnar formats, compression, useful partitions and sensible file sizes reduce the work Athena must scan to answer a query.**
 
 - Small number of large files performs better than large number of small files
-- Use partitions
-  - If adding partitions after the fact, use MSCK REPAIR TABLE command
-
-## Athena ACID transactions
-
-<!-- original-note: 137 -->
-
-Athena uses supported Iceberg tables for transactional updates and time travel. Plan table maintenance and compaction alongside concurrent reads and writes.
-
-  - Just add ‘table_type’ = ‘ICEBERG’ in your CREATE TABLE command
-- Concurrent users can safely make row-level modifications
-- Compatible with EMR, Spark, anything that supports Iceberg table format.
-- Removes need for custom record locking
-- Time travel operations
-  - Recover data recently deleted with a SELECT statement
-- Remember governed tables in Lake Formation? This is another way of getting ACID features in Athena.
-- Benefits from periodic compaction to preserve performance
-
-## Athena Fine-Grained Access to AWS Glue Data Catalog
-
-
-Catalog permissions determine which metadata a caller can use. Coordinate table and database authorization with permissions on the underlying data and keys.
-
-  - Broader than data filters in Lake Formation
-  - Cannot restrict to specific table versions
-- At a minimum you must have a policy that grants access to your database and the Glue Data Catalog in each region.
-
-## Athena Fine-Grained Access to AWS Glue Data Catalog
-
-
-Map catalog operations to their IAM actions and resource scope. Restricting one operation does not automatically restrict every way of accessing the data.
-
-  - ALTER or CREATE DATABASE
-  - CREATE TABLE
-  - DROP DATABASE or DROP TABLE
-  - MSCK REPAIR TABLE
-  - SHOW DATABASES or SHOW TABLES
-- Just need to map these operations to their IAM actions
-- Example: DROP TABLE
-- More examples at
-
-## Wait,what’s Iceberg?
-
-
-Iceberg adds table metadata, snapshots and transactional behavior over lake files. It is a table format, separate from the physical file format.
-
-  - Petabyte-scale
-  - Originally from Netflix
-- ACID Compliance
-  - Transactional consistency for adds, removals, modifications
-  - Row-level updates and deletes for GDPR compliance
-- Schema Evolution
-  - Update tables safely as data evolves
-- Hidden Partitioning
-  - Partition evolution, update partition schemes and data volumes
-- Time Travel
-  - Query historical data, verify changes between updates. Easy rollback.
-- Efficient Metadata Management
-- Works with Spark, Flink, Trino, Presto, Hive
-- Integrated with AWS Glue, EMR and Athena
-
-## Iceberg + AWS Glue / S3
-
-
-Iceberg separates metadata from data files; compatible engines use catalog coordination to locate table metadata and S3 objects.
-
-- Glue can take the place of Hive as Iceberg’s source of table metadata
-- Iceberg’s API communicates with Glue catalog for metadata
-- Iceberg stores / retrieves files from Amazon S3
-  - Usually in Parquet format
-- Spark / Flink can then sit on top of the Iceberg API
-- Also Athena for ACID transactions!
-  - See, this is how ACID is implemented for Athena – it just uses Iceberg’s ACID compliance.
-
+- **Use partitions:** If adding partitions after the fact, use MSCK REPAIR TABLE command
 
 ```mermaid
 flowchart LR
-  accTitle: Iceberg + AWS Glue / S3
+  A[Query] --> B[Partition pruning]
+  B --> C[Parquet / ORC projection]
+  C --> D[Efficient file sizes]
+  D --> E[Less data scanned]
+```
+
+
+## Athena ACID transactions
+
+**Athena uses supported Iceberg tables for transactional updates and time travel. Plan table maintenance and compaction alongside concurrent reads and writes.**
+
+- Just add ‘table_type' = ‘ICEBERG' in your CREATE TABLE command
+- Concurrent users can safely make row-level modifications
+- Compatible with EMR, Spark, anything that supports Iceberg table format
+- Removes need for custom record locking
+- **Time travel operations:** Recover data recently deleted with a SELECT statement
+- Benefits from periodic compaction to preserve performance
+
+
+## Athena — Catalog Access Control
+
+**Catalog permissions determine which metadata a caller can use. Coordinate table and database authorization with permissions on the underlying data and keys.**
+
+- Broader than data filters in Lake Formation
+- Cannot restrict to specific table versions
+- At a minimum you must have a policy that grants access to your database and the Glue Data Catalog in each region
+
+
+## Athena — Catalog IAM Operations
+
+**Map catalog operations to their IAM actions and resource scope. Restricting one operation does not automatically restrict every way of accessing the data.**
+
+- ALTER or CREATE DATABASE
+- CREATE TABLE
+- DROP DATABASE or DROP TABLE
+- MSCK REPAIR TABLE
+- Just need to map these operations to their IAM actions
+- Example: DROP TABLE
+
+
+## Apache Iceberg — Table Format
+
+**Iceberg adds table metadata, snapshots and transactional behavior over lake files. It is a table format, separate from the physical file format.**
+
+- **ACID Compliance:** Transactional consistency for adds, removals, modifications; Row-level updates and deletes for GDPR compliance
+- **Schema Evolution:** Update tables safely as data evolves
+- **Hidden Partitioning:** Partition evolution, update partition schemes and data volumes
+- **Time Travel:** Query historical data, verify changes between updates. Easy rollback
+- Works with Spark, Flink, Trino, Presto, Hive
+- Integrated with AWS Glue, EMR and Athena
+
+
+## Iceberg + AWS Glue / S3
+
+**Iceberg separates metadata from data files; compatible engines use catalog coordination to locate table metadata and S3 objects.**
+
+- Glue can take the place of Hive as Iceberg's source of table metadata
+- Iceberg's API communicates with Glue catalog for metadata
+- **Iceberg stores / retrieves files from Amazon S3:** Usually in Parquet format
+- Spark / Flink can then sit on top of the Iceberg API
+- **Also Athena for ACID transactions!:** See, this is how ACID is implemented for Athena – it just uses Iceberg's ACID compliance
+
+```mermaid
+flowchart LR
   n0["Athena / Spark / compatible engine"]
   n1["Glue catalog"]
   n2["Iceberg metadata + data in S3"]
@@ -5699,62 +5476,37 @@ flowchart LR
   n0 -->|"read / commit supported operations"| n2
 ```
 
-> Iceberg separates metadata from data files; compatible engines use catalog coordination to locate table metadata and S3 objects.
 
 ## Migrating Glue Data Catalogs to Iceberg
 
-
-Catalog migration requires compatible Iceberg metadata and APIs. Treat metadata conversion and the data files themselves as different parts of the change.
+**Catalog migration requires compatible Iceberg metadata and APIs. Treat metadata conversion and the data files themselves as different parts of the change.**
 
 - Once done, Athena can use it for ACID transactions
-- Other reasons to migrate:
-  - Compliance; expire old versions of tables, audit trails
-  - Historical reporting with time travel queries
-  - Data lake with many active producers and consumers
-    - Consistency is needed
-- In-Place Migration
-  - Leave data files where they are, just create Iceberg metadata
-  - Does not allow for schema or partition changes
-- Shadow Migration
-  - Copies the data over
-  - Allows additional validation
-  - Easier rollback and recovery
+- **Other reasons to migrate:** Compliance; expire old versions of tables, audit trails; Historical reporting with time travel queries; Data lake with many active producers and consumers; Consistency is needed
+- **In-Place Migration:** Leave data files where they are, just create Iceberg metadata; Does not allow for schema or partition changes
+- **Shadow Migration:** Copies the data over, Allows additional validation, Easier rollback and recovery
+
 
 ## CREATE TABLE AS SELECT
 
+**CTAS creates a table from query output. In Athena it can also reorganize or convert S3 data into a layout better suited to subsequent queries.**
 
-CTAS creates a table from query output. In Athena it can also reorganize or convert S3 data into a layout better suited to subsequent queries.
-
-  - But it exists in other databases as well.
+- But it exists in other databases as well
 - Creates a new table from query results (CTAS)
-- Can be used to create a new table that’s a subset of another
-- Can ALSO be used to convert data into a new underlying format
-  - So this is a trick to get Athena to convert data stored in S3
+- Can be used to create a new table that's a subset of another
+- **Can ALSO be used to convert data into a new underlying format:** So this is a trick to get Athena to convert data stored in S3
 
-### Athena Federated Queries
 
-<!-- original-note: 141 -->
+## Athena Federation — Connector Model
 
-Athena federation uses connectors to query supported sources beyond S3. Connections, credentials and source-side work remain necessary even though the query is submitted to Athena.
+**Athena federation uses connectors to query supported sources beyond S3. Connections, credentials and source-side work remain necessary even though the query is submitted to Athena.**
 
 - Query data from sources other than S3
-- Data source connectors translate between source and Athena
-  - These run on Lambda
-- Many, many are available
-  - CloudWatch
-  - DynamoDB
-  - DocumentDB
-  - RDS
-  - OpenSearch
-  - JDBC
-  - Custom connectors
-  - And lots of third-party ones
-    - Cloudera, HBase, Kafka, Oracle, Snowflake, Teradata…
-
+- **Data source connectors translate between source and Athena:** These run on Lambda
+- **Many, many are available:** CloudWatch · DynamoDB · DocumentDB · RDS · OpenSearch · JDBC · …
 
 ```mermaid
 flowchart LR
-  accTitle: Athena Federated Queries
   n0["Athena query"]
   n1["Connector / Lambda"]
   n2["DynamoDB / DocumentDB / logs / other source"]
@@ -5762,49 +5514,30 @@ flowchart LR
   n1 -->|"source API / query"| n2
 ```
 
-> Athena federated queries invoke a connector, commonly Lambda-based, to access supported non-S3 data sources.
 
-## Athena Federated Queries
+## Athena Federation — Configuration
 
+**Federated-query support varies by connector. Views, native passthrough queries, credential handling and cross-account access have their own requirements.**
 
-Federated-query support varies by connector. Views, native passthrough queries, credential handling and cross-account access have their own requirements.
-
-  - Stored in AWS Glue
-- Can use with AWS Secrets Manager
-  - If you configure a VPC private endpoint for it
-- Some connectors may be integrated with AWS Glue
-  - Enables fine-grained access control via Lake Formation
-  - Redshift, BigQuery, DynamoDB, Snowflake, MySQL…
-- Cross-account federated queries are possible
-  - With appropriate permissions
+- Stored in AWS Glue
+- **Can use with AWS Secrets Manager:** If you configure a VPC private endpoint for it
+- **Some connectors may be integrated with AWS Glue:** Enables fine-grained access control via Lake Formation; Redshift, BigQuery, DynamoDB, Snowflake, MySQL…
+- **Cross-account federated queries are possible:** With appropriate permissions
 - Passthrough Queries allow you to use the native query language of the data source
 - Some connectors may be used as Spark data sources
 
-### Hadoop
 
-<!-- original-note: 146 -->
+## Hadoop
 
-Hadoop separates distributed storage, resource scheduling and processing: HDFS stores blocks, YARN allocates resources and MapReduce executes map and reduce stages.
+**Hadoop ecosystems separate distributed storage, cluster resource management and batch processing.**
 
-- Distributed processing framework for big data
-- In-memory caching, optimized query execution
-- Supports Java, Scala, Python, and R
-- Supports code reuse across
-  - Batch processing
-  - Interactive Queries
-    - Spark SQL
-  - Real-time Analytics
-  - Machine Learning
-    - MLLib
-  - Graph Processing
-- Spark Streaming
-  - Integrated with Kinesis, Kafka, on EMR
-- Spark is NOT meant for OLTP
-
+- **HDFS:** block-based distributed storage.
+- **YARN:** allocates compute resources across applications.
+- **MapReduce:** traditional map/reduce execution; Spark can also run with YARN.
+- **Important:** Spark is a distinct processing framework, not another name for Hadoop.
 
 ```mermaid
 flowchart LR
-  accTitle: Hadoop
   n0["HDFS"]
   n1["YARN"]
   n2["MapReduce / Spark"]
@@ -5812,24 +5545,18 @@ flowchart LR
   n1 ---|"resource allocation"| n2
 ```
 
-> Hadoop layers distributed storage, cluster resource management and processing frameworks.
 
 ## Apache Spark
 
-<!-- original-note: 138 -->
+**Spark executes distributed data transformations through a driver, cluster manager and worker executors.**
 
-Spark distributes computation across executors coordinated by a driver and cluster manager. It supports analytical processing and reusable transformations rather than transactional database serving.
-
-- Spark apps are run as independent processes on a cluster
-- The SparkContext (driver program) coordinates them
-- SparkContext works through a Cluster Manager
-- Executors run computations and store data
-- SparkContext sends application code and tasks to executors
-
+- **Driver:** builds execution plans and schedules tasks.
+- **Executors:** process partitioned data and cache results.
+- **APIs:** SQL, DataFrames, Structured Streaming and MLlib.
+- **Recovery:** stages, partitioning, shuffles and checkpoints matter for performance and reliability.
 
 ```mermaid
 flowchart LR
-  accTitle: Apache Spark
   n0["Driver"]
   n1["Cluster manager"]
   n2["Executor A<br/>Tasks + cache"]
@@ -5841,17 +5568,17 @@ flowchart LR
   n0 -->|"schedule tasks"| n3
 ```
 
-> The Spark driver plans work, a cluster manager allocates resources and executors run tasks and retain cached partitions.
 
 ## Spark Components
 
+**Spark Core supplies scheduling and distributed execution for higher-level Spark libraries.**
 
-Spark Core underpins higher-level SQL, streaming, ML and graph APIs.
-
+- **Spark SQL:** relational and DataFrame queries.
+- **Structured Streaming:** incremental processing over unbounded input.
+- **MLlib / GraphX:** machine learning and graph computation.
 
 ```mermaid
 flowchart LR
-  accTitle: Spark Components
   n0["Spark Core"]
   n1["Spark SQL"]
   n2["Structured Streaming"]
@@ -5863,20 +5590,15 @@ flowchart LR
   n0 ---|"foundation"| n4
 ```
 
-> Spark Core underpins higher-level SQL, streaming, ML and graph APIs.
 
-### Spark Structured Streaming
+## Spark Structured Streaming
 
-<!-- original-note: 139 -->
+**Structured Streaming treats arriving records as additions to an unbounded table. Queries continuously transform that input and publish results to a configured sink.**
 
-Structured Streaming treats arriving records as additions to an unbounded table. Queries continuously transform that input and publish results to a configured sink.
-
-- Example from the personal notes: group incoming actions by a one-hour event-time window, count them and publish the result to a JDBC sink. The original sketch was conceptual rather than runnable API code.
-
+- Example: group incoming actions by a one-hour event-time window, count them and publish the result to a JDBC sink. The original sketch was conceptual rather than runnable API code
 
 ```mermaid
 flowchart LR
-  accTitle: Spark Structured Streaming
   n0["Input stream"]
   n1["Unbounded table"]
   n2["Incremental query"]
@@ -5886,17 +5608,13 @@ flowchart LR
   n2 -->|"write results"| n3
 ```
 
-> Structured Streaming models incoming data as an unbounded table and incrementally updates query results in a supported sink.
 
 ## Spark Streaming + Kinesis
 
-
-A supported Spark connector consumes Kinesis records for distributed stream processing; checkpointing governs recovery.
-
+**A supported Spark connector consumes Kinesis records for distributed stream processing; checkpointing governs recovery.**
 
 ```mermaid
 flowchart LR
-  accTitle: Spark Streaming + Kinesis
   n0["Producers"]
   n1["Kinesis Data Streams"]
   n2["Spark connector"]
@@ -5906,21 +5624,16 @@ flowchart LR
   n2 -->|"distributed processing"| n3
 ```
 
-> A supported Spark connector consumes Kinesis records for distributed stream processing; checkpointing governs recovery.
 
 ## Spark + Redshift
 
+**Spark can exchange bulk data with Redshift through S3 staging; S3 is the transfer path, not a Spark SQL database endpoint.**
 
-Spark can exchange bulk data with Redshift through S3 staging; S3 is the transfer path, not a Spark SQL database endpoint.
-
-- spark-redshift package allows Spark datasets from Redshift
-  - It’s a Spark SQL data source
+- **spark-redshift package allows Spark datasets from Redshift:** It's a Spark SQL data source
 - Useful for ETL using Spark
-
 
 ```mermaid
 flowchart LR
-  accTitle: Spark + Redshift
   n0["Spark job"]
   n1["S3 staging"]
   n2["Redshift"]
@@ -5930,90 +5643,53 @@ flowchart LR
   n1 -->|"read exported files"| n0
 ```
 
-> Spark can exchange bulk data with Redshift through S3 staging; S3 is the transfer path, not a Spark SQL database endpoint.
 
-### Spark + Athena
+## Spark + Athena
 
-<!-- original-note: 140 -->
-<!-- title: Spark in Athena -->
+**Athena can run Spark notebook sessions in supported workgroups. Session resources, permissions and notebook encryption remain part of the setup.**
 
-Athena can run Spark notebook sessions in supported workgroups. Session resources, permissions and notebook encryption remain part of the setup.
-
-  - Notebooks may be encrypted automatically or with KMS
+- Notebooks may be encrypted automatically or with KMS
 - Totally serverless
 - Selectable as an alternate analytics engine (vs. Athena SQL)
 - Uses Firecracker for quickly spinning up Spark resources
-- Programmatic API / CLI access as well
-  - create-work-group, create-notebook, start-session, start-calculation-execution
-- Can adjust DPU’s for coordinator and executor sizes
-- Pricing based on compute usage and DPU per hour
+- **Programmatic API / CLI access as well:** create-work-group, create-notebook, start-session, start-calculation-execution
+- Can adjust DPU's for coordinator and executor sizes
+
 
 ## AWS EMR
 
-<!-- original-note: 142 -->
+**Amazon EMR (Elastic MapReduce) is AWS's managed platform for running distributed big-data processing frameworks.**
 
-Amazon EMR (Elastic MapReduce) is AWS's managed platform for running distributed big-data processing frameworks.
-Instead of manually creating EC2 instances and configuring Hadoop, Spark, Hive, HDFS, networking, monitoring, etc., EMR automates much of that infrastructure setup.
-
-```
-                  Amazon S3
-               Raw / Lake Data
-                     │
-                     ▼
-              ┌─────────────┐
-              │     EMR     │
-              │             │
-              │ Spark       │
-              │ Hive        │
-              │ Hadoop      │
-              │ Flink       │
-              │ Presto      │
-              │ HBase       │
-              └──────┬──────┘
-                     │
-                     ▼
-                  Results
-                     │
-                     ▼
-                     S3
+```mermaid
+flowchart LR
+  A[(S3 datasets)] --> B[EMR: Spark / Hive / Flink]
+  B --> C[(S3 curated results)]
+  D[IAM / VPC / CloudWatch] -.-> B
 ```
 
-### EMR - Use Cases
 
-Typical use cases include:
+## EMR - Use Cases
+
+**Typical use cases include:.**
+
 - ETL / ELT processing
 - Large-scale transformations
 - Log processing
-- Machine learning preprocessing
-- Batch processing
 - SQL analytics with Hive/Presto
 - Streaming with Flink/Spark
 - Processing data stored in S3
 
-### EMR Cluster
 
+## EMR Cluster
 
-With traditional EMR on EC2, the cluster contains different types of nodes.
-```
-                    EMR Cluster
-                         │
-                ┌────────┴────────┐
-                │  Primary Node   │
-                │    CONTROL      │
-                └────────┬────────┘
-                         │
-          ┌──────────────┼──────────────┐
-          ▼              ▼              ▼
-      Core Node      Core Node      Task Node
-      COMPUTE        COMPUTE        COMPUTE
-         +               +             only
-      HDFS DATA       HDFS DATA
-```
+**An EMR on EC2 cluster separates control, data-bearing compute and temporary compute capacity.**
 
+- **Primary node:** coordinates cluster services and jobs.
+- **Core nodes:** execute tasks and store HDFS data.
+- **Task nodes:** add compute without storing HDFS blocks.
 
 ```mermaid
 flowchart LR
-  accTitle: EMR Cluster
   n0["Primary node"]
   n1["Core nodes<br/>Compute + HDFS"]
   n2["Task nodes<br/>Compute only"]
@@ -6021,274 +5697,165 @@ flowchart LR
   n0 -->|"coordinate"| n2
 ```
 
-> An EMR on EC2 cluster separates orchestration, core compute with HDFS and optional task compute without HDFS storage.
 
-### EMR - Primary node
+## EMR - Primary node
 
-Previously called the master node. It coordinates and manages the cluster.
-Responsibilities include:
-  - coordinating distributed jobs
-  - tracking tasks
-  - monitoring cluster health
-  - coordinating Hadoop/YARN services
+**Previously called the master node. It coordinates and manages the cluster.**
 
-- It is not where you should intentionally depend on durable business data being stored.
+- coordinating distributed jobs
+- tracking tasks
+- monitoring cluster health
+- coordinating Hadoop/YARN services
+- It is not where you should intentionally depend on durable business data being stored
 
-### EMR - Core nodes
 
-Core nodes perform two jobs:
-1. Run processing tasks.
-2. Store HDFS data.
+## EMR - Core nodes
 
-```
-          HDFS dataset
+**Core nodes perform two jobs:.**
 
-         sales.parquet
-              │
-      ┌───────┼───────┐
-      ▼       ▼       ▼
-    Core 1  Core 2   Core 3
-```
-
-- HDFS distributes and replicates data across core nodes.
+- HDFS distributes and replicates data across core nodes
 - Adding core nodes therefore increases both: Compute and HDFS
 - Removing them is more complicated because they may contain HDFS blocks (Data Loss)
 
-### EMR - Task node: 
+```mermaid
+flowchart LR
+  A[EMR primary] --> B[Core nodes]
+  B --> C[Compute tasks]
+  B --> D[HDFS blocks]
+  E[S3] -.-> B
+```
 
-- Task nodes provide compute only.
-- They do not store HDFS data.
+
+## EMR - Task node:
+
+**Focus:** EMR - Task node: — understand the key capabilities, constraints, and trade-offs.
+
+- Task nodes provide compute only
+- They do not store HDFS data
 - No risk of data loss when removing
-- Good use of spot instances
 - Once the workload finis
 
-### EMR Usage
-
-<!-- original-note: 143 -->
-
-There are two major lifecycle patterns for EMR on EC2:
-
-- Transient clusters:
-  - terminate once all steps are complete.  
-  - Create the cluster → process data → save results → destroy cluster.
-  - This is often highly cost-effective for batch workloads.
-
-- Long-running clusters:
-  - The cluster remains available for repeated workloads.
-  - must be manually terminated
-  - Can spin up task nodes using Spot instances for temporary capacity
-  - Can use reserved instances on long-running clusters to save $
-  - Termination protection "ON" by default
-
-  - Useful when:
-    - jobs run frequently
-    - users need interactive access
-    - startup latency is undesirable
-    - applications depend on a continuously available cluster
-
-
-### Submitting EMR workloads
-
-
-There are several ways to run workloads. One concept is an EMR Step.
-A step is essentially: "Run this job on my cluster."
-
+```mermaid
+flowchart LR
+  A[EMR primary] --> B[Task nodes: compute]
+  B --> C[Run distributed tasks]
+  D[HDFS storage] -.->|Not on task nodes| B
 ```
-EMR Cluster
-    │
-    ├── Step 1
-    │    Import data
-    │
-    ├── Step 2
-    │    Spark transformation
-    │
-    ├── Step 3
-    │    Hive aggregation
-    │
-    └── Step 4
-         Write results
-```
-- Jobs can be submitted using mechanisms such as the AWS Console, CLI, SDKs, APIs and supported application-specific interfaces.
-- You can also interact with the primary node when direct cluster/application access is appropriate.
 
 
-### EMR / AWS Integration
+## EMR Usage
+
+**There are two major lifecycle patterns for EMR on EC2:.**
+
+- **Transient clusters:** terminate once all steps are complete; Create the cluster → process data → save results → destroy cluster; This is often highly cost-effective for batch workloads
+- **Long-running clusters:** The cluster remains available for repeated workloads · must be manually terminated · Can spin up task nodes using Spot instances for temporary capacity · Can use reserved instances on long-running clusters to save $ ·…
 
 
-EMR doesn't operate in isolation.
+## Submitting EMR workloads
 
-```
-                       EMR
-                        │
-        ┌───────────────┼───────────────┐
-        ▼               ▼               ▼
-       VPC             IAM              S3
-    networking      permissions       storage
+**There are several ways to run workloads. One concept is an EMR Step.**
 
-        ▼               ▼
-   CloudWatch       CloudTrail
-   monitoring        auditing
-```
+- Jobs can be submitted using mechanisms such as the AWS Console, CLI, SDKs, APIs and supported application-specific interfaces
+- You can also interact with the primary node when direct cluster/application access is appropriate
+
+
+## EMR / AWS Integration
+
+**EMR doesn't operate in isolation.**
 
 - **AWS VPC** - Controls the cluster's network environment. (Subnets, routing, Security Groups, Network Access)
-- **AWS IAM** - Controls what EMR and its jobs are allowed to access.
-- **AWS S3** -  Provides durable input/output storage.
-- **AWS CloudWatch** - Used for operational monitoring, metrics and alarms.
-- **AWS CloudTrail** - Records AWS API activity.
+- **AWS IAM** - Controls what EMR and its jobs are allowed to access
+- **AWS S3** - Provides durable input/output storage
+- **AWS CloudWatch** - Used for operational monitoring, metrics and alarms
+- **AWS CloudTrail** - Records AWS API activity
 
-### EMR Storage
 
-<!-- original-note: 144 -->
+## EMR Storage
 
-This is one of the most important EMR topics.
-> HDFS → cluster storage (end on termination)
-> S3 → durable external object storage
+**EMR uses HDFS for cluster-local distributed data and S3 for durable datasets outside the cluster.**
 
-HDFS stands for Hadoop Distributed File System distributes data across core nodes.
-```
-                HDFS
+- **HDFS:** blocks reside on core nodes; replication protects against some node failures, not cluster deletion.
+- **S3:** input and output data survives when the EMR cluster terminates.
 
-            Dataset A
-                │
-      ┌─────────┼─────────┐
-      ▼         ▼         ▼
-    Core 1    Core 2    Core 3
-```
-HDFS replication helps protect against individual node failures.
-
-### EMRFS
-
-EMRFS allows Hadoop ecosystem applications running on EMR to interact with Amazon S3.
-
-Conceptually:
-```
-Spark / Hive / Hadoop
-          │
-        EMRFS
-          │
-          ▼
-          S3
-```
-
-#### EMRFS Consistent View Feature
-
-Older EMR architectures had to account for historical S3 lack of consistency characteristics by using workarounds.
-```
-Step 1:
-Spark writes 100 files to S3
-        ↓
-Step 2:
-Hive immediately lists the directory
-        ↓
-Hive temporarily sees only 97 files
-        ↓
-Incomplete processing ❌
+```mermaid
+flowchart TB
+  A[EMR computation] --> H[HDFS: core-node cluster data]
+  A --> S[S3: durable external objects]
+  H --> X[Cluster termination removes HDFS data]
+  S --> Y[S3 outlives cluster]
 ```
 
 
-For example, **Consistent View Feature**:
-```
-Spark
-  │
-  ▼
-EMRFS
-  │
-  ├──► Write object → S3
-  │
-  └──► Record metadata → DynamoDB
+## EMRFS
+
+**EMRFS allows Hadoop ecosystem applications running on EMR to interact with Amazon S3.**
+
+```mermaid
+flowchart LR
+  A[Spark / Hive / Hadoop] --> B[EMRFS]
+  B --> C[(Amazon S3)]
 ```
 
-So:
-```
-S3 LIST: 97 objects
 
-DynamoDB metadata: 100 objects
-        ↓
-EMRFS knows something
-is temporarily inconsistent
-```
+## EMRFS Consistent View Feature
 
-But Amazon S3 now provides strong read-after-write and LIST consistency, so this historical workaround is no longer necessary for S3 consistency.
-**Current reference (checked 2026-10-13):** [S3 consistency model](https://aws.amazon.com/s3/consistency/).
+**EMRFS Consistent View is a historical S3 consistency workaround, not a requirement for new S3-based pipelines.**
 
-### EMR Local Storage and Attached Storages
+- **Previously:** DynamoDB metadata helped detect temporarily incomplete S3 listings.
+- **Today:** S3 provides strong read-after-write and LIST consistency.
+- **Still needed:** transactional table formats when many writers must coordinate updates.
+
+<!-- Source reference: https://aws.amazon.com/s3/consistency/ -->
 
 
-There are three storage concepts worth separating:
+## EMR Local Storage and Attached Storages
+
+**There are three storage concepts worth separating:.**
+
 - Local / Instance Storage
 - EBS
-- HDFS
+- **HDFS:** Allows use of EMR on EBS-only types (M4, C4); Deleted when cluster is terminated; EBS volumes can only be attached when launching a cluster
 
-**Local Storage** Good for temporary working data such as: buffer, caches, shuffle, temp files.
-**EBS** EMR can use supported EBS volumes as additional storage attached to EC2 instances. 
 
-EBS can therefore contribute storage to HDFS.
-  - Allows use of EMR on EBS-only types (M4, C4)
-  - Deleted when cluster is terminated
-  - EBS volumes can only be attached when launching a cluster
+## AWS EMR Managed Scaling
 
-> If you need data to survive cluster destruction, persist it somewhere appropriate such as S3.
+**Imagine your workload changes throughout the day:.**
 
-Manually detaching a managed EBS volume can cause EMR to interpret the situation as an infrastructure failure.
-
-### AWS EMR Managed Scaling
-
-<!-- original-note: 145 -->
-
-Imagine your workload changes throughout the day:
-```
-Workload
-
-High      ████
-          ████       ███
-Medium    █████     █████
-Low    ███████████████████
-       00  06  12  18  24
-```
-- Keeping maximum capacity running all day wastes money.
-- Managed Scaling dynamically adjusts cluster capacity within boundaries you configure (MIN/MAX).
-
-EMR can manage capacity involving:
+- Keeping maximum capacity running all day wastes money
+- Managed Scaling dynamically adjusts cluster capacity within boundaries you configure (MIN/MAX)
 - On-Demand Instances
 - Spot Instances
 - instance groups
-- instance fleets
 
-### AWS EMR - Older Approach Scaling policies
 
-You could create scaling rules based on CloudWatch metrics.
-```
-YARNMemoryAvailablePercentage < threshold
-                ↓
-           add nodes
-```
+## AWS EMR - Older Approach Scaling policies
+
+**You could create scaling rules based on CloudWatch metrics.**
+
 - Supports instance groups only
 
 
-### EMR Serverless
+## EMR Serverless
 
-<!-- original-note: 147 -->
+**Submit a job to an EMR Serverless application; AWS allocates and scales workers without a persistent EC2 cluster.**
 
-EMR Serverless changes the operational model significantly. 
-```
-You
- │
- ▼
-Create application
- │
- ▼
-Submit job
- │
- ▼
-EMR allocates workers
- │
- ▼
-Job executes
+- **Workflow:** create application → submit job → allocate workers → execute → release capacity.
+- **Operations:** configure execution role, job limits, logs and storage permissions.
+
+```mermaid
+flowchart LR
+  A[Submit job] --> B[EMR Serverless application]
+  B --> C[Service-managed workers]
+  C --> D[Read/write S3]
+  C --> E[Logs and metrics]
 ```
 
-### EMR Serverless Example
 
-1. You submit a script as an EMR Serverless job.
+## EMR Serverless Example
+
+**1. You submit a script as an EMR Serverless job.**
+
+- 2. EMR Serverless handles the underlying worker capacity needed to execute it.
 
 ```python
   transactions = spark.read.parquet(
@@ -6302,45 +5869,16 @@ Job executes
   )
 ```
 
-2. EMR Serverless handles the underlying worker capacity needed to execute it.
 
-```
-             Spark job
-                 │
-                 ▼
-         EMR Serverless
-                 │           (capacity required)
-         ┌───────┼───────┐-------┐
-         ▼       ▼       ▼       ▼
-       Worker  Worker  Worker  Add Worker
-```
+## EMR Serverless Permissions
 
-### EMR Serverless Permissions
+**Separate authorization to submit a job from authorization the running job uses to access data.**
 
-
-There are two distinct permission concepts worth understanding.
-**Caller permissions** Determine whether: "Is User/application X allowed to submit or manage this EMR Serverless job?"
-**Job execution role** Determines: "What AWS resources can the running job access?"
-
-```
-User / Application
-        │
-        │ IAM caller permission
-        ▼
-Submit EMR Serverless job
-        │
-        ▼
-Job Execution Role
-        │
-        ├── Read S3
-        ├── Write S3
-        └── Access other permitted AWS resources
-```
-
+- **Caller permissions:** who can start, inspect or manage EMR Serverless applications and jobs.
+- **Execution role:** what S3 objects, logs and other AWS resources the job can access.
 
 ```mermaid
 flowchart LR
-  accTitle: EMR Serverless Permissions
   n0["User / CLI"]
   n1["EMR Serverless application"]
   n2["Job execution role"]
@@ -6350,29 +5888,13 @@ flowchart LR
   n2 -->|"authorized data access"| n3
 ```
 
-> EMR Serverless runs submitted jobs with a job execution role; caller permissions and job data permissions are distinct.
 
-### EMR Serverless Application Lifecycle
+## EMR Serverless Application Lifecycle
 
-
-An EMR Serverless application can start, stop, restart and terminate.
-```
-STOP
- ↓
-Application still exists
-Can restart later
-
-
-TERMINATE / delete
- ↓
-Application lifecycle ends
-```
-
-
+**An EMR Serverless application can start, stop, restart and terminate.**
 
 ```mermaid
 flowchart TB
-  accTitle: EMR Serverless Application Lifecycle
   n0["Creating"]
   n1["Created"]
   n2["Starting"]
@@ -6389,72 +5911,31 @@ flowchart TB
   n5 -->|"delete"| n6
 ```
 
-> An EMR Serverless application can start, stop and restart before termination.
 
-### EMR Serverless Pre-Initialized Capacity
+## EMR Serverless Pre-Initialized Capacity
 
+**Serverless doesn't necessarily mean:.**
 
-Serverless doesn't necessarily mean:
-> "Every resource magically exists instantly."
-
-Workers may need to be provisioned before a job can execute.
-That introduces startup latency.
-If jobs are latency-sensitive, you can configure **pre-initialized capacity**.
-
-> Note: When sizing workers, remember that frameworks such as Spark need resources not only for your application payload but also for framework/worker overhead.
-
-### EMR Serverless Security
+- Workers may need to be provisioned before a job can execute.
+- That introduces startup latency.
+- If jobs are latency-sensitive, you can configure pre-initialized capacity.
 
 
-Security still applies even though AWS manages the underlying compute.
-Think about four areas:
-```
-        EMR Serverless Security
-                 │
-     ┌───────────┼───────────┐
-     ▼           ▼           ▼
-   IAM       Encryption    Network
-     │           │           │
-     └───────────┼───────────┘
-                 ▼
-                S3
-```
-Supported EMR Serverless framework communication uses encryption mechanisms for relevant traffic, 
-including Spark driver/executor communication and TLS for supported AWS service interactions.
+## EMR Serverless Security
 
-The broader principle is:
-  Protect data at rest (SSE-S3, SSE-KMS, or CSE), in transit (TLS/HTTPS), and through IAM authorization.
+**Security still applies even though AWS manages the underlying compute.**
 
 - Spark communication between drivers & executors is encrypted
 - Hive communication between Glue Metastore and EMR uses TLS
 - A bucket policy can enforce secure transport using: aws:SecureTransport
 
-### EMR On EKS
 
-<!-- original-note: 148 -->
+## EMR On EKS
 
-The third major deployment model is EMR on EKS = Elastic Kubernetes Service.
-You can execute supported EMR analytics workloads using Kubernetes infrastructure
-```
-               EKS Cluster
-                    │
-        ┌───────────┼───────────┐
-        ▼           ▼           ▼
-    Web/API       Spark      Other
-    workload      jobs       workloads
-                    ▲
-                    │
-                EMR on EKS
-```
-
-This is particularly useful for organizations that already operate Kubernetes and want analytics workloads to share Kubernetes infrastructure with other compatible workloads.
-
-> EMR on EKS removes the need for a dedicated EMR EC2 cluster, but it does not remove the EKS cluster.
-
+**The third major deployment model is EMR on EKS = Elastic Kubernetes Service.**
 
 ```mermaid
 flowchart LR
-  accTitle: EMR On EKS
   n0["EKS cluster"]
   n1["Spark driver / executors"]
   n2["Other Kubernetes workloads"]
@@ -6465,9 +5946,10 @@ flowchart LR
   n2 -->|"scheduled compute"| n3
 ```
 
-> EMR on EKS schedules Spark workloads onto Kubernetes capacity that may also host other applications.
 
-### EMR Models Comparison
+## EMR Models Comparison
+
+**Choose an EMR deployment model by cluster ownership, platform integration and operational effort.**
 
 | | EMR on EC2 | EMR Serverless | EMR on EKS |
 |---|---|---|---|
@@ -6478,16 +5960,24 @@ flowchart LR
 | Scaling | Manual/Managed Scaling | Serverless worker scaling | Kubernetes + EMR mechanisms |
 | Operational overhead | Highest | Lowest | Depends on EKS environment |
 
+```mermaid
+flowchart TB
+  A{Deployment model?} --> B[EMR on EC2: managed cluster]
+  A --> C[EMR on EKS: Kubernetes-based]
+  A --> D[EMR Serverless: per-job managed capacity]
+```
+
+
 ## Amazon Kinesis Data Streams
 
-<!-- original-note: 149 -->
+**Kinesis Data Streams retains streaming records in shards for independent consumers and replay within configured retention.**
 
-Kinesis Data Streams retains ordered shard records for independent consumers and replay. Partition-key distribution and consumer type determine throughput and read behavior.
-
+- **Producers:** write partition-keyed records.
+- **Consumers:** read shards, track positions and process independently.
+- **Design for:** ordering within shards, throughput, resharding, retries and duplicates.
 
 ```mermaid
 flowchart LR
-  accTitle: Amazon Kinesis Data Streams
   n0["Producers"]
   n1["Partition-key routing"]
   n2["Shard A"]
@@ -6500,59 +5990,51 @@ flowchart LR
   n3 -->|"read records"| n4
 ```
 
-> Producers choose partition keys; Kinesis assigns records to shards that consumers read independently.
 
 ## Kinesis Data Streams
 
+**Retention enables replay independently of the rate at which consumers process records. Record-size limits, ordering and delivery behavior remain separate constraints.**
 
-Retention enables replay independently of the rate at which consumers process records. Record-size limits, ordering and delivery behavior remain separate constraints.
-
-- Current correction: default maximum Kinesis record size is 1 MiB; supported configuration can raise it to 10 MiB for intermittent large records. Sustained per-shard throughput limits remain separate.
+- Current correction: default maximum Kinesis record size is 1 MiB; supported configuration can raise it to 10 MiB for intermittent large records. Sustained per-shard throughput limits remain separate
 - Ability to reprocess (replay) data
-- Once data is inserted in Kinesis, it can’t be deleted (immutability)
+- Once data is inserted in Kinesis, it can't be deleted (immutability)
 - Data that shares the same partition goes to the same shard (ordering)
 - Producers: AWS SDK, Kinesis Producer Library (KPL), Kinesis Agent
-- Consumers:
-  - Write your own: Kinesis Client Library (KCL), AWS SDK
-  - Managed: AWS Lambda, Data Firehose, Kinesis Data
+- **Consumers:** Write your own: Kinesis Client Library (KCL), AWS SDK; Managed: AWS Lambda, Data Firehose, Kinesis Data
 
-**Current reference (checked 2026-10-13):** [Kinesis large records](https://docs.aws.amazon.com/streams/latest/dev/large-records.html).
+<!-- Source reference: https://docs.aws.amazon.com/streams/latest/dev/large-records.html -->
+
 
 ## Kinesis Data Streams – Capacity Modes
 
+**Provisioned streams expose shard-count planning; on-demand streams manage capacity differently. Compare scaling behavior, limits and billing for the chosen mode.**
 
-Provisioned streams expose shard-count planning; on-demand streams manage capacity differently. Compare scaling behavior, limits and billing for the chosen mode.
+- **Current correction: default maximum Kinesis record size is 1 MiB; supported configuration can raise it to 10 MiB for intermittent large records. Sustained per-shard throughput limits remain separate.:** You choose the number of shards…
+- **On-demand mode:** Default capacity provisioned (4 MB/s in or 4000 records per second); Scales automatically based on observed throughput peak during the last 30 days; Pay per stream per hour & data in/out per GB
 
-- Current correction: default maximum Kinesis record size is 1 MiB; supported configuration can raise it to 10 MiB for intermittent large records. Sustained per-shard throughput limits remain separate.
-  - You choose the number of shards provisioned, scale manually or using API
-  - Each shard gets 1MB/s in (or 1000 records per second)
-  - Each shard gets 2MB/s out (classic or enhanced fan-out consumer)
-  - You pay per shard provisioned per hour
-- On-demand mode:
-  - No need to provision or manage the capacity
-  - Default capacity provisioned (4 MB/s in or 4000 records per second)
-  - Scales automatically based on observed throughput peak during the last 30 days
-  - Pay per stream per hour & data in/out per GB
+```mermaid
+flowchart TB
+  A{Stream capacity preference?} -->|Control shards| B[Provisioned mode]
+  A -->|Managed capacity| C[On-demand mode]
+  B --> D[Scale shard count as traffic changes]
+  C --> E[Auto-scaling within constraints]
+```
 
-**Current reference (checked 2026-10-13):** [Kinesis large records](https://docs.aws.amazon.com/streams/latest/dev/large-records.html).
+<!-- Source reference: https://docs.aws.amazon.com/streams/latest/dev/large-records.html -->
+
 
 ## Kinesis data streams security
 
-<!-- original-note: 150 -->
-
-Protect stream access with IAM and network controls, use TLS in transit and configure encryption at rest. Client-side encryption remains an application responsibility.
+**Protect stream access with IAM and network controls, use TLS in transit and configure encryption at rest. Client-side encryption remains an application responsibility.**
 
 - Control access / authorization using IAM policies
 - Encryption in flight using HTTPS endpoints
 - Encryption at rest using KMS
 - You can implement encryption/decryption of data on client side (harder)
-- VPC Endpoints available for Kinesis to access within VPC
 - Monitor API calls using CloudTrail
-
 
 ```mermaid
 flowchart LR
-  accTitle: Kinesis data streams security
   n0["VPC producer / consumer"]
   n1["Interface VPC endpoint"]
   n2["Kinesis Data Streams"]
@@ -6562,23 +6044,18 @@ flowchart LR
   n2 -->|"encryption key operations"| n3
 ```
 
-> Kinesis access combines network reachability, IAM authorization and optional KMS encryption controls.
 
 ## Kinesis Producers
 
-<!-- original-note: 151 -->
-
-Choose a producer by where records originate: SDK calls for application code, KPL for buffered high-throughput publishing or an agent for supported log-file ingestion.
+**Choose a producer by where records originate: SDK calls for application code, KPL for buffered high-throughput publishing or an agent for supported log-file ingestion.**
 
 - Kinesis SDK
 - Kinesis Producer Library (KPL)
 - Kinesis Agent
 - 3rd party libraries: Spark, Log4J Appenders, Flume, Kafka Connect, NiFi…
 
-
 ```mermaid
 flowchart LR
-  accTitle: Kinesis Producers
   n0["SDK"]
   n1["KPL"]
   n2["Kinesis agent"]
@@ -6590,68 +6067,47 @@ flowchart LR
   n3 -->|"supported integration"| n4
 ```
 
-> The SDK, KPL, agent and supported third-party integrations are alternative producer paths into Kinesis.
 
-### SDK
+## SDK
 
-<!-- original-note: 152 -->
-<!-- title: Kinesis producer SDK -->
-
-PutRecord sends one record; PutRecords groups records in a request. Inspect individual failures and distribute partition keys before adding retries or capacity.
+**PutRecord sends one record; PutRecords groups records in a request. Inspect individual failures and distribute partition keys before adding retries or capacity.**
 
 - PutRecords uses batching and increases throughput => less HTTP requests
 - ProvisionedThroughputExceeded if we go over the limits
-- + AWS Mobile SDK: Android, iOS, etc...
+- + AWS Mobile SDK: Android, iOS, etc
 - Use case: low throughput, higher latency, simple API, AWS Lambda
-- Managed AWS sources for Kinesis Data Streams:
-  - CloudWatch Logs
-  - AWS IoT
-  - Kinesis Data Analytics
+- **Managed AWS sources for Kinesis Data Streams:** CloudWatch Logs, AWS IoT, Kinesis Data Analytics
+
 
 ## AWS Kinesis API – Exceptions
 
+**Throughput exceptions signal that an applicable shard or stream limit was exceeded. Inspect partition-key distribution before repeatedly retrying the same load.**
 
-Throughput exceptions signal that an applicable shard or stream limit was exceeded. Inspect partition-key distribution before repeatedly retrying the same load.
+- Happens when sending more data (exceeding MB/s or TPS for any shard)
+- Make sure you don't have a hot shard (such as your partition key is bad and too much data goes to that partition)
+- **Solution:** Retries with backoff; Increase shards (scaling); Ensure your partition key is a good one
 
-  - Happens when sending more data (exceeding MB/s or TPS for any shard)
-  - Make sure you don’t have a hot shard (such as your partition key is bad and too much data goes to that partition)
-- Solution:
-  - Retries with backoff
-  - Increase shards (scaling)
-  - Ensure your partition key is a good one
 
-### KPL (Kinesis Producer Library)
+## KPL (Kinesis Producer Library)
 
-<!-- original-note: 153 -->
-<!-- title: Kinesis Producer Library -->
+**KPL buffers, aggregates and collects records to improve publishing efficiency. The resulting latency and de-aggregation requirements are part of the tradeoff.**
 
-KPL buffers, aggregates and collects records to improve publishing efficiency. The resulting latency and de-aggregation requirements are part of the tradeoff.
-
-- Used for building high performance, long-running producers
 - Automated and configurable retry mechanism
 - Synchronous or Asynchronous API (better performance for async)
-- Submits metrics to CloudWatch for monitoring
-- Batching (both turned on by default) – increase throughput, decrease cost:
-  - Collect Records and Write to multiple shards in the same PutRecords API call
-  - Aggregate – increased latency
-    - Capability to store multiple records in one record (go over 1000 records per second limit)
-    - Increase payload size and improve throughput (maximize 1MB/s limit)
+- **Batching (both turned on by default) – increase throughput, decrease cost:** Collect Records and Write to multiple shards in the same PutRecords API call; Aggregate – increased latency; Capability to store multiple records in one record (go…
 - Compression must be implemented by the user
 - KPL Records must be de-coded with KCL or special helper library
+- Review prompt: explain collection versus aggregation using the batching diagram, then describe how RecordMaxBufferedTime trades latency for packing efficiency
 
-- Review prompt: explain collection versus aggregation using the batching diagram, then describe how RecordMaxBufferedTime trades latency for packing efficiency.
 
 ## Kinesis Producer Library (KPL) Batching
 
-
-KPL aggregation packs user records into a Kinesis record; collection batches multiple Kinesis records into one PutRecords request.
+**KPL aggregation packs user records into a Kinesis record; collection batches multiple Kinesis records into one PutRecords request.**
 
 - We can influence the batching efficiency by introducing some delay with RecordMaxBufferedTime (default 100ms)
 
-
 ```mermaid
 flowchart LR
-  accTitle: Kinesis Producer Library (KPL) Batching
   n0["User records"]
   n1["Aggregated Kinesis records"]
   n2["PutRecords request"]
@@ -6661,23 +6117,17 @@ flowchart LR
   n2 -->|"batch API call"| n3
 ```
 
-> KPL aggregation packs user records into a Kinesis record; collection batches multiple Kinesis records into one PutRecords request.
 
-### Anti pattern:
+## Kinesis — Producer Anti-Patterns
 
-<!-- original-note: 154 -->
-<!-- title: When to avoid KPL buffering -->
-
-Buffering improves packing efficiency but delays delivery. Use a more direct publishing path when the application cannot tolerate that extra wait.
+**Buffering improves packing efficiency but delays delivery. Use a more direct publishing path when the application cannot tolerate that extra wait.**
 
 - The KPL can incur an additional processing delay of up to RecordMaxBufferedTime within the library (user- configurable)
 - Larger values of RecordMaxBufferedTime results in higher packing efficiencies and better performance
 - Applications that cannot tolerate this additional delay may need to use the AWS SDK directly
 
-
 ```mermaid
 flowchart LR
-  accTitle: When to avoid KPL buffering
   n0["Application"]
   n1["KPL buffer"]
   n2["Direct SDK write"]
@@ -6688,42 +6138,28 @@ flowchart LR
   n2 -->|"API request"| n3
 ```
 
-> KPL buffering trades some latency for efficient requests; a direct SDK write avoids that producer-side buffer.
 
-### Kinesis Agent
+## Kinesis Agent
 
-<!-- original-note: 155 -->
-
-The Kinesis Agent watches supported log files and publishes their contents, handling rotation, checkpoints and retries while exposing operational metrics.
+**The Kinesis Agent watches supported log files and publishes their contents, handling rotation, checkpoints and retries while exposing operational metrics.**
 
 - Java-based agent, built on top of KPL
 - Install in Linux-based server environments
-- Features:
-  - Write from multiple directories and write to multiple streams
-  - Routing feature based on directory / log file
-  - Pre-process data before sending to streams (single line, csv to json, log to json…)
-  - The agent handles file rotation, checkpointing, and retry upon failures
-  - Emits metrics to CloudWatch for monitoring
+- **Features:** Write from multiple directories and write to multiple streams · Routing feature based on directory / log file · Pre-process data before sending to streams (single line, csv to json, log to json…) · The agent handles file rotation…
+
 
 ## Kinesis Consumers - Classic
 
-<!-- original-note: 156 -->
-<!-- title: Kinesis shared-throughput consumers -->
-
-Classic consumers poll shards and share each shard's read throughput. More consumers do not create extra shared read capacity.
+**Classic consumers poll shards and share each shard's read throughput. More consumers do not create extra shared read capacity.**
 
 - Kinesis SDK
 - Kinesis Client Library (KCL)
 - Kinesis Connector Library
 - 3rd party libraries: Spark, Log4J Appenders, Flume, Kafka Connect…
 - Kinesis Firehose
-- AWS Lambda
-- (Kinesis Consumer Enhanced Fan-Out discussed in the next lecture)
-
 
 ```mermaid
 flowchart LR
-  accTitle: Kinesis shared-throughput consumers
   n0["Kinesis stream"]
   n1["SDK consumer"]
   n2["KCL application"]
@@ -6735,14 +6171,10 @@ flowchart LR
   n0 -->|"supported consumer integration"| n4
 ```
 
-> Multiple consumer applications can independently process the same stream using SDKs, KCL or managed integrations.
 
-### Kinesis SDK
+## Kinesis SDK
 
-<!-- original-note: 157 -->
-<!-- title: Kinesis consumer SDK -->
-
-GetRecords reads through a shard iterator. Polling frequency, batch size and shared throughput jointly determine latency and throttling.
+**GetRecords reads through a shard iterator. Polling frequency, batch size and shared throughput jointly determine latency and throttling.**
 
 - Classic Kinesis - Records are polled by consumers from a shard
 - Each shard has 2 MB total aggregate throughput
@@ -6750,10 +6182,8 @@ GetRecords reads through a shard iterator. Polling frequency, batch size and sha
 - Maximum of 5 GetRecords API calls per shard per second = 200ms latency
 - If 5 consumers application consume from the same shard, means every consumer can poll once a second and receive less than 400 KB/s
 
-
 ```mermaid
 flowchart LR
-  accTitle: Kinesis consumer SDK
   n0["Shard<br/>Shared read budget"]
   n1["Consumer A"]
   n2["Consumer B"]
@@ -6763,25 +6193,19 @@ flowchart LR
   n0 -->|"GetRecords"| n3
 ```
 
-> Shared-throughput consumers compete for each shard's shared read capacity; adding consumers does not multiply that capacity.
 
-### Kinesis Client Library (KCL)
+## Kinesis Client Library (KCL)
 
-<!-- original-note: 158 -->
-<!-- title: Kinesis Client Library -->
+**KCL coordinates workers, leases shards, checkpoints progress and handles resharding. Its DynamoDB coordination tables also need sufficient capacity.**
 
-KCL coordinates workers, leases shards, checkpoints progress and handles resharding. Its DynamoDB coordination tables also need sufficient capacity.
-
-- KCL consumes records and de-aggregates KPL records for the application record processor.
-- Workers discover and share shard assignments, then checkpoint progress for recovery.
-- DynamoDB coordination-table throttling can delay worker progress; monitor its capacity as well as the stream.
-- An expired iterator needs investigation of processing delays and iterator handling; increasing DynamoDB capacity is not a universal fix.
-- Verify library and language support for the selected KCL version.
-
+- KCL consumes records and de-aggregates KPL records for the application record processor
+- Workers discover and share shard assignments, then checkpoint progress for recovery
+- DynamoDB coordination-table throttling can delay worker progress; monitor its capacity as well as the stream
+- An expired iterator needs investigation of processing delays and iterator handling; increasing DynamoDB capacity is not a universal fix
+- Verify library and language support for the selected KCL version
 
 ```mermaid
 flowchart LR
-  accTitle: Kinesis Client Library
   n0["Stream shards"]
   n1["KCL worker A"]
   n2["KCL worker B"]
@@ -6792,26 +6216,17 @@ flowchart LR
   n2 -->|"lease / checkpoint"| n3
 ```
 
-> KCL coordinates shard leases and checkpoints in DynamoDB so workers can rebalance and recover progress.
 
-### Kinesis Connector Library
+## Kinesis Connector Library
 
-<!-- original-note: 159 -->
-
-The older connector library combines KCL consumption with destination writers. For supported use cases, compare it with managed Firehose delivery or Lambda processing.
+**The older connector library combines KCL consumption with destination writers. For supported use cases, compare it with managed Firehose delivery or Lambda processing.**
 
 - Older Java library (2016), leverages the KCL library
-- Write data to:
-  - Amazon S3
-  - DynamoDB
-  - Redshift
-  - OpenSearch
+- **Write data to:** Amazon S3, DynamoDB, Redshift, OpenSearch
 - Kinesis Firehose replaces the Connector Library for a few of these targets, Lambda for the others
-
 
 ```mermaid
 flowchart LR
-  accTitle: Kinesis Connector Library
   n0["Kinesis"]
   n1["Consumer application"]
   n2["S3 / DynamoDB / Redshift / OpenSearch"]
@@ -6819,51 +6234,42 @@ flowchart LR
   n1 -->|"configured delivery"| n2
 ```
 
-> A Kinesis consumer application can transform stream data and deliver it to configured destinations; check library maintenance before use.
 
-### Kinesis Firehose
+## Kinesis Firehose
 
-<!-- original-note: 160 -->
-<!-- title: Firehose as a stream consumer -->
+**A Firehose delivery stream can consume Kinesis records and deliver buffered output. It is a managed delivery path rather than a KCL application.**
 
-A Firehose delivery stream can consume Kinesis records and deliver buffered output. It is a managed delivery path rather than a KCL application.
 
-### AWS Lambda
+## AWS Lambda — Kinesis Stream Consumer
 
-<!-- original-note: 161 -->
-<!-- title: Lambda as a stream consumer -->
+**A Lambda event source mapping polls Kinesis shards and invokes a function with record batches.**
 
-A Lambda event source mapping reads Kinesis batches and invokes the function. Configure batch handling and retry behavior around ordered shard processing.
-
-- Lambda consumer has a library to de-aggregate record from the KPL
-- Lambda can be used to run lightweight ETL to:
-  - Amazon S3
-  - DynamoDB
-  - Redshift
-  - OpenSearch
-  - Anywhere you want
-- Lambda can be used to trigger notifications / send emails in real time
-- Lambda has a configurable batch size (more in Lambda section)
-
-### Kinesis Enhanced Fan out
-
-<!-- original-note: 162 -->
-<!-- title: Kinesis enhanced fan-out -->
-
-Enhanced fan-out gives registered consumers dedicated per-shard read throughput and a push-based delivery path, trading extra cost for isolation and lower latency.
-
-- New game-changing feature from August 2018.
-- Works with KCL 2.0 and AWS Lambda (Nov 2018)
-- Each Consumer get 2 MB/s of provisioned throughput per shard
-- That means 20 consumers will get 40MB/s per shard aggregated
-- No more 2 MB/s limit!
-- Enhanced Fan Out: Kinesis pushes data to consumers over HTTP/2
-- Reduce latency (~70 ms)
-
+- **Processing:** lightweight ETL to S3, DynamoDB, OpenSearch or downstream services; emit notifications when appropriate.
+- **Batch handling:** tune batch size, report partial failures where supported, and retry safely.
+- **KPL producers:** deaggregate records where required by the record format.
+- **Ordering:** processing is organized by shard; track checkpoints and avoid duplicate side effects.
 
 ```mermaid
 flowchart LR
-  accTitle: Kinesis enhanced fan-out
+  P[Kinesis producers] --> S[Data Streams shards]
+  S --> M[Lambda event source mapping]
+  M --> F[Lambda batch handler]
+  F --> O[S3 / DynamoDB / OpenSearch]
+  F -.-> R[Retries and checkpointing]
+```
+
+## Kinesis Enhanced Fan out
+
+**Enhanced fan-out gives registered consumers dedicated per-shard read throughput and a push-based delivery path, trading extra cost for isolation and lower latency.**
+
+- New game-changing feature from August 2018
+- Works with KCL 2.0 and AWS Lambda (Nov 2018)
+- Each Consumer get 2 MB/s of provisioned throughput per shard
+- No more 2 MB/s limit!
+- Enhanced Fan Out: Kinesis pushes data to consumers over HTTP/2
+
+```mermaid
+flowchart LR
   n0["Shard"]
   n1["Registered consumer A"]
   n2["Registered consumer B"]
@@ -6871,40 +6277,30 @@ flowchart LR
   n0 -->|"dedicated delivery"| n2
 ```
 
-> Enhanced fan-out gives registered consumers dedicated per-shard read throughput through SubscribeToShard rather than sharing GetRecords capacity.
 
 ## Enhanced Fan-Out vs Standard Consumers
 
+**Shared consumers compete for shard read throughput; enhanced fan-out isolates supported consumers. Compare both throughput allocation and registered-consumer quotas.**
 
-Shared consumers compete for shard read throughput; enhanced fan-out isolates supported consumers. Compare both throughput allocation and registered-consumer quotas.
+- Low number of consuming applications (1,2,3…)
+- Can tolerate ~200 ms latency
+- Minimize cost
+- **Enhanced Fan Out Consumers:** Multiple Consumer applications for the same Stream; Low Latency requirements ~70ms; Higher costs (see Kinesis pricing page); Registered enhanced-fan-out consumer quotas depend on stream mode: consult current…
 
-  - Low number of consuming applications (1,2,3…)
-  - Can tolerate ~200 ms latency
-  - Minimize cost
-- Enhanced Fan Out Consumers:
-  - Multiple Consumer applications for the same Stream
-  - Low Latency requirements ~70ms
-  - Higher costs (see Kinesis pricing page)
-  - Registered enhanced-fan-out consumer quotas depend on stream mode: consult current quotas; do not generalize one mode's limit.
+<!-- Source reference: https://docs.aws.amazon.com/streams/latest/dev/service-sizes-and-limits.html -->
 
-**Current reference (checked 2026-10-13):** [Kinesis quotas by capacity mode](https://docs.aws.amazon.com/streams/latest/dev/service-sizes-and-limits.html).
 
-### Kinesis Operations - Adding Sharts
+## Kinesis — Split Shards
 
-<!-- original-note: 163 -->
-<!-- title: Splitting Kinesis shards -->
+**Splitting a shard increases provisioned capacity or divides a hot key range. Existing records remain on the parent shard until retention expires.**
 
-Splitting a shard increases provisioned capacity or divides a hot key range. Existing records remain on the parent shard until retention expires.
-
-- Also called “Shard Splitting”
+- Also called "Shard Splitting"
 - Can be used to increase the Stream capacity (1 MB/s data in per shard)
-- Can be used to divide a “hot shard”
+- Can be used to divide a "hot shard"
 - The old shard is closed and will be deleted once the data is expired
-
 
 ```mermaid
 flowchart LR
-  accTitle: Splitting Kinesis shards
   n0["Parent shard"]
   n1["Child A"]
   n2["Child B"]
@@ -6912,23 +6308,17 @@ flowchart LR
   n0 -->|"split hash range"| n2
 ```
 
-> A split closes the parent shard and creates two children covering its hash-key range.
 
-### Merging Sharts
+## Kinesis — Merge Shards
 
-<!-- original-note: 164 -->
-<!-- title: Merging Kinesis shards -->
-
-Merging adjacent shards reduces provisioned capacity. Continue consuming the closed parents correctly while records remain within retention.
+**Merging adjacent shards reduces provisioned capacity. Continue consuming the closed parents correctly while records remain within retention.**
 
 - Decrease the Stream capacity and save costs
 - Can be used to group two shards with low traffic
 - Old shards are closed and deleted based on data expiration
 
-
 ```mermaid
 flowchart LR
-  accTitle: Merging Kinesis shards
   n0["Adjacent parent A"]
   n1["Adjacent parent B"]
   n2["Merged child"]
@@ -6936,25 +6326,19 @@ flowchart LR
   n1 -->|"merge"| n2
 ```
 
-> A merge combines adjacent shard hash-key ranges into one child shard.
 
-### Out of order records after resahrding
+## Kinesis — Ordering After Resharding
 
-<!-- original-note: 165 -->
-<!-- title: Ordering after Kinesis resharding -->
-
-Read a parent shard fully before its child shards to preserve the ordering dependency. KCL manages that progression for its consumers.
+**Read a parent shard fully before its child shards to preserve the ordering dependency. KCL manages that progression for its consumers.**
 
 - After a reshard, you can read from child shards
-- However, data you haven’t read yet could still be in the parent
+- However, data you haven't read yet could still be in the parent
 - If you start reading the child before completing reading the parent, you could read data for a particular hash key out of order
-- After a reshard, read entirely from the parent until you don’t have new records
+- After a reshard, read entirely from the parent until you don't have new records
 - Note: The Kinesis Client Library (KCL) has this logic already built-in, even after resharding operations
-
 
 ```mermaid
 flowchart LR
-  accTitle: Ordering after Kinesis resharding
   n0["Parent records"]
   n1["Parent drained"]
   n2["Child A records"]
@@ -6964,25 +6348,18 @@ flowchart LR
   n1 -->|"then consume"| n3
 ```
 
-> A consumer must finish a parent before processing its children when it needs to preserve ordering across resharding.
 
-### Kinesis Operations - Auto Scaling
+## Kinesis Operations - Auto Scaling
 
-<!-- original-note: 166 -->
-<!-- title: Kinesis scaling -->
+**Distinguish managed on-demand capacity from a provisioned stream's shard-scaling automation. Capacity limits and the time required to reshard still matter.**
 
-Distinguish managed on-demand capacity from a provisioned stream's shard-scaling automation. Capacity limits and the time required to reshard still matter.
-
-- For a provisioned stream, UpdateShardCount requests a supported shard-count change.
-- External automation can observe metrics and request that change, including through a Lambda workflow.
-- On-demand mode uses a different capacity-management model; do not apply a blanket "no automatic scaling" statement to every stream.
-
-- Review prompt: fill in a complete provisioned-scaling example around UpdateShardCount, including limits, observation periods and failure handling.
-
+- For a provisioned stream, UpdateShardCount requests a supported shard-count change
+- External automation can observe metrics and request that change, including through a Lambda workflow
+- On-demand mode uses a different capacity-management model; do not apply a blanket "no automatic scaling" statement to every stream
+- Review prompt: fill in a complete provisioned-scaling example around UpdateShardCount, including limits, observation periods and failure handling
 
 ```mermaid
 flowchart LR
-  accTitle: Kinesis scaling
   n0["Kinesis metrics"]
   n1["CloudWatch alarm"]
   n2["Lambda / automation"]
@@ -6992,38 +6369,26 @@ flowchart LR
   n2 -->|"request resharding"| n3
 ```
 
-> For provisioned streams, external automation can observe CloudWatch metrics and request shard-count changes; on-demand capacity is a different mode.
 
 ## Kinesis Scaling Limitations
 
-
-Provisioned resharding has operational and quota constraints. Plan a capacity change before the current stream becomes the bottleneck.
+**Provisioned resharding has operational and quota constraints. Plan a capacity change before the current stream becomes the bottleneck.**
 
 - You can only perform one resharding operation at a time and it takes a few seconds
 - For1000 shards, it takes 30K seconds (8.3 hours) to double the shards to 2000
-- You can’t do the following:
-  - Scale more than 10x for each rolling 24-hour period for each stream
-  - Scale up to more than double your current shard count for a stream
-  - Scale down below half your current shard count for a stream
-  - Scale up to more than 10,000 shards in a stream
-  - Scale a stream with more than 10,000 shards down unless the result is less than 10,000 shards
-  - Scale up to more than the shard limit for your account
+- **You can't do the following:** Scale more than 10x for each rolling 24-hour period for each stream · Scale up to more than double your current shard count for a stream · Scale down below half your current shard count for a stream · Scale up to…
 
-### Kinesis Handling duplicates for Producers
 
-<!-- original-note: 167 -->
-<!-- title: Producer duplicates -->
+## Kinesis Handling duplicates for Producers
 
-A timed-out producer can retry a write that already succeeded. Include a stable record identifier so the processing path can recognize duplicates.
+**A timed-out producer can retry a write that already succeeded. Include a stable record identifier so the processing path can recognize duplicates.**
 
 - Producer retries can create duplicates due to network timeouts
 - Although the two records have identical data, they also have unique sequence numbers
 - Fix: embed unique record ID in the data to de-duplicate on the consumer side
 
-
 ```mermaid
 flowchart LR
-  accTitle: Producer duplicates
   n0["Producer"]
   n1["Successful write"]
   n2["Lost acknowledgement"]
@@ -7036,42 +6401,32 @@ flowchart LR
   n1 -->|"original record"| n4
 ```
 
-> An unacknowledged successful write may be retried and create a duplicate. Use an application record identifier and idempotent processing.
 
-### Kinesis Handling duplicates for consumers
+## Kinesis Handling duplicates for consumers
 
-<!-- original-note: 168 -->
-<!-- title: Consumer duplicates -->
+**Worker restarts, checkpoints and resharding can cause records to be processed again. Make destination effects idempotent rather than assuming a single delivery.**
 
-Worker restarts, checkpoints and resharding can cause records to be processed again. Make destination effects idempotent rather than assuming a single delivery.
+- Consumer retries happen when record processors restart
+- **Fixes:** Make your consumer application idempotent; If the final destination can handle duplicates, it's recommended to do it there
+- More info: https://docs.aws.amazon.com/streams/latest/dev/kinesis-record-processor
 
-- Consumer retries happen when record processors restart:
-- Fixes:
-  - Make your consumer application idempotent
-  - If the final destination can handle duplicates, it’s recommended to do it there
-- More info: https://docs.aws.amazon.com/streams/latest/dev/kinesis-record-processor-
 
 ## Kinesis Security
 
-
-IAM controls who can publish or consume, while TLS and KMS protect data on its network and storage paths. These are complementary controls.
+**IAM controls who can publish or consume, while TLS and KMS protect data on its network and storage paths. These are complementary controls.**
 
 - Encryption in flight using HTTPS endpoints
 - Encryption at rest using KMS
 - Client side encryption must be manually implemented (harder)
 - VPC Endpoints available for Kinesis to access within VPC
 
+
 ## Kinesis Data Firehose
 
-<!-- original-note: 169 -->
-<!-- title: Amazon Data Firehose -->
-
-Firehose buffers incoming records and delivers them to supported destinations, with optional transformation and backup paths. It does not expose a general replay API for arbitrary consumers.
-
+**Firehose buffers incoming records and delivers them to supported destinations, with optional transformation and backup paths. It does not expose a general replay API for arbitrary consumers.**
 
 ```mermaid
 flowchart LR
-  accTitle: Amazon Data Firehose
   n0["Direct / stream producers"]
   n1["Data Firehose"]
   n2["Optional Lambda transform"]
@@ -7084,33 +6439,25 @@ flowchart LR
   n1 -->|"configured backup"| n4
 ```
 
-> Data Firehose buffers delivery, optionally transforms records and sends them to a configured destination with optional S3 backup.
 
 ## Firehose operations
 
-
-Firehose manages the delivery infrastructure, but buffering, destinations, transformation and failed-data handling still require configuration.
+**Firehose manages the delivery infrastructure, but buffering, destinations, transformation and failed-data handling still require configuration.**
 
 - Near Real Time (Buffer based on time and size, optionally can be disabled)
 - Load data into Redshift / Amazon S3 / OpenSearch / Splunk
-- Automatic scaling
-- Supports many data formats
 - Data Conversions from JSON to Parquet / ORC (only for S3)
-- Data Transformation through AWS Lambda (ex: CSV => JSON)
 - Supports compression when target is Amazon S3 (GZIP, ZIP, and SNAPPY)
 - Only GZIP is the data is further loaded into Redshift
-- Pay for the amount of data going through Firehose
 - Spark / KCL do not read from KDF
+
 
 ## Data Firehose Delivery Diagram
 
-
-Firehose delivery to Redshift stages files in S3 and issues COPY; Lambda transformation and failed-record backup are optional branches.
-
+**Firehose delivery to Redshift stages files in S3 and issues COPY; Lambda transformation and failed-record backup are optional branches.**
 
 ```mermaid
 flowchart TB
-  accTitle: Data Firehose Delivery Diagram
   n0["Kinesis"]
   n1["Firehose"]
   n2["Optional Lambda"]
@@ -7125,28 +6472,22 @@ flowchart TB
   n1 -->|"configured error backup"| n5
 ```
 
-> Firehose delivery to Redshift stages files in S3 and issues COPY; Lambda transformation and failed-record backup are optional branches.
 
-### Kinesis Firehose Buffer Sizing
+## Kinesis Firehose Buffer Sizing
 
-<!-- original-note: 170 -->
-<!-- title: Firehose buffering -->
-
-Delivery occurs according to the configured size and time thresholds. Larger buffers can improve efficiency while increasing the delay before data reaches the destination.
+**Delivery occurs according to the configured size and time thresholds. Larger buffers can improve efficiency while increasing the delay before data reaches the destination.**
 
 - The buffer is flushed based on time and size rules
-- Buffer Size (ex: 32MB): if that buffer size is reached, it’s flushed
-- Buffer Time (ex: 2 minutes): if that time is reached, it’s flushed
+- Buffer Size (ex: 32MB): if that buffer size is reached, it's flushed
+- Buffer Time (ex: 2 minutes): if that time is reached, it's flushed
 - Firehose can automatically increase the buffer size to increase throughput
 - High throughput => Buffer Size will be hit
 - Low throughput => Buffer Time will be hit
 
-### Kinesis Data Streams vs Firehose
 
-<!-- original-note: 171 -->
-<!-- title: Kinesis Data Streams and Firehose -->
+## Kinesis Data Streams vs Firehose
 
-Choose Streams for retained records, independent consumers and replay. Choose Firehose for managed buffered delivery into a supported destination.
+**Choose Streams for retained records, independent consumers and replay. Choose Firehose for managed buffered delivery into a supported destination.**
 
 | Requirement | Kinesis Data Streams | Data Firehose |
 | --- | --- | --- |
@@ -7156,112 +6497,82 @@ Choose Streams for retained records, independent consumers and replay. Choose Fi
 | Processing | Application, Lambda or supported analytics consumer | Supported transformation and format-conversion options |
 | Capacity | Provisioned or supported on-demand modes | Managed delivery scaling |
 
-### Troubleshooting Kinesis data stream producers
+```mermaid
+flowchart LR
+  A[Events] --> B{Need custom streaming readers?}
+  B -->|Yes| C[Kinesis Data Streams]
+  B -->|Managed delivery| D[Amazon Data Firehose]
+  C --> E[Multiple consumers and replay]
+  D --> F[Buffered delivery to destinations]
+```
 
-<!-- original-note: 172 -->
-<!-- title: Troubleshooting Kinesis producers -->
 
-When publishing is slow, distinguish hot shards, insufficient capacity, batching choices and network or service errors before changing the stream.
+## Troubleshooting Kinesis data stream producers
 
-  - Service limits may be exceeded. Check for throughput exceptions, see what operations are being throttled. Different calls have different limits.
-  - There are shard-level limits for writes and reads
-  - Other operations (ie, CreateStream, ListStreams, DescribeStreams) have stream-level limits of 5-20 calls per second
-  - Select partition key to evenly distribute puts across shards
-- Large producers
-  - Batch things up. Use Kinesis Producer Library, PutRecords with multi-records, or aggregate records into larger files.
-- Small producers (i.e. apps)
-  - Use PutRecords or Kinesis Recorder in the AWS Mobile SDKs
+**When publishing is slow, distinguish hot shards, insufficient capacity, batching choices and network or service errors before changing the stream.**
+
+- Service limits may be exceeded. Check for throughput exceptions, see what operations are being throttled. Different calls have different limits
+- There are shard-level limits for writes and reads
+- Other operations (ie, CreateStream, ListStreams, DescribeStreams) have stream-level limits of 5-20 calls per second
+- Select partition key to evenly distribute puts across shards
+- **Large producers:** Batch things up. Use Kinesis Producer Library, PutRecords with multi-records, or aggregate records into larger files
+- **Small producers (i.e. apps):** Use PutRecords or Kinesis Recorder in the AWS Mobile SDKs
+
 
 ## Kinesis producer errors
 
+**Differentiate temporary service errors from invalid requests and oversize records. Apply retries only to recoverable failures and inspect per-record outcomes.**
 
-Differentiate temporary service errors from invalid requests and oversize records. Apply retries only to recoverable failures and inspect per-record outcomes.
+- This indicates an AmazonKinesisException error rate above 1%
+- Implement a retry mechanism
+- **Connection errors from Flink to Kinesis:** Network issue or lack of resources in Flink's environment; Could be a VPC misconfiguration
+- **Timeout errors from Flink to Kinesis:** Adjust RequestTimeout and #setQueueLimit on FlinkKinesisProducer
+- **Throttling errors:** Check for hot shards with enhanced monitoring (shard-level) · Check logs for "micro spikes" or obscure metrics breaching limits · Try a random partition key or improve the key's distribution · Use exponential backoff ·…
 
-  - This indicates an AmazonKinesisException error rate above 1%
-  - Implement a retry mechanism
-- Connection errors from Flink to Kinesis
-  - Network issue or lack of resources in Flink’s environment
-  - Could be a VPC misconfiguration
-- Timeout errors from Flink to Kinesis
-  - Adjust RequestTimeout and #setQueueLimit on FlinkKinesisProducer
-- Throttling errors
-  - Check for hot shards with enhanced monitoring (shard-level)
-  - Check logs for “micro spikes” or obscure metrics breaching limits
-  - Try a random partition key or improve the key’s distribution
-  - Use exponential backoff
-  - Rate-limit
 
-### Troubleshooting Kinesis data stream Consumers
+## Troubleshooting Kinesis data stream Consumers
 
-<!-- original-note: 173 -->
-<!-- title: Troubleshooting Kinesis consumers -->
+**Investigate missing or delayed processing through checkpoints, record handlers, iterator age, permissions and downstream processing capacity.**
 
-Investigate missing or delayed processing through checkpoints, record handlers, iterator age, permissions and downstream processing capacity.
+- Check for unhandled exceptions on processRecords
+- **Records in same shard are processed by more than one processor:** May be due to failover on the record processor workers; Adjust failover time; Handle shutdown methods with reason "ZOMBIE"
+- **Reading is too slow:** Increase number of shards; maxRecords per call is too low; Your code is too slow (test an empty processor vs. yours)
+- **GetRecords returning empty results:** This is normal, just keep calling GetRecords
+- **Shard Iterator expires unexpectedly:** May need more write capacity on the shard table in DynamoDB
+- **Record processing falling behind:** Increase retention period while troubleshooting; Usually insufficient resources; Monitor with GetRecords.IteratorAgeMilliseconds and MillisBehindLatest
 
-  - Check for unhandled exceptions on processRecords
-- Records in same shard are processed by more than one processor
-  - May be due to failover on the record processor workers
-  - Adjust failover time
-  - Handle shutdown methods with reason “ZOMBIE”
-- Reading is too slow
-  - Increase number of shards
-  - maxRecords per call is too low
-  - Your code is too slow (test an empty processor vs. yours)
-- GetRecords returning empty results
-  - This is normal, just keep calling GetRecords
-- Shard Iterator expires unexpectedly
-  - May need more write capacity on the shard table in DynamoDB
-- Record processing falling behind
-  - Increase retention period while troubleshooting
-  - Usually insufficient resources
-  - Monitor with GetRecords.IteratorAgeMilliseconds and MillisBehindLatest
 
 ## Kinesis and Lambda invocation failures
 
+**If Lambda is not processing a stream, inspect its event source mapping, execution permissions and failure behavior before changing producer code.**
 
-If Lambda is not processing a stream, inspect its event source mapping, execution permissions and failure behavior before changing producer code.
+- Permissions issue on execution role
+- Function is timing out (check max execution time)
+- Breaching concurrency limits
+- Monitor IteratorAge metric; it will increase is this is a problem
+- **ReadProvisionedThroughputExceeded exception:** Throttling · Reshard your stream · Reduce size of GetRecords requests · Use enhanced fan-out · Use retries and exponential backoff
 
-  - Permissions issue on execution role
-  - Function is timing out (check max execution time)
-  - Breaching concurrency limits
-  - Monitor IteratorAge metric; it will increase is this is a problem
-- ReadProvisionedThroughputExceeded exception
-  - Throttling
-  - Reshard your stream
-  - Reduce size of GetRecords requests
-  - Use enhanced fan-out
-  - Use retries and exponential backoff
 
 ## Kinesis consumer latency
 
+**High iterator age can indicate slow processing, insufficient consumer capacity or downstream delays. Follow the processing path to locate the bottleneck.**
 
-High iterator age can indicate slow processing, insufficient consumer capacity or downstream delays. Follow the processing path to locate the bottleneck.
-
-  - Monitor with GetRecords.Latency and IteratorAge
-  - Increase shards
-  - Increase retention period
-  - Check CPU and memory utilization (may need more memory)
-- 500 errors
-  - Same as producers – indicates a high error rate (>1%)
-  - Implement a retry mechanism
-- Blocked or stuck KCL application
-  - Optimize your processRecords method
-  - Increase maxLeasesPerWorker
-  - Enable KCL debug logs
-
-## Amazon Kinesis Data Analytics for SQL Applications
+- Monitor with GetRecords.Latency and IteratorAge
+- Increase shards
+- Increase retention period
+- Check CPU and memory utilization (may need more memory)
+- **500 errors:** Same as producers – indicates a high error rate (>1%); Implement a retry mechanism
+- **Blocked or stuck KCL application:** Optimize your processRecords method; Increase maxLeasesPerWorker; Enable KCL debug logs
 
 
-Historical Kinesis Data Analytics SQL architecture; applications of this service were discontinued in 2026.
+## Kinesis SQL Analytics — Retired Service
 
-- Historical: Kinesis SQL applications were discontinued; deletion began January 27, 2026. Use a supported engine for new deployments.
+**Historical Kinesis Data Analytics SQL architecture; applications of this service were discontinued in 2026.**
 
-**Current reference (checked 2026-10-13):** [Kinesis SQL discontinuation](https://docs.aws.amazon.com/kinesisanalytics/latest/dev/what-is.html).
-
+- Historical: Kinesis SQL applications were discontinued; deletion began January 27, 2026. Use a supported engine for new deployments
 
 ```mermaid
 flowchart LR
-  accTitle: Amazon Kinesis Data Analytics for SQL Applications
   n0["Streaming input"]
   n1["Retired SQL application"]
   n2["Output stream"]
@@ -7271,21 +6582,17 @@ flowchart LR
   n1 -->|"processing error"| n3
 ```
 
-> Historical Kinesis Data Analytics SQL architecture; applications of this service were discontinued in 2026.
+<!-- Source reference: https://docs.aws.amazon.com/kinesisanalytics/latest/dev/what-is.html -->
+
 
 ## In more depth…
 
+**Historical SQL analytics could join streaming input with S3 reference data; this is not a current deployment recommendation.**
 
-Historical SQL analytics could join streaming input with S3 reference data; this is not a current deployment recommendation.
-
-- Historical: Kinesis SQL applications were discontinued; deletion began January 27, 2026. Use a supported engine for new deployments.
-
-**Current reference (checked 2026-10-13):** [Kinesis SQL discontinuation](https://docs.aws.amazon.com/kinesisanalytics/latest/dev/what-is.html).
-
+- Historical: Kinesis SQL applications were discontinued; deletion began January 27, 2026. Use a supported engine for new deployments
 
 ```mermaid
 flowchart LR
-  accTitle: In more depth…
   n0["Kinesis / Firehose input"]
   n1["S3 reference data"]
   n2["Retired SQL application"]
@@ -7295,25 +6602,18 @@ flowchart LR
   n2 -->|"SQL output"| n3
 ```
 
-> Historical SQL analytics could join streaming input with S3 reference data; this is not a current deployment recommendation.
+<!-- Source reference: https://docs.aws.amazon.com/kinesisanalytics/latest/dev/what-is.html -->
+
 
 ## Reference tables are cool
 
+**Historical in-application streams separated source, SQL transformation, destination and error handling.**
 
-Historical in-application streams separated source, SQL transformation, destination and error handling.
-
-- Historical: Kinesis SQL applications were discontinued; deletion began January 27, 2026. Use a supported engine for new deployments.
-- Inexpensive way to “join” data for quick lookups
-  - i.e., look up the city associated with a zip code
-  - Mapping is stored in S3 which is very inexpensive
-  - Just use a “JOIN” command to use the data in your queries
-
-**Current reference (checked 2026-10-13):** [Kinesis SQL discontinuation](https://docs.aws.amazon.com/kinesisanalytics/latest/dev/what-is.html).
-
+- Historical: Kinesis SQL applications were discontinued; deletion began January 27, 2026. Use a supported engine for new deployments
+- **Inexpensive way to "join" data for quick lookups:** i.e., look up the city associated with a zip code; Mapping is stored in S3 which is very inexpensive; Just use a "JOIN" command to use the data in your queries
 
 ```mermaid
 flowchart TB
-  accTitle: Reference tables are cool
   n0["Source stream"]
   n1["In-application input"]
   n2["SQL transformation"]
@@ -7327,29 +6627,20 @@ flowchart TB
   n2 -->|"errors"| n5
 ```
 
-> Historical in-application streams separated source, SQL transformation, destination and error handling.
+<!-- Source reference: https://docs.aws.amazon.com/kinesisanalytics/latest/dev/what-is.html -->
+
 
 ## Kinesis Data Analytics + Lambda
 
+**Historical SQL analytics used Lambda for custom output handling; use a supported processing service for new designs.**
 
-Historical SQL analytics used Lambda for custom output handling; use a supported processing service for new designs.
-
-- Historical: Kinesis SQL applications were discontinued; deletion began January 27, 2026. Use a supported engine for new deployments.
+- Historical: Kinesis SQL applications were discontinued; deletion began January 27, 2026. Use a supported engine for new deployments
 - AWS Lambda can be a destination as well
-- Allows lots of flexibility for post-processing
-  - Aggregating rows
-  - Translating to different formats
-  - Transforming and enriching data
-  - Encryption
-- Opens up access to other services & destinations
-  - S3, DynamoDB, Aurora, Redshift, SNS, SQS, CloudWatch
-
-**Current reference (checked 2026-10-13):** [Kinesis SQL discontinuation](https://docs.aws.amazon.com/kinesisanalytics/latest/dev/what-is.html).
-
+- **Allows lots of flexibility for post-processing:** Aggregating rows, Translating to different formats, Transforming and enriching data, Encryption
+- **Opens up access to other services & destinations:** S3, DynamoDB, Aurora, Redshift, SNS, SQS, CloudWatch
 
 ```mermaid
 flowchart LR
-  accTitle: Kinesis Data Analytics + Lambda
   n0["Retired SQL application"]
   n1["Lambda output handler"]
   n2["Downstream destination"]
@@ -7357,26 +6648,20 @@ flowchart LR
   n1 -->|"custom delivery"| n2
 ```
 
-> Historical SQL analytics used Lambda for custom output handling; use a supported processing service for new designs.
+<!-- Source reference: https://docs.aws.amazon.com/kinesisanalytics/latest/dev/what-is.html -->
+
 
 ## Managed Service for Apache Flink
 
+**Managed Service for Apache Flink runs stateful streaming jobs with supported Kinesis, Kafka and other connectors.**
 
-Managed Service for Apache Flink runs stateful streaming jobs with supported Kinesis, Kafka and other connectors.
-
-- Formerly Kinesis Data Analytics for Apache Flink or for Java
-  - Kinesis Data Analytics always used Flink under the hood
-  - But now supports Python and Scala
-  - Flink is a framework for processing data streams
-- MSAF integrates Flink with AWS
-  - Instead of using SQL, you can develop your own Flink application from scratch and load it into MSAF via S3
+- **Formerly Kinesis Data Analytics for Apache Flink or for Java:** Kinesis Data Analytics always used Flink under the hood; But now supports Python and Scala; Flink is a framework for processing data streams
+- **MSAF integrates Flink with AWS:** Instead of using SQL, you can develop your own Flink application from scratch and load it into MSAF via S3
 - In addition to the DataStream API, there is a Table API for SQL access
 - Serverless
 
-
 ```mermaid
 flowchart LR
-  accTitle: Managed Service for Apache Flink
   n0["Kinesis / MSK / supported source"]
   n1["Managed Flink application"]
   n2["Supported sink"]
@@ -7384,30 +6669,16 @@ flowchart LR
   n1 -->|"process / deliver"| n2
 ```
 
-> Managed Service for Apache Flink runs stateful streaming jobs with supported Kinesis, Kafka and other connectors.
 
 ## Apache Flink Capabilities
 
+**Flink builds a processing graph of stateless and stateful operators, including event-time windows.**
 
-Flink builds a processing graph of stateless and stateful operators, including event-time windows.
-
-- Connectors
-  - The flink-connector-kinesis library lets you consume a data stream from Java
-  - A library of “Table API Connectors” are included in Flink
-    - Kafka, DynamoDB, Firehose, Kinesis, MongoDB, OpenSearch, JDBC…
-  - Custom “sink” connectors allow Flink to talk to anything you have an SDK for
-    - For example, you could write a sink to connect to a Timestream database
-- Operators
-  - Transform one or more DataStreams into a new DataStream
-  - Similar to Apache Spark transformations
-    - Map, Flatmap, Filter, Reduce, Windows, Join
-  - Physical partitioning
-  - Task chaining
-
+- **Connectors:** The flink-connector-kinesis library lets you consume a data stream from Java · A library of "Table API Connectors" are included in Flink · Kafka, DynamoDB, Firehose, Kinesis, MongoDB, OpenSearch, JDBC… · Custom "sink" connectors…
+- **Operators:** Transform one or more DataStreams into a new DataStream · Similar to Apache Spark transformations · Map, Flatmap, Filter, Reduce, Windows, Join · Physical partitioning · Task chaining
 
 ```mermaid
 flowchart LR
-  accTitle: Apache Flink Capabilities
   n0["Source"]
   n1["Map / flatMap / filter"]
   n2["Keyed reduce / window"]
@@ -7417,61 +6688,58 @@ flowchart LR
   n2 -->|"results"| n3
 ```
 
-> Flink builds a processing graph of stateless and stateful operators, including event-time windows.
 
 ## Common use-cases
 
-
-Streaming analytics can transform events, calculate ongoing metrics and detect conditions before delivering results to downstream systems.
+**Streaming analytics can transform events, calculate ongoing metrics and detect conditions before delivering results to downstream systems.**
 
 - Continuous metric generation
 - Responsive analytics
 
+
 ## Kinesis Analytics
 
+**Managed analytics charges follow the resources and processing model in use. Historical product names and example prices require dated interpretation.**
 
-Managed analytics charges follow the resources and processing model in use. Historical product names and example prices require dated interpretation.
-
-  - Charged by Kinesis Processing Units (KPU’s) consumed per hour
-  - 1 KPU = 1 vCPU + 4GB
+- Charged by Kinesis Processing Units (KPU's) consumed per hour
+- 1 KPU = 1 vCPU + 4GB
 - Serverless; scales automatically
 - Use IAM permissions to access streaming source and destination(s)
 - Schema discovery
 
+
 ## RANDOM_CUT_FOREST
 
+**RANDOM_CUT_FOREST is a historical Kinesis SQL anomaly-detection example. Retain the anomaly-detection concept while using a supported engine for new work.**
 
-RANDOM_CUT_FOREST is a historical Kinesis SQL anomaly-detection example. Retain the anomaly-detection concept while using a supported engine for new work.
-
-- They’re especially proud of this because they published a paper on it
-- It’s a novel way to identify outliers in a data set so you can handle them however you need to
+- They're especially proud of this because they published a paper on it
+- It's a novel way to identify outliers in a data set so you can handle them however you need to
 - Example: detect anomalous subway ridership during the NYC marathon
+
 
 ## Amazon Managed Streaming for Apache Kafka (Amazon MSK)
 
+**MSK provides managed Apache Kafka infrastructure. Its Kafka APIs and ecosystem differ from Kinesis even when both serve streaming architectures.**
 
-MSK provides managed Apache Kafka infrastructure. Its Kafka APIs and ecosystem differ from Kinesis even when both serve streaming architectures.
-
-- Fully managed Apache Kafka on AWS
-  - Allow you to create, update, delete clusters
-  - MSK creates & manages Kafka brokers nodes & Zookeeper nodes for you
-  - Deploy the MSK cluster in your VPC, multi-AZ (up to 3 for HA)
-  - Automatic recovery from common Apache Kafka failures
-  - Data is stored on EBS volumes
+- **Fully managed Apache Kafka on AWS:** Allow you to create, update, delete clusters · MSK creates & manages Kafka brokers nodes & Zookeeper nodes for you · Deploy the MSK cluster in your VPC, multi-AZ (up to 3 for HA) · Automatic recovery from…
 - You can build producers and consumers of data
-- Can create custom configurations for your clusters
-  - Default message size of 1MB
-  - Possibilities of sending large messages (ex: 10MB) into Kafka after custom configuration
-
-## Apache Kafka at a high level
-
-
-Kafka producers append to topic partitions on brokers; independent consumer groups process those records.
-
+- **Can create custom configurations for your clusters:** Default message size of 1MB; Possibilities of sending large messages (ex: 10MB) into Kafka after custom configuration
 
 ```mermaid
 flowchart LR
-  accTitle: Apache Kafka at a high level
+  A[Kafka producers] --> B[MSK broker cluster]
+  B --> C[Topics / partitions]
+  C --> D[Kafka consumers]
+  E[MSK Connect] -.-> C
+```
+
+
+## Apache Kafka at a high level
+
+**Kafka producers append to topic partitions on brokers; independent consumer groups process those records.**
+
+```mermaid
+flowchart LR
   n0["Producers"]
   n1["Kafka brokers / topic partitions"]
   n2["Consumer group A"]
@@ -7484,12 +6752,10 @@ flowchart LR
   n3 -->|"process"| n4
 ```
 
-> Kafka producers append to topic partitions on brokers; independent consumer groups process those records.
 
 ## MSK – Configurations
 
-
-The course depicts a multi-AZ Kafka cluster with ZooKeeper. Coordination architecture depends on the Kafka/MSK version and cluster mode.
+**The course depicts a multi-AZ Kafka cluster with ZooKeeper. Coordination architecture depends on the Kafka/MSK version and cluster mode.**
 
 - Choose the number of AZ (3 – recommended, or 2)
 - Choose the VPC & Subnets
@@ -7497,10 +6763,8 @@ The course depicts a multi-AZ Kafka cluster with ZooKeeper. Coordination archite
 - The number of brokers per AZ (can add brokers later)
 - Size of your EBS volumes (1GB – 16TB)
 
-
 ```mermaid
 flowchart LR
-  accTitle: MSK – Configurations
   n0["AZ A broker"]
   n1["AZ B broker"]
   n2["AZ C broker"]
@@ -7512,29 +6776,17 @@ flowchart LR
   n3 -->|"cluster metadata"| n2
 ```
 
-> The course depicts a multi-AZ Kafka cluster with ZooKeeper. Coordination architecture depends on the Kafka/MSK version and cluster mode.
 
 ## MSK – Security
 
+**MSK security separates transport encryption, client authentication and authorization.**
 
-MSK security separates transport encryption, client authentication and authorization.
-
-- Encryption:
-  - Optional in-flight using TLS between the brokers
-  - Optional in-flight with TLS between the clients and brokers
-  - At rest for your EBS volumes using KMS
-- Network Security:
-  - Authorize specific security groups for your Apache Kafka clients
-- Authentication & Authorization (important):
-  - Define who can read/write to which topics
-  - Mutual TLS (AuthN) + Kafka ACLs (AuthZ)
-  - SASL/SCRAM (AuthN) + Kafka ACLs (AuthZ)
-  - IAM Access Control (AuthN + AuthZ)
-
+- **Encryption:** Optional in-flight using TLS between the brokers; Optional in-flight with TLS between the clients and brokers; At rest for your EBS volumes using KMS
+- **Network Security:** Authorize specific security groups for your Apache Kafka clients
+- **Authentication & Authorization (important):** Define who can read/write to which topics; Mutual TLS (AuthN) + Kafka ACLs (AuthZ); SASL/SCRAM (AuthN) + Kafka ACLs (AuthZ); IAM Access Control (AuthN + AuthZ)
 
 ```mermaid
 flowchart LR
-  accTitle: MSK – Security
   n0["Client"]
   n1["TLS transport"]
   n2["IAM / supported authentication"]
@@ -7546,39 +6798,29 @@ flowchart LR
   n3 -->|"allowed operation"| n4
 ```
 
-> MSK security separates transport encryption, client authentication and authorization.
 
 ## MSK – Monitoring
 
+**Monitor MSK through supported service and broker metrics, logs and monitoring integrations. Observe partition health and consumer lag alongside resource use.**
 
-Monitor MSK through supported service and broker metrics, logs and monitoring integrations. Observe partition health and consumer lag alongside resource use.
+- Basic monitoring (cluster and broker metrics)
+- Enhanced monitoring (++enhanced broker metrics)
+- Topic-level monitoring (++enhanced topic-level metrics)
+- **Prometheus (Open-Source Monitoring):** Opens a port on the broker to export cluster, broker and topic-level metrics; Setup the JMX Exporter (metrics) or Node Exporter (CPU and disk metrics)
+- **Broker Log Delivery:** Delivery to CloudWatch Logs, Delivery to Amazon S3, Delivery to Kinesis Data Streams
 
-  - Basic monitoring (cluster and broker metrics)
-  - Enhanced monitoring (++enhanced broker metrics)
-  - Topic-level monitoring (++enhanced topic-level metrics)
-- Prometheus (Open-Source Monitoring)
-  - Opens a port on the broker to export cluster, broker and topic-level metrics
-  - Setup the JMX Exporter (metrics) or Node Exporter (CPU and disk metrics)
-- Broker Log Delivery
-  - Delivery to CloudWatch Logs
-  - Delivery to Amazon S3
-  - Delivery to Kinesis Data Streams
 
 ## MSK Connect
 
-
-MSK Connect runs a compatible connector that consumes Kafka records and delivers them to a configured sink such as S3.
+**MSK Connect runs a compatible connector that consumes Kafka records and delivers them to a configured sink such as S3.**
 
 - Managed Kafka Connect workers on AWS
 - Auto-scaling capabilities for workers
-- You can deploy any Kafka Connect connectors to MSK Connect as a plugin
-  - Amazon S3, Amazon Redshift, Amazon OpenSearch, Debezium, etc…
+- **You can deploy any Kafka Connect connectors to MSK Connect as a plugin:** Amazon S3, Amazon Redshift, Amazon OpenSearch, Debezium, etc…
 - Example pricing: Pay $0.11 per worker per hour
-
 
 ```mermaid
 flowchart LR
-  accTitle: MSK Connect
   n0["MSK topic"]
   n1["MSK Connect worker"]
   n2["S3 sink"]
@@ -7586,81 +6828,78 @@ flowchart LR
   n1 -->|"connector delivery"| n2
 ```
 
-> MSK Connect runs a compatible connector that consumes Kafka records and delivers them to a configured sink such as S3.
 
 ## MSK Serverless
 
-
-MSK Serverless reduces broker-capacity administration while retaining Kafka's application model and documented service constraints.
+**MSK Serverless reduces broker-capacity administration while retaining Kafka's application model and documented service constraints.**
 
 - MSK automatically provisions resources and scales compute & storage
-- You just define your topics and your partitions and you’re good to go!
+- You just define your topics and your partitions and you're good to go!
 - Security: IAM Access Control for all clusters
-- Example Pricing:
-  - $0.75 per cluster per hour = $558 monthly per cluster
-  - $0.0015 per partition per hour = $1.08 monthly per partition
-  - $0.10 per GB of storage each month
-  - $0.10 per GB in
-  - $0.05 per GB out
+- **Example Pricing:** $0.75 per cluster per hour = $558 monthly per cluster · $0.0015 per partition per hour = $1.08 monthly per partition · $0.10 per GB of storage each month · $0.10 per GB in · $0.05 per GB out
+
 
 ## Kinesis Data Streams vs Amazon MSK
 
-
-Compare Kafka and Kinesis by protocol, partitioning, retention, consumer behavior and operating model. Message limits depend on the selected service configuration.
+**Compare Kafka and Kinesis by protocol, partitioning, retention, consumer behavior and operating model. Message limits depend on the selected service configuration.**
 
 - Data Streams with Shards
 - Shard Splitting & Merging
 - TLS In-flight encryption
 - KMS At-rest encryption
-- Security:
-  - IAM policies for AuthN/AuthZ
-                    - 1MB default, configure for higher (ex: 10MB)
-                    - Kafka Topics with Partitions
-                    - Can only add partitions to a topic
-                    - PLAINTEXT or TLS In-flight Encryption
-                      - Mutual TLS (AuthN) + Kafka ACLs (AuthZ)
-                      - SASL/SCRAM (AuthN) + Kafka ACLs (AuthZ)
-                      - IAM Access Control (AuthN + AuthZ)
+- **Security:** IAM policies for AuthN/AuthZ · 1MB default, configure for higher (ex: 10MB) · Kafka Topics with Partitions · Can only add partitions to a topic · PLAINTEXT or TLS In-flight Encryption · Mutual TLS (AuthN) + Kafka ACLs (AuthZ) ·…
+
+```mermaid
+flowchart TB
+  A[Streaming platform] --> B[Kinesis: AWS native shards]
+  A --> C[MSK: managed Kafka brokers]
+  B --> D[AWS API + consumers]
+  C --> E[Kafka protocol + ecosystem]
+```
+
 
 ## What is OpenSearch?
 
-
-OpenSearch indexes documents for search and aggregation. It originated from Elasticsearch and provides its own supported APIs and visualization ecosystem.
+**OpenSearch indexes documents for search and aggregation. It originated from Elasticsearch and provides its own supported APIs and visualization ecosystem.**
 
 - A search engine
 - An analysis tool
 - A visualization tool (Dashboards = Kibana)
-- A data pipeline
-  - Kinesis replaces Beats & LogStash
+- **A data pipeline:** Kinesis replaces Beats & LogStash
 - Horizontally scalable
+
+```mermaid
+flowchart LR
+  A[Documents / log events] --> B[OpenSearch indexes]
+  B --> C[Full-text queries]
+  B --> D[Aggregations / dashboards]
+```
+
 
 ## OpenSearch Dashboards
 
+**Dashboards turn indexed search and aggregation results into interactive visualizations.**
 
-Dashboards turn indexed search and aggregation results into interactive visualizations.
+- The screenshot illustrates a dashboard of multiple charts; filters and a time range define the slice being inspected
+- Interpret the underlying query, units and time interval before drawing an operational conclusion from a chart
 
-- The screenshot illustrates a dashboard of multiple charts; filters and a time range define the slice being inspected.
-- Interpret the underlying query, units and time interval before drawing an operational conclusion from a chart.
 
 ## OpenSearch applications
 
-
-Search, log analysis and document aggregation are typical OpenSearch workloads. The index model is different from transactional database serving.
+**Search, log analysis and document aggregation are typical OpenSearch workloads. The index model is different from transactional database serving.**
 
 - Log analytics
 - Application monitoring
 - Security analytics
 - Clickstream analytics
 
+
 ## OpenSearch concepts
 
-
-OpenSearch indexes JSON documents; the slide's document-type terminology is historical and should not guide new index design.
-
+**OpenSearch indexes JSON documents; the slide's document-type terminology is historical and should not guide new index design.**
 
 ```mermaid
 flowchart LR
-  accTitle: OpenSearch concepts
   n0["JSON documents"]
   n1["Index"]
   n2["Search / aggregation"]
@@ -7668,17 +6907,13 @@ flowchart LR
   n1 -->|"query indexed fields"| n2
 ```
 
-> OpenSearch indexes JSON documents; the slide's document-type terminology is historical and should not guide new index design.
 
 ## An index is split into shards
 
-
-Document routing assigns documents to primary shards within an index; shard design affects scale and query overhead.
-
+**Document routing assigns documents to primary shards within an index; shard design affects scale and query overhead.**
 
 ```mermaid
 flowchart LR
-  accTitle: An index is split into shards
   n0["Document ID / routing key"]
   n1["Shard routing"]
   n2["Primary shard A"]
@@ -7688,17 +6923,13 @@ flowchart LR
   n1 -->|"place document"| n3
 ```
 
-> Document routing assigns documents to primary shards within an index; shard design affects scale and query overhead.
 
 ## Redundancy
 
-
-Writes reach a primary shard and are replicated; reads may use eligible primary or replica copies on different nodes.
-
+**Writes reach a primary shard and are replicated; reads may use eligible primary or replica copies on different nodes.**
 
 ```mermaid
 flowchart LR
-  accTitle: Redundancy
   n0["Write request"]
   n1["Primary shard"]
   n2["Replica on another node"]
@@ -7709,116 +6940,81 @@ flowchart LR
   n3 -->|"read option"| n2
 ```
 
-> Writes reach a primary shard and are replicated; reads may use eligible primary or replica copies on different nodes.
 
 ## Amazon OpenSearch Service (Managed)
 
+**Managed OpenSearch domains supply service-managed infrastructure with explicit sizing and configuration choices. They are distinct from the serverless deployment model.**
 
-Managed OpenSearch domains supply service-managed infrastructure with explicit sizing and configuration choices. They are distinct from the serverless deployment model.
-
-  - There is a separate serverless option now
-- Scale up or down without downtime
-  - But this isn’t automatic
-- Pay for what you use
-  - Instance-hours, storage, data transfer
+- There is a separate serverless option now
+- **Scale up or down without downtime:** But this isn't automatic
+- **Pay for what you use:** Instance-hours, storage, data transfer
 - Network isolation
-- AWS integration
-  - S3 buckets (via Lambda to Kinesis)
-  - Kinesis Data Streams
-  - DynamoDB Streams
-  - CloudWatch / CloudTrail
-  - Zone awareness
+- **AWS integration:** S3 buckets (via Lambda to Kinesis) · Kinesis Data Streams · DynamoDB Streams · CloudWatch / CloudTrail · Zone awareness
+
 
 ## Amazon OpenSearch options
 
+**Node roles, storage choices and deployment sizing affect both query behavior and cluster stability. Assign resources to the work each role performs.**
 
-Node roles, storage choices and deployment sizing affect both query behavior and cluster stability. Assign resources to the work each role performs.
-
-  - Choice of count and instance types
-- “Domains”
+- Choice of count and instance types
+- "Domains"
 - Snapshots to S3
 - Zone Awareness
 
+
 ## Cold / warm / ultrawarm / hot storage
 
+**Hot, warm and cold tiers trade query performance and access behavior for storage cost. Move data according to how often it must be searched.**
 
-Hot, warm and cold tiers trade query performance and access behavior for storage cost. Move data according to how often it must be searched.
-
-- Hot (standard data nodes)
-  - Instance stores or EBS volumes / fastest performance
-- UltraWarm (warm) storage uses S3 + caching
-  - Best for indices with few writes (like log data / immutable data)
-  - Slower performance but much lower cost
-  - Must have a dedicated master node
-- Cold storage
-  - Also uses S3
-  - Even cheaper
-  - For “periodic research or forensic analysis on older data”
-  - Must have dedicated master and have UltraWarm enabled too.
-  - Not compatible with T2 or T3 instance types on data nodes
-  - If using fine-grained access control, must map users to cold_manager role in OpenSearch Dashboards
+- **Hot (standard data nodes):** Instance stores or EBS volumes / fastest performance
+- **UltraWarm (warm) storage uses S3 + caching:** Best for indices with few writes (like log data / immutable data); Slower performance but much lower cost; Must have a dedicated master node
+- **Cold storage:** Also uses S3 · Even cheaper · For "periodic research or forensic analysis on older data" · Must have dedicated master and have UltraWarm enabled too · Not compatible with T2 or T3 instance types on data nodes · If using…
 - Data may be migrated between different storage types
+
 
 ## Index State Management
 
+**Index State Management applies lifecycle actions when configured conditions are met. Policies automate maintenance rather than changing the underlying retention requirement.**
 
-Index State Management applies lifecycle actions when configured conditions are met. Policies automate maintenance rather than changing the underlying retention requirement.
-
-- Examples
-  - Delete old indices after a period of time
-  - Move indices into read only state after a period of time
-  - Move indices from hot -> UltraWarm -> cold storage over time
-  - Reduce replica count over time
-  - Automate index snapshots
-- ISM policies are run every 30-48 minutes
-  - Random jitter to ensure they don’t all run at once
+- **Examples:** Delete old indices after a period of time · Move indices into read only state after a period of time · Move indices from hot -> UltraWarm -> cold storage over time · Reduce replica count over time · Automate index snapshots
+- **ISM policies are run every 30-48 minutes:** Random jitter to ensure they don't all run at once
 - Can even send notifications when done
+
 
 ## More Index Management
 
+**Rollups and transforms prepare derived data for repeated analysis. Decide which detail can be summarized and which original data must remain available.**
 
-Rollups and transforms prepare derived data for repeated analysis. Decide which detail can be summarized and which original data must remain available.
+- Periodically roll up old data into summarized indices
+- Saves storage costs
+- New index may have fewer fields, coarser time buckets
+- **Index transforms:** Like rollups, but purpose is to create a different view to analyze data differently; Groupings and aggregations
 
-  - Periodically roll up old data into summarized indices
-  - Saves storage costs
-  - New index may have fewer fields, coarser time buckets
-- Index transforms
-  - Like rollups, but purpose is to create a different view to analyze data differently.
-  - Groupings and aggregations
 
 ## Cross-cluster replication
 
-
-Cross-cluster replication follows supported indices and metadata into another domain. Replication direction, permissions and destination configuration still matter.
+**Cross-cluster replication follows supported indices and metadata into another domain. Replication direction, permissions and destination configuration still matter.**
 
 - Ensures high availability in an outage
 - Replicate data geographically for better latency
-- “Follower” index pulls data from “leader” index
+- "Follower" index pulls data from "leader" index
 - Requires fine-grained access control and node-to-node encryption
-- “Remote Reindex” allows copying indices from one cluster to another on demand
+- "Remote Reindex" allows copying indices from one cluster to another on demand
+
 
 ## OpenSearch Stability
 
+**Separate cluster-management responsibilities from data processing and distribute supported resources appropriately. Stable sizing is part of reliable search performance.**
 
-Separate cluster-management responsibilities from data processing and distribute supported resources appropriately. Stable sizing is part of reliable search performance.
+- Avoids "split brain"
+- **Don't run out of disk space:** Minimum storage requirement is roughly: Source Data * (1 + Number of Replicas) * 1.45
+- **Choosing the number of shards:** (source data + room to grow) * (1 + indexing overhead) / desired shard size; Indexing overhead is normally 10% of your data; In rare cases you may need to limit the number of shards per node; You usually run…
+- **Choosing instance types:** At least 3 nodes; Mostly about storage requirements; i.e., m6g.large.search, i3.4xlarge.search, i3.16xlarge.search
 
-  - Avoids “split brain”
-- Don’t run out of disk space
-  - Minimum storage requirement is roughly: Source Data * (1 + Number of Replicas) * 1.45
-- Choosing the number of shards
-  - (source data + room to grow) * (1 + indexing overhead) / desired shard size
-  - Indexing overhead is normally 10% of your data
-  - In rare cases you may need to limit the number of shards per node
-    - You usually run out of disk space first.
-- Choosing instance types
-  - At least 3 nodes
-  - Mostly about storage requirements
-  - i.e., m6g.large.search, i3.4xlarge.search, i3.16xlarge.search
 
 ## Amazon OpenSearch Security
 
-
-OpenSearch authorization can combine network, resource-policy and fine-grained controls. Apply the layers required by the application's access path.
+**OpenSearch authorization can combine network, resource-policy and fine-grained controls. Apply the layers required by the application's access path.**
 
 - Identity-based policies
 - IP-based policies
@@ -7826,22 +7022,16 @@ OpenSearch authorization can combine network, resource-policy and fine-grained c
 - VPC
 - Cognito
 
+
 ## Securing Dashboards
 
-
-A private OpenSearch dashboard needs network access through a supported private path plus application authentication.
+**A private OpenSearch dashboard needs network access through a supported private path plus application authentication.**
 
 - Cognito
-- Getting inside a VPC from outside is hard…
-  - Nginx reverse proxy on EC2 forwarding to ES domain
-  - SSH tunnel for port 5601
-  - VPC Direct Connect
-  - VPN
-
+- **Getting inside a VPC from outside is hard…:** Nginx reverse proxy on EC2 forwarding to ES domain; SSH tunnel for port 5601; VPC Direct Connect; VPN
 
 ```mermaid
 flowchart LR
-  accTitle: Securing Dashboards
   n0["User"]
   n1["VPN / authorized proxy"]
   n2["Private Dashboards endpoint"]
@@ -7851,48 +7041,36 @@ flowchart LR
   n3 -->|"authenticate user"| n2
 ```
 
-> A private OpenSearch dashboard needs network access through a supported private path plus application authentication.
 
 ## Amazon OpenSearch anti-patterns
 
+**OpenSearch is a poor substitute for a transactional database or for workloads without a search or aggregation requirement.**
 
-OpenSearch is a poor substitute for a transactional database or for workloads without a search or aggregation requirement.
+- No transactions
+- RDS or DynamoDB is better
+- **Ad-hoc data querying:** Athena is better
 
-  - No transactions
-  - RDS or DynamoDB is better
-- Ad-hoc data querying
-  - Athena is better
-- Remember OpenSearch is primarily for search & analytics
 
 ## Amazon OpenSearch performance
 
+**JVM memory pressure and shard layout can constrain search performance. Investigate field choices, aggregation load and resource distribution together.**
 
-JVM memory pressure and shard layout can constrain search performance. Investigate field choices, aggregation load and resource distribution together.
+- You have unbalanced shard allocations across nodes
+- You have too many shards in a cluster
+- **Fewer shards can yield better performance if JVMMemoryPressure errors are encountered:** Delete old or unused indices
 
-  - You have unbalanced shard allocations across nodes
-  - You have too many shards in a cluster
-- Fewer shards can yield better performance if JVMMemoryPressure errors are encountered
-  - Delete old or unused indices
 
 ## Amazon OpenSearch Serverless
 
-
-OpenSearch Serverless separates collection access from managed indexing and search capacity; network, encryption and data-access policies are distinct.
+**OpenSearch Serverless separates collection access from managed indexing and search capacity; network, encryption and data-access policies are distinct.**
 
 - On-demand autoscaling!
-- Works against “collections” instead of provisioned domains
-  - May be “search” or “time series” type
-- Always encrypted with your KMS key
-  - Data access policies
-  - Encryption at rest is required
-  - May configure security policies across many collections
-- Capacity measured in OpenSearch Compute Units (OCUs)
-  - Can set an upper limit, lower limit is always 2 for indexing, 2 for search
-
+- **Works against "collections" instead of provisioned domains:** May be "search" or "time series" type
+- **Always encrypted with your KMS key:** Data access policies; Encryption at rest is required; May configure security policies across many collections
+- **Capacity measured in OpenSearch Compute Units (OCUs):** Can set an upper limit, lower limit is always 2 for indexing, 2 for search
 
 ```mermaid
 flowchart LR
-  accTitle: Amazon OpenSearch Serverless
   n0["Client"]
   n1["Network + data policies"]
   n2["Collection"]
@@ -7902,110 +7080,91 @@ flowchart LR
   n3 -->|"service-managed compute"| n2
 ```
 
-> OpenSearch Serverless separates collection access from managed indexing and search capacity; network, encryption and data-access policies are distinct.
 
-## What is Quick Suite / Quick Sight?
+## Amazon QuickSight — Analytics & Dashboards
 
-
-QuickSight provides business-intelligence analysis and dashboards within the broader product suite described by the source. Keep analytics features separate from branding changes.
+**QuickSight provides business-intelligence analysis and dashboards within the broader product suite described by the source. Keep analytics features separate from branding changes.**
 
 - Fast, easy, cloud-powered business analytics service
-- Allows all employees in an organization to:
-  - Build visualizations
-  - Build paginated reports
-  - Perform ad-hoc analysis
-  - Get alerts on detected anomalies
-  - Quickly get business insights from data
-  - Anytime, on any device (browsers, mobile)
+- **Allows all employees in an organization to:** Build visualizations · Build paginated reports · Perform ad-hoc analysis · Get alerts on detected anomalies · Quickly get business insights from data · Anytime, on any device (browsers, mobile)
 - Serverless
+
+```mermaid
+flowchart LR
+  A[Warehouse / S3 / APIs] --> B[QuickSight datasets]
+  B --> C[SPICE / direct query]
+  C --> D[Analyses]
+  D --> E[Dashboards]
+```
+
 
 ## Quick Sight Data Sources
 
-
-QuickSight can analyze supported databases, lake data and uploaded files. The selected source determines connectivity, refresh and permission requirements.
+**QuickSight can analyze supported databases, lake data and uploaded files. The selected source determines connectivity, refresh and permission requirements.**
 
 - Aurora / RDS
 - Athena
 - OpenSearch
 - IoT Analytics
 - EC2-hosted databases
-- Files (S3 or on-premises)
-  - Excel
-  - CSV, TSV
-  - Common or extended log format
-- Data preparation allows limited ETL
-
-## Quick Sight Is SPICE!
+- **Files (S3 or on-premises):** Excel, CSV, TSV, Common or extended log format
 
 
-SPICE imports datasets into an analytical cache for interactive queries. Importing creates a refresh and capacity-planning responsibility.
+## QuickSight — SPICE In-Memory Engine
 
-  - Super-fast, Parallel, In-memory Calculation Engine
-  - Uses columnar storage, in-memory, machine code generation
-  - Accelerates interactive queries on large datasets
+**SPICE imports datasets into an analytical cache for interactive queries. Importing creates a refresh and capacity-planning responsibility.**
+
+- Super-fast, Parallel, In-memory Calculation Engine
+- Uses columnar storage, in-memory, machine code generation
+- Accelerates interactive queries on large datasets
 - Each user gets 10GB of SPICE
 - Highly available / durable
-- Scales to hundreds of thousands of users
-- Can accelerate large queries that would time out in direct query mode (hitting Athena directly)
-  - But if it takes more than 30 minutes to import your data into SPICE it will still time out
+- **Can accelerate large queries that would time out in direct query mode (hitting Athena directly):** But if it takes more than 30 minutes to import your data into SPICE it will still time out
+
 
 ## Quick Sight Use Cases
 
+**Use QuickSight to explore data and communicate results through interactive visuals. Prepare and govern the underlying datasets before presenting their conclusions.**
 
-Use QuickSight to explore data and communicate results through interactive visuals. Prepare and govern the underlying datasets before presenting their conclusions.
+- Dashboards and KPI's
+- **Analyze / visualize data from:** Logs in S3 · On-premise databases · AWS (RDS, Redshift, Athena, S3) · SaaS applications, such as Salesforce · Any JDBC/ODBC data source
 
-- Dashboards and KPI’s
-- Analyze / visualize data from:
-  - Logs in S3
-  - On-premise databases
-  - AWS (RDS, Redshift, Athena, S3)
-  - SaaS applications, such as Salesforce
-  - Any JDBC/ODBC data source
 
 ## Quick Sight Anti-Patterns
 
-
-QuickSight is not a general data-transformation engine or a substitute for the systems that ingest and prepare analytical data.
+**QuickSight is not a general data-transformation engine or a substitute for the systems that ingest and prepare analytical data.**
 
 - Use Glue instead, although QuickSight can do some transformations
 
-## Quick Sight Security
+
+## QuickSight — Access Control
+
+**Protect account access and choose the edition and identity integration required by the organization. Data access remains a separate permission boundary.**
+
+- **VPC connectivity:** Add QuickSight's IP address range to your database security groups
+- **Row-level security:** New for 2021: Column-level security too (CLS) – Enterprise edition only
+- **Private VPC access:** Elastic Network Interface, AWS Direct Connect
 
 
-Protect account access and choose the edition and identity integration required by the organization. Data access remains a separate permission boundary.
+## QuickSight — Data Source Security
 
-- VPC connectivity
-  - Add QuickSight’s IP address range to your database security groups
-- Row-level security
-  - New for 2021: Column-level security too (CLS) – Enterprise edition only
-- Private VPC access
-  - Elastic Network Interface, AWS Direct Connect
+**QuickSight needs explicit access to supported AWS resources and encryption keys. A user who can open the application may still lack access to a dataset.**
 
-## Quick Sight Security
+- Must ensure QuickSight is authorized to use Athena / S3 / your S3 buckets
+- This can be managed within the QuickSight console (Manage Quicksight / Security & Permissions)\
+- **Data access:** Can create IAM policies to restrict what data in S3 given QuickSight users can access
 
-
-QuickSight needs explicit access to supported AWS resources and encryption keys. A user who can open the application may still lack access to a dataset.
-
-  - Must ensure QuickSight is authorized to use Athena / S3 / your S3 buckets
-  - This can be managed within the QuickSight console (Manage Quicksight / Security & Permissions)\
-- Data access
-  - Can create IAM policies to restrict what data in S3 given QuickSight users can access
 
 ## QuickSight database connectivity: public and private paths
 
+**Choose connectivity for the database endpoint; access also requires database credentials and network authorization.**
 
-Choose connectivity for the database endpoint; access also requires database credentials and network authorization.
-
-- For the public-endpoint path, authorize documented QuickSight source IP ranges in the database security group.
-- Correction: the source's blanket same-Region restriction is not universal. Supported private designs can reach data across accounts and Regions.
-- The following pages compare a VPC connection, VPC peering, Transit Gateway, supported PrivateLink endpoints and VPC sharing. These are alternatives with configuration-specific requirements.
-
-**Current reference (checked 2026-10-13):** [QuickSight cross-account and cross-Region deployment models](https://aws.amazon.com/blogs/big-data/amazon-quicksight-deployment-models-for-cross-account-and-cross-region-access-to-amazon-redshift-and-amazon-rds/).
-
+- For the public-endpoint path, authorize documented QuickSight source IP ranges in the database security group
+- Correction: the source's blanket same-Region restriction is not universal. Supported private designs can reach data across accounts and Regions
+- The following pages compare a VPC connection, VPC peering, Transit Gateway, supported PrivateLink endpoints and VPC sharing. These are alternatives with configuration-specific requirements
 
 ```mermaid
 flowchart LR
-  accTitle: QuickSight database connectivity: public and private paths
   n0["QuickSight service"]
   n1["Documented source IP ranges"]
   n2["Database security group"]
@@ -8015,23 +7174,20 @@ flowchart LR
   n2 -->|"authorized query"| n3
 ```
 
-> Conceptual public-endpoint path: authorize the documented QuickSight source IP ranges at the database. The source's blanket same-Region restriction is not universal; private alternatives follow.
+<!-- Source reference: https://aws.amazon.com/blogs/big-data/amazon-quicksight-deployment-models-for-cross-account-and-cross-region-access-to-amazon-redshift-and-amazon-rds/ -->
+
 
 ## Quick Sight / Redshift / RDS cross-region
 
-
-An Enterprise VPC connection places network interfaces in the configured VPC; subnet routes and security rules determine reachable private data sources.
+**An Enterprise VPC connection places network interfaces in the configured VPC; subnet routes and security rules determine reachable private data sources.**
 
 - Other ways to do it (if you have Enterprise Edition)
 - Create a private subnet in a VPC
-- Use Elastic Network Interface to put Quick Sight in the subnet
-  - This is the part that requires Enterprise Edition
+- **Use Elastic Network Interface to put Quick Sight in the subnet:** This is the part that requires Enterprise Edition
 - This can also enable cross- account access
-
 
 ```mermaid
 flowchart LR
-  accTitle: Quick Sight / Redshift / RDS cross-region
   n0["QuickSight"]
   n1["VPC connection ENI"]
   n2["Private-subnet route table"]
@@ -8041,20 +7197,15 @@ flowchart LR
   n2 -->|"configured route"| n3
 ```
 
-> An Enterprise VPC connection places network interfaces in the configured VPC; subnet routes and security rules determine reachable private data sources.
 
 ## Quick Suite / Redshift / RDS cross-region
 
+**VPC peering connects the QuickSight connection VPC to the database VPC, with routes on both sides and database authorization.**
 
-VPC peering connects the QuickSight connection VPC to the database VPC, with routes on both sides and database authorization.
-
-- Now you can create a peering connection between your private subnet and another private subnet containing your data
-  - This also works for cross-account access
-
+- **Now you can create a peering connection between your private subnet and another private subnet containing your data:** This also works for cross-account access
 
 ```mermaid
 flowchart LR
-  accTitle: Quick Suite / Redshift / RDS cross-region
   n0["QuickSight ENI in VPC A"]
   n1["Route table A"]
   n2["VPC peering"]
@@ -8066,23 +7217,17 @@ flowchart LR
   n3 -->|"authorized query"| n4
 ```
 
-> VPC peering connects the QuickSight connection VPC to the database VPC, with routes on both sides and database authorization.
 
 ## Quick Sight / Redshift / RDS cross- account
 
+**Transit Gateway routing, a supported PrivateLink endpoint and VPC sharing are alternative private-access designs, not one combined chain. Each requires its own supported configuration.**
 
-Transit Gateway routing, a supported PrivateLink endpoint and VPC sharing are alternative private-access designs, not one combined chain. Each requires its own supported configuration.
-
-- Can use an AWS Transit Gateway to connect your subnets
-  - But this must be in the same org & region
-  - Or you can peer Transit Gateways in different regions
+- **Can use an AWS Transit Gateway to connect your subnets:** But this must be in the same org & region; Or you can peer Transit Gateways in different regions
 - OR use AWS PrivateLink to connect them
 - OR use VPC sharing to connect them
 
-
 ```mermaid
 flowchart TB
-  accTitle: Quick Sight / Redshift / RDS cross- account
   n0["QuickSight connection VPC"]
   n1["Transit Gateway + attachments"]
   n2["Data-source VPC"]
@@ -8097,104 +7242,66 @@ flowchart TB
   n5 -->|"VPC sharing option"| n6
 ```
 
-> Transit Gateway routing, a supported PrivateLink endpoint and VPC sharing are alternative private-access designs, not one combined chain. Each requires its own supported configuration.
 
 ## Quick Sight User Management
 
+**User and group management depends on the supported identity model and edition. Assign access according to authoring and consumption responsibilities.**
 
-User and group management depends on the supported identity model and edition. Assign access according to authoring and consumption responsibilities.
+- **Active Directory connector with Quick Sight Enterprise Edition:** All keys are managed by AWS; you CANNOT use customer- provided keys; Enterprise edition only!; Can tweak security access using IAM if needed
 
-- Active Directory connector with Quick Sight Enterprise Edition
-  - All keys are managed by AWS; you CANNOT use customer- provided keys
-  - Enterprise edition only!
-  - Can tweak security access using IAM if needed
 
 ## Quick Sight pricing
 
+**QuickSight pricing depends on the chosen roles, capacity and subscription model. Treat the source's dollar amounts as examples rather than a current quote.**
 
-QuickSight pricing depends on the chosen roles, capacity and subscription model. Treat the source's dollar amounts as examples rather than a current quote.
+- Standard: $9 / user /month
+- Enterprise: $18 / user / month
+- With Quicksight Q: $28 / user /month
+- **Extra SPICE capacity (beyond 10GB):** $0.25 (standard) $0.38 (enterprise) / GB / month
+- **Month to month:** Standard: $12 / user / month; Enterprise: $24 / user / month; With Quicksight Q: $34 / user / month
+- **Enterprise edition:** Encryption at rest; Microsoft Active Directory integration
 
-  - Standard: $9 / user /month
-  - Enterprise: $18 / user / month
-  - With Quicksight Q: $28 / user /month
-- Extra SPICE capacity (beyond 10GB)
-  - $0.25 (standard) $0.38 (enterprise) / GB / month
-- Month to month
-  - Standard: $12 / user / month
-  - Enterprise: $24 / user / month
-  - With Quicksight Q: $34 / user / month
-- Enterprise edition
-  - Encryption at rest
-  - Microsoft Active Directory integration
 
 ## Quick Sight Dashboards
 
-
-A dashboard publishes a read-oriented view of an analysis. Updates to the analysis and publication determine what readers see.
+**A dashboard publishes a read-oriented view of an analysis. Updates to the analysis and publication determine what readers see.**
 
 - Can share with others with Quick suite access
-- Can share even more widely with embedded dashboards
-  - Embed within an application
-  - Authenticate with Active Directory / Cognito / SSO
-  - QuickSight Javascript SDK / QuickSight API
-  - Whitelist domains where embedding is allowed
+- **Can share even more widely with embedded dashboards:** Embed within an application; Authenticate with Active Directory / Cognito / SSO; QuickSight Javascript SDK / QuickSight API; Whitelist domains where embedding is allowed
+
 
 ## Quick Sight Machine Learning Insights
 
+**ML insights can highlight anomalies or forecast patterns in suitable data. Validate the input, interval and interpretation before using an insight to make a decision.**
 
-ML insights can highlight anomalies or forecast patterns in suitable data. Validate the input, interval and interpretation before using an insight to make a decision.
+- Uses Random Cut Forest
+- Identify top contributors to significant changes in metrics
+- **ML-powered forecasting:** Also uses Random Cut Forest; Detects seasonality and trends; Excludes outliers and imputes missing values
+- **Autonarratives:** Adds "story of your data" to your dashboards
+- **Suggested Insights:** "Insights" tab displays read-to-use suggested insights
 
-  - Uses Random Cut Forest
-  - Identify top contributors to significant changes in metrics
-- ML-powered forecasting
-  - Also uses Random Cut Forest
-  - Detects seasonality and trends
-  - Excludes outliers and imputes missing values
-- Autonarratives
-  - Adds “story of your data” to your dashboards
-- Suggested Insights
-  - “Insights” tab displays read-to-use suggested insights
 
 ## Quick Sight Calculated Fields
 
+**Calculated fields derive values from dataset fields. Understand whether an expression operates at row or aggregation level before comparing its results.**
 
-Calculated fields derive values from dataset fields. Understand whether an expression operates at row or aggregation level before comparing its results.
+- For example, profit margin, things like that
+- **Mathematical and logical operators:** /, *, AND, OR, NOT, etc
+- **Conditional functions:** If / else / not / etc
+- **Date functions:** Date offsets, formatting
+- **Numeric and mathematical functions:** Log, sqrt, round, etc
+- **Aggregation functions:** Avg, min, max, stddev, etc
 
-  - For example, profit margin, things like that
-- Mathematical and logical operators
-  - /, *, AND, OR, NOT, etc.
-- Conditional functions
-  - If / else / not / etc.
-- Date functions
-  - Date offsets, formatting
-- Numeric and mathematical functions
-  - Log, sqrt, round, etc.
-- String functions
-- Table calculation functions
-  - Running average, running min/max, etc.
-- Aggregation functions
-  - Avg, min, max, stddev, etc.
 
 ## Level-Aware Calculations (LAC)
 
+**LAC-A changes the grouping level at which an aggregate is evaluated before the visual's final aggregation.**
 
-LAC-A changes the grouping level at which an aggregate is evaluated before the visual's final aggregation.
-
-- Control granularity of calculations
-  - Which may be independent, and before, aggregations done at the display level
-- LAC-A : Aggregate functions
-  - See example at right
-  - Sum({Sales}) aggregates on the columns displayed (region, country, product)
-  - But we can aggregate at a different level as well
-    - sum({Sales},[{Country}])
-    - This aggregates only by Country
-    - Country doesn’t even have to be in the visual
-  - Works on sum, count, percentile
-
+- **Control granularity of calculations:** Which may be independent, and before, aggregations done at the display level
+- **LAC-A : Aggregate functions:** See example at right · Sum({Sales}) aggregates on the columns displayed (region, country, product) · But we can aggregate at a different level as well · sum({Sales},[{Country}]) · This aggregates only by Country…
 
 ```mermaid
 flowchart LR
-  accTitle: Level-Aware Calculations (LAC)
   n0["Dataset rows"]
   n1["Specified grouping level"]
   n2["Level-aware aggregate"]
@@ -8204,24 +7311,17 @@ flowchart LR
   n2 -->|"render at visual grain"| n3
 ```
 
-> LAC-A changes the grouping level at which an aggregate is evaluated before the visual's final aggregation.
 
 ## Level-Aware Calculations – Window (LAC-W)
 
+**LAC-W calculates a window expression at the selected prefilter or preaggregation stage; evaluation order changes the result.**
 
-LAC-W calculates a window expression at the selected prefilter or preaggregation stage; evaluation order changes the result.
-
-- Aggregate over a window or partition
-  - Values calculated over some window are added to each row
-    - Some window functions: sumover, maxover, denseRank
-  - Example below: Order amount defined as sumOver({Sales}, [{Order ID}], PRE_AGG)
+- **Aggregate over a window or partition:** Values calculated over some window are added to each row; Some window functions: sumover, maxover, denseRank; Example below: Order amount defined as sumOver({Sales}, [{Order ID}], PRE_AGG)
 - PRE_AGG means to apply the window prior to display-level aggregations
 - PRE_FILTER applies prior to any display-level filters
 
-
 ```mermaid
 flowchart LR
-  accTitle: Level-Aware Calculations – Window (LAC-W)
   n0["Dataset"]
   n1["Prefilter / preaggregate window"]
   n2["Visual grouping"]
@@ -8231,30 +7331,28 @@ flowchart LR
   n2 -->|"render"| n3
 ```
 
-> LAC-W calculates a window expression at the selected prefilter or preaggregation stage; evaluation order changes the result.
 
 ## QuickSight numeric precision: decimal and floating point
 
+**Choose a numeric type for the required precision and range; floating point is approximate.**
 
-Choose a numeric type for the required precision and range; floating point is approximate.
+- Fixed-decimal and floating-point types use different precision models
+- FLOAT may represent a wider range, but it does not universally avoid rounding or calculation error
+- Use appropriate decimal precision for exact decimal requirements such as financial values; validate import and calculated-field behavior
 
-- Fixed-decimal and floating-point types use different precision models.
-- FLOAT may represent a wider range, but it does not universally avoid rounding or calculation error.
-- Use appropriate decimal precision for exact decimal requirements such as financial values; validate import and calculated-field behavior.
+<!-- Source reference: https://docs.aws.amazon.com/quick/latest/userguide/supported-data-types-and-values.html -->
 
-**Current reference (checked 2026-10-13):** [QuickSight decimal data types](https://docs.aws.amazon.com/quick/latest/userguide/supported-data-types-and-values.html).
+
 
 # Section Application integration
 
+
 ## AWS SQS What’s a queue?
 
-
-SQS decouples producers from competing consumers; a message is processed by a consumer, then explicitly deleted on success.
-
+**SQS decouples producers from competing consumers; a message is processed by a consumer, then explicitly deleted on success.**
 
 ```mermaid
 flowchart LR
-  accTitle: AWS SQS What’s a queue?
   n0["Producers"]
   n1["SQS queue"]
   n2["Consumer A"]
@@ -8264,40 +7362,30 @@ flowchart LR
   n1 -->|"receive"| n3
 ```
 
-> SQS decouples producers from competing consumers; a message is processed by a consumer, then explicitly deleted on success.
 
 ## AWS SQS – Standard Queue
 
-
-SQS Standard is a decoupling work queue with at-least-once delivery and best-effort ordering.
+**SQS Standard is a decoupling work queue with at-least-once delivery and best-effort ordering.**
 
 - Oldest offering (over 10 years old)
-- Fully managed
 - Scales from 1 message per second to 15,000s per second
 - Default retention of messages: 4 days, maximum of 14 days
 - No limit to how many messages can be in the queue
 - Low latency (<10 ms on publish and receive)
-- Horizontal scaling in terms of number of consumers
-- Can have duplicate messages (at least once delivery, occasionally)
 - Can have out of order messages (best effort ordering)
-- Limitation of 1024 KB per message sent
+
 
 ## SQS – Producing Messages
 
-
-A queue message contains a body and optional attributes used by applications and supported integrations.
+**A queue message contains a body and optional attributes used by applications and supported integrations.**
 
 - Define Body
 - Add message attributes (metadata – optional)
 - Provide Delay Delivery (optional)
-- Get back
-  - Message identifier
-  - MD5 hash of the body
-
+- **Get back:** Message identifier, MD5 hash of the body
 
 ```mermaid
 flowchart LR
-  accTitle: SQS – Producing Messages
   n0["Message"]
   n1["Body"]
   n2["Message attributes"]
@@ -8307,22 +7395,18 @@ flowchart LR
   n0 ---|"enqueue"| n3
 ```
 
-> A queue message contains a body and optional attributes used by applications and supported integrations.
 
 ## SQS – Consuming Messages
 
-
-Receive makes a message temporarily invisible; delete it after successful work. Expired visibility permits another receive.
+**Receive makes a message temporarily invisible; delete it after successful work. Expired visibility permits another receive.**
 
 - Consumers…
 - Poll SQS for messages (receive up to 10 messages at a time)
 - Process the message within the visibility timeout
 - Delete the message using the message ID & receipt handle
 
-
 ```mermaid
 flowchart LR
-  accTitle: SQS – Consuming Messages
   n0["Queue"]
   n1["Receive + visibility timer"]
   n2["Process"]
@@ -8335,24 +7419,18 @@ flowchart LR
   n4 -->|"visible again"| n0
 ```
 
-> Receive makes a message temporarily invisible; delete it after successful work. Expired visibility permits another receive.
 
 ## SQS FIFO: ordering and deduplication
 
+**FIFO queues preserve order within a message group and support send deduplication.**
 
-FIFO queues preserve order within a message group and support send deduplication.
-
-- The queue name ends in .fifo. Use MessageGroupId for the ordering domain.
-- Provide MessageDeduplicationId or enable content-based deduplication; the send-deduplication interval is five minutes.
-- A failed or timed-out consumer may receive the message again. Make side effects idempotent and delete after successful work.
-- Throughput examples depend on configuration; high-throughput FIFO and Regional quotas differ.
-
-**Current reference (checked 2026-10-13):** [SQS deduplication](https://docs.aws.amazon.com/AWSSimpleQueueService/latest/SQSDeveloperGuide/FIFO-queues-exactly-once-processing.html); [SQS visibility and retries](https://docs.aws.amazon.com/AWSSimpleQueueService/latest/SQSDeveloperGuide/sqs-visibility-timeout.html).
-
+- The queue name ends in .fifo. Use MessageGroupId for the ordering domain
+- Provide MessageDeduplicationId or enable content-based deduplication; the send-deduplication interval is five minutes
+- A failed or timed-out consumer may receive the message again. Make side effects idempotent and delete after successful work
+- Throughput examples depend on configuration; high-throughput FIFO and Regional quotas differ
 
 ```mermaid
 flowchart LR
-  accTitle: SQS FIFO: ordering and deduplication
   n0["FIFO queue"]
   n1["Group A ordered messages"]
   n2["Group B ordered messages"]
@@ -8363,20 +7441,18 @@ flowchart LR
   n2 -->|"parallel across groups"| n3
 ```
 
-> FIFO ordering applies within a message group; different groups can be processed concurrently. Deduplication is not a guarantee of exactly-once side effects.
+<!-- Source reference: https://docs.aws.amazon.com/AWSSimpleQueueService/latest/SQSDeveloperGuide/FIFO-queues-exactly-once-processing.html | https://docs.aws.amazon.com/AWSSimpleQueueService/latest/SQSDeveloperGuide/sqs-visibility-timeout.html -->
+
 
 ## SQS Extended Client
 
-
-The extended-client pattern places a large payload in S3 and a reference in SQS; the consumer retrieves the object separately.
+**The extended-client pattern places a large payload in S3 and a reference in SQS; the consumer retrieves the object separately.**
 
 - Message size limit is 1024 KB, how to send large messages?
 - Using the SQS Extended Client (Java Library)
 
-
 ```mermaid
 flowchart LR
-  accTitle: SQS Extended Client
   n0["Producer"]
   n1["S3 payload"]
   n2["SQS pointer"]
@@ -8387,76 +7463,52 @@ flowchart LR
   n1 -->|"retrieve bytes"| n3
 ```
 
-> The extended-client pattern places a large payload in S3 and a reference in SQS; the consumer retrieves the object separately.
 
 ## AWS SQS Use Cases
 
-
-A work queue decouples request arrival from processing capacity, such as accepting payment work for asynchronous handling.
+**A work queue decouples request arrival from processing capacity, such as accepting payment work for asynchronous handling.**
 
 - Buffer writes to a database (for example a voting application)
 - Handle large loads of messages coming in (for example an email sender)
 - SQS can be integrated with Auto Scaling through CloudWatch!
 
-## SQS Limits
 
+## SQS — Capacity & Message Limits
 
-SQS quotas constrain in-flight work and API behavior separately from queue retention. Check the queue type and current documented limits.
+**SQS quotas constrain in-flight work and API behavior separately from queue retention. Check the queue type and current documented limits.**
 
 - Batch Request has a maximum of 10 messages
 - Message content is XML, JSON, Unformatted text
-- Standard queues have an unlimited TPS
 - FIFO queues support up to 3,000 messages per second (using batching)
 - Max message size is 1024 KB (or use Extended Client)
 - Data retention from 1 minute to 14 days
-- Pricing:
-  - Pay per API Request
-  - Pay per network usage
+- **Pricing:** Pay per API Request, Pay per network usage
+
 
 ## AWS SQS Security
 
+**Protect SQS with HTTPS, supported at-rest encryption and IAM or queue policies. Delivery to a queue and access to its encryption key require separate authorization.**
 
-Protect SQS with HTTPS, supported at-rest encryption and IAM or queue policies. Delivery to a queue and access to its encryption key require separate authorization.
-
-- Can enable SSE (Server Side Encryption) using KMS
-  - Can set the CMK (Customer Master Key) we want to use
-  - SSE only encrypts the body, not the metadata (message ID, timestamp, attributes)
+- **Can enable SSE (Server Side Encryption) using KMS:** Can set the CMK (Customer Master Key) we want to use; SSE only encrypts the body, not the metadata (message ID, timestamp, attributes)
 - IAM policy must allow usage of SQS
-- SQS queue access policy
-  - Finer grained control over IP
-  - Control over the time the requests come in
+- **SQS queue access policy:** Finer grained control over IP; Control over the time the requests come in
+
 
 ## Kinesis Data Stream vs SQS
 
-
-Kinesis retains records for independent readers; SQS distributes work to receivers that acknowledge completion by deleting messages.
+**Kinesis retains records for independent readers; SQS distributes work to receivers that acknowledge completion by deleting messages.**
 
 - Data can be consumed many times
 - Data is deleted after the retention period
 - Ordering of records is preserved (at the shard level) – even during replays
 - Build multiple applications reading from the same stream independently (Pub/Sub)
-- “Streaming MapReduce” querying capability (Spark, Flink…)
+- "Streaming MapReduce" querying capability (Spark, Flink…)
 - Checkpointing needed to track progress of consumption (ex: KCL with DynamoDB)
-- Provisioned mode or on-demand mode
-                      - SQS:
-                        - Queue, decouple applications
-                        - One application per queue
-                        - Records are deleted after consumption (ack / fail)
-                        - Messages are processed independently for standard queue
-                        - Ordering for FIFO queues (decreased throughtput)
-                        - Capability to “delay” messages
-                        - Dynamic scaling of load (no-ops)
+
 
 ## Stream, delivery service or queue?
 
-
-Choose by replay, consumer independence, ordering and delivery behavior rather than a single throughput number.
-
-- Kinesis Data Streams: retained ordered shard records and independent consumers; replay within retention.
-- Data Firehose: managed buffered delivery to a destination, not a general retained stream for arbitrary consumers.
-- SQS Standard: work queue with at-least-once delivery and best-effort ordering.
-- SQS FIFO: ordering within a message group and deduplication support; design idempotent consumer side effects.
-- Course retention examples: Kinesis up to 365 days, SQS up to 14 days. Record/message sizes and throughput limits vary by configuration and date.
+**Choose by replay, consumer independence, ordering and delivery behavior rather than a single throughput number.**
 
 | Service | Ordering | Independent replay |
 | --- | --- | --- |
@@ -8465,43 +7517,42 @@ Choose by replay, consumer independence, ordering and delivery behavior rather t
 | SQS Standard | Best effort | Receive/delete work queue |
 | SQS FIFO | Within message group | Receive/delete work queue; deduplication |
 
+- Kinesis Data Streams: retained ordered shard records and independent consumers; replay within retention
+- Data Firehose: managed buffered delivery to a destination, not a general retained stream for arbitrary consumers
+- SQS Standard: work queue with at-least-once delivery and best-effort ordering
+- SQS FIFO: ordering within a message group and deduplication support; design idempotent consumer side effects
+- Course retention examples: Kinesis up to 365 days, SQS up to 14 days. Record/message sizes and throughput limits vary by configuration and date
+
+```mermaid
+flowchart TB
+  A{Data movement need?} -->|Work distribution| B[SQS queue]
+  A -->|Replayable event log| C[Kinesis / Kafka stream]
+  A -->|Managed destination delivery| D[Data Firehose]
+```
+
+
 ## SQS vs Kinesis – Use cases
 
+**Use a queue to distribute tasks and buffer uneven demand. Use a stream when independent consumers or replay of ordered records are central requirements.**
 
-Use a queue to distribute tasks and buffer uneven demand. Use a stream when independent consumers or replay of ordered records are central requirements.
+- Order processing
+- Image Processing
+- Auto scaling queues according to messages
+- Buffer and Batch messages for future processing
+- Request Offloading
+- **Kinesis Data Streams use cases:** Fast log and event data collection and processing · Real Time metrics and reports · Mobile data capture · Real Time data analytics · Gaming data feed · Complex Stream Processing · Data Feed from "Internet of…
 
-  - Order processing
-  - Image Processing
-  - Auto scaling queues according to messages.
-  - Buffer and Batch messages for future processing.
-  - Request Offloading
-- Kinesis Data Streams use cases:
-  - Fast log and event data collection and processing
-  - Real Time metrics and reports
-  - Mobile data capture
-  - Real Time data analytics
-  - Gaming data feed
-  - Complex Stream Processing
-  - Data Feed from “Internet of Things”
 
 ## Amazon SQS – Dead Letter Queue (DLQ)
 
+**A dead-letter queue isolates messages that repeatedly fail so they can be inspected without blocking all useful work.**
 
-Repeated unsuccessful receives can move a message to a dead-letter queue according to maxReceiveCount.
-
-- If a consumer fails to process a message within the Visibility Timeout… the message goes back to the queue!
-- We can set a threshold of how many times a message can go back to the queue
-- After the MaximumReceives threshold is exceeded, the message goes into a Dead Letter Queue (DLQ)
-- Useful for debugging!
-- DLQ of a FIFO queue must also be a FIFO queue
-- DLQ of a Standard queue must also be a Standard queue
-- Make sure to process the messages in the DLQ before they expire:
-  - Good to set a retention of 14 days in the DLQ
-
+- **Redrive policy:** sets the maximum receive count before movement to a DLQ.
+- **Investigate:** failure reason, payload and processing state.
+- **Replay:** redrive selected messages after fixing the consumer; ensure idempotent processing.
 
 ```mermaid
 flowchart LR
-  accTitle: Amazon SQS – Dead Letter Queue (DLQ)
   n0["Source queue"]
   n1["Consumer attempt"]
   n2["Visibility expires"]
@@ -8512,20 +7563,16 @@ flowchart LR
   n2 -->|"receive threshold exceeded"| n3
 ```
 
-> Repeated unsuccessful receives can move a message to a dead-letter queue according to maxReceiveCount.
 
 ## SQS DLQ – Redrive to Source
 
-
-Inspect dead-letter messages, fix the cause and redrive eligible messages to a source or other supported destination.
+**Inspect dead-letter messages, fix the cause and redrive eligible messages to a source or other supported destination.**
 
 - Feature to help consume messages in the DLQ to understand what is wrong with them
 - When our code is fixed, we can redrive the messages from the DLQ back into the source queue (or any other queue) in batches without writing custom code
 
-
 ```mermaid
 flowchart LR
-  accTitle: SQS DLQ – Redrive to Source
   n0["DLQ"]
   n1["Diagnose / fix"]
   n2["Redrive"]
@@ -8535,19 +7582,15 @@ flowchart LR
   n2 -->|"move messages"| n3
 ```
 
-> Inspect dead-letter messages, fix the cause and redrive eligible messages to a source or other supported destination.
 
-## Amazon SNS
+## Amazon SNS — Publish & Subscribe
 
-
-SNS fan-out replaces separate producer calls with one publication to independently subscribed consumers.
+**SNS fan-out replaces separate producer calls with one publication to independently subscribed consumers.**
 
 - What if you want to send one message to many receivers?
 
-
 ```mermaid
 flowchart LR
-  accTitle: Amazon SNS
   n0["Producer"]
   n1["SNS topic"]
   n2["Subscriber A"]
@@ -8559,23 +7602,19 @@ flowchart LR
   n1 -->|"deliver"| n4
 ```
 
-> SNS fan-out replaces separate producer calls with one publication to independently subscribed consumers.
 
-## Amazon SNS
+## Amazon SNS — Delivery Architecture
 
+**A topic delivers to supported subscription protocols; delivery, ordering and retry behavior depend on the protocol and topic type.**
 
-A topic delivers to supported subscription protocols; delivery, ordering and retry behavior depend on the protocol and topic type.
-
-- The “event producer” only sends message to one SNS topic
-- As many “event receivers” (subscriptions) as we want to listen to the SNS topic notifications
+- The "event producer" only sends message to one SNS topic
+- As many "event receivers" (subscriptions) as we want to listen to the SNS topic notifications
 - Each subscriber to the topic will get all the messages (note: new feature to filter messages)
 - Up to 12,500,000 subscriptions per topic
 - 100,000 topics limit
 
-
 ```mermaid
 flowchart TB
-  accTitle: Amazon SNS
   n0["SNS topic"]
   n1["SQS"]
   n2["Lambda"]
@@ -8589,19 +7628,15 @@ flowchart TB
   n0 -->|"delivery-stream subscription"| n5
 ```
 
-> A topic delivers to supported subscription protocols; delivery, ordering and retry behavior depend on the protocol and topic type.
 
 ## SNS integrates with a lot of AWS services
 
-
-Supported AWS services publish notifications into SNS, which fans out to subscriptions.
+**Supported AWS services publish notifications into SNS, which fans out to subscriptions.**
 
 - Many AWS services can send data directly to SNS for notifications
 
-
 ```mermaid
 flowchart LR
-  accTitle: SNS integrates with a lot of AWS services
   n0["CloudWatch / S3 / supported service"]
   n1["SNS topic"]
   n2["Configured subscribers"]
@@ -8609,27 +7644,16 @@ flowchart LR
   n1 -->|"notification"| n2
 ```
 
-> Supported AWS services publish notifications into SNS, which fans out to subscriptions.
 
 ## Amazon SNS – How to publish
 
+**Mobile push can target a platform endpoint directly or reach multiple subscribed endpoints through a topic.**
 
-Mobile push can target a platform endpoint directly or reach multiple subscribed endpoints through a topic.
-
-- Topic Publish (using the SDK)
-  - Create a topic
-  - Create a subscription (or many)
-  - Publish to the topic
-- Direct Publish (for mobile apps SDK)
-  - Create a platform application
-  - Create a platform endpoint
-  - Publish to the platform endpoint
-  - Works with Google GCM, Apple APNS, Amazon ADM…
-
+- **Topic Publish (using the SDK):** Create a topic, Create a subscription (or many), Publish to the topic
+- **Direct Publish (for mobile apps SDK):** Create a platform application; Create a platform endpoint; Publish to the platform endpoint; Works with Google GCM, Apple APNS, Amazon ADM…
 
 ```mermaid
 flowchart LR
-  accTitle: Amazon SNS – How to publish
   n0["Application"]
   n1["SNS topic"]
   n2["Platform endpoint"]
@@ -8642,36 +7666,30 @@ flowchart LR
   n3 -->|"push notification"| n4
 ```
 
-> Mobile push can target a platform endpoint directly or reach multiple subscribed endpoints through a topic.
 
 ## Amazon SNS – Security
 
+**SNS combines topic permissions with transport and at-rest protection. Authorize publishers and subscribers for the intended delivery paths.**
 
-SNS combines topic permissions with transport and at-rest protection. Authorize publishers and subscribers for the intended delivery paths.
-
-  - In-flight encryption using HTTPS API
-  - At-rest encryption using KMS keys
-  - Client-side encryption if the client wants to perform encryption/decryption itself
+- In-flight encryption using HTTPS API
+- At-rest encryption using KMS keys
+- Client-side encryption if the client wants to perform encryption/decryption itself
 - Access Controls: IAM policies to regulate access to the SNS API
-- SNS Access Policies (similar to S3 bucket policies)
-  - Useful for cross-account access to SNS topics
-  - Useful for allowing other services ( S3…) to write to an SNS topic
+- **SNS Access Policies (similar to S3 bucket policies):** Useful for cross-account access to SNS topics; Useful for allowing other services ( S3…) to write to an SNS topic
+
 
 ## SNS + SQS: Fan Out
 
-
-SNS plus separate SQS queues lets fraud and shipping consumers process the same order independently.
+**SNS plus separate SQS queues lets fraud and shipping consumers process the same order independently.**
 
 - Push once in SNS, receive in all SQS queues that are subscribers
-- Consumers are decoupled; delivery policies, retention and failure handling still determine reliability.
+- Consumers are decoupled; delivery policies, retention and failure handling still determine reliability
 - SQS allows for: data persistence, delayed processing and retries of work
 - Ability to add more SQS subscribers over time
-- The destination queue policy must permit the SNS topic to send messages.
-
+- The destination queue policy must permit the SNS topic to send messages
 
 ```mermaid
 flowchart TB
-  accTitle: SNS + SQS: Fan Out
   n0["Order producer"]
   n1["SNS topic"]
   n2["Fraud queue"]
@@ -8685,20 +7703,16 @@ flowchart TB
   n3 -->|"consume"| n5
 ```
 
-> SNS plus separate SQS queues lets fraud and shipping consumers process the same order independently.
 
 ## Application: S3 Events to multiple queues
 
-
-An S3 event can publish to SNS, which distributes notifications to independent queue and function subscribers.
+**An S3 event can publish to SNS, which distributes notifications to independent queue and function subscribers.**
 
 - For the same combination of: event type (e.g. object create) and prefix (e.g. images/) you can only have one S3 Event rule
 - If you want to send the same S3 event to many SQS queues, use fan-out
 
-
 ```mermaid
 flowchart LR
-  accTitle: Application: S3 Events to multiple queues
   n0["S3 bucket"]
   n1["SNS topic"]
   n2["SQS queue"]
@@ -8708,19 +7722,15 @@ flowchart LR
   n1 -->|"subscription"| n3
 ```
 
-> An S3 event can publish to SNS, which distributes notifications to independent queue and function subscribers.
 
 ## Application: SNS to Amazon S3 through Data Firehose
 
+**An SNS Firehose subscription can archive topic events to S3 through buffered delivery.**
 
-An SNS Firehose subscription can archive topic events to S3 through buffered delivery.
-
-- SNS can send to Kinesis and therefore we can have the following solutions architecture:
-
+- SNS can send to Kinesis and therefore we can have the following solutions architecture
 
 ```mermaid
 flowchart LR
-  accTitle: Application: SNS to Amazon S3 through Data Firehose
   n0["SNS topic"]
   n1["Data Firehose"]
   n2["S3 archive"]
@@ -8728,24 +7738,18 @@ flowchart LR
   n1 -->|"buffer / deliver"| n2
 ```
 
-> An SNS Firehose subscription can archive topic events to S3 through buffered delivery.
 
 ## Amazon SNS – FIFO Topic
 
-
-SNS FIFO and SQS FIFO preserve supported per-group ordering and deduplication; consumers must still handle retries idempotently.
+**SNS FIFO and SQS FIFO preserve supported per-group ordering and deduplication; consumers must still handle retries idempotently.**
 
 - FIFO = First In First Out (ordering of messages in the topic)
-- Similar features as SQS FIFO:
-  - Ordering by Message Group ID (all messages in the same group are ordered)
-  - Deduplication using a Deduplication ID or Content Based Deduplication
+- **Similar features as SQS FIFO:** Ordering by Message Group ID (all messages in the same group are ordered); Deduplication using a Deduplication ID or Content Based Deduplication
 - Can have SQS Standard and FIFO queues as subscribers
 - Limited throughput (same throughput as SQS FIFO)
 
-
 ```mermaid
 flowchart LR
-  accTitle: Amazon SNS – FIFO Topic
   n0["Producer + group ID"]
   n1["SNS FIFO"]
   n2["SQS FIFO"]
@@ -8755,19 +7759,15 @@ flowchart LR
   n2 -->|"receive / delete"| n3
 ```
 
-> SNS FIFO and SQS FIFO preserve supported per-group ordering and deduplication; consumers must still handle retries idempotently.
 
 ## SNS FIFO + SQS FIFO: Fan Out
 
-
-FIFO fan-out gives each subscribed queue its own ordered processing path.
+**FIFO fan-out gives each subscribed queue its own ordered processing path.**
 
 - In case you need fan out + ordering + deduplication
 
-
 ```mermaid
 flowchart LR
-  accTitle: SNS FIFO + SQS FIFO: Fan Out
   n0["SNS FIFO"]
   n1["SQS FIFO A"]
   n2["SQS FIFO B"]
@@ -8779,20 +7779,16 @@ flowchart LR
   n2 -->|"process"| n4
 ```
 
-> FIFO fan-out gives each subscribed queue its own ordered processing path.
 
 ## SNS – Message Filtering
 
+**Subscription filter policies route only matching events; a subscription without a filter receives all supported messages.**
 
-Subscription filter policies route only matching events; a subscription without a filter receives all supported messages.
-
-- JSON policy used to filter messages sent to SNS topic’s subscriptions
-- If a subscription doesn’t have a filter policy, it receives every message
-
+- JSON policy used to filter messages sent to SNS topic's subscriptions
+- If a subscription doesn't have a filter policy, it receives every message
 
 ```mermaid
 flowchart LR
-  accTitle: SNS – Message Filtering
   n0["Order events"]
   n1["SNS"]
   n2["Cancelled-order queue"]
@@ -8804,28 +7800,34 @@ flowchart LR
   n1 -->|"no filter"| n4
 ```
 
-> Subscription filter policies route only matching events; a subscription without a filter receives all supported messages.
 
-## AWS Step Functions
+## Step Functions — State Machines
 
-
-Step Functions models a workflow as states and transitions. Define success, retries, error handling and service calls as part of the state machine.
+**Step Functions models a workflow as states and transitions. Define success, retries, error handling and service calls as part of the state machine.**
 
 - Easy visualizations
 - Advanced Error Handling and Retry mechanism outside the code
 - Audit of the history of workflows
-- Ability to “Wait” for an arbitrary amount of time
+- Ability to "Wait" for an arbitrary amount of time
 - Max execution time of a State Machine is 1 year
-
-## Step Functions – Examples Train a Machine Learning Model
-
-
-A training workflow makes data preparation, training, evaluation and conditional deployment explicit orchestration steps.
-
 
 ```mermaid
 flowchart LR
-  accTitle: Step Functions – Examples Train a Machine Learning Model
+  A[Start execution] --> B[Task]
+  B --> C{Result?}
+  C -->|Success| D[Next task]
+  C -->|Retryable| E[Retry / backoff]
+  E --> B
+  C -->|Failure| F[Catch / fail]
+```
+
+
+## Step Functions – Examples Train a Machine Learning Model
+
+**A training workflow makes data preparation, training, evaluation and conditional deployment explicit orchestration steps.**
+
+```mermaid
+flowchart LR
   n0["Prepare data"]
   n1["Train model"]
   n2["Evaluate"]
@@ -8837,17 +7839,13 @@ flowchart LR
   n1 -->|"catch / retry exhausted"| n4
 ```
 
-> A training workflow makes data preparation, training, evaluation and conditional deployment explicit orchestration steps.
 
 ## Step Functions – Examples Tune a Machine Learning Model
 
-
-A tuning workflow launches a search, waits for its outcome and selects the best eligible model.
-
+**A tuning workflow launches a search, waits for its outcome and selects the best eligible model.**
 
 ```mermaid
 flowchart LR
-  accTitle: Step Functions – Examples Tune a Machine Learning Model
   n0["Prepare tuning job"]
   n1["Hyperparameter search"]
   n2["Wait / check status"]
@@ -8860,17 +7858,13 @@ flowchart LR
   n3 -->|"candidate"| n4
 ```
 
-> A tuning workflow launches a search, waits for its outcome and selects the best eligible model.
 
 ## Step Functions – Examples Manage a Batch Job
 
-
-Step Functions can submit a Batch job and coordinate success or failure paths with downstream work.
-
+**Step Functions can submit a Batch job and coordinate success or failure paths with downstream work.**
 
 ```mermaid
 flowchart LR
-  accTitle: Step Functions – Examples Manage a Batch Job
   n0["Submit Batch job"]
   n1["Wait for job"]
   n2["Success branch"]
@@ -8880,28 +7874,17 @@ flowchart LR
   n1 -->|"failed"| n3
 ```
 
-> Step Functions can submit a Batch job and coordinate success or failure paths with downstream work.
 
-## AWS Step Functions
+## Step Functions — Reliability & Integrations
 
-
-Map iterates a dataset, Parallel runs branches and Choice selects a path; these states express different orchestration semantics.
+**Map iterates a dataset, Parallel runs branches and Choice selects a path; these states express different orchestration semantics.**
 
 - Your workflow is called a state machine
 - Each step in a workflow is a state
-- Types of states
-  - Task: Does something with Lambda, other AWS services, or third party API’s
-  - Choice: Adds conditional logic via Choice Rules (ie, comparisons)
-  - Wait: Delays state machine for a specified time
-  - Parallel: Add separate branches of execution
-  - Map: Run a set of steps for each item in a dataset, in parallel
-    - This is most relevant to data engineering! Works with JSON, S3 objects, CSV files
-  - Also Pass, Succeed, Fail
-
+- **Types of states:** Task: Does something with Lambda, other AWS services, or third party API's · Choice: Adds conditional logic via Choice Rules (ie, comparisons) · Wait: Delays state machine for a specified time · Parallel: Add separate…
 
 ```mermaid
 flowchart LR
-  accTitle: AWS Step Functions
   n0["Input dataset"]
   n1["Map items"]
   n2["Per-item task"]
@@ -8913,29 +7896,31 @@ flowchart LR
   n3 -->|"branch on result"| n4
 ```
 
-> Map iterates a dataset, Parallel runs branches and Choice selects a path; these states express different orchestration semantics.
 
-## Amazon AppFlow
+## Amazon AppFlow — SaaS Integration
 
-
-AppFlow transfers supported SaaS application data to or from supported AWS destinations, with connectors, mappings and run settings controlling the exchange.
+**AppFlow transfers supported SaaS application data to or from supported AWS destinations, with connectors, mappings and run settings controlling the exchange.**
 
 - Sources: Salesforce, SAP, Zendesk, Slack, and ServiceNow
 - Destinations: AWS services like Amazon S3, Amazon Redshift or non-AWS such as SnowFlake and Salesforce
 - Frequency: on a schedule, in response to events, or on demand
 - Data transformation capabilities like filtering and validation
 - Encrypted over the public internet or privately over AWS PrivateLink
-- Don’t spend time writing the integrations and leverage APIs
-
-## Amazon AppFlow
-
-
-AppFlow transfers supported SaaS data to configured AWS or SaaS destinations with optional mapping and filtering.
-
 
 ```mermaid
 flowchart LR
-  accTitle: Amazon AppFlow
+  A[SaaS source] --> B[AppFlow connector]
+  B --> C[Scheduled / event / on-demand flow]
+  C --> D[S3 or supported target]
+```
+
+
+## Amazon AppFlow — Pipeline Architecture
+
+**AppFlow transfers supported SaaS data to configured AWS or SaaS destinations with optional mapping and filtering.**
+
+```mermaid
+flowchart LR
   n0["SaaS application"]
   n1["AppFlow mapping / filtering"]
   n2["Supported destination"]
@@ -8943,21 +7928,17 @@ flowchart LR
   n1 -->|"mapped records"| n2
 ```
 
-> AppFlow transfers supported SaaS data to configured AWS or SaaS destinations with optional mapping and filtering.
 
 ## Amazon EventBridge (formerly CloudWatch Events)
 
-
-EventBridge routes matching events to targets; scheduled workflows may use EventBridge Scheduler or supported schedule rules.
+**EventBridge routes matching events to targets; scheduled workflows may use EventBridge Scheduler or supported schedule rules.**
 
 - Schedule: Cron jobs (scheduled scripts)
 - Event Pattern: Event rules to react to a service doing something
 - Trigger Lambda functions, send SQS/SNS messages…
 
-
 ```mermaid
 flowchart LR
-  accTitle: Amazon EventBridge (formerly CloudWatch Events)
   n0["Schedule / event"]
   n1["EventBridge rule / scheduler"]
   n2["Lambda"]
@@ -8967,17 +7948,13 @@ flowchart LR
   n1 -->|"publish"| n3
 ```
 
-> EventBridge routes matching events to targets; scheduled workflows may use EventBridge Scheduler or supported schedule rules.
 
 ## Amazon EventBridge Rules
 
-
-An event envelope carries source, detail type and detail fields; rules match patterns before invoking targets.
-
+**An event envelope carries source, detail type and detail fields; rules match patterns before invoking targets.**
 
 ```mermaid
 flowchart LR
-  accTitle: Amazon EventBridge Rules
   n0["AWS event source"]
   n1["Event JSON"]
   n2["EventBridge bus + rule"]
@@ -8987,21 +7964,17 @@ flowchart LR
   n2 -->|"matching event"| n3
 ```
 
-> An event envelope carries source, detail type and detail fields; rules match patterns before invoking targets.
 
 ## Amazon EventBridge
 
-
-Default, partner and custom buses separate event intake; each has configured rules and permissions.
+**Default, partner and custom buses separate event intake; each has configured rules and permissions.**
 
 - Event buses can be accessed by other AWS accounts using Resource- based Policies
 - You can archive events (all/filter) sent to an event bus (indefinitely or set period)
 - Ability to replay archived events
 
-
 ```mermaid
 flowchart TB
-  accTitle: Amazon EventBridge
   n0["AWS service events"]
   n1["SaaS partner events"]
   n2["Application events"]
@@ -9013,29 +7986,25 @@ flowchart TB
   n2 -->|"PutEvents"| n5
 ```
 
-> Default, partner and custom buses separate event intake; each has configured rules and permissions.
 
 ## Amazon EventBridge – Schema Registry
 
-
-An event schema describes the structure consumers should expect. EventBridge can infer supported schemas and provide code bindings for integration.
+**An event schema describes the structure consumers should expect. EventBridge can infer supported schemas and provide code bindings for integration.**
 
 - The Schema Registry allows you to generate code for your application, that will know in advance how data is structured in the event bus
 - Schema can be versioned
 
+
 ## Amazon EventBridge – Resource-based Policy
 
-
-Cross-account event routing requires a permitted target bus and receiver resource policy before receiver rules invoke local targets.
+**Cross-account event routing requires a permitted target bus and receiver resource policy before receiver rules invoke local targets.**
 
 - Manage permissions for a specific Event Bus
 - Example: allow/deny events from another AWS account or AWS region
 - Use case: aggregate all events from your AWS Organization in a single AWS account or AWS region
 
-
 ```mermaid
 flowchart LR
-  accTitle: Amazon EventBridge – Resource-based Policy
   n0["Sender bus / rule"]
   n1["Receiver bus policy"]
   n2["Receiver bus / rule"]
@@ -9045,29 +8014,23 @@ flowchart LR
   n2 -->|"local routing"| n3
 ```
 
-> Cross-account event routing requires a permitted target bus and receiver resource policy before receiver rules invoke local targets.
 
 ## Amazon Managed Workflows for Apache Airflow (MWAA)
 
-
-MWAA hosts Apache Airflow for scheduled, dependency-based batch workflows. Airflow orchestrates tasks rather than acting as the data-processing engine itself.
+**MWAA hosts Apache Airflow for scheduled, dependency-based batch workflows. Airflow orchestrates tasks rather than acting as the data-processing engine itself.**
 
 - Develop, schedule, and monitor your workflows
 - Workflows are defined as Python code that creates a Directed Acyclic Graph (DAG)
-- Amazon MWAA provides a managed service for Apache Airflow so you don’t have to deal with installing or maintaining it
-- Use cases:
-  - Complex workflows
-  - ETL coordination
-  - Preparing ML data
+- Amazon MWAA provides a managed service for Apache Airflow so you don't have to deal with installing or maintaining it
+- **Use cases:** Complex workflows, ETL coordination, Preparing ML data
+
 
 ## Airflow DAG: schedule and task dependency
 
+**A DAG defines tasks and their dependency order; the sample runs a Bash task before a Python TaskFlow task.**
 
-A DAG defines tasks and their dependency order; the sample runs a Bash task before a Python TaskFlow task.
-
-- The daily schedule is midnight using the cron expression 0 0 * * *.
-- The hello >> airflow() expression establishes the upstream/downstream dependency.
-- This is an interpreted Airflow 2-style course example. Check imports and scheduling options for the deployed Airflow version.
+- The daily schedule is midnight using the cron expression 0 0 * * *
+- The hello >> airflow() expression establishes the upstream/downstream dependency
 
 ```python
 from datetime import datetime
@@ -9086,10 +8049,8 @@ with DAG("study_demo", start_date=datetime(2022, 1, 1),
     hello >> airflow()
 ```
 
-
 ```mermaid
 flowchart LR
-  accTitle: Airflow DAG: schedule and task dependency
   n0["Daily schedule"]
   n1["hello<br/>BashOperator: echo hello"]
   n2["airflow<br/>Python task: print airflow"]
@@ -9097,28 +8058,19 @@ flowchart LR
   n1 -->|"hello #gt;#gt; airflow()"| n2
 ```
 
-> The sample Airflow DAG schedules a daily workflow in which a Bash task completes before a Python TaskFlow task runs.
 
 ## Airflow + MWAA
 
+**MWAA loads DAG definitions and supporting files from S3 and schedules task execution in its managed Airflow environment.**
 
-MWAA loads DAG definitions and supporting files from S3 and schedules task execution in its managed Airflow environment.
-
-- Your DAGs (Python code) are uploaded into S3
-  - May also zip it together with required plugins and requirements
-- Amazon MWAA picks it up, and orchestrates and schedules the pipelines defined by each DAG.
-- Runs within a VPC
-  - In at least 2 AZ’s
-- Private or public endpoints
-  - IAM-managed
-  - (Access to Airflow Web Server)
-- Automatic scaling
-  - Airflow Workers autoscale up to the limits you define
-
+- **Your DAGs (Python code) are uploaded into S3:** May also zip it together with required plugins and requirements
+- Amazon MWAA picks it up, and orchestrates and schedules the pipelines defined by each DAG
+- **Runs within a VPC:** In at least 2 AZ's
+- **Private or public endpoints:** IAM-managed, (Access to Airflow Web Server)
+- **Automatic scaling:** Airflow Workers autoscale up to the limits you define
 
 ```mermaid
 flowchart LR
-  accTitle: Airflow + MWAA
   n0["DAG files in S3"]
   n1["MWAA scheduler"]
   n2["Airflow workers"]
@@ -9128,28 +8080,24 @@ flowchart LR
   n2 -->|"execute operators"| n3
 ```
 
-> MWAA loads DAG definitions and supporting files from S3 and schedules task execution in its managed Airflow environment.
 
 ## Amazon MWAA Integration
 
+**MWAA operators and integrations invoke surrounding data and compute services. Execution roles, credentials and network access govern those calls.**
 
-MWAA operators and integrations invoke surrounding data and compute services. Execution roles, credentials and network access govern those calls.
-
-  - Athena, Batch, CloudWatch, DynamoDB, DataSync
-  - EMR, Fargate, EKS, Kinesis, Glue, Lambda
-  - Redshift, SQS, SNS, SageMaker, S3… and more
-  - Security services (AWS Secrets Manager, etc)
+- Athena, Batch, CloudWatch, DynamoDB, DataSync
+- EMR, Fargate, EKS, Kinesis, Glue, Lambda
+- Redshift, SQS, SNS, SageMaker, S3… and more
+- Security services (AWS Secrets Manager, etc)
 - Schedulers and Workers are AWS Fargate containers
+
 
 ## Amazon MWAA Architecture
 
-
-MWAA separates customer-VPC schedulers/workers from service-VPC web and metadata services; private endpoints, IAM, KMS, S3, ECR and CloudWatch support the environment.
-
+**MWAA separates customer-VPC schedulers/workers from service-VPC web and metadata services; private endpoints, IAM, KMS, S3, ECR and CloudWatch support the environment.**
 
 ```mermaid
 flowchart TB
-  accTitle: Amazon MWAA Architecture
   n0["S3 DAGs / plugins"]
   n1["Schedulers"]
   n2["SQS task queue"]
@@ -9171,7 +8119,7 @@ flowchart TB
   n9 -->|"logs / images / permissions / keys"| n3
 ```
 
-> MWAA separates customer-VPC schedulers/workers from service-VPC web and metadata services; private endpoints, IAM, KMS, S3, ECR and CloudWatch support the environment.
+
 
 # Section Security, identity and compliance
 
