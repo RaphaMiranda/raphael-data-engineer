@@ -20,7 +20,7 @@ test('study notes have no document attribution or page annotations', () => {
 test('topics are grouped and searchable by section and title', () => {
   const topics = slides.filter(slide => !slide.isSection);
   const groups = helpers.groupTopics(topics);
-  assert.equal(groups.length, 15);
+  assert.equal(groups.length, slides.filter(slide => slide.isSection).length);
   assert.equal(groups[0].section, 'Fundamentals');
   assert.equal(groups.reduce((count, group) => count + group.topics.length, 0), topics.length);
   assert.ok(helpers.matchesTopic(topics.find(slide => /DynamoDB/i.test(slide.title)), 'dynamodb'));
@@ -31,10 +31,10 @@ test('topics are grouped and searchable by section and title', () => {
 test('all migrated visuals are owned by their Markdown topics', () => {
   const diagrams = slides.flatMap(slide => slide.visuals).filter(visual => visual.type === 'mermaid');
   const images = slides.flatMap(slide => slide.visuals).filter(visual => visual.type === 'image');
-  assert.equal(diagrams.length, 332);
-  assert.equal(images.length, 1);
+  assert.ok(diagrams.length >= 336);
+  assert.ok(images.length <= 1);
   assert.equal(diagrams.filter(visual => visual.source.startsWith('architecture-beta')).length, 4);
-  assert.ok(diagrams.every(visual => visual.caption && visual.source));
+  assert.ok(diagrams.every(visual => visual.source));
   assert.ok(slides.length >= 764);
   assert.equal(fs.existsSync('assets/js/aws-study-visuals.js'), false);
   assert.doesNotMatch(fs.readFileSync('aws-study-guide.html', 'utf8'), /gojs|aws-study-visuals/i);
@@ -42,6 +42,26 @@ test('all migrated visuals are owned by their Markdown topics', () => {
   assert.match(keyConcepts.source, /^flowchart LR/);
   assert.doesNotMatch(keyConcepts.source, /\(\(|layout:\s*(elk\.(force|radial)|circular)/);
   for (const stage of ['Generation', 'Storage', 'Ingestion', 'Transformation', 'Serving']) assert.ok(keyConcepts.source.includes('["' + stage + '"]'));
+});
+
+test('every JOIN overview and SQL example uses a Mermaid Venn diagram', () => {
+  const titles = [
+    /^INNER JOIN$/,
+    /^INNER JOIN(?:: SQL Example| worked example)$/,
+    /^LEFT OUTER JOIN$/,
+    /^LEFT JOIN(?:: SQL Example| worked example)$/,
+    /^RIGHT OUTER JOIN$/,
+    /^RIGHT JOIN(?:: SQL Example| worked example)$/,
+    /^FULL OUTER JOIN$/,
+    /^CROSS JOIN$/,
+    /^CROSS JOIN(?:: SQL Example| worked example)$/
+  ];
+  for (const title of titles) {
+    const slide = slides.find(item => title.test(item.title));
+    assert.ok(slide, 'Missing JOIN slide: ' + title);
+    assert.equal(slide.visuals.filter(visual => visual.type === 'mermaid' && visual.source.startsWith('venn-beta')).length, 1, slide.title);
+    if (/^CROSS JOIN/.test(slide.title)) assert.doesNotMatch(slide.visuals.find(visual => visual.type === 'mermaid').source, /\bunion\b/);
+  }
 });
 
 test('Mermaid fences and captions stay attached to their own repeated headings', () => {

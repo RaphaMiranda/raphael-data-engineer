@@ -867,15 +867,13 @@ INNER JOIN returns matching row pairs. Duplicate keys can produce multiple outpu
 
 
 ```mermaid
-flowchart LR
-  accTitle: INNER JOIN
-  n0["Left rows"]
-  n1["Join predicate"]
-  n2["Right rows"]
-  n3["Matching pairs only"]
-  n0 -->|"compare keys"| n1
-  n2 -->|"compare keys"| n1
-  n1 -->|"matches"| n3
+venn-beta
+    set Customers["Customers"]
+    set Payments["Payments"]
+    union Customers,Payments["Matching customer_id"]
+    style Customers fill:#22d3ee,fill-opacity:0.3,stroke:#67e8f9,stroke-width:3,color:#e2e8f0
+    style Payments fill:#34d399,fill-opacity:0.3,stroke:#6ee7b7,stroke-width:3,color:#e2e8f0
+    style Customers,Payments fill:#818cf8,fill-opacity:0.65,stroke:#c4b5fd,stroke-width:3,color:#f8fafc
 ```
 
 > INNER JOIN returns matching row pairs. Duplicate keys can produce multiple output rows.
@@ -894,6 +892,16 @@ INNER JOIN payments p
   ON c.customerNumber = p.customerNumber;
 ```
 
+```mermaid
+venn-beta
+    set Customers["Customers"]
+    set Payments["Payments"]
+    union Customers,Payments["Matching customerNumber"]
+    style Customers fill:#22d3ee,fill-opacity:0.3,stroke:#67e8f9,stroke-width:3,color:#e2e8f0
+    style Payments fill:#34d399,fill-opacity:0.3,stroke:#6ee7b7,stroke-width:3,color:#e2e8f0
+    style Customers,Payments fill:#818cf8,fill-opacity:0.65,stroke:#c4b5fd,stroke-width:3,color:#f8fafc
+```
+
 ## LEFT OUTER JOIN
 
 
@@ -901,13 +909,13 @@ LEFT OUTER JOIN keeps every left row; unmatched right-side columns become NULL.
 
 
 ```mermaid
-flowchart LR
-  accTitle: LEFT OUTER JOIN
-  n0["Left rows<br/>Preserve all"]
-  n1["Right rows<br/>Match where possible"]
-  n2["Join result<br/>Matches + unmatched left rows"]
-  n0 -->|"all left rows"| n2
-  n1 -->|"matching right values"| n2
+venn-beta
+    set Customers["Customers"]
+    set Payments["Payments"]
+    union Customers,Payments["Matching customer_id"]
+    style Customers fill:#34d399,fill-opacity:0.4,stroke:#6ee7b7,stroke-width:3,color:#ecfdf5
+    style Payments fill:#475569,fill-opacity:0.24,stroke:#64748b,stroke-width:2,color:#cbd5e1
+    style Customers,Payments fill:#22d3ee,fill-opacity:0.65,stroke:#67e8f9,stroke-width:3,color:#ecfeff
 ```
 
 > LEFT OUTER JOIN keeps every left row; unmatched right-side columns become NULL.
@@ -926,6 +934,16 @@ LEFT JOIN payments p
   ON c.customerNumber = p.customerNumber;
 ```
 
+```mermaid
+venn-beta
+    set Customers["Customers"]
+    set Payments["Payments"]
+    union Customers,Payments["Matching customerNumber"]
+    style Customers fill:#34d399,fill-opacity:0.4,stroke:#6ee7b7,stroke-width:3,color:#ecfdf5
+    style Payments fill:#475569,fill-opacity:0.24,stroke:#64748b,stroke-width:2,color:#cbd5e1
+    style Customers,Payments fill:#22d3ee,fill-opacity:0.65,stroke:#67e8f9,stroke-width:3,color:#ecfeff
+```
+
 ## RIGHT OUTER JOIN
 
 
@@ -933,13 +951,13 @@ RIGHT OUTER JOIN keeps every right row; unmatched left-side columns become NULL.
 
 
 ```mermaid
-flowchart LR
-  accTitle: RIGHT OUTER JOIN
-  n0["Left rows<br/>Match where possible"]
-  n1["Right rows<br/>Preserve all"]
-  n2["Join result<br/>Matches + unmatched right rows"]
-  n0 -->|"matching left values"| n2
-  n1 -->|"all right rows"| n2
+venn-beta
+    set Payments["Payments"]
+    set Customers["Customers"]
+    union Payments,Customers["Matching customer_id"]
+    style Payments fill:#475569,fill-opacity:0.24,stroke:#64748b,stroke-width:2,color:#cbd5e1
+    style Customers fill:#34d399,fill-opacity:0.4,stroke:#6ee7b7,stroke-width:3,color:#ecfdf5
+    style Payments,Customers fill:#22d3ee,fill-opacity:0.65,stroke:#67e8f9,stroke-width:3,color:#ecfeff
 ```
 
 > RIGHT OUTER JOIN keeps every right row; unmatched left-side columns become NULL.
@@ -958,6 +976,16 @@ RIGHT JOIN customers c
   ON c.customerNumber = p.customerNumber;
 ```
 
+```mermaid
+venn-beta
+    set Payments["Payments"]
+    set Customers["Customers"]
+    union Payments,Customers["Matching customerNumber"]
+    style Payments fill:#475569,fill-opacity:0.24,stroke:#64748b,stroke-width:2,color:#cbd5e1
+    style Customers fill:#34d399,fill-opacity:0.4,stroke:#6ee7b7,stroke-width:3,color:#ecfdf5
+    style Payments,Customers fill:#22d3ee,fill-opacity:0.65,stroke:#67e8f9,stroke-width:3,color:#ecfeff
+```
+
 ## FULL OUTER JOIN
 
 
@@ -965,13 +993,13 @@ FULL OUTER JOIN preserves unmatched rows from both inputs and includes all match
 
 
 ```mermaid
-flowchart LR
-  accTitle: FULL OUTER JOIN
-  n0["Left rows"]
-  n1["Right rows"]
-  n2["Join result<br/>Matches + unmatched rows from both sides"]
-  n0 -->|"preserve left"| n2
-  n1 -->|"preserve right"| n2
+venn-beta
+    set Left["Left input"]
+    set Right["Right input"]
+    union Left,Right["Matching keys"]
+    style Left fill:#22d3ee,fill-opacity:0.34,stroke:#67e8f9,stroke-width:3,color:#e2e8f0
+    style Right fill:#34d399,fill-opacity:0.34,stroke:#6ee7b7,stroke-width:3,color:#e2e8f0
+    style Left,Right fill:#818cf8,fill-opacity:0.65,stroke:#c4b5fd,stroke-width:3,color:#f8fafc
 ```
 
 > FULL OUTER JOIN preserves unmatched rows from both inputs and includes all matching row pairs.
@@ -986,13 +1014,11 @@ A cross join returns the Cartesian product: m rows times n rows yields m × n co
 
 
 ```mermaid
-flowchart LR
-  accTitle: CROSS JOIN
-  n0["Left input<br/>m rows"]
-  n1["Right input<br/>n rows"]
-  n2["Cartesian product<br/>m × n row pairs"]
-  n0 -->|"every left row"| n2
-  n1 -->|"every right row"| n2
+venn-beta
+    set Colors["Colors"]
+    set Sizes["Sizes"]
+    style Colors fill:#22d3ee,fill-opacity:0.32,stroke:#67e8f9,stroke-width:3,color:#e2e8f0
+    style Sizes fill:#34d399,fill-opacity:0.32,stroke:#6ee7b7,stroke-width:3,color:#e2e8f0
 ```
 
 > The slide's 'CROSS OUTER JOIN' is a CROSS JOIN: every left row pairs with every right row, producing m × n rows.
@@ -1008,6 +1034,14 @@ A cross join pairs each row from one input with every row from the other, produc
 SELECT c.customerName, p.paymentDate, p.amount
 FROM payments p
 CROSS JOIN customers c;
+```
+
+```mermaid
+venn-beta
+    set Payments["Payments"]
+    set Customers["Customers"]
+    style Payments fill:#22d3ee,fill-opacity:0.32,stroke:#67e8f9,stroke-width:3,color:#e2e8f0
+    style Customers fill:#34d399,fill-opacity:0.32,stroke:#6ee7b7,stroke-width:3,color:#e2e8f0
 ```
 
 ## SQL Regular Expressions
