@@ -6,11 +6,31 @@ Personal AWS data engineering study notes. Technical details that change over ti
 
 <!-- original-note: 0 -->
 <!-- section -->
+## Future of Data Engineering
 
-## Key Concepts
+Over the next years, Data Engineering is increasingly less about simply "moving data" and more about building reliable data products and platforms.
 
-Data Engineering lifecycle is a subset of **Data lifecycle**.
+One particularly useful way to think about the evolution is:
 
+```
+ETL developer → Data Engineer → Data Platform Engineer
+```
+where the emphasis shifts from individual pipelines toward:
+```
+reusable platforms, 
+infrastructure as code, 
+automated testing, 
+CI/CD, 
+data contracts, 
+observability, 
+self-service tooling 
+and AI-ready data infrastructure.
+```
+
+
+## Data Engineering Lifecycle
+
+Generation, storage, ingestion, transformation and serving are stages of the **Data Engineering lifecycle**.
 
 ```mermaid
 flowchart LR
@@ -29,8 +49,18 @@ flowchart LR
   n4 --> n0
   n4 --> n5
 ```
+> with features as governance, security, observability, and data quality spanning the entire lifecycle.
 
-> Generation, storage, ingestion, transformation and serving are stages of the Data Engineering lifecycle.
+## Key Concepts
+
+| Area | Brief Definition |
+|---|---|
+| **Data Generation** | The creation of data by applications, users, devices, APIs, databases, logs, SaaS platforms, and business processes. |
+| **Data Storage** | Persisting data reliably in systems such as databases, data lakes, warehouses, lakehouses, object storage, and streaming platforms. |
+| **Data Ingestion** | Moving data from source systems into a data platform for storage, processing, or analysis. |
+| **Data Integration** | Combining data from multiple heterogeneous sources into a consistent, usable representation across the organization. |
+| **Data Transformation** | Cleaning, validating, enriching, joining, aggregating, and modelling raw data into business-ready datasets. |
+| **Data Serving** | Making processed data available to consumers such as BI dashboards, analysts, applications, APIs, ML systems, and AI workloads. |
 
 ## Ingestion vs Integration
 
@@ -43,789 +73,890 @@ architecture-beta
   group sources(cloud)[Source systems]
   service salesforce(server)[Salesforce] in sources
   service postgres(database)[PostgreSQL] in sources
-  service events(server)[Application events] in sources
 
   group platform(cloud)[Data platform]
   service lake(database)[Data lake] in platform
   service standardize(server)[Join and standardize] in platform
   service customer(database)[Unified customer model] in platform
 
-  align column salesforce postgres events
+  align column salesforce postgres
   align row lake standardize customer
 
   salesforce:R --> L:lake
   postgres:R --> L:lake
-  events:R --> L:lake
   lake:R --> L:standardize
   standardize:R --> L:customer
 ```
 
-> For example, copying Salesforce, PostgreSQL and application events into a lake is ingestion. Joining and standardizing customer information from those three sources into a unified customer model is integration.
+> For example, copying Salesforce, PostgreSQL into a data lake is ingestion. Joining and standardizing customer information from those sources into a unified customer model is integration.
+
+## Ingestion Patterns
+
+| Pattern | Definition |
+|---|---|
+| **Push Ingestion** | The source actively sends data to the destination when data or events become available. |
+| **Pull Ingestion** | The data platform periodically requests or retrieves data from the source. |
+| **Batch Ingestion** | Data is collected and processed in groups at scheduled or triggered intervals. |
+| **Streaming Ingestion** | Data is continuously ingested as events occur, enabling low-latency processing. |
+| **Micro-batch** | Small batches are processed frequently, providing a compromise between traditional batch and continuous streaming. |
+| **CDC** | Change Data Capture captures inserts, updates and deletes from operational systems instead of repeatedly loading entire datasets. |
+
+- You can have a mixture of ingestion patterns on real life scenarios. 
+
+> For example, **pull + batch** ingestion from an API or **push + streaming** from an event-driven application.
+
+## Modern Data Engineering Features 1/6
+
+Use the list below as a reference, do not try to understand all at once. Some of these items reflect big concepts and will be detailed later. However others may not be in scope for this course and the exam.
+
+- Reprocessing - The ability to re-run historical data through a pipeline when logic changes, bugs are fixed, or datasets need to be reconstructed. **"A well-designed platform assumes reprocessing will eventually be necessary."**
+
+- Idempotency - Running the same operation multiple times should produce the same final state without creating duplicates or unintended side effects. **"This is particularly important for retries and reprocessing."**
+
+- Checkpointing - Persisting processing progress so a pipeline can resume from a known position after failure instead of starting from the beginning. **"Common in streaming and large incremental workloads."**
+
+## Modern Data Engineering Features 2/6
+
+- Versioning - Maintaining versions of data, schemas, transformation logic, pipeline code, and infrastructure so changes are traceable and reproducible.
+
+- Schema Evolution - Allowing datasets to safely adapt when columns or data structures change while maintaining compatibility with existing consumers.
+
+- Data Lineage - is related to tracking the path of data, fundamental for debugging, governance and impact analysis. **Where did this data come from? → What transformed it? → Where is it being used?**
+
+## Modern Data Engineering Features 3/6
+
+- Data Quality - Ensuring data satisfies defined expectations such as: accuracy, completeness, validity, consistency, uniqueness, integrity and timeliness. **"Modern pipelines should detect quality problems automatically rather than relying exclusively on downstream users to discover them."**
+
+- Observability - Understanding the health and behaviour of the entire data platform through metrics, logs, traces, lineage and alerts. Monitoring might tell you: **Pipeline failed**. Observability should answer: Why did it fail, what data was affected, and which downstream systems are impacted?
+
+- Logging - Recording pipeline execution, errors, transformations and operational events so engineers can debug, audit and monitor systems.
+
+## Modern Data Engineering Features 4/6
+
+- Retry & Failure Recovery - Pipelines should tolerate transient failures using controlled retries, backoff, checkpoints and recovery mechanisms rather than immediately failing permanently.
+
+- Deduplication - Identifying and eliminating duplicate records, particularly important in event-driven and streaming architectures where at-least-once delivery can produce duplicate events.
+
+- Incremental Processing - Processing only new or changed data instead of repeatedly processing the entire dataset.
+
+## Modern Data Engineering Features 5/6
+
+- Data Contracts - Explicit agreements between producers and consumers defining things such as schema, types, semantics, ownership and quality expectations. **They reduce unexpected upstream changes breaking downstream pipelines.**
+
+- Compliance & Governance - Ensuring data is handled according to organizational and regulatory requirements covering areas such as privacy, retention, access control, auditing, classification and data residency.
+
+- Security - Protecting data through authentication, authorization, encryption, secrets management, network controls and least-privilege access.
+
+## Modern Data Engineering Features 6/6
+
+- Scalability - The platform should continue operating efficiently as data volume, velocity, variety, users and workloads increase.
+
+- Orchestration - Coordinating pipelines through dependencies, scheduling, retries, parameters and workflow state. For example:
+```
+Ingest → Validate → Transform → Quality Check → Publish
+```
+
+- Metadata Management - Maintaining information about the data—schemas, owners, classifications, descriptions, lineage, timestamps and locations—so datasets remain discoverable and understandable.
+
+- Reproducibility - A pipeline should be capable of producing consistent results from the same inputs, code, configuration and environment.
 
 ## Types of Data
 
-<!-- original-note: 1 -->
+**Data structure determines how information is stored, interpreted, and queried.**
 
-Start by identifying the data's structure: fixed columns, flexible named fields, or content that needs interpretation before it can be queried.
+```mermaid
+flowchart TB
+    D["Data"]
+    D --> S["Structured"]
+    D --> M["Semi-structured"]
+    D --> U["Unstructured"]
+    S --> ST["Tables · CSV"]
+    M --> MT["JSON · XML · Events"]
+    U --> UT["Text · Images · Audio"]
+```
 
-- Structured: a consistent row-and-column model, such as a relational table or well-defined CSV.
-- Semi-structured: keys, tags or nesting provide organization, as in JSON, XML and many logs.
-- Unstructured: text, media and other content need interpretation or preprocessing for the intended analysis.
+- **Structured:** predictable fields and types.
+- **Semi-structured:** explicit keys or tags, with flexible layouts.
+- **Unstructured:** content that needs extraction or interpretation for analysis.
 
 ## Structured Data
 
+**Structured data follows a defined schema**, enabling consistent SQL queries, joins, and validation.
 
-Structured data follows an explicit model, such as named columns with consistent meanings and types, which makes repeated queries straightforward.
+```mermaid
+erDiagram
+    CUSTOMER ||--o{ ORDER : places
+    CUSTOMER {
+        int customer_id PK
+        string name
+    }
+    ORDER {
+        int order_id PK
+        int customer_id FK
+        decimal total
+    }
+```
 
-- A schema defines how to interpret each field.
-- Relational tables and consistently organized spreadsheets are examples.
-- Delimited files count as structured only when their records follow an agreed layout.
-
-## Unstructured Data
-
-
-Unstructured data lacks a ready-made row-and-column model. Extract useful features or text before applying the analysis the content requires.
-
-- Examples include free text, audio, video and images.
-- A document may contain useful information without exposing it as predefined fields.
-- The preparation depends on the question: searching text and analyzing an image require different processing.
+- **Examples:** relational tables, consistently formatted CSV files.
+- **Engineering implication:** enforce data types, keys, and constraints.
 
 ## Semi-Structured Data
 
-
-Semi-structured records use tags, keys or nesting to provide organization without requiring every record to share the same fixed layout.
-
-- JSON and XML make the field structure explicit while allowing variation between records.
-- Logs may mix common fields with event-specific attributes.
-- Email headers are structured fields surrounding a less structured message body.
-
-# Properties of Data
-
-<!-- original-note: 2 -->
-
-The three Vs describe different design pressures: how much data exists, how quickly it arrives, and how many shapes and sources must be supported.
-
-- Volume determines the scale of storage and processing.
-- Velocity connects arrival rate to the required processing delay.
-- Variety determines the formats, schemas and connectors the pipeline must handle.
-
-- Review prompt: estimate a real organization's daily arrival volume, retained history and working-set size before choosing capacity.
-
-## Volume
-
-
-Volume is the amount of data to store and process. Estimate both today's working set and its growth before selecting storage and compute capacity.
-
-- Key properties:
-  - May range from gigabytes to petabytes or even more
-  - Challenges in storing, processing, and analyzing high volumes of data
-- Examples:
-  - A popular social media platform processing terabytes of data daily from user posts, images, and videos.
-  - Retailers collecting years' worth of transaction data, amounting to several petabytes.
-
-## Velocity
-
-
-Velocity is the rate at which data arrives and must be processed. The required freshness determines whether batch, near-real-time or streaming operation is appropriate.
-
-- Key properties:
-  - High velocity requires real-time or near-real-time processing capabilities
-  - Rapid ingestion and processing can be critical for certain applications
-- Examples:
-  - Sensor data from IoT devices streaming readings every millisecond.
-  - High-frequency trading systems where milliseconds can make a difference in decision-making.
-
-## Variety
-
-
-Variety describes differences in source systems, formats and structure. A pipeline may combine relational records with API documents, logs, images or other content.
-
-- Example from the personal notes: combine clinical-system database records with JSON returned by an API.
-- Identify each source's format and meaning before trying to join its records.
-- Flexible storage does not remove the need to interpret and validate the fields used in analysis.
-
-# Data Warehouse
-
-<!-- original-note: 3 -->
-
-A warehouse brings curated, structured data together for reporting and analytical queries. Model the data before loading it and optimize for repeated reads.
-
-- Key properties:
-  - Designed for complex queries and analysis
-  - Data is cleaned, transformed, and loaded (ETL process)
-  - Typically uses a star or snowflake schema
-  - Optimized for read-heavy operations
-- Examples:
-  - Amazon Redshift
-  - Google BigQuery
-  - Microsoft Azure SQL Data Warehouse
-
-## Data Warehouse example
-
-
-Source systems feed a central warehouse; subject-specific data marts serve accounting, analysis and machine learning.
-
+**Semi-structured data is self-describing but does not require identical fields in every record.**
 
 ```mermaid
 flowchart TB
-  accTitle: Data Warehouse example
-  n0["Clickstream"]
-  n1["Purchases"]
-  n2["Catalog"]
-  n3["Warehouse"]
-  n4["Accounting mart"]
-  n5["Analysis mart"]
-  n6["ML mart"]
-  n0 -->|"ingest"| n3
-  n1 -->|"ingest"| n3
-  n2 -->|"ingest"| n3
-  n3 -->|"curate"| n4
-  n3 -->|"curate"| n5
-  n3 -->|"curate"| n6
+    E["JSON event"] --> ID["event_id"]
+    E --> T["timestamp"]
+    E --> P["payload"]
+    P --> A["device_type"]
+    P --> B["optional attributes"]
 ```
 
-> Source systems feed a central warehouse; subject-specific data marts serve accounting, analysis and machine learning.
+- **Examples:** JSON, XML, event messages, application logs.
+- **Engineering implication:** handle nested fields, missing values, and schema evolution.
 
-# Data Lake
+## Unstructured Data
 
-<!-- original-note: 4 -->
-
-A lake keeps source data in its original form so different processing engines can reuse it. Raw storage is flexible, but useful analysis still needs metadata, quality checks and access control.
-
-- Key properties:
-  - Can store large volumes of raw data without predefined schema
-  - Data is loaded as-is, no need for preprocessing
-  - Supports batch, real-time, and stream processing
-  - Can be queried for data transformation or exploration purposes
-- Examples:
-  - Amazon Simple Storage Service (S3) when used as a data lake
-  - Azure Data Lake Storage
-  - Hadoop Distributed File System (HDFS)
-
-## Comparisons
-
-<!-- original-note: 5 -->
-
-Compare a lake and a warehouse by when structure is imposed, which data types they retain and how much preparation each query needs.
-
-| Decision | Warehouse | Lake |
-| --- | --- | --- |
-| Data preparation | Curated data fitted to a model before loading | Raw or prepared data retained for later processing |
-| Schema | Commonly enforced on write | Commonly interpreted on read |
-| Workload | Repeated analytical SQL and reporting | Exploration, processing and multiple analytical consumers |
-| Data shape | Primarily modeled, structured datasets | Structured, semi-structured and unstructured datasets |
-| Cost question | Compute and storage for the reporting workload | Storage plus the processing and scans used by consumers |
-
-- ETL and ELT are workflow choices, not absolute definitions of either storage architecture.
-- Many organizations retain raw data in a lake and publish curated warehouse tables.
-
-## When to use datawarehouse:
-
-<!-- original-note: 6 -->
-
-Many pipelines use both: retain incoming data in a lake, then publish curated datasets to a warehouse for stable business reporting.
-
-- Use a Data Warehouse when:
-  - You have structured data sources and require fast and complex queries.
-  - Data integration from different sources is essential.
-  - Business intelligence and analytics are the primary use cases.
-- Use a Data Lake when:
-  - You have a mix of structured, semi-structured, or unstructured data.
-  - You need a scalable and cost-effective solution to store massive amounts of data.
-  - Future needs for data are uncertain, and you want flexibility in storage and processing.
-  - Advanced analytics, machine learning, or data discovery are key goals.
-- Often, organizations use a combination of both, ingesting raw data into a data lake and then processing and moving refined data into a data warehouse for analysis.
-
-# Data Lakehouses
-
-<!-- original-note: 7 -->
-
-A lakehouse adds table management and warehouse-style reliability to lake storage, aiming to keep open data access while supporting dependable analytics.
-
-- Key properties:
-  - Supports both structured and unstructured data.
-  - Allows for schema-on-write and schema-on-read.
-  - Provides capabilities for both detailed analytics and machine learning tasks.
-  - Typically built on top of cloud or distributed architectures.
-  - Benefits from technologies like Delta Lake, which bring ACID transactions to big data.
-- Examples:
-  - AWS Lake Formation (with S3 and Redshift Spectrum)
-  - Delta Lake: An open-source storage layer that brings ACID transactions to Apache Spark and big data workloads.
-  - Databricks Lakehouse Platform: A unified platform that combines the capabilities of data lakes and data warehouses.
-  - Azure Synapse Analytics: Microsoft's analytics service that brings together big data and data warehousing.
-
-
-![A case-study image showing a medallion lakehouse with bronze, silver, and gold layers.](/assets/images/lakehouse-databricks.png)
-
-> Illustrative reference: a medallion-style lakehouse flow.
-
-# Data Mesh
-
-<!-- original-note: 8 -->
-
-Data mesh is an ownership model: domain teams publish usable data products, while shared tooling and federated standards keep the organization coordinated.
-
-- Coined in 2019; it’s more about governance and organization
-- Individual teams own “data products” within a given domain
-- These data products serve various “use cases” around the organization
-- “Domain-based data management”
-- Federated governance with central standards
-- Self-service tooling & infrastructure
-- Data lakes, warehouses, etc. may be part of it
-  - But a “data mesh” is more about the “data management paradigm” and not the specific technologies or architectures.
-
+**Unstructured data has no predefined analytical field layout.** Its meaning is usually extracted before downstream querying.
 
 ```mermaid
 flowchart LR
-  accTitle: Data Mesh
-  n0["Federated governance"]
-  n1["Domain A<br/>Owns data products"]
-  n2["Domain B<br/>Owns data products"]
-  n3["Domain C<br/>Owns data products"]
-  n4["Consumers<br/>Discover and use products"]
-  n0 ---|"standards"| n1
-  n0 ---|"standards"| n2
-  n0 ---|"standards"| n3
-  n1 ---|"data product"| n4
-  n2 ---|"data product"| n4
-  n3 ---|"data product"| n4
+    A["Text · Audio · Images"] --> B["Extraction"]
+    B --> C["Text · Labels · Embeddings"]
+    C --> D["Search · Analytics · AI"]
 ```
 
-> Data mesh distributes ownership to domains while sharing governance standards and self-service infrastructure.
+- **Examples:** emails, PDFs, photographs, recordings, videos.
+- **Engineering implication:** choose appropriate parsing, OCR, transcription, or ML methods.
 
-# ETL Pipelines
+## The 5 Vs of Data
 
-<!-- original-note: 9 -->
+**The 5 Vs describe the challenges and goals of working with data at scale.**
 
-ETL extracts source records, prepares them for the target model and loads them into an analytical store. Choose batch or streaming operation from the freshness requirement.
+```mermaid
+mindmap
+  root((5 Vs of Data))
+    Volume
+      How much?
+    Velocity
+      How fast?
+    Variety
+      What forms?
+    Veracity
+      How trustworthy?
+    Value
+      Why does it matter?
+```
 
-- Extract:
-  - Retrieve raw data from source systems, which can be databases, CRMs, flat files, APIs, or other data repositories.
-  - Ensure data integrity during the extraction phase.
-  - Can be done in real-time or in batches, depending on requirements.
+- **Engineering pressures:** Volume, Velocity, Variety.
+- **Quality and outcomes:** Veracity, Value.
+
+## Volume — How Much Data?
+
+**Volume is the quantity of data generated, processed, and retained.**
+
+```mermaid
+flowchart LR
+    A["Many sources"] --> B["Growing data volume"]
+    B --> C["Partitioned storage"]
+    C --> D["Distributed processing"]
+```
+
+- **Design for:** data growth, storage footprint, compute capacity, retention.
+- **Example:** years of retail transactions and clickstream history.
+- **Key question:** How large is the daily ingest and retained dataset?
+
+## Velocity — How Fast Does It Arrive?
+
+**Velocity is the rate at which data is generated and arrives; freshness needs determine processing latency.**
+
+```mermaid
+sequenceDiagram
+    participant A as Application
+    participant B as Event stream
+    participant C as Processor
+    participant D as Dashboard
+    A->>B: Publish event
+    B->>C: Deliver event
+    C->>D: Update metric
+```
+
+- **Design for:** throughput, latency, backpressure, and recovery.
+- **Patterns:** scheduled batch, micro-batch, continuous streaming.
+- **Example:** IoT telemetry or live fraud detection.
+
+## Variety — What Forms Does Data Take?
+
+**Variety is the diversity of sources, formats, schemas, and meanings.**
+
+```mermaid
+flowchart LR
+    A["SQL tables"] --> N["Integration layer"]
+    B["JSON APIs"] --> N
+    C["Logs and media"] --> N
+    N --> O["Consistent data model"]
+```
+
+- **Design for:** connectors, parsing, schema mapping, standardization.
+- **Example:** joining healthcare database records with API responses.
+- **Key question:** Do fields represent the same business concept across systems?
+
+## Veracity — Can We Trust It?
+
+**Veracity concerns the accuracy, completeness, consistency, and credibility of data.**
+
+```mermaid
+flowchart LR
+    A["Incoming records"] --> B{"Quality checks"}
+    B -->|Pass| C["Trusted dataset"]
+    B -->|Fail| D["Quarantine + alert"]
+```
+
+- **Design for:** validation, deduplication, anomaly detection, lineage.
+- **Example:** detecting missing customer IDs or duplicated payments.
+- **Key question:** Is the data trustworthy enough for its intended use?
+
+## Value — What Can We Achieve?
+
+**Value is the measurable benefit created when data supports decisions, products, or automation.**
+
+```mermaid
+flowchart LR
+    A["Raw data"] --> B["Curated datasets"]
+    B --> C["Insights and models"]
+    C --> D["Business decisions"]
+    D --> E["Measurable outcomes"]
+```
+
+- **Design for:** useful data products, accessibility, cost-effectiveness.
+- **Example:** improving delivery forecasts or reducing customer churn.
+- **Key question:** What decision or outcome will this dataset improve?
+
+## Data Warehouse
+
+**A data warehouse centralizes governed, structured analytical data for reliable SQL reporting and BI.**
+
+- **Workload:** complex, read-heavy analytical queries—not everyday transaction processing.
+- **Model:** curated facts and dimensions, often star or snowflake schemas.
+- **Loading:** supports ETL **or** ELT; modern cloud warehouses commonly use ELT.
+
+**Examples:** Amazon Redshift, Google BigQuery, Azure Synapse dedicated SQL pools, Snowflake.
+
+## Data Warehouse Architecture
+
+**Sources are ingested and transformed into shared analytical models; data marts serve specific teams.**
+
+```mermaid
+flowchart TB
+    subgraph S["Source systems"]
+        A["Purchases"]
+        B["Product catalog"]
+        C["Clickstream"]
+    end
+    A --> I["Ingest + transform"]
+    B --> I
+    C --> I
+    I --> W[("Data warehouse")]
+    W --> M1["Finance mart"]
+    W --> M2["Analytics mart"]
+    W --> M3["ML features"]
+```
+
+- **Benefit:** consistent metrics and reusable datasets across consumers.
+
+## Data Lake
+
+**A data lake stores data of many formats—often in object storage—for flexible processing and analysis.**
+
+- **Workload:** batch analytics, exploration, data science, and streaming ingestion.
+- **Content:** raw and curated datasets; structured, semi-structured, or unstructured.
+- **Trade-off:** storage flexibility requires metadata, governance, access control, and quality management.
+
+**Examples:** Amazon S3, Azure Data Lake Storage, Google Cloud Storage (when organized as data lakes).
+
+## Data Lake Architecture
+
+**The lake separates durable storage from the engines that process and consume its data.**
+
+```mermaid
+flowchart TB
+    A["Databases · APIs · Events · Files"] --> B[("Object storage / data lake")]
+    B --> C["Spark / SQL / ML engines"]
+    C --> D["Analytics · AI · Applications"]
+    M["Catalog · Security · Lineage · Quality"] -.-> B
+    M -.-> C
+```
+
+- **Engineering principle:** Store flexibly, govern strictly: make your data lake discoverable and trustworthy.
+
+## Data Warehouse vs. Data Lake
+
+**Both support analytics, but they emphasize different storage and consumption patterns.**
+
+| Dimension | Data Warehouse | Data Lake |
+|---|---|---|
+| **Primary focus** | Governed SQL analytics and BI | Flexible storage and multi-engine processing |
+| **Typical data** | Curated, structured | Raw and curated; any structure |
+| **Processing** | Warehouse SQL engines | Spark, SQL, ML, other engines |
+| **Common use** | Reporting, KPI models | Exploration, history, ML, diverse data |
+
+**Modern convergence:** lakehouses combine lake storage with transactional table formats and warehouse-like management capabilities.
+
+## Choosing Warehouse, Lake, or Both
+
+```mermaid
+flowchart TD
+    A{"Primary need?"}
+    A -->|"Stable BI & SQL"| W["Data warehouse"]
+    A -->|"Raw / diverse data"| L["Data lake"]
+    A -->|"Both"| B["Lake + warehouse"]
+    B --> R["Lake: retain sources"]
+    R --> C["Curate and publish"]
+    C --> W
+```
+
+**Rule of thumb:** Keep reusable source history in the lake; publish trusted reporting models where consumers need them.
+
+## Data Lakehouse
+
+**Data-lake storage + reliable, managed analytical tables.**
+
+```mermaid
+flowchart LR
+    S["APIs · Databases · Events"] --> B["Bronze<br/>Raw"]
+    B --> SI["Silver<br/>Validated"]
+    SI --> G["Gold<br/>Business models"]
+    G --> BI["BI / SQL"]
+    SI --> ML["ML / exploration"]
+```
+
+- Table formats (e.g., **Delta Lake, Apache Iceberg, Hudi**) add transactional table management and metadata.
+- Key capabilities: **ACID**, schema controls, versioned snapshots, scalable engines.
+- **AWS Lake Formation** is governance tooling, not itself a lakehouse table format.
+
+## Data Mesh
+
+**An organizational model: domains own discoverable data products.**
+
+```mermaid
+flowchart TB
+    G["Federated governance<br/>Shared standards"]
+    P["Self-service data platform"]
+    D1["Sales domain<br/>Orders product"]
+    D2["Finance domain<br/>Revenue product"]
+    D3["Support domain<br/>Tickets product"]
+    C["Cross-domain consumers"]
+    G -.-> D1 & D2 & D3
+    P -.-> D1 & D2 & D3
+    D1 & D2 & D3 --> C
+```
+
+**Four ideas:** domain ownership · data as a product · self-service platform · federated governance.
+
+## ETL and ELT Pipelines
+
+**Extract → Transform → Load** or **Extract → Load → Transform**.
+
+```mermaid
+flowchart TB
+    S["Sources"] --> E["Extract"]
+    E --> T["Transform"]
+    T --> W["Target warehouse / store"]
+    E --> L["Load raw data"]
+    L --> T2["Transform in target"]
+    T2 --> M["Curated models"]
+```
+
+- **ETL:** transform before loading the destination.
+- **ELT:** load first; transform using destination compute.
 
 ## Extract
 
-<!-- original-note: 10 -->
-
-Extraction gathers records from databases, applications, files or APIs while preserving the information needed to load them correctly.
-
-# Transform
-
-<!-- original-note: 11 -->
-
-Transformation turns source records into usable target data: clean values, align formats, enrich fields, calculate measures and handle missing information.
-
-- Can involve various operations such as:
-  - Data cleansing (e.g., removing duplicates, fixing errors)
-  - Data enrichment (e.g., adding additional data from other sources)
-  - Format changes (e.g., date formatting, string manipulation)
-  - Aggregations or computations (e.g., calculating totals or averages)
-  - Encoding or decoding data
-  - Handling missing values
-
-# Load
-
-<!-- original-note: 12 -->
-
-Loading writes prepared data into its destination. Batch size, streaming behavior and integrity checks must match the target system's constraints.
-
-- Can be done in batches (all at once) or in a streaming manner (as data becomes available).
-- Ensure that data maintains its integrity during the loading phase.
-
-# Managing ETL pipelines
-
-<!-- original-note: 13 -->
-
-Orchestration makes the pipeline repeatable: schedule work, enforce dependencies, observe failures and arrange retries instead of relying on manual execution.
-
-- AWS Glue
-- Orchestration services
-  - EventBridge
-  - Amazon Managed Workflows for Apache Airflow [Amazon MWAA]
-  - AWS Step Functions
-  - Lambda
-  - Glue Workflows
-- We’ll get into specific architectures later.
-
-# Data sources
-
-<!-- original-note: 14 -->
-
-A source connection depends on both the interface and the driver. JDBC and ODBC provide database access; APIs, logs and streams require their own ingestion paths.
-
-- JDBC
-  - Java Database Connectivity
-  - Platform-independent
-  - Language-dependent
-- ODBC
-  - Open Database Connectivity
-  - Platform-dependent (thx to drivers)
-  - Language-independent
-- Raw logs
-- API’s
-- Streams
-
+**Read source data without silently losing records.**
 
 ```mermaid
 flowchart LR
-  accTitle: Data sources
-  n0["Application"]
-  n1["JDBC / ODBC driver"]
-  n2["Database"]
-  n0 -->|"database interface"| n1
-  n1 -->|"queries / results"| n2
+    DB["Databases"] & API["APIs"] & F["Files"] & EV["Events"] --> X["Extract"]
+    X --> V["Raw landing area"]
 ```
 
-> Applications use database drivers; JDBC is Java-oriented, while ODBC exposes a language-independent interface through drivers.
+- **Full load** or **incremental / CDC**.
+- Capture **watermark/offset, source ID, extraction time**.
+- Plan for pagination, rate limits, retries and duplicates.
+
+## Transform
+
+**Turn source records into usable business data.**
+
+```mermaid
+flowchart LR
+    R["Raw"] --> C["Clean & deduplicate"]
+    C --> J["Join & enrich"]
+    J --> M["Model & aggregate"]
+    M --> Q["Quality checks"]
+    Q --> O["Trusted output"]
+```
+
+Examples: normalize dates · handle nulls · derive metrics · enforce business rules.
+
+## Load
+
+**Write output reliably to the chosen destination.**
+
+```mermaid
+flowchart LR
+    D["Prepared records"] --> V{"Write mode"}
+    V --> A["Append"]
+    V --> U["Upsert / MERGE"]
+    V --> O["Overwrite partition"]
+    A & U & O --> Q["Validate counts & integrity"]
+```
+
+**Design for:** idempotency, atomic commits where supported, retries and target constraints.
+
+## Managing ETL Pipelines
+
+**Orchestration = dependencies + scheduling + recovery + visibility.**
+
+```mermaid
+flowchart LR
+    E["Schedule / event"] --> I["Ingest"]
+    I --> Q["Validate"]
+    Q --> T["Transform"]
+    T --> P["Publish"]
+    Q -.->|"Failure"| A["Alert / retry"]
+    T -.->|"Failure"| A
+```
+
+**AWS examples:** Step Functions, MWAA (Airflow), Glue Workflows; EventBridge triggers; Lambda or Glue runs tasks.
+
+## Data Sources & Access Interfaces
+
+**The connection method depends on the source.**
+
+```mermaid
+flowchart LR
+    DB["Relational DB"] --> D["JDBC / ODBC"]
+    API["Web service"] --> H["HTTP / REST API"]
+    LOG["Log files"] --> F["File / log collector"]
+    EV["Events"] --> K["Kafka / Kinesis"]
+    D & H & F & K --> P["Ingestion platform"]
+```
+
+Consider **authentication, schema, rate, freshness and recovery** for each source.
 
 ## JDBC
 
-<!-- original-note: 15 -->
-<!-- title: JDBC -->
+**Java Database Connectivity:** a Java-oriented interface for SQL databases.
 
-JDBC gives Java applications a database interface through an appropriate driver. Separate the application's language from the database engine it connects to.
+```mermaid
+flowchart LR
+    A["Java application"] --> J["JDBC API"]
+    J --> D["Database-specific driver"]
+    D --> DB[("Database")]
+```
+
+- Common with **Java/Spark ecosystem**.
+- SQL and capabilities still depend on the connected database.
 
 ## ODBC
 
-<!-- original-note: 16 -->
-<!-- title: ODBC -->
-
-ODBC exposes a common database interface to different application languages. Install a driver compatible with the database and host platform.
-
-## OTher data sources
-
-<!-- original-note: 17 -->
-<!-- title: Other data sources -->
-
-Logs, APIs and event streams are source systems too. Record their format, arrival pattern and recovery behavior before designing ingestion.
-
-# Data Formats
-
-<!-- original-note: 18 -->
-
-Choose a format for the access pattern: readable interchange, schema-aware record transport or compressed analytical column scans.
-
-## CSV : Text based format that represents data in tabular form where each line corresponds to a row and values are separeted by comma or similar separator
-
-<!-- original-note: 19 -->
-<!-- title: CSV -->
-
-CSV represents rows as delimited text. It is convenient for exchanging and inspecting tabular data, but applications must agree on delimiters, quoting and column meanings.
-
-- When to Use:
-  - For small to medium datasets.
-  - For data interchange between systems with different technologies.
-  - For human-readable and editable data storage.
-  - Importing/Exporting data from databases or spreadsheets.
-- Systems: Databases (SQL-based), Excel, Pandas in Python, R, many ETL tools.
-
-## Json
-
-<!-- original-note: 20 -->
-<!-- title: JSON -->
-
-JSON represents values with named fields and nested structures. It suits APIs and flexible records, while leaving validation and type interpretation to the consuming system.
-
-- When to Use:
-  - Data interchange between a web server and a web client.
-  - Configurations and settings for software applications.
-  - Use cases that need a flexible schema or nested data structures.
-- Systems: Web browsers, many programming languages (like JavaScript, Python, Java, etc.), RESTful APIs, NoSQL databases (like MongoDB).
-
-## AVRO
-
-<!-- original-note: 21 -->
-<!-- title: Avro -->
-
-Avro stores records in a compact binary representation with schema information. It is useful when systems exchange records and their schemas evolve over time.
-
-- When to Use:
-  - With big data and real-time processing systems.
-  - When schema evolution (changes in data structure) is needed.
-  - Efficient serialization for data transport between systems.
-- Systems: Apache Kafka, Apache Spark, Apache Flink, Hadoop ecosystem.
-
-## Parquet
-
-<!-- original-note: 22 -->
-
-Parquet stores values by column, allowing analytical engines to read selected fields and compress similar values efficiently.
-
-- When to Use:
-  - Analyzing large datasets with analytics engines.
-  - Use cases where reading specific columns instead of entire records is beneficial.
-  - Storing data on distributed systems where I/O operations and storage need optimization.
-- Systems: Hadoop ecosystem, Apache Spark, Apache Hive, Apache Impala, Amazon Redshift Spectrum.
-
-# Data Modelling
-
-<!-- original-note: 23 -->
-
-Choose the grain of a fact table, identify its measures and connect descriptive dimensions through keys. The enrollment example illustrates this separation.
-
-- The exam guide doesn’t really talk about specific data models.
-- But here’s a star schema.
-  - Fact tables
-  - Dimensions
-  - Primary / foreign keys
-- This sort of diagram is an Entity Relationship Diagram (ERD)
-
+**Open Database Connectivity:** a language-neutral database-access standard.
 
 ```mermaid
 flowchart LR
-  accTitle: Data Modelling
-  n0["Fact_Enrollments<br/>CourseID, StudentID, PaymentID, OrderDateTime"]
-  n1["Dim_Course<br/>CourseID, Name, Description, Instructor, Price"]
-  n2["Dim_Student<br/>StudentID, Name, Address, Email, SavedCard"]
-  n3["Dim_Payment<br/>PaymentID, PaymentType, Amount, TaxPayment, AuthorizationCode"]
-  n0 ---|"CourseID"| n1
-  n0 ---|"StudentID"| n2
-  n0 ---|"PaymentID"| n3
+    A["BI tool / application"] --> O["ODBC interface"]
+    O --> D["Installed driver"]
+    D --> DB[("Database")]
 ```
 
-> The enrollment star schema connects the fact table to course, student and payment dimensions through foreign keys.
+**Contrast:** JDBC is Java-centric; ODBC exposes a common interface through platform-compatible drivers.
+
+## Other Data Sources
+
+```mermaid
+flowchart TD
+    S["Non-database sources"] --> A["REST / GraphQL APIs"]
+    S --> L["Application logs"]
+    S --> E["Event streams"]
+    A --> P["Pagination · auth · limits"]
+    L --> R["Parsing · rotation · timestamps"]
+    E --> O["Offsets · ordering · replay"]
+```
+
+**Always establish:** data format · delivery model · error recovery.
+
+## Data Format Selection
+
+**Choose by how data is exchanged and queried.**
+
+| Format | Layout | Typical strength |
+|---|---|---|
+| **CSV** | Text rows | Simple interchange |
+| **JSON** | Nested text | APIs / flexibility |
+| **Avro** | Binary records | Schema-aware transport |
+| **Parquet** | Binary columns | Analytical scans |
+
+> There is no universally best format: access patterns decide.
+
+## CSV
+
+**Delimited rows; simple but weakly typed.**
+
+```csv
+id,name,amount
+1,Ana,49.90
+2,Leo,20.00
+```
+
+- Useful for exports and system interchange.
+- Agree on **header, delimiter, quoting, encoding and types**.
+- Inefficient for large selective analytical scans.
+
+## JSON
+
+**Named fields and nested values; common for APIs.**
+
+```json
+{"order_id": 42, "customer": {"id": 7}, "items": ["A", "B"]}
+```
+
+- Supports nested and evolving records.
+- **Flexible ≠ validated**: enforce required fields and types downstream.
+
+## Apache Avro
+
+**Compact row-oriented binary serialization with a schema.**
+
+```mermaid
+flowchart LR
+    S["Writer schema"] --> E["Encode record"]
+    R["Record"] --> E
+    E --> B["Avro bytes"]
+    B --> D["Reader + schema resolution"]
+    D --> O["Decoded fields"]
+```
+
+Best fit: **record exchange, event pipelines, schema evolution** (subject to compatibility rules).
+
+## Apache Parquet
+
+**Columnar file layout: read only relevant columns.**
+
+```mermaid
+flowchart LR
+    T["Wide table"] --> C1["Column: date"]
+    T --> C2["Column: sales"]
+    T --> C3["Column: customer"]
+    C1 & C2 --> Q["Query: SUM(sales) BY date"]
+    C3 -.->|"Not scanned when unnecessary"| X["Skipped"]
+```
+
+- Column projection + compression reduce I/O.
+- Best suited to **analytical lake / lakehouse workloads**.
+
+## Dimensional Data Modeling
+
+Data Modeling is not an easy task, but the trick is to
+**Start with the grain, then choose facts and dimensions accordingly.**
+
+```mermaid
+erDiagram
+    DIM_STUDENT ||--o{ FACT_ENROLLMENT : has
+    DIM_COURSE ||--o{ FACT_ENROLLMENT : describes
+    DIM_DATE ||--o{ FACT_ENROLLMENT : dates
+    DIM_STUDENT {
+        int student_key PK
+        string student_name
+    }
+    DIM_COURSE {
+        int course_key PK
+        string course_name
+    }
+    DIM_DATE {
+        int date_key PK
+        date full_date
+    }
+    FACT_ENROLLMENT {
+        int student_key FK
+        int course_key FK
+        int date_key FK
+        decimal paid_amount
+    }
+```
+
+**Grain:** one fact row per student–course enrollment event.
 
 ## Star Schema
 
-<!-- original-note: 24 -->
-
-A star schema keeps the fact table at the center with direct links to its dimensions. Explain the grain and each foreign-key relationship using the enrollment diagram.
-
-## Snowflake
-
-<!-- original-note: 25 -->
-<!-- unexpanded -->
-
-# Data Lineage
-
-<!-- original-note: 26 -->
-
-Lineage records where data originated, which transformations changed it and which outputs depend on it. Use that history to trace errors and assess downstream impact.
-
-- A visual representation that traces the flow and transformation of data through its lifecycle, from its source to its final destination.
-- Importance:
-  - Helps in tracking errors back to their source.
-  - Ensures compliance with regulations.
-  - Provides a clear understanding of how data is moved, transformed, and consumed within systems.
-
-- Review prompt: trace one field through a Glue/Spark transformation and explain how its recorded lineage would help investigate an incorrect report.
-
-
-```mermaid
-flowchart LR
-  accTitle: Data Lineage
-  n0["Sources"]
-  n1["Raw datasets"]
-  n2["Transformations"]
-  n3["Curated datasets"]
-  n4["Reports"]
-  n0 -->|"ingestion"| n1
-  n1 -->|"inputs"| n2
-  n2 -->|"outputs"| n3
-  n3 -->|"consumption"| n4
-```
-
-> Lineage follows source data through transformations to outputs, making upstream dependencies and downstream impact visible.
-
-## Capturing Spark lineage
-
-
-In the illustrated lineage solution, a Spline agent observes Glue/Spark jobs; Lambda loads lineage metadata into Neptune for traversal.
-
-- Example of capturing data lineage
-  - Uses Spline Agent (for Spark) attached to Glue
-  - Dump lineage data into Neptune via Lambda
-
-
-```mermaid
-flowchart LR
-  accTitle: Capturing Spark lineage
-  n0["Glue / Spark jobs"]
-  n1["Spline agent"]
-  n2["Lineage events"]
-  n3["Lambda"]
-  n4["Neptune<br/>Lineage graph"]
-  n0 -->|"observe execution"| n1
-  n1 -->|"capture dependencies"| n2
-  n2 -->|"process metadata"| n3
-  n3 -->|"store lineage"| n4
-```
-
-> In the illustrated lineage solution, a Spline agent observes Glue/Spark jobs; Lambda loads lineage metadata into Neptune for traversal.
-
-# schema evolution
-
-<!-- original-note: 27 -->
-<!-- title: Schema evolution -->
-
-Schema evolution changes fields or their definitions without unexpectedly breaking readers and writers. Treat compatibility as part of the pipeline contract.
-
-- Importance:
-  - Ensures data systems can adapt to changing business requirements.
-  - Allows for the addition, removal, or modification of columns/fields in a dataset.
-  - Maintains backward compatibility with older data records.
-- Glue Schema Registry
-  - Schema discovery, compatibility, validation, registration…
-
-- Review prompt: design a production process for adding, removing or changing a field without breaking existing pipeline readers.
-
-# Database Performance Optimization
-
-<!-- original-note: 28 -->
-
-Improve performance by addressing the actual bottleneck: indexes narrow lookups, partitions reduce work, and compression lowers storage and transfer volume.
-
-- Indexing
-  - Avoid full table scans!
-  - Enforce data uniqueness and integrity
-- Partitioning
-  - Reduce amount of data scanned
-  - Helps with data lifecycle management
-  - Enables parallel processing
-- Compression
-  - Speed up data transfer, reduce storage & disk reads
-  - GZIP, LZOP, BZIP2, ZSTD (Redshift examples)
-    - Various tradeoffs between compression & speed
-  - Columnar compression
-
-
-```mermaid
-flowchart LR
-  accTitle: Database Performance Optimization
-  n0["Dataset"]
-  n1["Partition 1"]
-  n2["Partition 2"]
-  n3["Worker 1"]
-  n4["Worker 2"]
-  n0 -->|"partition"| n1
-  n0 -->|"partition"| n2
-  n1 -->|"parallel scan"| n3
-  n2 -->|"parallel scan"| n4
-```
-
-> Partitioning distributes data for parallel work; indexing and compression address different parts of query cost.
-
-# Data Sampling Techniques
-
-<!-- original-note: 29 -->
-
-Sampling reduces the amount of data examined while preserving the properties needed for the question. Match the selection method to the population's structure.
-
-- Random: give eligible observations a random chance of selection.
-- Stratified: sample separately within defined groups, then combine them.
-- Systematic: take every kth observation after selecting a starting point.
-- Other methods named in the notes include cluster, convenience and judgmental sampling; assess their selection bias before relying on the result.
-
-
-```mermaid
-flowchart LR
-  accTitle: Data Sampling Techniques
-  n0["Population"]
-  n1["Random selection"]
-  n2["Strata"]
-  n3["Selection within each stratum"]
-  n4["Representative sample"]
-  n0 -->|"random method"| n1
-  n1 -->|"sample"| n4
-  n0 -->|"stratified method"| n2
-  n2 -->|"sample each group"| n3
-  n3 -->|"combine"| n4
-```
-
-> Random sampling selects from the entire population; stratified sampling first divides the population into groups.
-
-## Random Sampling
-
-
-Random sampling gives each eligible item a chance of selection; highlighted items need not be regularly spaced.
-
-
-```mermaid
-flowchart LR
-  accTitle: Random Sampling
-  n0["Population<br/>All eligible items"]
-  n1["Random selection<br/>No fixed positional interval"]
-  n2["Sample"]
-  n0 -->|"draw items"| n1
-  n1 -->|"selected subset"| n2
-```
-
-> Random sampling gives each eligible item a chance of selection; highlighted items need not be regularly spaced.
-
-## Stratified Sampling
-
-
-Stratified sampling takes samples from books, music, home/garden and apparel separately, then combines them.
-
+**A central fact table links directly to descriptive dimensions.**
 
 ```mermaid
 flowchart TB
-  accTitle: Stratified Sampling
-  n0["Population"]
-  n1["Books"]
-  n2["Music"]
-  n3["Home / garden"]
-  n4["Apparel"]
-  n5["Combined sample"]
-  n0 -->|"stratum"| n1
-  n0 -->|"stratum"| n2
-  n0 -->|"stratum"| n3
-  n0 -->|"stratum"| n4
-  n1 -->|"sample"| n5
-  n2 -->|"sample"| n5
-  n3 -->|"sample"| n5
-  n4 -->|"sample"| n5
+    DATE["Dim Date"] --> F["Fact Enrollments<br/>paid_amount"]
+    STUDENT["Dim Student"] --> F
+    COURSE["Dim Course"] --> F
+    CHANNEL["Dim Channel"] --> F
 ```
 
-> Stratified sampling takes samples from books, music, home/garden and apparel separately, then combines them.
+- **Facts:** measurable events at a declared grain.
+- **Dimensions:** who, what, when, where and how.
 
-## Systematic sampling
+## Snowflake Schema
 
-
-Select every kth observation after choosing a starting point.
-
-- Systematic sampling selects every kth record after a randomized start.
-- Avoid a sampling interval that aligns with periodic structure in the population.
-
+**Normalized dimensions introduce additional joins.**
 
 ```mermaid
 flowchart LR
-  accTitle: Systematic sampling
-  n0["Ordered population"]
-  n1["Starting position"]
-  n2["Every kth item"]
-  n3["Systematic sample"]
-  n0 -->|"choose start"| n1
-  n1 -->|"apply interval"| n2
-  n2 -->|"collect"| n3
+    F["Fact Sales"] --> P["Dim Product"]
+    P --> C["Dim Category"]
+    C --> D["Dim Department"]
+    F --> S["Dim Store"]
+    S --> R["Dim Region"]
 ```
 
-> Systematic sampling uses a starting position and a regular interval; periodic patterns can bias the result.
+**Trade-off:** less dimension redundancy, but more joins than a denormalized star schema.
 
-# Data Skew mechanisms
+## Data Lineage
 
-<!-- original-note: 30 -->
-
-Skew occurs when some keys or partitions receive much more work than others. A celebrity account or a busy recent partition can become the limiting part of a distributed job.
-
-- Data skew refers to the unequal distribution or imbalance of data across various nodes or partitions in distributed computing systems.
-- “The celebrity problem”
-  - Even partitioning doesn’t work if your traffic is uneven
-  - Imagine you’re IMDb… Brad Pitt could overload his partition
-- Causes:
-  - Non-uniform distribution of data
-  - Inadequate partitioning strategy
-  - Temporal skew
-- Important to monitor data distribution and alert when skew issues arise.
-
+**Trace data origin, transformations and downstream consumers.**
 
 ```mermaid
 flowchart LR
-  accTitle: Data Skew mechanisms
-  n0["Clickstream"]
-  n1["Common actor keys"]
-  n2["Popular actor key"]
-  n3["Ordinary partitions"]
-  n4["Hot partition"]
-  n0 -->|"normal traffic"| n1
-  n0 -->|"concentrated traffic"| n2
-  n1 -->|"distributed load"| n3
-  n2 -->|"bottleneck"| n4
+    S["CRM source"] --> R["Raw customers"]
+    R --> T["Normalize customer_id"]
+    T --> G["Gold customer model"]
+    G --> BI["Retention dashboard"]
+    G --> ML["Churn model"]
 ```
 
-> A popular partition key sends disproportionate traffic to one partition; even storage distribution alone does not prevent hot keys.
+**Use for:** root-cause analysis · change impact · governance / audit.
 
-## Solutions
+## Capturing Spark Lineage
 
-<!-- original-note: 31 -->
-<!-- title: Reducing data skew -->
+**Illustrative architecture: Spark execution → lineage graph.**
 
-Redistribute work with better partitioning, sampling or salting, and verify that the change preserves the required result.
+```mermaid
+sequenceDiagram
+    participant G as Glue / Spark
+    participant S as Spline Agent
+    participant L as Lambda / Ingestion
+    participant N as Neptune
+    G->>S: Execution metadata
+    S->>L: Lineage events
+    L->>N: Nodes + dependencies
+    Note over N: Traverse upstream / downstream
+```
 
-- Adaptive partitioning adjusts partitioning to observed data characteristics.
-- Salting adds a distribution factor; account for it when joining or combining results.
-- Repartitioning redistributes existing data, trading shuffle cost for a better balance.
-- Sampling estimates the distribution before choosing a strategy.
-- Custom partitioning applies domain-specific placement rules.
+> Implementation example, not a built-in AWS Glue → Neptune integration.
+**Reference Example:** [build-data-lineage-for-data-lakes](https://aws.amazon.com/blogs/big-data/build-data-lineage-for-data-lakes-using-aws-glue-amazon-neptune-and-spline/)
 
-- Review prompts: work through a salted join, then choose a domain-specific partitioning rule and explain how to recombine its results.
+## Schema Evolution
 
-# Data Validation and Profiling
+**Change a dataset's structure without unexpectedly breaking consumers.**
 
-<!-- original-note: 32 -->
+```mermaid
+flowchart LR
+    A["v1: id, name"] --> B["v2: id, name, region?"]
+    B --> C{"Compatibility check"}
+    C -->|"Pass"| D["Register + deploy"]
+    C -->|"Fail"| E["Coordinate migration"]
+```
 
-Profile data along four separate dimensions: missing information, contradictory values, incorrect values and broken relationships.
+- **Adding optional fields** is often easier than removing/renaming required ones.
+- Validate writer/reader compatibility; use a schema registry where relevant.
+- Modern Table formats like Apache Iceberg, Hudi, and DeltaLake manage schema changes at the metadata level, meaning that you can add, drop or rename columns without reprocessing historical data.
+- AWS Glue crawlers can be used to track schema evolution on s3 files.
 
-- Completeness: required fields and records exist; inspect missing/null counts and populated-field percentages.
-- Consistency: cross-field rules and comparisons across sources or time do not contradict each other.
-- Accuracy: compare values with trusted sources, known standards and business rules.
-- Integrity: preserve valid relationships and lifecycle consistency, including foreign-key/reference checks.
-- Missing, contradictory, inaccurate or disconnected data can each produce misleading conclusions; report these dimensions separately.
+## Database Performance Optimization
 
-# Add a topic about Data Cardinality
+**Reduce work before adding compute.**
 
-<!-- original-note: 34 -->
-<!-- title: Data cardinality: review prompt -->
-<!-- unexpanded -->
+```mermaid
+mindmap
+  root((Query performance))
+    Indexes
+      Targeted lookups
+    Partitions
+      Prune scans
+    Compression
+      Less I/O
+    Columnar layout
+      Read needed fields
+    Query design
+      Filter early
+```
 
-# Section SQL and Git
+**Trade-offs matter:** indexes cost writes/storage; repartitioning costs shuffles; compression costs CPU.
 
-## Aggregation
+## Data Sampling Techniques
 
+**Inspect less data while controlling selection bias.**
 
-COUNT, SUM, AVG, MIN and MAX summarize a set of input rows.
+```mermaid
+flowchart TD
+    P["Population"] --> R["Random<br/>Sample across all items"]
+    P --> S["Stratified<br/>Sample within groups"]
+    P --> Y["Systematic<br/>Every kth item"]
+```
 
-- COUNT
-  - SELECT COUNT(*) AS total_rows FROM employees;
-- SUM
-  - SELECT SUM(salary) AS total_salary FROM employees;
-- AVG
-  - SELECT AVG(salary) AS average_salary FROM employees;
-- MAX / MIN
-  - SELECT MAX(salary) AS highest_salary FROM employees;
+**Other methods:** cluster, convenience and judgmental sampling; assess representativeness.
 
-## Conditional aggregation with CASE
+## Random Sampling
 
+**Select observations using chance—not a fixed interval.**
 
-WHERE filters input rows before grouping; CASE lets one query calculate several conditional aggregates.
+```mermaid
+flowchart LR
+    P["Population<br/>A B C D E F G H"] --> R["Random draw"]
+    R --> S["Example sample<br/>B E H"]
+```
 
-- WHERE filters input rows before grouping; HAVING filters groups after aggregation.
-- COUNT(CASE WHEN condition THEN 1 END) counts matches because COUNT(expression) ignores NULL.
-- SUM(CASE WHEN condition THEN amount ELSE 0 END) totals values within a condition.
+A **simple random sample** gives each eligible observation the same inclusion probability.
+
+## Stratified Sampling
+
+**Divide into groups; sample from each group.**
+
+```mermaid
+flowchart TB
+    P["All products"] --> B["Books"]
+    P --> M["Music"]
+    P --> A["Apparel"]
+    B & M & A --> S["Sample per stratum"]
+    S --> C["Combined sample"]
+```
+
+Good when important subgroups must remain represented.
+
+## Systematic Sampling
+
+**Choose a start, then select every kth observation.**
+
+```mermaid
+flowchart LR
+    A["1"] --> B["2 ✓"] --> C["3"] --> D["4"] --> E["5 ✓"] --> F["6"] --> G["7"] --> H["8 ✓"]
+```
+
+Example: **k = 3, start = 2**. Beware of periodic patterns aligned with k.
+
+## Data Skew
+
+**Unequal key frequencies overload some partitions/workers.**
+
+```mermaid
+flowchart LR
+    E["Events"] --> K["Partition by actor_id"]
+    K --> P1["Worker 1<br/>1k rows"]
+    K --> P2["Worker 2<br/>1k rows"]
+    K --> HOT["Worker 3<br/>90k rows ⚠"]
+```
+
+**Causes:** hot keys · poor partitioning · time-based bursts. **Symptom:** straggler tasks.
+
+## Reducing Data Skew
+
+```mermaid
+flowchart TD
+    D{"Skew source?"}
+    D -->|"Hot join key"| S["Salting / skew-aware join"]
+    D -->|"Bad partition sizing"| R["Repartition / rebalance"]
+    D -->|"Unknown distribution"| P["Profile key frequencies"]
+    S & R & P --> V["Verify results + shuffle cost"]
+```
+
+**Caution:** salting may require recombination; repartitioning introduces shuffle overhead.
+
+## Data Validation and Profiling
+
+| Dimension | Ask | Check |
+|---|---|---|
+| **Completeness** | Is required data present? | NULL / missing rate |
+| **Consistency** | Do rules agree? | Cross-field checks |
+| **Accuracy** | Is the value correct? | Trusted reference |
+| **Integrity** | Are links valid? | Key relationships |
+
+**Profile first; validate continuously.** Add uniqueness, validity and timeliness where needed.
+
+## Data Cardinality
+
+**Cardinality = number of distinct values in a field.**
+
+```mermaid
+flowchart LR
+    L["status<br/>NEW · PAID · CANCELED"] --> LC["Low cardinality"]
+    H["order_id<br/>Many distinct IDs"] --> HC["High cardinality"]
+```
+
+- Affects **indexes, compression, statistics, joins and partition choices**.
+- **Relationship cardinality** is different: one-to-one, one-to-many, many-to-many.
+
+## SQL and Git: Two Essential Toolsets
+
+```mermaid
+flowchart LR
+    DE["Data Engineer"] --> SQL["SQL<br/>Query · join · aggregate"]
+    DE --> GIT["Git<br/>Version · review · collaborate"]
+    SQL --> D["Trustworthy datasets"]
+    GIT --> P["Reproducible pipeline code"]
+```
+
+**SQL manipulates data; Git manages changes to code and other tracked files.**
+
+## SQL Aggregation
+
+**Aggregate functions summarize multiple rows.**
+
+| Function | Purpose |
+|---|---|
+| `COUNT(*)` | Count rows |
+| `SUM(x)` | Total |
+| `AVG(x)` | Mean (ignores NULL) |
+| `MIN(x)` / `MAX(x)` | Extremes |
 
 ```sql
-SELECT
-  COUNT(CASE WHEN salary > 70000 THEN 1 END) AS high_count,
-  COUNT(CASE WHEN salary BETWEEN 50000 AND 70000 THEN 1 END) AS middle_count,
-  COUNT(CASE WHEN salary < 50000 THEN 1 END) AS low_count
+SELECT COUNT(*) AS employees,
+       AVG(salary) AS avg_salary
 FROM employees;
 ```
 
-**Current reference (checked 2026-10-13):** [Redshift WHERE and HAVING](https://docs.aws.amazon.com/redshift/latest/dg/r_HAVING_clause.html).
+## Conditional Aggregation with CASE
 
-## Grouping
-
-
-GROUP BY returns one aggregate row per distinct grouping key.
-
-- The screenshot filters employees by join date before counting each department.
-- For the pictured sample, HR has 5 qualifying rows and IT has 8; those are example results, not properties of the query.
+**Calculate several metrics in a single scan.**
 
 ```sql
-SELECT department_id, COUNT(*) AS number_of_employees
+SELECT
+  COUNT(CASE WHEN salary > 70000 THEN 1 END) AS high,
+  COUNT(CASE WHEN salary BETWEEN 50000 AND 70000 THEN 1 END) AS middle,
+  COUNT(CASE WHEN salary < 50000 THEN 1 END) AS low
+FROM employees;
+```
+
+- `COUNT(expression)` ignores `NULL`.
+- `WHERE` filters rows; `HAVING` filters aggregated groups.
+
+## SQL Grouping
+
+**`GROUP BY` returns one output row per group.**
+
+```sql
+SELECT department_id, COUNT(*) AS employee_count
 FROM employees
-WHERE join_date > '2020-01-01'
+WHERE join_date > DATE '2020-01-01'
 GROUP BY department_id;
 ```
 
-## Multiple grouping keys and sorting
+```mermaid
+flowchart LR
+    R["Employee rows"] --> F["WHERE: date filter"]
+    F --> G["GROUP BY department"]
+    G --> C["COUNT per department"]
+```
 
+## Multiple Grouping Keys and Sorting
 
-Grouping by year and product produces one row for each year/product combination.
-
-- ORDER BY controls result order; GROUP BY alone does not guarantee a sorted result.
-- The source uses YEAR(); this version uses EXTRACT for Redshift-style SQL.
+**Group by combinations; sort the result separately.**
 
 ```sql
 SELECT EXTRACT(YEAR FROM sale_date) AS sale_year,
@@ -835,22 +966,22 @@ GROUP BY EXTRACT(YEAR FROM sale_date), product_id
 ORDER BY sale_year, total_sales DESC;
 ```
 
-# SQL Pivoting
+**Key:** `GROUP BY` does **not** guarantee output order.
 
-<!-- original-note: 33 -->
+## SQL Pivoting
 
-Pivoting changes category values into report columns. For sales reporting, group by salesperson and aggregate the amount for each month.
+**Convert categories stored in rows into report columns.**
 
-- The screenshot pivots monthly sales into January and February columns per salesperson.
-- PIVOT syntax differs by database; conditional aggregation is a portable alternative.
+```mermaid
+flowchart LR
+    R["Alice · Jan · 1000<br/>Alice · Feb · 1100<br/>Bob · Jan · 900"]
+    --> P["PIVOT / conditional aggregation"]
+    P --> C["Seller | Jan | Feb<br/>Alice | 1000 | 1100<br/>Bob | 900 | 0"]
+```
 
-## Pivoting with conditional aggregation
+Use **`PIVOT`** where supported or **`SUM(CASE...)`** for broad SQL compatibility.
 
-
-Use CASE inside an aggregate to build a cross-tab report without a dedicated PIVOT operator.
-
-- Group by salesperson; each CASE selects the month contributing to its output column.
-- The source sample shows Alice: 1000 January / 1100 February and Bob: 900 / 950.
+## Pivoting with Conditional Aggregation
 
 ```sql
 SELECT salesperson,
@@ -860,11 +991,11 @@ FROM sales
 GROUP BY salesperson;
 ```
 
+**Pattern:** one `CASE` per desired column; one group per output row.
+
 ## INNER JOIN
 
-
-INNER JOIN returns matching row pairs. Duplicate keys can produce multiple output rows.
-
+**Returns matching row pairs only.**
 
 ```mermaid
 flowchart LR
@@ -878,29 +1009,22 @@ flowchart LR
   n1 -->|"matches"| n3
 ```
 
-> INNER JOIN returns matching row pairs. Duplicate keys can produce multiple output rows.
+**Important:** repeated keys can create multiple output rows.
 
-## INNER JOIN worked example
-
-
-An inner join emits rows only when the join condition matches. A customer with several matching payments contributes several joined rows.
-
-- The screenshot is interpreted as SQL plus result semantics; individual customer/payment rows are illustrative.
+## INNER JOIN: SQL Example
 
 ```sql
 SELECT c.customerName, p.paymentDate, p.amount
-FROM customers c
-INNER JOIN payments p
+FROM customers AS c
+INNER JOIN payments AS p
   ON c.customerNumber = p.customerNumber;
 ```
 
-
+**Keeps:** customers with matching payments. A customer with three payments appears in three joined rows.
 
 ## LEFT OUTER JOIN
 
-
-LEFT OUTER JOIN keeps every left row; unmatched right-side columns become NULL.
-
+**Keeps all left rows; adds matching right values when available.**
 
 ```mermaid
 flowchart LR
@@ -912,29 +1036,22 @@ flowchart LR
   n1 -->|"matching right values"| n2
 ```
 
-> LEFT OUTER JOIN keeps every left row; unmatched right-side columns become NULL.
+Unmatched columns from the **right** are `NULL`.
 
-## LEFT JOIN worked example
-
-
-A left join preserves every row from its left input. When no payment matches a customer, the payment columns in the result are NULL.
-
-- The screenshot is interpreted as SQL plus result semantics; individual customer/payment rows are illustrative.
+## LEFT JOIN: SQL Example
 
 ```sql
 SELECT c.customerName, p.paymentDate, p.amount
-FROM customers c
-LEFT JOIN payments p
+FROM customers AS c
+LEFT JOIN payments AS p
   ON c.customerNumber = p.customerNumber;
 ```
 
-
+**Keeps:** every customer—even those without a payment.
 
 ## RIGHT OUTER JOIN
 
-
-RIGHT OUTER JOIN keeps every right row; unmatched left-side columns become NULL.
-
+**Keeps all right rows; adds matching left values when available.**
 
 ```mermaid
 flowchart LR
@@ -946,29 +1063,22 @@ flowchart LR
   n1 -->|"all right rows"| n2
 ```
 
-> RIGHT OUTER JOIN keeps every right row; unmatched left-side columns become NULL.
+**Equivalent idea:** swap table order and use `LEFT JOIN`.
 
-## RIGHT JOIN worked example
-
-
-A right join preserves every row from its right input. Swapping the inputs changes which unmatched records remain in the result.
-
-- The screenshot is interpreted as SQL plus result semantics; individual customer/payment rows are illustrative.
+## RIGHT JOIN: SQL Example
 
 ```sql
 SELECT c.customerName, p.paymentDate, p.amount
-FROM payments p
-RIGHT JOIN customers c
+FROM payments AS p
+RIGHT JOIN customers AS c
   ON c.customerNumber = p.customerNumber;
 ```
 
-
+**Keeps:** all `customers` rows because `customers` is the **right** input.
 
 ## FULL OUTER JOIN
 
-
-FULL OUTER JOIN preserves unmatched rows from both inputs and includes all matching row pairs.
-
+**Keeps matches and all unmatched rows from both sides.**
 
 ```mermaid
 flowchart LR
@@ -980,16 +1090,11 @@ flowchart LR
   n1 -->|"preserve right"| n2
 ```
 
-> FULL OUTER JOIN preserves unmatched rows from both inputs and includes all matching row pairs.
+Missing partner fields become `NULL`; duplicate match keys can multiply rows.
 
 ## CROSS JOIN
 
-
-A cross join returns the Cartesian product: m rows times n rows yields m × n combinations.
-
-- CROSS JOIN returns the Cartesian product of its inputs.
-- There is no matching ON predicate in this example.
-
+**Cartesian product: every left row × every right row.**
 
 ```mermaid
 flowchart LR
@@ -1001,155 +1106,157 @@ flowchart LR
   n1 -->|"every right row"| n2
 ```
 
-> The slide's 'CROSS OUTER JOIN' is a CROSS JOIN: every left row pairs with every right row, producing m × n rows.
+**No `ON` predicate.** Output count = `m × n`.
 
-## CROSS JOIN worked example
-
-
-A cross join pairs each row from one input with every row from the other, producing all combinations without a matching-key condition.
-
-- The screenshot is interpreted as SQL plus result semantics; individual customer/payment rows are illustrative.
+## CROSS JOIN: SQL Example
 
 ```sql
 SELECT c.customerName, p.paymentDate, p.amount
-FROM payments p
-CROSS JOIN customers c;
+FROM payments AS p
+CROSS JOIN customers AS c;
 ```
 
-
+**Warning:** multiplies rows regardless of customer keys. Use only when all combinations are intended.
 
 ## SQL Regular Expressions
 
+**Regex matches patterns beyond simple `LIKE`.**
 
-Regular expressions match patterns inside text; SQL syntax and supported operators depend on the database.
+| Pattern | Meaning |
+|---|---|
+| `^` / `$` | Start / end |
+| `[a-z]` | Character range |
+| `a|b` | Alternative |
+| `{4}` | Four repetitions |
+| `\d` / `\s` | Digit / whitespace (dialect-dependent) |
 
-- Pattern matching
-  - Think a much more powerful “LIKE”
-- ~ is the regular expression operator
-- ~* is case-insensitive
-- !~* would mean “not match expression, case insensitive”
-- Regular expression 101
-  - ^ - match a pattern at the start of a string
-  - $ - match a pattern at the end of a string (boo$ would match boo but not book)
-  - | - alternate characters (sit|sat matches both sit and sat)
-  - Ranges ([a-z] matches any lower case letter)
-  - Repeats ([a-z]{4} matches any four-letter lowercase word)
-  - Special metacharacters
-    - \d – any digit; \w – any letter, digit, or underscore, \s – whitespace, \t – tab
-- Example:
-  - SELECT * FROM name WHERE name ~ * ‘^(fire|ice)’;
-  - Selects any rows where the name starts with “fire” or “ice” (case insensitive)
+**PostgreSQL example** (`~*` = case-insensitive regex):
 
-## Git review
+```sql
+SELECT * FROM names
+WHERE name ~* '^(fire|ice)';
+```
 
+> Regex operators and escape rules differ across databases.
 
-Git separates working files, the staging area, local commits and the remote repository.
+## Git: The Four Areas
 
+**Track changes from files to shared history.**
 
 ```mermaid
 flowchart LR
-  accTitle: Git review
-  n0["Working tree"]
-  n1["Index / staging"]
-  n2["Local repository"]
-  n3["Remote repository"]
-  n0 -->|"git add"| n1
-  n1 -->|"git commit"| n2
-  n2 -->|"git push"| n3
-  n3 -->|"git fetch"| n2
-  n2 -->|"checkout / restore"| n0
+    W["Working tree"] -->|"git add"| S["Staging area"]
+    S -->|"git commit"| L["Local repository"]
+    L -->|"git push"| R["Remote"]
+    R -->|"git fetch"| L
 ```
 
-> Git separates working files, the staging area, local commits and the remote repository.
+`git status` shows the current working-tree and staging state.
 
-## Common git commands
+## Common Git Commands
 
+| Intent | Command |
+|---|---|
+| Start new repo | `git init` |
+| Copy existing repo | `git clone URL` |
+| Inspect changes | `git status` / `git diff` |
+| Stage files | `git add .` |
+| Save snapshot | `git commit -m "message"` |
+| Read history | `git log --oneline` |
 
-Git configuration sets identity and preferences; init and clone create a local repository in different ways.
+**Identity:** `git config --global user.name` / `user.email`.
 
-- Setting Up and Configuration:
-  - git init: Initialize a new Git repository.
-  - git config: Set configuration values for user info, aliases, and more.
-    - git config --global user.name "Your Name": Set your name.
-    - git config --global user.email "your@email.com": Set your email.
-- Basic Commands:
-  - git clone <repository>: Clone (or download) a repository from an existing URL.
-  - git status: Check the status of your changes in the working directory.
-  - git add <filename>: Add changes in the file to the staging area.
-    - git add .: Add all new and changed files to the staging area.
-  - git commit -m "Commit message here": Commit the staged changes with a message.
-  - git log: View commit logs.
+## Git Branching
 
-## Branching with git
-
-
-Branches diverge from a common commit and may later merge; branch pointers identify the current tip.
-
-- git branch: List all local branches.
-  - git branch <branchname>: Create a new branch.
-- git checkout <branchname>: Switch to a specific branch.
-  - git checkout -b <branchname>: Create a new branch and switch to it.
-- git merge <branchname>: Merge the specified branch into the current branch.
-- git branch -d <branchname>: Delete a branch.
-
+**Branches allow parallel development and later integration.**
 
 ```mermaid
 flowchart LR
-  accTitle: Branching with git
-  n0["Common commit"]
-  n1["Main branch"]
-  n2["Feature branch"]
-  n3["Merge commit"]
-  n0 -->|"main development"| n1
-  n0 -->|"feature development"| n2
-  n1 -->|"first parent"| n3
-  n2 -->|"merged changes"| n3
+    A["Common commit"] --> M1["main: next commit"]
+    A --> F1["feature: change A"]
+    F1 --> F2["feature: change B"]
+    M1 & F2 --> M2["Merge commit"]
 ```
 
-> Branches diverge from a common commit and may later merge; branch pointers identify the current tip.
+```bash
+git switch -c feature/orders
+git switch main
+git merge feature/orders
+```
 
-## Remote repositories
+## Remote Repositories
 
+**Remotes share branches and history across collaborators.**
 
-Remote repositories provide shared references for collaboration. Configure a remote, fetch its history and explicitly push the branches you intend to publish.
+```mermaid
+sequenceDiagram
+    participant L as Local repo
+    participant R as Remote repo
+    L->>R: git push origin feature
+    R-->>L: git fetch origin
+    Note over L: git pull = fetch + integrate
+```
 
-- git remote: List all remote repositories.
-- git push <remote> <branch>: Push a branch to a remote repository.
-- git pull <remote> <branch>: Pull changes from a remote repository branch into the current local branch.
+- `git remote -v`: inspect configured remotes.
+- **Fetch before integrating** to review incoming changes.
 
-## Undoing changes
+## Undoing Changes Safely
 
+**Pick the undo method by the scope of change.**
 
-Choose an undo operation by what must change: the staging area, working files or committed history. Check the affected scope before resetting or reverting.
+| Goal | Command |
+|---|---|
+| Unstage a file | `git restore --staged file` |
+| Discard unstaged edits | `git restore file` |
+| Reverse a committed change | `git revert COMMIT` |
+| Reset tracked files to HEAD | `git reset --hard HEAD` |
 
-- git reset --hard: Reset the staging area and the working directory to match the most recent commit.
-- git revert <commit>: Create a new commit that undoes all of the changes from a previous commit.
+**Caution:** `reset --hard` discards local tracked changes; `revert` creates a new undo commit.
 
-## Advanced git
+## Advanced Git Operations
 
+```mermaid
+flowchart TD
+    N{"What do you need?"}
+    N -->|"Temporarily set edits aside"| S["git stash"]
+    N -->|"Move commits onto new base"| R["git rebase"]
+    N -->|"Apply one commit"| C["git cherry-pick"]
+    N -->|"Find first bad commit"| B["git bisect"]
+```
 
-Stashing, rebasing, cherry-picking and bisecting solve different history-management problems; select the operation from the result you need.
+**Rule:** avoid rewriting already-shared history without coordination.
 
-  - git stash pop: Restore the most recently stashed changes.
-- git rebase <branch>: Reapply changes from one branch onto another, often used to integrate changes from one branch into another.
-- git cherry-pick <commit>: Apply changes from a specific commit to the current branch.
+## Git Collaboration and Inspection
 
-## Git collaboration and inspection
+**Review what changed before merging or releasing.**
 
+```mermaid
+flowchart LR
+    F["git fetch"] --> D["git diff / git log"]
+    D --> B["git blame (who changed a line?)"]
+    B --> R["Review + integrate"]
+```
 
-Inspect commits, file attribution and differences to understand a change before integrating it. Use patches when exchanging changes outside the usual branch workflow.
+**Useful commands:** `git diff`, `git show`, `git log`, `git blame`, `git fetch`.
 
-- git diff: Show changes between commits, commit and working tree, etc.
-- git fetch: Fetch changes from a remote repository without merging them.
+## Git Maintenance and Recovery
 
-## Git maintenance and data recovery
+**Inspect repository health and recover local references.**
 
+| Command | Purpose |
+|---|---|
+| `git fsck` | Verify object connectivity/integrity |
+| `git gc` | Repack and clean up objects |
+| `git reflog` | Find previous positions of local references |
 
-Git integrity checks, cleanup and the reflog support local repository maintenance and recovery.
+```mermaid
+flowchart LR
+    M["Commit seems lost"] --> R["git reflog"]
+    R --> C["Locate commit hash"]
+    C --> B["Create recovery branch"]
+```
 
-- git fsck: Check the database for errors.
-- git gc: Clean up and optimize the local repository.
-- git reflog: Record when refs were updated in the local repository, useful for recovering lost commits.
+**Recovery tip:** investigate with `reflog` before aggressive cleanup.
 
 # Section Storage
 
