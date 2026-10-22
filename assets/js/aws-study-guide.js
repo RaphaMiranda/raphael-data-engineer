@@ -45,7 +45,11 @@
 
     function flushParagraph() {
       const target = current && contentTarget();
-      if (target && paragraphLines.length) target.paragraphs.push(paragraphLines.join(" "));
+      if (target && paragraphLines.length) {
+        const text = paragraphLines.join(" ");
+        target.paragraphs.push(text);
+        target.blocks.push({ type: text.startsWith("**Current reference") ? "reference" : "paragraph", text: text });
+      }
       paragraphLines = [];
     }
 
@@ -53,16 +57,23 @@
       if (line.trim().startsWith("```")) {
         flushParagraph();
         if (!inCodeBlock) {
+          table = null;
           lastVisual = null;
           inCodeBlock = true;
           codeLanguage = line.trim().slice(3).trim().toLowerCase();
         } else {
           inCodeBlock = false;
           if (current && codeLines.length) {
+            const target = contentTarget();
             if (codeLanguage === "mermaid") {
               lastVisual = { type: "mermaid", source: codeLines.join("\n"), caption: "" };
-              contentTarget().visuals.push(lastVisual);
-            } else contentTarget().code.push(codeLines.join("\n"));
+              target.visuals.push(lastVisual);
+              target.blocks.push({ type: "visual", visual: lastVisual });
+            } else {
+              const code = codeLines.join("\n");
+              target.code.push(code);
+              target.blocks.push({ type: "code", code: code });
+            }
           }
           codeLanguage = "";
           codeLines = [];
@@ -77,7 +88,7 @@
         const rawTitle = (heading[2] || "").trim();
         const title = cleanTitle(rawTitle) || "Unexpanded topic";
         if (current && title.toLowerCase() === "detailed notes" && heading[1].length > current.level) {
-          if (!current.detailedNotes) current.detailedNotes = { title: current.title, listItems: [], paragraphs: [], code: [], tables: [], visuals: [] };
+          if (!current.detailedNotes) current.detailedNotes = { title: current.title, blocks: [], listItems: [], paragraphs: [], code: [], tables: [], visuals: [] };
           detailOwner = current;
           inDetailedNotes = true;
           table = null;
@@ -88,7 +99,7 @@
         inDetailedNotes = false;
         const isSection = /^Section\s+/i.test(rawTitle);
         if (isSection) currentSection = title;
-        current = { level: heading[1].length, title: title, section: currentSection, isSection: isSection, unexpanded: !rawTitle, listItems: [], paragraphs: [], code: [], tables: [], visuals: [] };
+        current = { level: heading[1].length, title: title, section: currentSection, isSection: isSection, unexpanded: !rawTitle, blocks: [], listItems: [], paragraphs: [], code: [], tables: [], visuals: [] };
         table = null;
         lastVisual = null;
         slides.push(current);
@@ -99,15 +110,24 @@
       const caption = line.match(/^>\s?(.*)$/);
       if (caption) {
         if (lastVisual) lastVisual.caption += (lastVisual.caption ? " " : "") + caption[1];
-        else { flushParagraph(); contentTarget().paragraphs.push(caption[1]); }
+        else {
+          flushParagraph();
+          const target = contentTarget();
+          target.paragraphs.push(caption[1]);
+          target.blocks.push({ type: "paragraph", text: caption[1] });
+        }
+        table = null;
         return;
       }
       lastVisual = null;
       const image = line.trim().match(/^!\[([^\]]*)\]\((https:\/\/[^\s)]+|\/(?!\/)[^\s)]+)\)$/);
       if (image) {
         flushParagraph();
+        table = null;
         lastVisual = { type: "image", src: image[2], alt: image[1], caption: "" };
-        contentTarget().visuals.push(lastVisual);
+        const target = contentTarget();
+        target.visuals.push(lastVisual);
+        target.blocks.push({ type: "visual", visual: lastVisual });
         return;
       }
       const displayTitle = line.match(/^<!-- title: (.+) -->$/);
@@ -121,15 +141,20 @@
         flushParagraph();
         const cells = line.trim().slice(1, -1).split("|").map(function (cell) { return cell.trim(); });
         if (cells.every(function (cell) { return /^:?-{3,}:?$/.test(cell); })) return;
-        if (!table) { table = []; target.tables.push(table); }
+        if (!table) { table = []; target.tables.push(table); target.blocks.push({ type: "table", rows: table }); }
         table.push(cells);
         return;
       }
 
+      table = null;
       const listItem = line.match(/^(\s*)(?:([-*])|(\d+)\.)\s+(.+)$/);
       if (listItem) {
         flushParagraph();
-        target.listItems.push({ indent: listItem[1].replace(/\t/g, "  ").length, ordered: Boolean(listItem[3]), text: listItem[4].trim() });
+        const item = { indent: listItem[1].replace(/\t/g, "  ").length, ordered: Boolean(listItem[3]), text: listItem[4].trim() };
+        target.listItems.push(item);
+        const lastBlock = target.blocks[target.blocks.length - 1];
+        if (lastBlock && lastBlock.type === "list") lastBlock.items.push(item);
+        else target.blocks.push({ type: "list", items: [item] });
       } else if (!line.trim().startsWith("<!--")) {
         paragraphLines.push(line.trim());
       }
@@ -188,6 +213,26 @@
     }).join("");
   }
 
+  function renderCode(snippets) {
+    return snippets.map(function (snippet) { return "<pre class=\"code-block\"><code>" + escapeHtml(snippet) + "</code></pre>"; }).join("");
+  }
+
+  function renderContent(blocks, title) {
+    let paragraphCount = 0;
+    return blocks.map(function (block) {
+      if (block.type === "paragraph") {
+        const className = paragraphCount++ === 0 ? "slide-lede" : "detail-note";
+        return '<p class="' + className + '">' + formatText(block.text) + '</p>';
+      }
+      if (block.type === "reference") return '<p class="source-reference">' + formatText(block.text) + '</p>';
+      if (block.type === "list") return renderList(block.items);
+      if (block.type === "table") return renderTables([block.rows]);
+      if (block.type === "code") return renderCode([block.code]);
+      if (block.type === "visual") return renderVisual({ title: title, visuals: [block.visual] });
+      return "";
+    }).join("");
+  }
+
   async function initializeDiagrams() {
     const version = ++state.diagramVersion;
     const sources = elements.slide.querySelectorAll("[data-study-mermaid]");
@@ -241,19 +286,11 @@
   function renderSlide(shouldFocus) {
     const current = state.slides[state.index];
     const section = current.section;
-    const notes = renderList(current.listItems);
-    const tables = renderTables(current.tables);
-    const visual = renderVisual(current);
-    const code = current.code.map(function (snippet) { return "<pre class=\"code-block\"><code>" + escapeHtml(snippet) + "</code></pre>"; }).join("");
-    const references = current.paragraphs.filter(function (paragraph) { return paragraph.startsWith("**Current reference"); });
-    const paragraphs = current.paragraphs.filter(function (paragraph) { return !paragraph.startsWith("**Current reference"); });
-    const introduction = paragraphs[0] ? "<p class=\"slide-lede\">" + formatText(paragraphs[0]) + "</p>" : "";
-    const supportingParagraphs = paragraphs.slice(1).map(function (paragraph) { return '<p class="detail-note">' + formatText(paragraph) + '</p>'; }).join("");
+    const content = renderContent(current.blocks, current.title);
     const detailed = current.detailedNotes;
-    const detailedCode = detailed ? detailed.code.map(function (snippet) { return "<pre class=\"code-block\"><code>" + escapeHtml(snippet) + "</code></pre>"; }).join("") : "";
-    const detail = detailed ? renderList(detailed.listItems) + detailed.paragraphs.map(function (paragraph) { return '<p class="detail-note">' + formatText(paragraph) + '</p>'; }).join("") + renderTables(detailed.tables) + detailedCode + renderVisual(detailed) : "";
-    const details = detail ? '<details class="notes-details"><summary>Detailed notes</summary>' + detail + '</details>' : '';
-    const empty = current.unexpanded || !tables && !notes && !code && !current.paragraphs.length && !detail && !visual
+    const detailContent = detailed ? renderContent(detailed.blocks, current.title) : "";
+    const details = detailContent ? '<details class="notes-details"><summary>Detailed notes</summary>' + detailContent + '</details>' : '';
+    const empty = current.unexpanded || !content && !detailContent
       ? "<p class=\"empty-note\">This topic is marked in the source notes but has not been expanded yet. Use it as a prompt for deeper study.</p>" : "";
 
     elements.slide.classList.remove("entering");
@@ -262,9 +299,7 @@
       + "<p class=\"slide-index\">" + "Study notes" + "</p>"
       + "<p class=\"slide-section\">" + escapeHtml(section) + "</p>"
       + "<h2>" + escapeHtml(current.title) + "</h2>"
-      + introduction + supportingParagraphs + tables + notes + visual + code + details
-      + references.map(function (reference) { return '<p class="source-reference">' + formatText(reference) + '</p>'; }).join("")
-      + empty + "</div>";
+      + content + details + empty + "</div>";
     elements.slide.classList.add("entering");
     elements.count.textContent = (state.index + 1) + " / " + state.slides.length;
     elements.section.textContent = section;

@@ -7,7 +7,7 @@ const notes = fs.readFileSync('docs/aws-data-eng-associate.md', 'utf8');
 const sandbox = { window: { addEventListener() {} }, document: { getElementById: () => null }, fetch: () => new Promise(() => {}) };
 vm.createContext(sandbox);
 const guide = fs.readFileSync('assets/js/aws-study-guide.js', 'utf8').replace('  fetch(sourcePath',
-  '  window.studyTest = { parseMarkdown, formatText, renderList, renderVisual, renderTables, groupTopics, matchesTopic };\n  fetch(sourcePath');
+  '  window.studyTest = { parseMarkdown, formatText, renderList, renderVisual, renderTables, renderContent, groupTopics, matchesTopic };\n  fetch(sourcePath');
 vm.runInContext(guide, sandbox);
 const helpers = sandbox.window.studyTest;
 const slides = helpers.parseMarkdown(notes);
@@ -89,6 +89,15 @@ test('all top-level list items render and tables and links remain safe', () => {
   const html = helpers.renderTables([[['Field', 'Meaning'], ['<img src=x>', '**Important**']]]);
   assert.doesNotMatch(html, /<img/);
   assert.match(html, /<strong>Important<\/strong>/);
+});
+
+test('mixed Markdown blocks render in their source order', () => {
+  const fixture = helpers.parseMarkdown('## Ordered\nBefore the query.\n\n```sql\nSELECT 1;\n```\n\n| Field | Meaning |\n|---|---|\n| id | Identifier |\n\nAfter the table.')[0];
+  assert.deepEqual(Array.from(fixture.blocks.map(block => block.type)), ['paragraph', 'code', 'table', 'paragraph']);
+  const html = helpers.renderContent(fixture.blocks, fixture.title);
+  assert.ok(html.indexOf('Before the query.') < html.indexOf('<pre'));
+  assert.ok(html.indexOf('<pre') < html.indexOf('<div class="study-table"'));
+  assert.ok(html.indexOf('<div class="study-table"') < html.indexOf('After the table.'));
 });
 
 test('detailed material renders only under an explicit nested heading', () => {
