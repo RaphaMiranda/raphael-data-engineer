@@ -273,7 +273,7 @@
       + "<p class=\"slide-index\">" + "Study notes" + "</p>"
       + "<p class=\"slide-section\">" + escapeHtml(section) + "</p>"
       + "<h2>" + escapeHtml(current.title) + "</h2>"
-      + introduction + notes + visual + details
+      + introduction + renderTables(current.tables) + notes + visual + details
       + references.map(function (reference) { return '<p class="source-reference">' + formatText(reference) + '</p>'; }).join("")
       + empty + "</div>";
     elements.slide.classList.add("entering");
@@ -412,7 +412,7 @@
     document.addEventListener("keydown", function (event) {
       if (event.defaultPrevented || event.target.closest(".site-header, input, select, textarea, [contenteditable='true']")) return;
       if (event.key === "Escape" && !elements.workspace.classList.contains("sidebar-hidden")) { toggleOverview(false); return; }
-      if (event.target.closest("button, summary, .study-diagram") && (event.key === "ArrowLeft" || event.key === "ArrowRight")) return;
+      if (event.target.closest("button, summary, .study-diagram, .study-table") && (event.key === "ArrowLeft" || event.key === "ArrowRight")) return;
       if (event.key === "ArrowRight") goTo(state.index + 1);
       if (event.key === "ArrowLeft") goTo(state.index - 1);
       if (event.key.toLowerCase() === "o") toggleOverview(elements.workspace.classList.contains("sidebar-hidden"));
