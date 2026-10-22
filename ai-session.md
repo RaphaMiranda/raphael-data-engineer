@@ -338,3 +338,12 @@
 - **Changes:** Rewrote DNS terminology and lookup slides, plus the Route 53 overview, record fields, record types, hosted zones, and public/private zones. Clarified A/AAAA, CNAME and apex Alias behavior, NS delegation, TTL, and split-view DNS; removed dated hosted-zone pricing and unrelated service trivia.
 - **Verification:** 22 Node tests passed; 203 browser checks passed at 1440×1000 and 375×812; 33 local links returned HTTP 200; AWS claims checked against official Route 53 documentation; `git diff --check` passed.
 - **Commit:** `docs: simplify Route 53 study slides`.
+
+## 2026-10-22 — JOIN slide Venn diagrams
+
+- **Branch:** `feat/from-gojs-to-mermaid`
+- **Goal:** Add a Mermaid Venn diagram to each JOIN overview and worked example.
+- **Changes:** Replaced five JOIN overview flowcharts with themed Venn diagrams and added diagrams to four SQL examples. Highlights show matching rows and preserved input sides; CROSS JOIN inputs stay disjoint. Added coverage for all nine JOIN slides.
+- **Changed files:** `docs/aws-data-eng-associate.md`, `tests/aws-study-guide.test.js`, `ai-session.md`.
+- **Verification:** All 10 Node tests passed with `--test-isolation=none`; all nine diagrams rendered at desktop and 375 px mobile widths, with no page-level horizontal overflow. The Fit diagram control worked, ArrowRight navigation advanced slides, local navigation links returned 200, Mermaid console errors: 0, and cached diff check passed.
+- **Commit:** `756ab00`.
