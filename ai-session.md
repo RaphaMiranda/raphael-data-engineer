@@ -1,5 +1,14 @@
 # AI session log
 
+## 2026-10-22 - Preserve Markdown block order
+
+- **Branch:** `feat/from-gojs-to-mermaid`.
+- **Goal:** Render each Markdown topic in the order its paragraphs, code, tables, lists, and diagrams appear in the source.
+- **Changed files:** `assets/js/aws-study-guide.js`, `tests/aws-study-guide.test.js`, `ai-session.md`.
+- **Changes:** The parser now records ordered content blocks and the slide renderer emits them in that order. Nested Detailed notes use the same ordered rendering inside their collapsible section.
+- **Verification:** All 9 Node tests passed; both JavaScript files passed syntax checks; four local page resources returned HTTP 200; `git diff --check` passed. A targeted browser check at desktop and mobile widths confirmed the Data Engineering 101 paragraph, code fence, and quote remain in source order without horizontal overflow. The full browser suite was not rerun.
+- **Commit:** `da920ba` (`fix: preserve Markdown block order`).
+
 ## 2026-10-22 - Render all Markdown content outside Detailed notes
 
 - **Branch:** `feat/from-gojs-to-mermaid`.
