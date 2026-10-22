@@ -999,14 +999,9 @@ GROUP BY salesperson;
 
 ```mermaid
 flowchart LR
-  accTitle: INNER JOIN
-  n0["Left rows"]
-  n1["Join predicate"]
-  n2["Right rows"]
-  n3["Matching pairs only"]
-  n0 -->|"compare keys"| n1
-  n2 -->|"compare keys"| n1
-  n1 -->|"matches"| n3
+    A["Customers<br/>1 · 2 · 3"] --> J["Match on customer_id"]
+    B["Payments<br/>1 · 1 · 4"] --> J
+    J --> R["Result<br/>1 · 1"]
 ```
 
 **Important:** repeated keys can create multiple output rows.
@@ -1028,12 +1023,9 @@ INNER JOIN payments AS p
 
 ```mermaid
 flowchart LR
-  accTitle: LEFT OUTER JOIN
-  n0["Left rows<br/>Preserve all"]
-  n1["Right rows<br/>Match where possible"]
-  n2["Join result<br/>Matches + unmatched left rows"]
-  n0 -->|"all left rows"| n2
-  n1 -->|"matching right values"| n2
+    L["Customers<br/>1 · 2 · 3"] --> J["LEFT JOIN"]
+    R["Payments<br/>1 · 1 · 4"] --> J
+    J --> O["1 · payment A<br/>1 · payment B<br/>2 · NULL<br/>3 · NULL"]
 ```
 
 Unmatched columns from the **right** are `NULL`.
@@ -1055,12 +1047,9 @@ LEFT JOIN payments AS p
 
 ```mermaid
 flowchart LR
-  accTitle: RIGHT OUTER JOIN
-  n0["Left rows<br/>Match where possible"]
-  n1["Right rows<br/>Preserve all"]
-  n2["Join result<br/>Matches + unmatched right rows"]
-  n0 -->|"matching left values"| n2
-  n1 -->|"all right rows"| n2
+    L["Payments<br/>customer 1 · 4"] --> J["RIGHT JOIN"]
+    R["Customers<br/>1 · 2 · 3"] --> J
+    J --> O["Customer 1 + payment<br/>Customer 2 + NULL<br/>Customer 3 + NULL"]
 ```
 
 **Equivalent idea:** swap table order and use `LEFT JOIN`.
@@ -1082,12 +1071,9 @@ RIGHT JOIN customers AS c
 
 ```mermaid
 flowchart LR
-  accTitle: FULL OUTER JOIN
-  n0["Left rows"]
-  n1["Right rows"]
-  n2["Join result<br/>Matches + unmatched rows from both sides"]
-  n0 -->|"preserve left"| n2
-  n1 -->|"preserve right"| n2
+    A["Left<br/>1 · 2"] --> J["FULL OUTER JOIN"]
+    B["Right<br/>2 · 3"] --> J
+    J --> R["1 · NULL<br/>2 · 2<br/>NULL · 3"]
 ```
 
 Missing partner fields become `NULL`; duplicate match keys can multiply rows.
@@ -1098,12 +1084,9 @@ Missing partner fields become `NULL`; duplicate match keys can multiply rows.
 
 ```mermaid
 flowchart LR
-  accTitle: CROSS JOIN
-  n0["Left input<br/>m rows"]
-  n1["Right input<br/>n rows"]
-  n2["Cartesian product<br/>m × n row pairs"]
-  n0 -->|"every left row"| n2
-  n1 -->|"every right row"| n2
+    A["Colors<br/>Red · Blue"] --> X["CROSS JOIN"]
+    B["Sizes<br/>S · M · L"] --> X
+    X --> R["6 combinations<br/>2 × 3"]
 ```
 
 **No `ON` predicate.** Output count = `m × n`.
@@ -1260,1600 +1243,1018 @@ flowchart LR
 
 # Section Storage
 
-<!-- original-note: 35 -->
-<!-- section -->
+## Storage: Choosing the Right AWS Service
 
-## Amazon S3
+**Choose storage by access model, sharing, latency, and recovery needs.**
 
+```mermaid
+flowchart TD
+    A{"How will data be accessed?"}
+    A -->|Objects / data lake| S3["Amazon S3"]
+    A -->|Disk for EC2| EBS["Amazon EBS"]
+    A -->|Shared filesystem| EFS["Amazon EFS"]
+    A -->|Central backups| B["AWS Backup"]
+```
 
-S3 stores objects for data lakes, backups, archives, application assets and content distribution. Other AWS services often use it as a durable exchange point.
+- **Object (s3):** API access to keys and blobs.
+- **Block (EBS):** volumes formatted as disks/filesystems.
+- **File (EFS):** shared paths and POSIX-style operations.
 
-- Storage and recovery: backups, disaster recovery, archives and hybrid transfer.
-- Applications and delivery: static websites, media, application assets and software updates.
-- Analytics: retain datasets and exchange outputs between processing tools.
-- The personal notes use long-retention financial archives and analytical reports as example workloads; they are examples rather than current customer claims.
+## Amazon S3: Object Storage
 
-### Amazon S3 Use cases
-
-
-S3 supports object-backed storage, archives, recovery copies, content delivery and analytical lakes.
-
-- Backup and storage
-- Disaster Recovery
-- Archive
-- Hybrid Cloud storage
-- Application hosting
-- Media hosting
-- Data lakes & big data analytics
-- Software delivery
-- Static website
-
-### Buckets
-
-<!-- original-note: 36 -->
-<!-- title: S3 buckets -->
-
-A bucket is the container for S3 objects in a Region. Choose its namespace deliberately; object key prefixes organize names rather than creating ordinary directories.
-
-- Shared-global bucket names must be unique across accounts and Regions within their AWS partition.
-- An account-regional namespace reserves names for one account using the required account/Region suffix; it does not make arbitrary duplicate global names valid.
-- Account-regional creation uses the documented naming convention and namespace request setting.
-- Naming basics: 3-63 characters; lowercase letters, digits, periods and hyphens; begin and end with a letter or digit. Uppercase, underscores, adjacent periods and IP-address formatting are invalid.
-- Reserved names include the xn-- prefix and -s3alias suffix; consult the linked rules for the complete list and namespace-specific requirements.
-
-**Current reference (checked 2026-10-13):** [S3 bucket namespaces and naming](https://docs.aws.amazon.com/AmazonS3/latest/userguide/bucketnamingrules.html).
-
-### Amazon S3 - Objects
-
-
-An S3 object key identifies the object within its bucket; slash-separated prefixes do not create ordinary filesystem directories.
-
-- Objects (files) have a Key
-- The key is the FULL path:
-  - s3://my-bucket/my_file.txt
-  - s3://my-bucket/my_folder1/another_folder/my_file.txt
-- The key is composed of prefix + object name
-- There’s no concept of “directories” within buckets (although the UI will trick you to think otherwise)
-- Just keys with very long names that contain slashes (“/”) with Objects
-
-### Amazon S3 – Objects (cont.)
-
-
-An S3 object combines its bytes with metadata, optional tags and a version identifier when versioning is enabled.
-
-- Current correction: S3 supports objects up to 53.7 TB (48.8 TiB), commonly called 50 TB; a single PUT supports up to 5 GB. Use multipart upload for larger objects.
-- Object values are the content of the body:
-  - Max. Object Size is 50TB (50,000GB)
-  - If uploading more than 5GB, must use “multi-part upload”
-- Metadata (list of text key / value pairs – system or user metadata)
-- Tags (Unicode key / value pair – up to 10) – useful for security / lifecycle
-- Version ID (if versioning is enabled)
-
-**Current reference (checked 2026-10-13):** [S3 object limits](https://docs.aws.amazon.com/AmazonS3/latest/userguide/UsingObjects.html).
-
-### S3 - Security
-
-<!-- original-note: 37 -->
-<!-- title: S3 security -->
-
-S3 access depends on the requesting identity, applicable resource policies and blocking controls. An explicit deny takes precedence over an allow.
-
-- User-Based
-  - IAM Policies – which API calls should be allowed for a specific user from IAM
-- Resource-Based
-  - Bucket Policies – bucket wide rules from the S3 console - allows cross account
-  - Object Access Control List (ACL) – finer grain (can be disabled)
-  - Bucket Access Control List (ACL) – less common (can be disabled)
-- Note: an IAM principal can access an S3 object if
-  - The user IAM permissions ALLOW it OR the resource policy ALLOWS it
-  - AND there’s no explicit DENY
-- Encryption: encrypt objects in Amazon S3 using encryption keys
-
-### S3 - Bucket Policies
-
-
-A bucket policy is a resource policy that scopes S3 actions by principal, resource and optional conditions.
-
-- JSON based policies
-  - Resources: buckets and objects
-  - Effect: Allow / Deny
-  - Actions: Set of API to Allow or Deny
-  - Principal: The account or user to apply the policy to
-- Use S3 bucket for policy to:
-  - Grant public access to the bucket
-  - Force objects to be encrypted at upload
-  - Grant access to another account (Cross Account)
-
-### Example: Public Access - Use Bucket Policy
-
-
-Anonymous access requires an applicable bucket policy and public-access settings that permit it; public access is an explicit configuration choice.
-
+**Amazon S3** stores objects durably in buckets, separating storage from the compute that accesses them.
 
 ```mermaid
 flowchart LR
-  accTitle: Example: Public Access - Use Bucket Policy
-  n0["Anonymous visitor"]
-  n1["Bucket policy<br/>Explicit public allow"]
-  n2["S3 bucket"]
-  n0 -->|"request"| n1
-  n1 -->|"authorize if permitted"| n2
+    subgraph Sources
+      DB["Databases"]
+      API["APIs / logs"]
+      App["Applications"]
+    end
+    DB & API & App --> S3[("S3 bucket")]
+    S3 --> X["Glue / Spark / Athena"]
+    S3 --> B["Backups / archives"]
+    S3 --> W["Static assets / delivery"]
 ```
 
-> Anonymous access requires an applicable bucket policy and public-access settings that permit it; public access is an explicit configuration choice.
+- **Data engineering:** raw lakes, curated files, pipeline exchange, historical retention.
+- **Other uses:** backups, disaster recovery, media, static sites, software distribution.
 
-### Example: User Access to S3 – IAM permissions
+## S3 Buckets and Object Keys
 
-
-An IAM user's identity policy can authorize same-account S3 access, subject to all applicable policy restrictions.
-
-
-```mermaid
-flowchart LR
-  accTitle: Example: User Access to S3 – IAM permissions
-  n0["IAM user"]
-  n1["Identity policy"]
-  n2["S3 bucket"]
-  n0 -->|"evaluate request"| n1
-  n1 -->|"allow required actions"| n2
-```
-
-> An IAM user's identity policy can authorize same-account S3 access, subject to all applicable policy restrictions.
-
-### Example: EC2 instance access - Use IAM Roles
-
-
-An EC2 instance uses an IAM role and temporary credentials to access S3 without embedded long-lived keys.
-
-
-```mermaid
-flowchart LR
-  accTitle: Example: EC2 instance access - Use IAM Roles
-  n0["EC2 application"]
-  n1["Instance role<br/>Temporary credentials"]
-  n2["S3 bucket"]
-  n0 -->|"assume service role"| n1
-  n1 -->|"authorized requests"| n2
-```
-
-> An EC2 instance uses an IAM role and temporary credentials to access S3 without embedded long-lived keys.
-
-### Advanced: Cross-Account Access – Use Bucket Policy
-
-
-Cross-account S3 access requires authorization on both sides; the destination bucket policy trusts the external principal.
-
-
-```mermaid
-flowchart LR
-  accTitle: Advanced: Cross-Account Access – Use Bucket Policy
-  n0["Account A principal"]
-  n1["Identity policy"]
-  n2["Account B bucket policy"]
-  n3["S3 bucket"]
-  n0 -->|"identity permission"| n1
-  n1 -->|"cross-account request"| n2
-  n2 -->|"resource permission"| n3
-```
-
-> Cross-account S3 access requires authorization on both sides; the destination bucket policy trusts the external principal.
-
-### Bucket settings for Block Public Access
-
-
-Block Public Access adds controls against unintended public exposure. Evaluate these settings together with the bucket's policies and access-control configuration.
-
-- If you know your bucket should never be public, leave these on
-- Can be set at the account level
-
-### Amazon S3 - Versioning
-
-
-Versioning retains distinct versions under the same object key; a delete marker hides the current object without erasing retained versions.
-
-- You can version your files in Amazon S3
-- It is enabled at the bucket level
-- Same key overwrite will change the “version”: 1, 2, 3….
-- It is best practice to version your buckets
-  - Protect against unintended deletes (ability to restore a version)
-  - Easy roll back to previous version
-- Notes:
-  - Any file that is not versioned prior to enabling versioning will have version “null”
-  - Suspending versioning does not delete the previous versions
-
-
-```mermaid
-flowchart LR
-  accTitle: Amazon S3 - Versioning
-  n0["Object key"]
-  n1["Version 1"]
-  n2["Version 2"]
-  n3["Version 3"]
-  n4["Delete marker"]
-  n0 ---|"retained version"| n1
-  n0 ---|"retained version"| n2
-  n0 ---|"retained version"| n3
-  n0 ---|"logical deletion"| n4
-```
-
-> Versioning retains distinct versions under the same object key; a delete marker hides the current object without erasing retained versions.
-
-### Amazon S3 - Replication
-
-<!-- original-note: 38 -->
-<!-- title: S3 replication -->
-
-Replication copies eligible objects to another bucket in the same Region or a different Region. Configure the rule, permissions and destination for the recovery or distribution requirement.
-
-- Must enable Versioning in source and destination buckets
-- Cross-Region Replication (CRR)
-- Same-Region Replication (SRR)
-- Buckets can be in different AWS accounts
-- Copying is asynchronous
-- Must give proper IAM permissions to S3
-- Use cases:
-  - CRR – compliance, lower latency access, replication across accounts
-  - SRR – log aggregation, live replication between production and test accounts
-
-
-```mermaid
-flowchart LR
-  accTitle: S3 replication
-  n0["Versioned source bucket"]
-  n1["Replication role / rule"]
-  n2["Versioned destination bucket"]
-  n0 -->|"eligible versions"| n1
-  n1 -->|"asynchronous copy"| n2
-```
-
-> S3 asynchronously replicates eligible new object versions to another bucket in the same or a different Region.
-
-### Amazon S3 – Replication (Notes)
-
-
-A newly enabled replication rule handles eligible new writes. Use a separate batch-replication workflow when existing objects also need to be copied.
-
-- Optionally, you can replicate existing objects using S3 Batch Replication
-  - Replicates existing objects and objects that failed replication
-- For DELETE operations
-  - Can replicate delete markers from source to target (optional setting)
-  - Deletions with a version ID are not replicated (to avoid malicious deletes)
-- There is no “chaining” of replication
-  - If bucket 1 has replication into bucket 2, which has replication into bucket 3
-  - Then objects created in bucket 1 are not replicated to bucket 3
-
-### Amazon S3 – Replication Time Control (RTC)
-
-
-Replication Time Control adds a defined replication-time objective and monitoring to supported replication rules, with additional charges and documented eligibility.
-
-- 99.99% of new objects replicated within 15 minutes
-- Provides predictable, auditable replication time
-- Publishes CloudWatch metrics to monitoring
-- Alerts you if replication falls behind
-- Can replicate to same or different AWS Region
-- Helps you meet compliance or business requirements
-- Extra cost per GB for the replication
-
-### S3 Classes
-
-<!-- original-note: 39 -->
-<!-- title: S3 storage classes -->
-
-Choose a storage class by access frequency, retrieval delay, resilience and retention charges rather than storage price alone.
-
-- Amazon S3 Standard - General Purpose
-- Amazon S3 Standard-Infrequent Access (IA)
-- Amazon S3 One Zone-Infrequent Access
-- Amazon S3 Glacier Instant Retrieval
-- Amazon S3 Glacier Flexible Retrieval
-- Amazon S3 Glacier Deep Archive
-- Amazon S3 Intelligent Tiering
-- Can move between classes manually or using S3 Lifecycle configurations
-
-### S3 Durability and Availability
-
-
-Durability measures protection against data loss; availability measures successful access over time.
-
-- Durability:
-  - High durability (99.999999999%, 11 9’s) of objects across multiple AZ
-  - If you store 10,000,000 objects with Amazon S3, you can on average expect to incur a loss of a single object once every 10,000 years
-  - Same for all storage classes
-- Availability:
-  - Measures how readily available a service is
-  - Varies depending on storage class
-  - Example: S3 standard has 99.99% availability = not available 53 minutes a year
-
-### S3 Standard – General Purpose
-
-
-S3 Standard targets frequently accessed data with immediate access and multi-AZ resilience.
-
-- 99.99% Availability
-- Used for frequently accessed data
-- Low latency and high throughput
-- Sustain 2 concurrent facility failures
-- Use Cases: Big Data analytics, mobile & gaming applications, content distribution…
-
-### S3 Storage Classes – Infrequent Access
-
-
-Infrequent-access classes trade lower storage prices for retrieval charges and minimum-duration rules while retaining immediate object access.
-
-- Lower cost than S3 Standard
-- Amazon S3 Standard-Infrequent Access (S3 Standard-IA)
-  - 99.9% Availability
-  - Use cases: Disaster Recovery, backups
-- Amazon S3 One Zone-Infrequent Access (S3 One Zone-IA)
-  - High durability (99.999999999%) in a single AZ; data lost when AZ is destroyed
-  - 99.5% Availability
-  - Use Cases: Storing secondary backup copies of on-premises data, or data you can recreate
-
-### Amazon S3 Glacier Storage Classes
-
-
-Glacier classes serve long-retention and rarely accessed data. Choose between immediate reads and restore workflows according to the acceptable retrieval delay.
-
-- Pricing: price for storage + object retrieval cost
-- Amazon S3 Glacier Instant Retrieval
-  - Millisecond retrieval, great for data accessed once a quarter
-  - Minimum storage duration of 90 days
-- Amazon S3 Glacier Flexible Retrieval (formerly Amazon S3 Glacier):
-  - Expedited (1 to 5 minutes), Standard (3 to 5 hours), Bulk (5 to 12 hours) – free
-- Amazon S3 Glacier Deep Archive – for long term storage:
-  - Standard (12 hours), Bulk (48 hours)
-  - Minimum storage duration of 180 days
-
-### S3 Intelligent-Tiering
-
-
-Intelligent-Tiering adapts eligible objects to changing access patterns, with monitoring and optional archive-tier considerations.
-
-- Small monthly monitoring and auto-tiering fee
-- Moves objects automatically between Access Tiers based on usage
-- There are no retrieval charges in S3 Intelligent-Tiering
-- Frequent Access tier (automatic): default tier
-- Infrequent Access tier (automatic): objects not accessed for 30 days
-- Archive Instant Access tier (automatic): objects not accessed for 90 days
-- Archive Access tier (optional): configurable from 90 days to 700+ days
-
-### S3 storage-class comparison
-
-
-Compare access latency, AZ resilience, retention charges and retrieval fees before comparing storage price.
-
-- The course table describes 11-nines designed durability; durability and availability are different measures.
-- Standard, Intelligent-Tiering and IA classes provide immediate access; Flexible Retrieval and Deep Archive require restore workflows.
-- One Zone-IA stores data in one AZ: choose it only for reproducible or otherwise acceptable single-AZ datasets.
-- Course minimum-duration examples: IA 30 days, Glacier Instant/Flexible 90 days, Deep Archive 180 days. Validate current class rules before implementation.
-
-| Class family | Typical role | Tradeoff to check |
-| --- | --- | --- |
-| Standard | Frequent access | Storage price versus request volume |
-| Intelligent-Tiering | Unpredictable access | Monitoring, object eligibility, optional archive tiers |
-| Standard-IA / One Zone-IA | Infrequent immediate reads | Retrieval charges; single-AZ risk for One Zone |
-| Glacier Instant Retrieval | Rare immediate reads | Minimum duration and retrieval cost |
-| Glacier Flexible Retrieval | Archives with restore delay | Restore tier and temporary restored copy |
-| Glacier Deep Archive | Long retention, hours acceptable | Longer restore time and minimum duration |
-
-### S3 pricing: compare the complete workload
-
-
-The us-east-1 dollar amounts are an illustrative snapshot, not a current quote.
-
-- Include storage, requests, retrieved bytes, lifecycle transitions, monitoring and transfer in the estimate.
-- Frequent small reads can make the lowest per-GB storage class more expensive overall.
-- The source illustrates Flexible Retrieval tiers of minutes to hours and Deep Archive restore times of hours; check the selected tier and current pricing.
-
-**Current reference (checked 2026-10-13):** [S3 pricing](https://aws.amazon.com/s3/pricing/).
-
-### S3 Express One Zone
-
-
-S3 Express One Zone places a directory bucket in one Availability Zone; co-locating compute reduces access latency.
-
-- High performance, single Availability Zone storage class
-- Objects stored in a Directory Bucket (bucket in a single AZ)
-- Handle 100,000s requests per second with single- digit millisecond latency
-- Up to 10x better performance than S3 Standard (50% lower costs)
-- High Durability (99.999999999%) and Availability (99.95%)
-- Co-locate your storage and compute resources in the same AZ (reduces latency)
-- Use cases: latency-sensitive apps, data-intensive apps, AI & ML training, financial modeling, media processing, HPC…
-- Best integrated with SageMaker Model Training,
-
-
-```mermaid
-flowchart LR
-  accTitle: S3 Express One Zone
-  n0["Region"]
-  n1["Availability Zone"]
-  n2["Compute"]
-  n3["Directory bucket<br/>S3 Express One Zone"]
-  n0 ---|"contains"| n1
-  n1 ---|"co-located"| n2
-  n1 ---|"single-AZ storage"| n3
-  n2 ---|"low-latency requests"| n3
-```
-
-> S3 Express One Zone places a directory bucket in one Availability Zone; co-locating compute reduces access latency.
-
-### Amazon S3 – Moving between Storage Classes
-
-
-The lifecycle waterfall shows alternative permitted transitions, not a mandatory sequence. Intelligent-Tiering exits depend on the object's access tier; eligibility and minimum-duration rules still apply.
-
-- You can transition objects between storage classes
-- For infrequently accessed object, move them to Standard IA
-- For archive objects that you don’t need fast access to, move them to Glacier or Glacier Deep Archive
-- Moving objects can be automated using a Lifecycle Rules
-
-**Current reference (checked 2026-10-13):** [S3 supported lifecycle transitions](https://docs.aws.amazon.com/AmazonS3/latest/userguide/lifecycle-transition-general-considerations.html).
-
+**A bucket is the storage container; a key is an object's full name within it.**
 
 ```mermaid
 flowchart TB
-  accTitle: Amazon S3 – Moving between Storage Classes
-  n0["S3 Standard"]
-  n1["Standard-IA"]
-  n2["Intelligent-Tiering<br/>Access-tier restrictions apply"]
-  n3["One Zone-IA"]
-  n4["Glacier Instant Retrieval"]
-  n5["Glacier Flexible Retrieval"]
-  n6["Glacier Deep Archive"]
-  n0 -->|"transition"| n1
-  n0 -->|"transition"| n2
-  n0 -->|"transition"| n3
-  n0 -->|"transition"| n4
-  n0 -->|"transition"| n5
-  n0 -->|"transition"| n6
-  n1 -->|"transition"| n2
-  n1 -->|"transition"| n3
-  n1 -->|"transition"| n4
-  n1 -->|"transition"| n5
-  n1 -->|"transition"| n6
-  n2 -->|"Frequent / Infrequent tiers"| n3
-  n2 -->|"eligible access tiers"| n4
-  n2 -->|"eligible access tiers"| n5
-  n2 -->|"eligible access tiers"| n6
-  n3 -->|"transition"| n5
-  n3 -->|"transition"| n6
-  n4 -->|"transition"| n5
-  n4 -->|"transition"| n6
-  n5 -->|"transition"| n6
+    B["Bucket: analytics-lake"] --> K1["raw/orders/2026-10-22.json"]
+    B --> K2["silver/orders/part-0001.parquet"]
+    B --> K3["gold/revenue/report.parquet"]
 ```
 
-> The lifecycle waterfall shows alternative permitted transitions, not a mandatory sequence. Intelligent-Tiering exits depend on the object's access tier; eligibility and minimum-duration rules still apply.
+- `s3://analytics-lake/silver/orders/part-0001.parquet`
+- **Slashes are key-prefix delimiters**, not ordinary filesystem directories.
+- General-purpose bucket naming follows namespace and Region rules; names are lowercase and typically 3–63 characters.
 
-### Amazon S3 – Lifecycle Rules
+## S3 Object Anatomy and Upload Limits
 
-
-Lifecycle rules transition or expire eligible objects, versions and uploads. Scope each rule to the intended dataset and retention requirement.
-
-  - Move objects to Standard IA class 60 days after creation
-  - Move to Glacier for archiving after 6 months
-- Expiration actions – configure objects to expire (delete) after some time
-  - Access log files can be set to delete after a 365 days
-  - Can be used to delete old versions of files (if versioning is enabled)
-  - Can be used to delete incomplete Multi-Part uploads
-- Rules can be created for a certain prefix (example: s3://mybucket/mp3/*)
-
-### Amazon S3 – Lifecycle Rules (Scenario 1)
-
-
-Store profile originals for immediate access for 60 days, then allow a six-hour retrieval delay. Treat reproducible thumbnails separately because they can be deleted and regenerated.
-
-- S3 source images can be on Standard, with a lifecycle configuration to transition them to Glacier after 60 days
-- S3 thumbnails can be on One-Zone IA, with a lifecycle configuration to expire them (delete them) after 60 days
-
-### Amazon S3 – Lifecycle Rules (Scenario 2)
-
-
-Combine versioning and lifecycle transitions to keep deleted objects immediately recoverable for 30 days, then recoverable with a longer delay through day 365.
-
-- Enable S3 Versioning in order to have object versions, so that “deleted objects” are in fact hidden by a “delete marker” and can be recovered
-- Transition the “noncurrent versions” of the object to Standard IA
-- Transition afterwards the “noncurrent versions” to Glacier Deep Archive
-
-### Amazon S3 Analytics – Storage Class Analysis
-
-
-S3 storage-class analysis produces reports to inform lifecycle decisions; recommendations do not themselves move objects.
-
-- Help you decide when to transition objects to the right storage class
-- Recommendations for Standard and Standard IA
-  - Does NOT work for One-Zone IA or Glacier
-- Report is updated daily
-- 24 to 48 hours to start seeing data analysis
-- Good first step to put together Lifecycle Rules (or improve them)!
-
+**An object = content + key + metadata + optional tags / version ID.**
 
 ```mermaid
 flowchart LR
-  accTitle: Amazon S3 Analytics – Storage Class Analysis
-  n0["S3 objects / access patterns"]
-  n1["Storage-class analysis"]
-  n2["Reports"]
-  n3["Lifecycle policy decision"]
-  n0 -->|"analyze"| n1
-  n1 -->|"export insights"| n2
-  n2 -->|"choose transitions"| n3
+    O["S3 object"] --> B["Body / bytes"]
+    O --> K["Key"]
+    O --> M["System + user metadata"]
+    O --> T["Up to 10 tags"]
+    O --> V["Version ID, if enabled"]
 ```
 
-> S3 storage-class analysis produces reports to inform lifecycle decisions; recommendations do not themselves move objects.
+- **Maximum object:** approximately **50 TB (48.8 TiB)**.
+- **Single PUT:** up to 5 GB; larger objects require multipart upload.
+- Metadata describes content; **tags** support policy, lifecycle, and classification.
 
-### S3 Event Notifications
+## S3 Authorization: What Grants Access?
 
-<!-- original-note: 40 -->
-<!-- title: S3 event notifications -->
+**Access is allowed only when all applicable policy boundaries permit the request.**
 
-With s3 event notifications object events can trigger downstream processing. 
-Select the event type, destination and destination permissions as separate parts of the notification setup.
+```mermaid
+flowchart TD
+    R["Principal requests S3 action"] --> I["Identity policy / resource policy"]
+    I --> D{"Explicit deny anywhere?"}
+    D -->|Yes| N["DENY"]
+    D -->|No| A{"Required allow and controls satisfied?"}
+    A -->|Yes| Y["ALLOW"]
+    A -->|No| N
+```
 
-- S3:ObjectCreated, S3:ObjectRemoved, S3:ObjectRestore, S3:Replication…
-- Object name filtering possible (*.jpg)
-- Use case: generate thumbnails of images uploaded to S3
-- Can create as many “S3 events” as desired
-- S3 event notifications typically deliver events in seconds but can sometimes take a minute or longer
+- **IAM policies:** permissions attached to identities/roles.
+- **Bucket / access-point policies:** permissions attached to S3 resources.
+- **ACLs:** legacy access mechanism; generally prefer **Bucket owner enforced** and policy-based access.
+- **Other limits:** Block Public Access, SCPs, endpoint policies, KMS permissions.
 
+## Bucket Policies and Public Access
+
+**Bucket policies declare `Principal`, `Action`, `Resource`, `Effect`, and optional `Condition`.**
 
 ```mermaid
 flowchart LR
-  accTitle: S3 event notifications
-  n0["S3 bucket"]
-  n1["SNS"]
-  n2["SQS"]
-  n3["Lambda"]
-  n0 -->|"event notification"| n1
-  n0 -->|"event notification"| n2
-  n0 -->|"event notification"| n3
+    U["Anonymous or IAM request"] --> BP["Bucket policy"]
+    BPA["Block Public Access"] -.-> BP
+    BP --> A{"Policy permits request?"}
+    A -->|Yes, no blockers| S3[("S3 object")]
+    A -->|No| D["Access denied"]
 ```
 
-> S3 object events can notify SNS, SQS or Lambda; configure the supported event types and filters.
+- Typical rules: **cross-account read**, **TLS-only access**, and **restricted prefixes**.
+- **Public access is never implied** by an internet-reachable endpoint.
+- Keep Block Public Access enabled unless public access is intentional and approved.
 
-### S3 Event Notifications – IAM Permissions
+## S3 Roles and Cross-Account Access
 
+**AWS workloads should use temporary IAM-role credentials—not embedded access keys.**
 
-Notification destinations need resource policies allowing the S3 service to publish, send or invoke as appropriate.
+```mermaid
+sequenceDiagram
+    participant E as EC2 / Glue role (Account A)
+    participant P as IAM policy (A)
+    participant B as Bucket policy (B)
+    participant S as S3 bucket (B)
+    E->>P: Request s3:GetObject
+    P-->>E: Identity-side permission
+    E->>B: Signed request
+    B-->>E: Resource-side permission
+    E->>S: Read object, if all controls allow
+```
 
+- **Same account:** identity and resource-policy evaluation follows AWS authorization rules.
+- **Cross-account:** normally requires **permission from the principal account and bucket account**.
+- For SSE-KMS objects, the requester may also need appropriate **KMS key permissions**.
+
+## S3 Block Public Access
+
+**Block Public Access is a guardrail against accidental internet exposure.**
 
 ```mermaid
 flowchart LR
-  accTitle: S3 Event Notifications – IAM Permissions
-  n0["S3 event"]
-  n1["SNS policy"]
-  n2["SQS policy"]
-  n3["Lambda policy"]
-  n4["Destination"]
-  n0 -->|"sns:Publish"| n1
-  n0 -->|"sqs:SendMessage"| n2
-  n0 -->|"lambda:InvokeFunction"| n3
-  n1 -->|"permit SNS delivery"| n4
-  n2 -->|"permit SQS delivery"| n4
-  n3 -->|"permit invocation"| n4
+    R["Public allow in policy / ACL"] --> G{"Block Public Access settings"}
+    G -->|Blocked| D["Denied / rejected"]
+    G -->|Not blocked| P["Evaluate normal S3 authorization"]
 ```
 
-> Notification destinations need resource policies allowing the S3 service to publish, send or invoke as appropriate.
+- Configure at **account**, **bucket**, and relevant **access-point** scope.
+- Prefer restricting access by IAM roles, VPC conditions, and least privilege.
 
-### S3 Event Notifications with Amazon EventBridge
+## S3 Versioning
 
-
-S3 events enter EventBridge, where rules filter event detail and route to configured targets.
-
-- Advanced filtering options with JSON rules (metadata, object size, name...)
-- Multiple Destinations – ex Step Functions, Kinesis Streams / Firehose…
-- EventBridge Capabilities – Archive, Replay Events, Reliable delivery
-
+**Versioning preserves historical object states under one key.**
 
 ```mermaid
 flowchart LR
-  accTitle: S3 Event Notifications with Amazon EventBridge
-  n0["S3 bucket"]
-  n1["EventBridge bus"]
-  n2["Rules<br/>Event matching"]
-  n3["Targets<br/>Workflows, queues, functions"]
-  n0 -->|"events"| n1
-  n1 -->|"evaluate pattern"| n2
-  n2 -->|"route matching events"| n3
+    K["orders.csv"] --> V1["v1: original"]
+    K --> V2["v2: overwrite"]
+    K --> V3["v3: overwrite"]
+    K --> DM["Delete marker: current view hidden"]
 ```
 
-> S3 events enter EventBridge, where rules filter event detail and route to configured targets.
+- Enables **rollback** and recovery from accidental overwrite or simple deletion.
+- Enabling versioning does not retroactively assign new version IDs to old objects (`null` versions can exist).
+- Suspending versioning **does not erase** stored historical versions.
 
-### S3 Performance
+## S3 Replication: SRR vs CRR
 
-<!-- original-note: 41 -->
-<!-- title: S3 performance -->
-
-The key idea is that Amazon S3 is designed for massive parallelism, rather than behaving like a traditional disk or filesystem.
-
-AWS documents performance of at least:
-- 3,500 requests/second per prefix for write-type operations such as PUT, COPY, POST, and DELETE
-- 5,500 requests/second per prefix for GET and HEAD
-
-```
-s3://my-data-lake/
-    raw/
-    silver/
-    gold/
-```
-
-```
-                S3 Bucket
-                    │
-        ┌───────────┼───────────┐
-        ▼           ▼           ▼
-      raw/        silver/      gold/
-    5,500 GET/s   5,500 GET/s  5,500 GET/s
-```
-
-- If you spread reads across all three prefixes evenly, you can achieve 16,500 (GET/HEAD) per second.
-
-### S3 Performance - Multipart Upload
-
-
-For large objects, you shouldn't necessarily upload the entire object as one request.
-Instead, S3 supports multipart upload which sends parts in parallel.
-
-- recommended for files > 100MB
-- Mandatory for files > 5GB
-- S3 objects can be up to 5TB.
-```
-                  10 GB file
-                      │
-       ┌──────────────┼──────────────┐
-       ▼              ▼              ▼
-     Part 1         Part 2         Part 3 ...
-       │              │              │
-       └──────────────┼──────────────┘
-                      ▼
-                     S3
-```
-
+**Replication asynchronously copies eligible object versions between versioned buckets.**
 
 ```mermaid
 flowchart LR
-  accTitle: S3 Performance - Multipart Upload
-  n0["Large object"]
-  n1["Parallel parts"]
-  n2["S3 bucket"]
-  n3["Remote uploader"]
-  n4["Edge location"]
-  n0 -->|"split"| n1
-  n1 -->|"upload / complete"| n2
-  n3 -->|"public network"| n4
-  n4 -->|"optimized network path"| n2
+    S[("Source bucket\nversioning ON")] --> R{"Replication rule + IAM role"}
+    R -->|Same Region| SRR[("SRR destination")]
+    R -->|Different Region| CRR[("CRR destination")]
 ```
 
-> Multipart upload sends parts in parallel; Transfer Acceleration routes uploads through an edge location toward the destination bucket.
+- **SRR:** same-Region redundancy, aggregation, account separation.
+- **CRR:** geographic copies, compliance, disaster recovery, proximity.
+- Source and destination require **versioning**, valid permissions, and eligible configuration.
 
-### S3 Performance – S3 Byte-Range Fetches
+## S3 Replication: Edge Cases
 
+**Ordinary replication rules handle eligible future writes; history needs a separate plan.**
 
-There's effectively an equivalent concept on the download side. You don't necessarily have to download an entire object.
-You can request specific byte ranges.
-
-- can download separate ranges concurrently or retrieve only a file header.
-
-```
-                    S3 Object
-                       │
-         ┌─────────────┼─────────────┐
-         ▼             ▼             ▼
-     Range 1        Range 2       Range 3
-         │             │             │
-         └─────────────┼─────────────┘
-                       ▼
-                  Application
+```mermaid
+flowchart TB
+    W["New version"] --> R["Configured replication"]
+    O["Existing versions / failed objects"] --> B["S3 Batch Replication"]
+    R & B --> D[("Destination bucket")]
 ```
 
+- **Delete-marker replication:** optional; deleting a specific version does not replicate as a normal deletion.
+- **No automatic chaining:** A → B → C does not automatically relay A's replicas onward to C.
+- Validate replication metrics and destination ownership / encryption requirements.
 
+## S3 Replication Time Control (RTC)
+
+**RTC adds a predictable replication-time objective and monitoring.**
+
+```mermaid
+sequenceDiagram
+    participant S as Source bucket
+    participant R as Replication RTC
+    participant D as Destination bucket
+    S->>R: Eligible new object
+    R->>D: Asynchronous copy
+    Note over R,D: 15-minute objective + SLA
+    R-->>S: Metrics / threshold events
+```
+
+- AWS documents a **99.99% within 15 minutes SLA** for covered objects; monitor late or failed replication.
+- Helps with regulatory delivery objectives; **additional charges apply**.
+- [AWS: Replication Time Control](https://docs.aws.amazon.com/AmazonS3/latest/userguide/replication-time-control.html)
+
+## S3 Storage Classes: How to Choose
+
+**Choose on access frequency, retrieval latency, AZ resilience, and total cost.**
+
+```mermaid
+flowchart TD
+    Q{"Access pattern?"}
+    Q -->|Frequent| STD["S3 Standard"]
+    Q -->|Unpredictable| IT["Intelligent-Tiering"]
+    Q -->|Infrequent, instant reads| IA["Standard-IA / One Zone-IA"]
+    Q -->|Rare archive, instant reads| GI["Glacier Instant Retrieval"]
+    Q -->|Archive, wait for restore| GF["Glacier Flexible / Deep Archive"]
+    Q -->|Very low latency, one AZ| EX["S3 Express One Zone"]
+```
+
+## Durability vs Availability
+
+**Durability protects data from loss; availability measures how often requests can access it.**
+
+| Metric | Engineering question | S3 example |
+|---|---|---|
+| **Durability** | Will the object survive? | Many classes designed for **11 nines** |
+| **Availability** | Can I access it now? | **S3 Standard: 99.99%** design |
+| **Resilience** | What failure domain is covered? | **Multi-AZ** vs **One Zone** |
+
+**Key distinction:** one-AZ classes can be durable against device failures but **not resilient to total AZ loss**.
+
+## Standard and Infrequent Access
+
+| Class | Access | Placement | Typical workload |
+|---|---|---|---|
+| **Standard** | Frequent, immediate | Multi-AZ | Hot lake datasets / assets |
+| **Standard-IA** | Rare, immediate | Multi-AZ | Backups / DR copies |
+| **One Zone-IA** | Rare, immediate | Single AZ | Re-creatable copies |
+
+- **IA trade-off:** retrieval fees and **30-day minimum storage duration**.
+- Avoid **One Zone-IA** as the only copy of irreplaceable data.
+
+## S3 Glacier: Three Archive Choices
+
+| Class | Typical retrieval | Minimum storage |
+|---|---|---|
+| **Glacier Instant Retrieval** | Milliseconds | **90 days** |
+| **Glacier Flexible Retrieval** | Minutes–hours after restore | **90 days** |
+| **Glacier Deep Archive** | Hours after restore | **180 days** |
 
 ```mermaid
 flowchart LR
-  accTitle: S3 Performance – S3 Byte-Range Fetches
-  n0["S3 object"]
-  n1["Range 1"]
-  n2["Range 2"]
-  n3["Header range"]
-  n4["Client"]
-  n0 -->|"GET byte range"| n1
-  n0 -->|"GET byte range"| n2
-  n0 -->|"partial GET"| n3
-  n1 -->|"parallel download"| n4
-  n2 -->|"parallel download"| n4
-  n3 -->|"inspect metadata"| n4
+    D["Archive request"] --> Q{"Immediate access?"}
+    Q -->|Yes| I["Instant Retrieval"]
+    Q -->|No, faster restore| F["Flexible Retrieval"]
+    Q -->|No, longest retention| A["Deep Archive"]
 ```
 
-> Byte-range GETs can download separate ranges concurrently or retrieve only a file header.
+- Restore tiers and charges depend on the selected class and options.
 
-### S3 Performance – Transfer Acceleration
+## S3 Intelligent-Tiering
 
-S3 Transfer Acceleration allows to accelerate uploads/downloads to/from s3 by entering in AWS's network through a nearby edge location.
+**Automatically optimizes eligible object storage when access patterns change.**
 
-- Compatible with multi-part upload
-- Transfer Acceleration has additional cost
-- Do not confuse with CloudFront, which cache/distribute content globally
-
+```mermaid
+stateDiagram-v2
+    [*] --> Frequent
+    Frequent --> Infrequent: 30 days without access
+    Infrequent --> ArchiveInstant: 90 days without access
+    Infrequent --> Frequent: Access
+    ArchiveInstant --> Frequent: Access
+    ArchiveInstant --> OptionalArchive: Optional archival configuration
 ```
-Client
-Melbourne AWS region
-    │
-    ▼
-Nearby AWS Edge Location
-    │
-    │ AWS global network (faster)
-    │
-    ▼
-S3 Bucket (us-east-1)
+
+- Monitoring/automation fees apply for qualifying objects.
+- **Optional archive tiers** may require restore before reading; automatic access tiers remain immediately available.
+- Evaluate object-size eligibility and tier-specific behaviour.
+
+## S3 Storage Cost: Full Workload View
+
+**Lowest $/GB does not always mean lowest overall cost.**
+
+```mermaid
+mindmap
+  root((Total S3 cost))
+    Storage bytes
+    PUT GET LIST requests
+    Retrieval and restoration
+    Data transfer
+    Lifecycle transitions
+    Monitoring and replication
 ```
-                          
 
-### S3 Encryption
+- **Small frequently accessed files** may cost more in a supposedly cheaper archive class.
+- Minimum-duration charges and transition request costs matter.
+- Check current [AWS S3 pricing](https://aws.amazon.com/s3/pricing/) for the Region and workload.
 
-<!-- original-note: 42 -->
-<!-- title: S3 encryption -->
+## S3 Express One Zone
 
-Distinguish encryption at rest from protection in transit, then identify who manages the keys and which permissions each request requires.
+**Directory-bucket storage designed for high request rates and single-digit-ms access in one AZ.**
 
-- Server-Side Encryption (SSE)
-  - Server-Side Encryption with Amazon S3-Managed Keys (SSE-S3) – Enabled by Default
-  - Server-Side Encryption with KMS Keys stored in AWS KMS (SSE-KMS)
-  - Dual-Layer Server-Side Encryption with KMS Keys (DSSE-KMS)
-  - Server-Side Encryption with Customer-Provided Keys (SSE-C)
-- Client-Side Encryption
+```mermaid
+flowchart TB
+    subgraph AZ["One Availability Zone"]
+      C["Compute / analytics job"] <-->|"Low-latency requests"| B[("Directory bucket\nS3 Express One Zone")]
+    end
+    A["Multi-AZ / DR strategy"] -.->|"Plan separately"| B
+```
 
-## Amazon S3 Encryption – SSE-S3
+- **Co-locate compute and storage** to minimize latency.
+- **99.95% designed availability**; single-AZ failure domain.
+- Directory buckets have different naming, API, endpoint, and feature constraints.
+- [AWS: S3 Express](https://docs.aws.amazon.com/AmazonS3/latest/userguide/directory-bucket-high-performance.html)
 
+## S3 Lifecycle: Transition vs Expiration
 
-With SSE-S3, S3 encrypts the received object using keys managed by S3; TLS separately protects upload transport.
-
-- Encryption using keys handled, managed, and owned by AWS
-- Object is encrypted server-side
-- Encryption type is AES-256
-- Must set header "x-amz-server-side-encryption": "AES256"
-- Enabled by default for new buckets & new objects
-
+**Lifecycle rules automate storage-class changes and retention cleanup.**
 
 ```mermaid
 flowchart LR
-  accTitle: Amazon S3 Encryption – SSE-S3
-  n0["Client"]
-  n1["S3 encryption"]
-  n2["S3-managed key"]
-  n3["Encrypted object"]
-  n0 -->|"HTTPS upload"| n1
-  n2 -->|"key management"| n1
-  n1 -->|"store ciphertext"| n3
+    A["New object"] -->|"After 30+ days"| I["Infrequent storage"]
+    I -->|"After retention threshold"| G["Archive"]
+    G -->|"Retention ends"| X["Expire / delete"]
+    V["Noncurrent versions"] --> NV["Separate transition / expiration rules"]
 ```
 
-> With SSE-S3, S3 encrypts the received object using keys managed by S3; TLS separately protects upload transport.
+- Scope rules by **prefix, tags, size** and relevant object state.
+- Can expire **noncurrent versions** and abort **incomplete multipart uploads**.
+- Transitions must follow supported pathways; arrows show **illustrative** choices, not universal eligibility.
 
-## Amazon S3 Encryption – SSE-KMS
+## S3 Lifecycle: Images Example
 
+**Original files and regenerable derivatives deserve different retention policies.**
 
-With SSE-KMS, S3 integrates with KMS for key authorization and data-key operations, then stores the encrypted object.
+```mermaid
+flowchart TB
+    P["Profile image upload"] --> O["Original: Standard"]
+    P --> T["Thumbnail: lower-cost tier"]
+    O -->|"60 days"| G["Archive original"]
+    T -->|"60 days"| D["Expire; regenerate if needed"]
+```
 
-- Encryption using keys handled and managed by AWS KMS (Key Management Service)
-- KMS advantages: user control + audit key usage using CloudTrail
-- Object is encrypted server side
-- Must set header "x-amz-server-side-encryption": "aws:kms"
+- Use separate prefixes/tags and lifecycle rules.
+- Confirm the intended archive **retrieval delay** before transition.
 
+## S3 Lifecycle: Recover Deleted Data
+
+**Versioning + noncurrent-version rules keep a time-limited recovery window.**
 
 ```mermaid
 flowchart LR
-  accTitle: Amazon S3 Encryption – SSE-KMS
-  n0["Client"]
-  n1["S3"]
-  n2["KMS key"]
-  n3["Encrypted object"]
-  n0 -->|"HTTPS upload"| n1
-  n1 -->|"GenerateDataKey / authorization"| n2
-  n1 -->|"encrypt and store"| n3
+    A["Overwrite / delete"] --> M["Old version retained"]
+    M -->|"0–30 days"| F["Immediate recovery tier"]
+    F -->|"30–365 days"| C["Lower-cost archive"]
+    C -->|"After day 365"| E["Expire version"]
 ```
 
-> With SSE-KMS, S3 integrates with KMS for key authorization and data-key operations, then stores the encrypted object.
+- A **delete marker** can hide a key without deleting older versions.
+- Design recovery windows separately from current-object retention.
 
-## SSE-KMS Limitation
+## S3 Analytics: Storage Class Analysis
 
-
-SSE-KMS operations depend on both S3 and KMS capacity; key-operation quotas can become a bottleneck.
-
-- If you use SSE-KMS, you may be impacted by the KMS limits
-- When you upload, it calls the GenerateDataKey KMS API
-- When you download, it calls the Decrypt KMS API
-- Count towards the KMS quota per second (5500, 10000, 30000 req/s based on region)
-- You can request a quota increase using the Service Quotas Console
-
+**Use real access measurements to choose lifecycle thresholds.**
 
 ```mermaid
 flowchart LR
-  accTitle: SSE-KMS Limitation
-  n0["Client requests"]
-  n1["S3 SSE-KMS"]
-  n2["KMS<br/>GenerateDataKey / Decrypt"]
-  n0 -->|"PUT / GET"| n1
-  n1 -->|"key operations"| n2
+    A["Object access / storage activity"] --> B["Storage Class Analysis"]
+    B --> C["Daily report / trends"]
+    C --> D["Proposed lifecycle rule"]
+    D --> E["Measure savings and retrieval impact"]
 ```
 
-> SSE-KMS operations depend on both S3 and KMS capacity; key-operation quotas can become a bottleneck.
+- Primarily informs **Standard ↔ Standard-IA** decisions; not a universal recommendation engine for Glacier/One Zone-IA.
+- Does **not automatically transition** objects.
 
-## Amazon S3 Encryption – DSSE-KMS
+## S3 Event Notifications
 
-
-DSSE-KMS applies two independent encryption layers, combining KMS-controlled key use with an additional S3-managed layer.
-
-- Dual-Layer Server-Side Encryption using keys handled and managed by AWS KMS
-- Object is encrypted twice server side: KMS Key (1st layer) + S3 Managed Key (2nd layer)
-- For compliance standards requiring multi-layer encryption (higher cost & latency than SSE-KMS)
-- Must set header "x-amz-server-side-encryption": "aws:kms:dsse"
-
-**Current reference (checked 2026-10-13):** [S3 dual-layer encryption](https://docs.aws.amazon.com/AmazonS3/latest/userguide/UsingDSSEncryption.html).
-
+**Object events can trigger asynchronous downstream processing.**
 
 ```mermaid
 flowchart LR
-  accTitle: Amazon S3 Encryption – DSSE-KMS
-  n0["Upload"]
-  n1["KMS-backed layer"]
-  n2["S3-managed layer"]
-  n3["Stored object"]
-  n0 -->|"first layer"| n1
-  n1 -->|"second layer"| n2
-  n2 -->|"store"| n3
+    U["Object uploaded"] --> S[("S3")]
+    S -->|"ObjectCreated event"| Q["SQS"]
+    S -->|"ObjectCreated event"| L["Lambda"]
+    S -->|"ObjectCreated event"| N["SNS"]
+    Q --> W["ETL / thumbnail worker"]
 ```
 
-> DSSE-KMS applies two independent encryption layers, combining KMS-controlled key use with an additional S3-managed layer.
+- Event types include **creation, removal, restore, and replication** events.
+- Filter by **key prefix/suffix** when supported.
+- Events can be **duplicated or out of order**: write idempotent consumers.
 
-## Amazon S3 Encryption – SSE-C
+## Event Notification Permissions
 
+**S3 needs permission to deliver events to the destination resource.**
 
-SSE-C performs encryption in S3 using a customer-provided key sent over HTTPS; S3 does not retain that key for later requests.
+```mermaid
+flowchart TD
+    S["S3 bucket event"] --> D{"Target"}
+    D --> Q["SQS policy: SendMessage"]
+    D --> N["SNS policy: Publish"]
+    D --> L["Lambda resource policy: InvokeFunction"]
+```
 
-- Server-Side Encryption using keys fully managed by the customer outside of AWS
-- Amazon S3 does NOT store the encryption key you provide
-- HTTPS must be used
-- Encryption key must provided in HTTP headers, for every HTTP request made
+- Destination **resource policies** must trust the S3 service and constrain the source appropriately.
+- Encryption keys and destination-specific permissions may impose further requirements.
 
+## S3 Events with EventBridge
+
+**EventBridge adds rich filtering, routing, archival and replay capabilities.**
 
 ```mermaid
 flowchart LR
-  accTitle: Amazon S3 Encryption – SSE-C
-  n0["Client + customer key"]
-  n1["HTTPS request"]
-  n2["S3 encryption"]
-  n3["Stored ciphertext"]
-  n0 -->|"provide key each request"| n1
-  n1 -->|"server-side encryption"| n2
-  n2 -->|"store object"| n3
+    S[("S3") ] --> B["EventBridge bus"]
+    B --> R{"Event pattern"}
+    R -->|".parquet"| E["Step Functions ETL"]
+    R -->|"audit events"| Q["SQS / notifications"]
+    R -->|"other matching events"| L["Lambda"]
 ```
 
-> SSE-C performs encryption in S3 using a customer-provided key sent over HTTPS; S3 does not retain that key for later requests.
+- Better for **multiple targets** and complex event routing.
+- EventBridge rules and archive/replay have their own delivery and cost rules.
 
-## Amazon S3 Encryption – Client-Side Encryption
+## S3 Request Performance: Prefix Parallelism
 
+**S3 scales with parallel requests; prefixes are useful workload partitions.**
 
-Client-side encryption encrypts the object before upload; the client manages encryption and decryption.
+```mermaid
+flowchart TB
+    B["S3 bucket"] --> R["raw/"]
+    B --> S["silver/"]
+    B --> G["gold/"]
+    R & S & G --> P["Parallel clients / compute"]
+```
 
-- Use client libraries such as Amazon S3 Client-Side Encryption Library
-- Clients must encrypt data themselves before sending to Amazon S3
-- Clients must decrypt data themselves when retrieving from Amazon S3
-- Customer fully manages the keys and encryption cycle
+- Documented baseline **per prefix:** at least **3,500 write-type** and **5,500 GET/HEAD** requests/second.
+- Multiple prefixes can support greater aggregate request rates; performance ramps with demand.
+- This is **request throughput**, not a guarantee of application query speed.
 
+## S3 Multipart Upload
+
+**Upload large objects in independently transferred parts, then complete the object.**
 
 ```mermaid
 flowchart LR
-  accTitle: Amazon S3 Encryption – Client-Side Encryption
-  n0["Plaintext"]
-  n1["Client encryption + key"]
-  n2["Ciphertext"]
-  n3["S3 bucket"]
-  n0 -->|"encrypt locally"| n1
-  n1 -->|"encrypted bytes"| n2
-  n2 -->|"HTTPS upload"| n3
+    F["10 GB file"] --> P1["Part 1"]
+    F --> P2["Part 2"]
+    F --> P3["Part 3"]
+    P1 & P2 & P3 --> C["CompleteMultipartUpload"]
+    C --> S[("One S3 object")]
 ```
 
-> Client-side encryption encrypts the object before upload; the client manages encryption and decryption.
+- **Consider for ≥100 MB**; **required above 5 GB**.
+- Up to **10,000 parts** (normally 5 MiB–5 GiB per part; final part may be smaller).
+- Supports parallelism, retrying failed parts, and aborting abandoned uploads.
+- [AWS multipart limits](https://docs.aws.amazon.com/AmazonS3/latest/userguide/qfacts.html)
 
-## Amazon S3 – Encryption in transit (SSL/TLS)
+## S3 Byte-Range GET
 
-
-TLS protects S3 traffic in transit independently of object encryption at rest.
-
-- Encryption in flight is also called SSL/TLS
-- Amazon S3 exposes two endpoints:
-  - HTTP Endpoint – non encrypted
-  - HTTPS Endpoint – encryption in flight
-- HTTPS is recommended
-- HTTPS is mandatory for SSE-C
-- Most clients would use the HTTPS endpoint by default
-
-## Amazon S3 – Force Encryption in Transit aws:SecureTransport
-
-
-A bucket-policy explicit deny on aws:SecureTransport=false rejects unencrypted transport even if another policy allows the action.
-
+**Read only the bytes needed instead of downloading the full object.**
 
 ```mermaid
 flowchart LR
-  accTitle: Amazon S3 – Force Encryption in Transit aws:SecureTransport
-  n0["HTTP request"]
-  n1["HTTPS request"]
-  n2["Bucket policy"]
-  n3["Denied"]
-  n4["S3 bucket"]
-  n0 -->|"SecureTransport=false"| n2
-  n1 -->|"SecureTransport=true"| n2
-  n2 -->|"explicit deny HTTP"| n3
-  n2 -->|"HTTPS still needs authorization"| n4
+    O[("Large S3 object")] -->|"Range 0–N"| A["Worker A"]
+    O -->|"Range N+1–M"| B["Worker B"]
+    O -->|"Footer / header range"| C["Metadata reader"]
 ```
 
-> A bucket-policy explicit deny on aws:SecureTransport=false rejects unencrypted transport even if another policy allows the action.
+- Useful for **parallel downloads**, **partial reads**, and file-metadata access.
+- Data formats such as Parquet can exploit selective I/O through suitable readers.
 
-## Amazon S3 – Default Encryption vs. Bucket Policies
+## S3 Transfer Acceleration vs CloudFront
 
+**Transfer Acceleration optimizes long-distance S3 transfers via AWS edge locations.**
 
-Default encryption supplies encryption for new uploads, while a bucket policy can enforce request and access requirements. These controls serve different purposes.
+```mermaid
+flowchart LR
+    C["Remote client"] --> E["Nearby AWS edge"]
+    E -->|"AWS network"| S[("S3 bucket in distant Region")]
+```
 
-- Optionally, you can “force encryption” using a bucket policy and refuse any API call to PUT an S3 object without encryption headers
-- Note: Bucket Policies are evaluated before “Default Encryption”
+- Works with multipart upload; **additional cost** and eligibility checks.
+- **CloudFront is different:** CDN caching/content distribution, not simply accelerated upload transport.
+
+## S3 Encryption: At Rest vs In Transit
+
+**First ask where encryption occurs and who controls the keys.**
+
+```mermaid
+flowchart TB
+    E["Protect S3 data"] --> T["In transit: TLS / HTTPS"]
+    E --> R["At rest"]
+    R --> S["Server-side: SSE-S3 / SSE-KMS / DSSE-KMS / SSE-C"]
+    R --> C["Client-side: encrypt before upload"]
+```
+
+- **Default S3 encryption:** new objects receive server-side encryption (typically SSE-S3 unless configured otherwise).
+- TLS and at-rest encryption protect **different** parts of the data path.
+
+## SSE-S3: S3-Managed Keys
+
+**S3 encrypts objects at rest using keys managed by the service.**
+
+```mermaid
+flowchart LR
+    C["Client"] -->|"HTTPS PUT"| S["S3 encrypts with S3-managed keys"]
+    S --> O[("Encrypted object")]
+```
+
+- Default for new objects unless another encryption configuration applies.
+- Request header when explicitly specifying: `x-amz-server-side-encryption: AES256`.
+- No separately managed customer KMS key policy required.
+
+## SSE-KMS: Controlled Key Access
+
+**S3 encrypts objects using data keys protected by AWS KMS.**
+
+```mermaid
+sequenceDiagram
+    participant C as Client
+    participant S as S3
+    participant K as AWS KMS
+    C->>S: PUT object (SSE-KMS)
+    S->>K: GenerateDataKey / authorize
+    K-->>S: Data key material for encryption
+    S-->>C: Stored encrypted object
+```
+
+- **KMS key policies + IAM** matter in addition to S3 permissions.
+- AWS CloudTrail can record supported **KMS API usage**.
+- Header: `x-amz-server-side-encryption: aws:kms`.
+
+## SSE-KMS: Throughput and Cost
+
+**KMS requests may become an independent scaling constraint.**
+
+```mermaid
+flowchart LR
+    R["Many S3 PUTs / GETs"] --> S["S3 with SSE-KMS"]
+    S --> K{"KMS quotas + API calls"}
+    K -->|"within limits"| O["Object access"]
+    K -->|"throttled"| X["Backoff / capacity review"]
+```
+
+- Uploads can invoke **GenerateDataKey**, downloads can invoke **Decrypt**.
+- Evaluate request rate, KMS quotas, API charges, and **S3 Bucket Keys** where supported.
+
+## DSSE-KMS: Dual-Layer Encryption
+
+**Two independent server-side encryption layers protect the same object.**
+
+```mermaid
+flowchart LR
+    P["Plaintext"] --> K["KMS-backed encryption layer"]
+    K --> S["Second S3-managed layer"]
+    S --> O[("Stored ciphertext")]
+```
+
+- Designed for **requirements calling for two layers** of encryption.
+- More key operations / cost considerations than ordinary SSE-S3.
+- Header: `x-amz-server-side-encryption: aws:kms:dsse`.
+
+## SSE-C: Customer-Provided Key
+
+**Client supplies a key for server-side encryption on each relevant request.**
+
+```mermaid
+flowchart LR
+    C["Client + customer key"] -->|"HTTPS + key headers"| S["S3 encrypts / decrypts"]
+    S --> O[("Encrypted object")]
+```
+
+- S3 **does not retain the supplied key**; losing it can make data unreadable.
+- Requires HTTPS; feature support varies by bucket type and API.
+- **2026 update:** SSE-C is **disabled by default for new general-purpose buckets**; explicitly enable it if the workload requires it.
+- [AWS: SSE-C default setting](https://docs.aws.amazon.com/AmazonS3/latest/userguide/default-s3-c-encryption-setting-faq.html)
+
+## Client-Side Encryption
+
+**Encrypt locally before the object reaches S3; decrypt after download.**
+
+```mermaid
+flowchart LR
+    P["Plaintext"] --> E["Client encrypts with key"]
+    E --> C["Ciphertext"]
+    C -->|"HTTPS upload"| S[("S3 bucket")]
+```
+
+- Key lifecycle and decryption are **client responsibilities**.
+- Suited to workloads requiring encryption **before** cloud storage receives data.
+
+## TLS and `aws:SecureTransport`
+
+**Enforce HTTPS through an explicit bucket-policy deny for insecure transport.**
+
+```mermaid
+flowchart TD
+    A["S3 request"] --> T{"aws:SecureTransport"}
+    T -->|"false / HTTP"| D["Explicit DENY"]
+    T -->|"true / HTTPS"| P["Continue authorization"]
+```
+
+- TLS protects **data in transit**, independently of object encryption at rest.
+- `HTTPS` is necessary but **not sufficient** for authorization.
+
+## Default Encryption vs Encryption Policy
+
+**Default encryption encrypts new writes; policies can reject requests that fail explicit requirements.**
+
+```mermaid
+flowchart LR
+    P["PUT request"] --> A{"Bucket policy checks"}
+    A -->|"Allowed"| E["Default encryption / requested mode"]
+    A -->|"Denied"| D["Reject request"]
+    E --> O[("Stored encrypted object")]
+```
+
+- A policy that requires a **specific encryption header** can reject a request that default encryption would otherwise protect.
+- Choose enforcement rules deliberately, particularly for SSE-KMS / key-ID requirements.
 
 ## S3 Access Points
 
-<!-- original-note: 43 -->
-<!-- title: S3 access points -->
-
-Amazon S3 Access Points are a feature that allows you to create multiple, independently managed access paths to the same S3 bucket, each with its own permissions and network restrictions. 
-
-They are especially useful in Data Engineering when multiple applications, teams, or pipelines need access to the same data lake but require different permissions.
-
-- When you create an S3 Access Point, AWS provides a unique DNS name.
-- An access point policy is a resource-based IAM policy, similar to an S3 bucket policy.
-
-
+**Access Points give separate names and resource policies for accessing one shared bucket.**
 
 ```mermaid
 flowchart TB
-  accTitle: S3 access points
-  n0["Finance users"]
-  n1["Sales users"]
-  n2["Analytics users"]
-  n3["Finance access point"]
-  n4["Sales access point"]
-  n5["Analytics access point"]
-  n6["Shared bucket"]
-  n0 -->|"finance policy"| n3
-  n1 -->|"sales policy"| n4
-  n2 -->|"analytics policy"| n5
-  n3 -->|"allowed objects"| n6
-  n4 -->|"allowed objects"| n6
-  n5 -->|"allowed objects"| n6
+    F["Finance role"] --> FA["Finance access point"]
+    M["Marketing role"] --> MA["Marketing access point"]
+    A["Analytics role"] --> AA["Analytics access point"]
+    FA & MA & AA --> S[("Shared data lake bucket")]
 ```
 
-> Separate access points apply application-specific permissions to shared S3 data; they do not create separate copies of the bucket.
+- Simplify different **prefix, team, and network** access rules.
+- They **do not copy data** or create independent buckets.
+- Evaluate IAM, access-point, bucket, and endpoint policies together.
 
-### Internet Origin vs. VPC Origin
+## Access Point Network Origins
 
-
-An Access Point can have one of two network origins.
-
-1. Internet Origin - Requests can reach the access point through the public S3 endpoint, subject to authentication and authorization.
-> This does not mean the data is publicly accessible. IAM, resource policies, and Block Public Access settings still apply.
-
-2. VPC Origin - Requests must come through an S3 VPC endpoint from the configured VPC.
-> This is useful for private workloads such as AWS Glue jobs, EC2 applications, and data pipelines that should access S3 through controlled network paths.
-
-
+**Internet-origin and VPC-origin access points restrict where requests may originate.**
 
 ```mermaid
 flowchart LR
-  accTitle: Internet Origin vs. VPC Origin
-  n0["VPC workload"]
-  n1["S3 gateway endpoint"]
-  n2["VPC-origin access point"]
-  n3["S3 bucket"]
-  n0 -->|"private access"| n1
-  n1 -->|"endpoint policy"| n2
-  n2 -->|"access-point + bucket policies"| n3
+    P["Authorized public-network client"] --> I["Internet-origin AP"]
+    V["Glue / EC2 in VPC"] --> E["S3 VPC endpoint"]
+    E --> VP["VPC-origin AP"]
+    I & VP --> S[("Bucket")]
 ```
 
-> A VPC-origin S3 access point is reached through a gateway endpoint; endpoint, access-point and bucket policies all participate.
+- **Internet-origin ≠ publicly readable**; normal authorization still applies.
+- **VPC-origin:** restrict to the designated VPC using supported S3 endpoints.
 
-### Key points for Certification
+## S3 Access Points: Exam Checklist
 
-- One S3 bucket can have multiple Access Points.
-- Each Access Point has its own unique DNS endpoint and resource-based policy.
-- Access Points simplify managing different access requirements for shared data.
-- An Access Point can use Internet Origin or VPC Origin.
-- VPC-origin access points restrict requests to the configured VPC through S3 VPC endpoints.
-- Access Points do not replicate data or create separate buckets.
-- IAM policies, bucket policies, access point policies, and applicable endpoint policies must be evaluated together.
+| Question | Answer |
+|---|---|
+| Does each AP have its own policy? | **Yes** |
+| Separate copy of data? | **No** |
+| Unique AP endpoint/name? | **Yes** |
+| Can it restrict network origin? | **Yes** |
+| Does it bypass bucket policy / IAM? | **No** |
 
+**Design principle:** use multiple managed access paths rather than a single unwieldy bucket policy.
 
-### S3 Tables
+## Amazon S3 Tables: Managed Iceberg Storage
 
-<!-- original-note: 44 -->
-
-S3 Tables combines table-oriented storage with managed maintenance for Iceberg datasets. Table buckets and table permissions differ from an ordinary collection of objects.
-
-  - This seems to be the direction AWS is converging on as a data platform
-  - Combined with Amazon Sagemaker Lakehouse
-- A managed data lake solution
-- Built around “Table Buckets”
-  - These store data in Apache Iceberg format
-  - So you can just issue SQL queries through anything that supports Iceberg
-
-## Wait,what’s Iceberg?
-
-
-Iceberg is an open table format that adds transaction and metadata management to lake files.
-
-- Apache Iceberg is a table format for data lakes
-  - Petabyte-scale
-  - Originally from Netflix
-- ACID Compliance
-  - Transactional consistency for adds, removals, modifications
-  - Row-level updates and deletes for GDPR compliance
-- Schema Evolution
-  - Update tables safely as data evolves
-- Hidden Partitioning
-  - Partition evolution, update partition schemes and data volumes
-- Time Travel
-  - Query historical data, verify changes between updates. Easy rollback.
-- Efficient Metadata Management
-- New preferred AWS interface: Amazon Sagemaker Lakehouse
-- Works with Spark, Flink, Trino, Presto, Hive
-- Integrated with AWS Glue, Redshift, EMR and Athena
-
-## Iceberg means S3 Tables is compatible with a lot of stuff
-
-
-S3 Tables exposes Iceberg-compatible tabular data to supported engines; the Glue catalog and Iceberg REST endpoint provide metadata access paths.
-
+**S3 Tables provides purpose-built table buckets and managed maintenance for Apache Iceberg.**
 
 ```mermaid
 flowchart LR
-  accTitle: Iceberg means S3 Tables is compatible with a lot of stuff
-  n0["Analytics engines<br/>Athena, Redshift, EMR, Glue"]
-  n1["Glue Data Catalog"]
-  n2["S3 Tables"]
-  n3["Spark / Flink clients"]
-  n4["Iceberg REST endpoint"]
-  n0 -->|"catalog integration"| n1
-  n1 -->|"table metadata"| n2
-  n3 -->|"Iceberg API"| n4
-  n4 -->|"table operations"| n2
+    D["Structured / tabular datasets"] --> T[("S3 table bucket")]
+    T --> I["Apache Iceberg tables"]
+    I --> Q["Athena / Spark / Redshift / Glue"]
+    M["Compaction / snapshot maintenance"] -.-> I
 ```
 
-> S3 Tables exposes Iceberg-compatible tabular data to supported engines; the Glue catalog and Iceberg REST endpoint provide metadata access paths.
+- Analytics-first storage with **table operations**, distinct from ordinary S3 object layouts.
+- Catalog integration and supported engines supply the query interfaces.
 
-## Features of S3 Tables
+## Apache Iceberg: Files + Transactional Metadata
 
-
-S3 Tables provides purpose-built storage and maintenance for Iceberg tables; verify current feature support in AWS documentation.
-
-- Purpose-built for tabular data
-  - Better than just storing data in S3 buckets
-  - Up to 3X faster performance, 10X more transaction rate
-- But it’s more expensive
-- Managed table optimization
-  - Compaction
-  - Snapshot management
-  - Unreferenced file removal
-- IAM and Service Control Policies (Amazon Organizations) integration
-  - New, distinct service namespace: s3tables
-
-## Table Buckets
-
-
-Table buckets contain namespaces, which organize Iceberg tables; these are not ordinary object-key folders.
-
-- arn’s are also under s3tables namespace
-  - arn:aws:s3tables:Region:OwnerAccountID:bucket/bucke t-name
-- Table buckets contain tables, which may be organized into namespaces
-  - This is the same concept as a “database” in other services, which contains multiple, related tables
-- Types of table buckets
-  - Customer-managed
-  - AWS-managed (S3 metadata table, inventory tables)
-- Names only need to be unique within your account
-  - Must be lowercase! Or won’t integrate with Lake Formation / Glue
-  - Same restriction on namespaces
-  - Cannot be changed
-- May have IAM policies attached
-- May have tags attached
-
+**Iceberg is an open table format that manages large datasets stored as files.**
 
 ```mermaid
 flowchart TB
-  accTitle: Table Buckets
-  n0["Table bucket"]
-  n1["Namespace A"]
-  n2["Namespace B"]
-  n3["Table 1"]
-  n4["Table 2"]
-  n5["Table 3"]
-  n6["Table 4"]
-  n0 ---|"namespace"| n1
-  n0 ---|"namespace"| n2
-  n1 ---|"table"| n3
-  n1 ---|"table"| n4
-  n2 ---|"table"| n5
-  n2 ---|"table"| n6
+    C["Catalog pointer"] --> M["Table metadata"]
+    M --> S["Current snapshot"]
+    S --> L["Manifest list / manifests"]
+    L --> F["Parquet / other data files"]
 ```
 
-> Table buckets contain namespaces, which organize Iceberg tables; these are not ordinary object-key folders.
+- **ACID transactions**, snapshots, **time travel**, row-level updates/deletes (engine-dependent).
+- **Schema / partition evolution** without rebuilding every historical file.
+- Metadata-driven planning avoids naive directory scans.
+
+## S3 Tables: Engine Interoperability
+
+**Iceberg-compatible engines work through table metadata / catalog integration.**
+
+```mermaid
+flowchart LR
+    A["Athena"] --> C["Glue Data Catalog / integration"]
+    R["Redshift"] --> C
+    G["Glue / EMR Spark"] --> C
+    C --> T[("S3 Tables")]
+    O["Supported Iceberg REST clients"] --> REST["Iceberg REST endpoint"] --> T
+```
+
+- **Interoperable** does not mean every feature works identically in every engine.
+- Validate identity, catalog permissions, and engine-specific write operations.
+
+## S3 Tables: Maintenance and Performance
+
+**Managed table maintenance reduces repetitive Iceberg housekeeping.**
+
+```mermaid
+flowchart TB
+    T[("Iceberg table")] --> C["Compaction: merge small files"]
+    T --> S["Snapshot expiration"]
+    T --> O["Unreferenced-object cleanup"]
+    C & S & O --> P["Lower overhead / more predictable queries"]
+```
+
+- Request rates, table sizes, and maintenance costs still matter.
+- Compare actual workloads instead of memorizing vendor benchmark multipliers.
+
+## S3 Table Buckets and Namespaces
+
+**Table buckets organize Iceberg tables under logical namespaces.**
+
+```mermaid
+flowchart TB
+    B["Table bucket"] --> N1["sales namespace"]
+    B --> N2["finance namespace"]
+    N1 --> T1["orders table"]
+    N1 --> T2["customers table"]
+    N2 --> T3["ledger table"]
+```
+
+- Namespaces resemble database schemas; they are **not object-key folders**.
+- S3 Tables has its own resource model / API namespace: **`s3tables`**.
+- Permissions may apply at bucket, namespace, and table scopes as supported.
 
 ## S3 Tables Intelligent-Tiering
 
-
-S3 Tables tiering can transition tables after periods of inactivity; confirm current timing and access behavior in AWS documentation.
-
-- Cost optimization feature
-  - Automatically move data between storage tiers based on access frequency
-- Frequent Access (Standard)
-  - Default; accessing a table will move it back here.
-  - Compaction table maintenance only occurs in this tier
-- Infrequent Access
-  - If data untouched for 30 days
-- Archive Instant Access
-  - If data untouched for 90 days
-- All tiers have 99.9% availability and 99.999999999% durability
-
+**Eligible files can move between immediate-access tiers based on inactivity.**
 
 ```mermaid
-flowchart LR
-  accTitle: S3 Tables Intelligent-Tiering
-  n0["Frequent access"]
-  n1["Infrequent access"]
-  n2["Archive instant access"]
-  n0 -->|"inactivity threshold"| n1
-  n1 -->|"additional inactivity"| n2
-  n1 -->|"table accessed"| n0
-  n2 -->|"table accessed"| n0
+stateDiagram-v2
+    [*] --> Frequent
+    Frequent --> Infrequent: File not accessed for 30 days
+    Infrequent --> ArchiveInstant: File not accessed for 90 days
+    Infrequent --> Frequent: File accessed
+    ArchiveInstant --> Frequent: File accessed
 ```
 
-> S3 Tables tiering can move tables between access tiers based on inactivity; verify current timing and access behavior in AWS documentation.
+- **Tiering is per file**, so one table may span multiple tiers.
+- These tiers retain **millisecond access**; not the same as Glacier restore workflows.
+- [AWS: S3 Tables tiering](https://docs.aws.amazon.com/en_en/AmazonS3/latest/userguide/tables-intelligent-tiering.html)
 
 ## S3 Tables Replication
 
-
-Table replication creates read-only replicas for backup, compliance or local reads; replicas are not independent writable primaries.
-
-- Automatic replication for backup / availability / compliance
-- Read-only replicas
-  - Potentially across regions and across accounts
-- Use cases
-  - Minimize latency with local replicas
-  - Centralize analytics by replicating into a single region
-  - Compliance / data residency
-  - Test / devo environments
-- Intelligent tiering can apply to replicas to minimize cost
-
+**Maintain read-only copies of Iceberg tables across table buckets.**
 
 ```mermaid
 flowchart LR
-  accTitle: S3 Tables Replication
-  n0["Source table"]
-  n1["Replica A<br/>Read only"]
-  n2["Replica B<br/>Read only"]
-  n3["Replica C<br/>Read only"]
-  n0 -->|"replicate"| n1
-  n0 -->|"replicate"| n2
-  n0 -->|"replicate"| n3
+    T[("Source Iceberg table")] --> R["Managed table replication"]
+    R --> A[("Replica: Region A\nread-only")]
+    R --> B[("Replica: Region B\nread-only")]
 ```
 
-> Table replication creates read-only replicas for backup, compliance or local reads; replicas are not independent writable primaries.
+- Supports **same / cross-Region and account** destinations as configured.
+- Replicas preserve table history and can have **independent snapshot retention**.
+- Use for nearby reads, disaster recovery, compliance, and test analytics.
+- [AWS: S3 Tables replication](https://docs.aws.amazon.com/AmazonS3/latest/userguide/s3-tables-replication-tables.html)
 
-## S3 Tables Security
+## S3 Tables Security and Governance
 
+**Treat table access as a combination of IAM, table permissions, and analytics governance.**
 
-Table-bucket and table access uses identity and resource permissions, with organizational controls and supported analytics-governance tools where appropriate.
+```mermaid
+flowchart TD
+    U["Analytics user / engine"] --> I["IAM + s3tables permissions"]
+    I --> G["Glue / Lake Formation governance"]
+    G --> T[("Table bucket / Iceberg table")]
+    SCP["Organization SCP"] -.-> I
+    N["Private connectivity / endpoint policy"] -.-> I
+```
 
-  - IAM identity-based policies (user, group, or role)
-  - Resource-based policies
-  - Amazon Organizations Service Control Policies (SCP’s)
-- Other access management tools
-  - SQL commands (operations map to specific IAM permissions)
-  - Lake Formation
-- Encryption
-  - SSE-S3 or SSE-KMS
-- VPC endpoints via PrivateLink
-  - Gateway and Interface endpoints (for finer-grained control)
-  - Endpoint policies may restrict by table or bucket
-  - Dual-stack IPv4 and IPv6 endpoints
-- Public access and HTTP not allowed
+- Supports **SSE-S3 / SSE-KMS**, organization controls, and private access configurations.
+- **S3 Tables are not public-object hosting**; prefer tightly scoped access.
 
-### Storage Lens
+## S3 Storage Lens: Portfolio Visibility
 
-<!-- original-note: 45 -->
-<!-- title: S3 Storage Lens -->
-
-Storage Lens summarizes storage and access patterns across buckets and accounts so you can investigate cost, protection and performance issues.
-
-- Understand, analyze, and optimize storage across entire AWS Organization
-- Discover anomalies, identify cost efficiencies, and apply data protection best practices across entire AWS Organization (30 days usage & activity metrics)
-- Aggregate data for Organization, specific accounts, regions, buckets, or prefixes
-- Default dashboard or create your own dashboards
-- Can be configured to export metrics daily to an S3 bucket (CSV, Parquet)
-
+**Storage Lens gives organization-wide metrics for cost, protection, and operational hygiene.**
 
 ```mermaid
 flowchart LR
-  accTitle: S3 Storage Lens
-  n0["Buckets / accounts / Regions"]
-  n1["Storage Lens aggregation"]
-  n2["Dashboard"]
-  n3["S3 export"]
-  n4["Optimization decisions"]
-  n0 -->|"usage metrics"| n1
-  n1 -->|"visualize"| n2
-  n1 -->|"export"| n3
-  n2 -->|"review insights"| n4
+    B["Buckets / Regions / accounts"] --> L["Storage Lens"]
+    L --> D["Dashboards"]
+    L --> E["S3 CSV / Parquet exports"]
+    D & E --> A["Investigate growth / waste / risk"]
 ```
 
-> Storage Lens aggregates organization, account, Region and bucket metrics into dashboards and optional exports.
+- Filter/drill down by the supported account, bucket, Region and prefix scopes.
+- Use **trends** and anomalies rather than raw totals alone.
 
-## Storage Lens – Default Dashboard
+## Storage Lens: Metric Families
 
+| Family | Example signal | Question |
+|---|---|---|
+| **Summary** | Bytes, object count | What is growing? |
+| **Cost** | Noncurrent bytes, incomplete uploads | What can be cleaned? |
+| **Protection** | Versioning, encryption, replication | Which buckets lack controls? |
+| **Access / events** | Ownership, notifications | How is storage configured? |
+| **Activity / HTTP** | GET/PUT, 403/404 | How is it used / failing? |
 
-The Storage Lens dashboard presents storage trends and metric summaries for the selected scope. Drill into anomalies rather than treating totals as an explanation.
+**Free vs paid:** advanced metrics add detail, historical retention, and optional CloudWatch publishing; check the current feature tier.
 
-- Default dashboard shows Multi-Region and Multi-Account data
-- Preconfigured by Amazon S3
-- Can’t be deleted, but can be disabled
+## Amazon EBS: Persistent Block Storage
 
-## Storage Lens – Metrics
-
-
-Storage Lens summary metrics describe storage volume, object counts and activity across a chosen scope.
-
-- Summary Metrics
-  - General insights about your S3 storage
-  - StorageBytes, ObjectCount…
-  - Use cases: identify the fastest-growing (or not used) buckets and prefixes
-- Cost-Optimization Metrics
-  - Provide insights to manage and optimize your storage costs
-  - NonCurrentVersionStorageBytes, IncompleteMultipartUploadStorageBytes…
-  - Use cases: identify buckets with incomplete multipart uploaded older than 7 days, Identify which objects could be transitioned to lower-cost storage class
-
-## Storage Lens – Metrics
-
-
-Storage Lens data-protection metrics reveal adoption of protection controls across buckets.
-
-- Data-Protection Metrics
-  - Provide insights for data protection features
-  - VersioningEnabledBucketCount, MFADeleteEnabledBucketCount, SSEKMSEnabledBucketCount, CrossRegionReplicationRuleCount…
-  - Use cases: identify buckets that aren’t following data-protection best practices
-- Access-management Metrics
-  - Provide insights for S3 Object Ownership
-  - ObjectOwnershipBucketOwnerEnforcedBucketCount…
-  - Use cases: identify which Object Ownership settings your buckets use
-- Event Metrics
-  - Provide insights for S3 Event Notifications
-  - EventNotificationEnabledBucketCount (identify which buckets have S3 Event Notifications configured)
-
-## Storage Lens – Metrics
-
-
-Storage Lens performance metrics help distinguish request activity, errors and latency signals.
-
-- Performance Metrics
-  - Provide insights for S3 Transfer Acceleration
-  - TransferAccelerationEnabledBucketCount (identify which buckets have S3 Transfer Acceleration enabled)
-- Activity Metrics
-  - Provide insights about how your storage is requested
-  - AllRequests, GetRequests, PutRequests, ListRequests, BytesDownloaded…
-- Detailed Status Code Metrics
-  - Provide insights for HTTP status codes
-  - 200OKStatusCount, 403ForbiddenErrorCount, 404NotFoundErrorCount…
-
-## Storage Lens – Free vs. Paid
-
-
-Storage Lens free and paid metric sets differ in detail, retention and available capabilities.
-
-- Free Metrics
-  - Automatically available for all customers
-  - Contains around 28 usage metrics
-  - Data is available for queries for 14 days
-- Advanced Metrics and Recommendations
-  - Additional paid metrics and features
-  - Advanced Metrics – Activity, Advanced Cost Optimization, Advanced Data Protection, Status Code
-  - CloudWatch Publishing – Access metrics in CloudWatch without additional charges
-  - Prefix Aggregation – Collect metrics at the prefix level
-  - Data is available for queries for 15 months
-
-## EBS Elastic Block Store
-
-<!-- original-note: 46 -->
-<!-- title: EBS volumes -->
-
-EBS provides persistent block storage for EC2 within an Availability Zone. Volume attachment, provisioned capacity and deletion settings determine how the data survives instance changes.
-
-- It allows your instances to persist data, even after their termination
-- They can only be mounted to one instance at a time (at the CCP level)
-- They are bound to a specific availability zone
-- Analogy: Think of them as a “network USB stick”
-
-## EBS Volume
-
-
-EBS exposes network-attached block storage to supported compute within an Availability Zone.
-
-- It’s a network drive (i.e. not a physical drive)
-  - It uses the network to communicate the instance, which means there might be a bit of latency
-  - It can be detached from an EC2 instance and attached to another one quickly
-- It’s locked to an Availability Zone (AZ)
-  - An EBS Volume in us-east-1a cannot be attached to us-east-1b
-  - To move a volume across, you first need to snapshot it
-- Have a provisioned capacity (size in GBs, and IOPS)
-  - You get billed for all the provisioned capacity
-  - You can increase the capacity of the drive over time
-
-## EBS Volume - Example
-
-
-EBS volumes belong to one Availability Zone and may remain unattached; the example includes multiple volumes on one instance.
-
+**EBS supplies network-attached block volumes for EC2 within an Availability Zone.**
 
 ```mermaid
 flowchart TB
-  accTitle: EBS Volume - Example
-  n0["AZ A instance"]
-  n1["AZ A volume 1"]
-  n2["AZ A volume 2"]
-  n3["AZ B instance"]
-  n4["AZ B volume"]
-  n5["Unattached volume"]
-  n0 ---|"attach in same AZ"| n1
-  n0 ---|"attach in same AZ"| n2
-  n3 ---|"attach in same AZ"| n4
+    subgraph AZA["Availability Zone A"]
+      E["EC2 instance"] --> V1[("EBS root volume")]
+      E --> V2[("EBS data volume")]
+    end
+    S[("EBS snapshot")] -.->|"Restore in another AZ"| V3[("New volume in AZ B")]
+    V2 -->|"Create snapshot"| S
 ```
 
-> EBS volumes belong to one Availability Zone and may remain unattached; the example includes multiple volumes on one instance.
+- Disk semantics: format, mount, and run filesystems/databases.
+- Provision **capacity, IOPS and throughput** according to volume type.
+- EBS is **not automatically a cross-AZ shared disk**.
 
-## EBS – Delete on Termination attribute
+## EBS Attachments and Lifecycle
 
-
-DeleteOnTermination determines whether an attached EBS volume is removed with its instance. Check the root and additional volumes separately.
-
-  - By default, the root EBS volume is deleted (attribute enabled)
-  - By default, any other attached EBS volume is not deleted (attribute disabled)
-- This can be controlled by the AWS console / AWS CLI
-- Use case: preserve root volume when instance is terminated
-
-## Amazon EBS Elastic Volumes
-
-
-Elastic Volumes can change supported volume characteristics without first removing the volume. Filesystem growth and applicable modification limits still require attention.
-
-  - Just go to actions / modify volume from the console
-- Increase volume size
-  - You can only increase, not decrease
-- Change volume type
-  - Gp2 -> Gp3
-  - Specify desired IOPS or throughput performance (or it will guess)
-- Adjust performance
-  - Increase or decrease
-
-## EFS Elastic file system
-
-<!-- original-note: 47 -->
-<!-- title: EFS filesystems -->
-
-EFS provides a managed shared filesystem for compatible clients. Multiple instances can access the same files through configured mount targets and network permissions.
-
-- Managed NFS (network file system) that can be mounted on many EC2
-- EFS works with EC2 instances in multi-AZ
-- Highly available, scalable, expensive (3x gp2), pay per use
-
+**Volumes can survive compute replacement when deletion settings preserve them.**
 
 ```mermaid
 flowchart LR
-  accTitle: EFS filesystems
-  n0["EC2 in AZ A"]
-  n1["EC2 in AZ B"]
-  n2["EC2 in AZ C"]
-  n3["EFS filesystem"]
-  n0 -->|"NFS mount"| n3
-  n1 -->|"NFS mount"| n3
-  n2 -->|"NFS mount"| n3
+    E["EC2 terminated"] --> D{"DeleteOnTermination?"}
+    D -->|"true"| X["Volume deleted"]
+    D -->|"false"| P["Volume retained / reattach"]
 ```
 
-> EFS offers a shared NFS filesystem to compute instances across Availability Zones through mount targets.
+- **Root volume:** commonly defaults to delete on termination.
+- **Additional data volumes:** commonly default to retain, but verify launch/attachment settings.
+- Typical volumes attach to one instance; **io1/io2 Multi-Attach** is a specific exception with cluster-aware application requirements.
 
-## Amazon EFS – Elastic File System
+## EBS Elastic Volumes
 
-
-Shared content, web serving and application files are typical EFS workloads. Select client compatibility, mount security and encryption for the participating instances.
-
-- Uses NFSv4.1 protocol
-- Uses security group to control access to EFS
-- Compatible with Linux based AMI (not Windows)
-- Encryption at rest using KMS
-- POSIX file system (~Linux) that has a standard file API
-- File system scales automatically, pay-per-use, no capacity planning!
-
-## EFS – Performance & Storage Classes
-
-
-EFS performance choices and storage-class choices solve different throughput, latency and cost requirements.
-
-- EFS Scale
-  - 1000s of concurrent NFS clients, 10 GB+ /s throughput
-  - Grow to Petabyte-scale network file system, automatically
-- Performance Mode (set at EFS creation time)
-  - General Purpose (default) – latency-sensitive use cases (web server, CMS, etc…)
-  - Max I/O – higher latency, throughput, highly parallel (big data, media processing)
-- Throughput Mode
-  - Bursting – 1 TB = 50MiB/s + burst of up to 100MiB/s
-  - Provisioned – set your throughput regardless of storage size, ex: 1 GiB/s for 1 TB storage
-  - Elastic – automatically scales throughput up or down based on your workloads
-    - Up to 3GiB/s for reads and 1GiB/s for writes
-    - Used for unpredictable workloads
-
-## EFS – Storage Classes
-
-
-EFS lifecycle policies move eligible files between storage tiers; Standard and One Zone describe a separate availability choice.
-
-- Storage Tiers (lifecycle management feature – move file after N days)
-  - Standard: for frequently accessed files
-  - Infrequent access (EFS-IA): cost to retrieve files, lower price to store.
-  - Archive: rarely accessed data (few times each year), 50% cheaper
-  - Implement lifecycle policies to move files between storage tiers
-- Availability and durability
-  - Standard: Multi-AZ, great for prod
-  - One Zone: One AZ, great for dev, backup enabled by default, compatible with IA (EFS One Zone-IA)
-- Over 90% in cost savings
-
+**Modify supported volume properties without replacing the disk first.**
 
 ```mermaid
 flowchart LR
-  accTitle: EFS – Storage Classes
-  n0["EFS Standard storage"]
-  n1["Lifecycle policy"]
-  n2["EFS Infrequent Access"]
-  n0 -->|"file inactivity"| n1
-  n1 -->|"transition"| n2
+    A["Existing gp2 volume"] --> B["Modify volume"]
+    B --> C["gp3 volume / larger size"]
+    C --> D["Extend OS partition / filesystem if needed"]
 ```
 
-> EFS lifecycle policies move eligible files between storage tiers; Standard and One Zone describe a separate availability choice.
+- Increase size and adjust **volume type, IOPS, throughput** within supported limits.
+- **Shrinking** an EBS volume is not supported in place.
+- Performance tuning and filesystem expansion are separate tasks.
 
-## EBS vs EFS – Elastic Block Storage
+## Amazon EFS: Shared File Storage
 
+**EFS is a managed NFS filesystem that multiple Linux clients can mount.**
 
-To move EBS data between Availability Zones, snapshot the source volume and restore a new volume in the target AZ.
+```mermaid
+flowchart TB
+    subgraph A["AZ A"]
+      EC1["EC2 / workload A"] --> MT1["EFS mount target"]
+    end
+    subgraph B["AZ B"]
+      EC2["EC2 / workload B"] --> MT2["EFS mount target"]
+    end
+    MT1 & MT2 --> FS[("One shared EFS filesystem")]
+```
 
-- EBS volumes…
-  - one instance (except multi-attach io1/io2)
-  - are locked at the Availability Zone (AZ) level
-  - gp2: IO increases if the disk size increases
-  - gp3 & io1: can increase IO independently
-- To migrate an EBS volume across AZ
-  - Take a snapshot
-  - Restore the snapshot to another AZ
-  - EBS backups use IO and you shouldn’t run them while your application is handling a lot of traffic
-- Root EBS Volumes of instances get terminated by default if the EC2
+- POSIX-style paths; compatible workloads access **the same files**.
+- NFSv4.x, security groups, and mount permissions are key configuration points.
+- Capacity expands automatically; charges depend on storage/throughput choices.
 
+## EFS Performance and Throughput
+
+**Separate file-system latency/throughput from storage-tier cost decisions.**
+
+```mermaid
+flowchart TD
+    W{"Workload profile?"}
+    W -->|"Unpredictable throughput"| E["Elastic throughput"]
+    W -->|"Planned performance"| P["Provisioned throughput"]
+    W -->|"Legacy size-linked pattern"| B["Bursting throughput"]
+    W --> M["Evaluate performance mode / client behaviour"]
+```
+
+- **General Purpose:** latency-sensitive shared files.
+- **Max I/O:** legacy performance-mode option; availability depends on creation and service support.
+- Monitor throughput, operations, burst credits (if applicable), and client latency.
+
+## EFS Lifecycle and Storage Classes
+
+**Move colder files to cheaper storage without changing their path.**
 
 ```mermaid
 flowchart LR
-  accTitle: EBS vs EFS – Elastic Block Storage
-  n0["Source EBS volume<br/>AZ A"]
-  n1["EBS snapshot"]
-  n2["New EBS volume<br/>AZ B"]
-  n0 -->|"snapshot"| n1
-  n1 -->|"restore"| n2
+    S["EFS Standard"] -->|"Inactivity"| I["EFS Infrequent Access"]
+    I -->|"Longer inactivity"| A["EFS Archive, where supported"]
+    I & A -->|"Access policy"| S
 ```
 
-> To move EBS data between Availability Zones, snapshot the source volume and restore a new volume in the target AZ.
+- **Standard vs One Zone** expresses resilience / AZ placement.
+- **Standard / IA / Archive** expresses access frequency and retrieval economics.
+- Lifecycle and access policy choices determine transitions and read charges.
 
-## EBS vs EFS – Elastic File System
+## EBS vs EFS vs S3
 
+| Dimension | **S3** | **EBS** | **EFS** |
+|---|---|---|---|
+| Access | Object API | Block device | Shared NFS filesystem |
+| Typical clients | Apps / analytics engines | EC2 / compatible compute | Multiple Linux clients |
+| Sharing | By permissions | Usually one instance | Many instances |
+| Placement | Bucket class / Region | Volume bound to AZ | Regional or One Zone filesystem |
+| Best for | Lakes / archives / blobs | Instance disks / databases | Shared application files |
 
-EFS clients in separate AZs mount one shared filesystem; EBS ordinarily supplies block storage to an instance in one AZ.
+**Pattern:** S3 for historical data, EBS for local database disks, EFS for concurrently shared files.
 
-- Mounting 100s of instances across AZ
-- EFS share website files (WordPress)
-- Only for Linux Instances (POSIX)
-- EFS has a higher price point than EBS
-- Can leverage Storage Tiers for cost savings
-- Remember: EFS vs EBS vs Instance
+## EBS Cross-AZ Migration
 
+**Snapshot first, then restore the volume in the destination AZ.**
 
 ```mermaid
 flowchart LR
-  accTitle: EBS vs EFS – Elastic File System
-  n0["Instance in AZ A"]
-  n1["Mount target A"]
-  n2["EFS"]
-  n3["Mount target B"]
-  n4["Instance in AZ B"]
-  n0 -->|"NFS"| n1
-  n1 -->|"shared files"| n2
-  n4 -->|"NFS"| n3
-  n3 -->|"shared files"| n2
+    V1[("Volume: AZ A")] --> S["EBS snapshot"]
+    S --> V2[("New volume: AZ B")]
+    V2 --> E["Attach to EC2 in AZ B"]
 ```
 
-> EFS clients in separate AZs mount one shared filesystem; EBS ordinarily supplies block storage to an instance in one AZ.
+- You **cannot directly attach** an AZ A volume to an EC2 instance in AZ B.
+- Snapshots support restoration and disaster recovery; plan application-consistent backups where needed.
 
-## AWS Backup
+## AWS Backup: Centralized Protection
 
-<!-- original-note: 48 -->
-
-AWS Backup applies centrally managed backup plans to supported resources. Select schedules, retention, destinations and recovery options from the workload's recovery objectives.
-
-- Fully managed service
-- Centrally manage and automate backups across AWS services
-- No need to create custom scripts and manual processes
-- Supported services:
-  - Amazon EC2 / Amazon EBS
-  - Amazon S3
-  - Amazon RDS (all DBs engines) / Amazon Aurora / Amazon DynamoDB
-  - Amazon DocumentDB / Amazon Neptune
-  - Amazon EFS / Amazon FSx (Lustre & Windows File Server)
-  - AWS Storage Gateway (Volume Gateway)
-- Supports cross-region backups
-- Supports cross-account backups
-
-## AWS Backup
-
-
-Backup plans, recovery options and resource support determine whether a backup meets the recovery requirement.
-
-- Supports PITR for supported services
-- On-Demand and Scheduled backups
-- Tag-based backup policies
-- You create backup policies known as Backup Plans
-  - Backup frequency (every 12 hours, daily, weekly, monthly, cron expression)
-  - Backup window
-  - Transition to Cold Storage (Never, Days, Weeks, Months, Years)
-  - Retention Period (Always, Days, Weeks, Months, Years)
-
-## AWS Backup
-
-
-A backup plan defines frequency and retention, assigns supported resources and writes recovery points to a backup vault.
-
+**AWS Backup coordinates supported resource backups without per-service scripts.**
 
 ```mermaid
 flowchart LR
-  accTitle: AWS Backup
-  n0["Backup plan"]
-  n1["Resource assignments"]
-  n2["Supported AWS resources"]
-  n3["Backup vault<br/>Recovery points"]
-  n0 -->|"schedule / retention"| n1
-  n1 -->|"select resources"| n2
-  n2 -->|"service-managed backups"| n3
+    subgraph Sources["Protected resources"]
+      E["EBS / EC2"]
+      D["RDS / DynamoDB"]
+      F["EFS / S3 / other supported"]
+    end
+    E & D & F --> P["Backup plan + assignments"]
+    P --> V[("Backup vault / recovery points")]
+    V --> R["Restore / recovery testing"]
 ```
 
-> A backup plan defines frequency and retention, assigns supported resources and writes recovery points to a backup vault.
+- Supports supported **cross-account / cross-Region copies** and **PITR** for eligible resources.
+- Backup is not useful until **restore procedures are tested**.
+
+## AWS Backup Plans
+
+**A backup plan defines *what*, *when*, *where*, and *how long*.**
+
+```mermaid
+mindmap
+  root((Backup plan))
+    Resource assignment
+      Tags or explicit selection
+    Frequency and window
+    Destination vault
+    Retention period
+    Cold-tier transitions
+    Copy rules
+```
+
+- Backups may run **on-demand** or **scheduled**.
+- Align policy with **RPO** (acceptable loss) and **RTO** (acceptable restoration delay).
+- Recovery-point lifecycle rules depend on the protected resource and storage type.
 
 ## AWS Backup Vault Lock
 
-
-Vault Lock protects recovery points with retention controls; compliance-mode immutability applies after its changeable period.
-
-- Enforce a WORM (Write Once Read Many) state for all the backups that you store in your AWS Backup Vault
-- Additional layer of defense to protect your backups against:
-  - Inadvertent or malicious delete operations
-  - Updates that shorten or alter retention periods
-- Even the root user cannot delete backups when enabled
-
+**Vault Lock protects recovery points from premature deletion or retention changes.**
 
 ```mermaid
 flowchart LR
-  accTitle: AWS Backup Vault Lock
-  n0["Backup recovery points"]
-  n1["Vault Lock policy"]
-  n2["Protected vault"]
-  n0 -->|"retention enforcement"| n1
-  n1 -->|"WORM protection"| n2
+    P["Recovery points"] --> V["Backup vault"]
+    V --> L["Vault Lock policy"]
+    L --> W["WORM-like retention enforcement"]
+    W --> R["Recovery even after accidental / malicious delete attempts"]
 ```
 
-> Vault Lock protects recovery points with retention controls; compliance-mode immutability applies after its changeable period.
+- **Governance mode:** authorized administrators can change supported settings.
+- **Compliance mode:** after its grace period, retention controls become immutable—even for the account root user.
+- Plan grace periods and retention carefully before enforcement.
+
+## Storage: Design Review Checklist
+
+```mermaid
+flowchart TB
+    R["Storage design"] --> A["Access model + latency"]
+    R --> B["Durability + AZ / Region recovery"]
+    R --> C["IAM + encryption + network"]
+    R --> D["Retention + lifecycle + cost"]
+    R --> E["Events / automation + observability"]
+    R --> F["Backup and restore validation"]
+```
+
+**Remember:** a low storage price is meaningless if retrieval, resilience, or recovery misses the workload requirement.
 
 # Section Databases
 
