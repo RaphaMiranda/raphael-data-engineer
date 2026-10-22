@@ -1,5 +1,14 @@
 # AI session log
 
+## 2026-10-22 - Removed diagram text and made detailed notes opt-in
+
+- **Branch:** `feature/aws-explorer-first-use-tour`.
+- **Goal:** Remove the "Read Diagram as text" feature and show the Detailed notes renderer only when a slide has a nested `Detailed notes` heading.
+- **Changed files:** `assets/js/aws-study-guide.js`, `assets/css/aws-study-guide.css`, `README.md`, `tests/aws-study-guide.test.js`, `tests/aws-study-guide-browser.js`, `ai-session.md`.
+- **Changes:** Removed the diagram node and relationship text disclosure and its fallback dependency. Kept the diagram caption for accessibility. Detailed notes, tables and code now render only from content under an explicit `Detailed notes` subheading.
+- **Verification:** A focused self-check confirms diagrams omit the text disclosure, explicit nested notes and code parse correctly, and the current source has no opt-in notes sections. Changed JavaScript syntax checks and scoped `git diff --check` pass. Full Node and browser suites were not run.
+- **Commit:** `7a3c8af` (`fix: make detailed slide notes opt-in`).
+
 ## 2026-10-22 - Removed base-document references from AWS study deck
 
 - **Branch:** `feature/aws-explorer-first-use-tour`.
