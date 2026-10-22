@@ -97,8 +97,9 @@
       if (!current) return;
       if (!line.trim()) { flushParagraph(); table = null; return; }
       const caption = line.match(/^>\s?(.*)$/);
-      if (caption && lastVisual) {
-        lastVisual.caption += (lastVisual.caption ? " " : "") + caption[1];
+      if (caption) {
+        if (lastVisual) lastVisual.caption += (lastVisual.caption ? " " : "") + caption[1];
+        else { flushParagraph(); contentTarget().paragraphs.push(caption[1]); }
         return;
       }
       lastVisual = null;
@@ -187,22 +188,6 @@
     }).join("");
   }
 
-  function summaryPoints(items, limit) {
-    if (!items.length) return [];
-    const root = Math.min.apply(null, items.map(function (item) { return item.indent; }));
-    return items.filter(function (item) { return item.indent === root; }).slice(0, limit).map(function (item) {
-      if (!/:$/.test(item.text)) return item;
-      const start = items.indexOf(item) + 1;
-      const children = [];
-      for (let i = start; i < items.length && items[i].indent > root; i++) children.push(items[i]);
-      if (!children.length) return item;
-      const childIndent = Math.min.apply(null, children.map(function (child) { return child.indent; }));
-      const summary = children.filter(function (child) { return child.indent === childIndent; }).slice(0, 2)
-        .map(function (child) { return child.text; }).join("; ");
-      return Object.assign({}, item, { text: item.text + " " + summary });
-    });
-  }
-
   async function initializeDiagrams() {
     const version = ++state.diagramVersion;
     const sources = elements.slide.querySelectorAll("[data-study-mermaid]");
@@ -256,16 +241,19 @@
   function renderSlide(shouldFocus) {
     const current = state.slides[state.index];
     const section = current.section;
-    const notes = renderList(summaryPoints(current.listItems, 4));
+    const notes = renderList(current.listItems);
     const tables = renderTables(current.tables);
     const visual = renderVisual(current);
-    const introduction = current.paragraphs[0] ? "<p class=\"slide-lede\">" + formatText(current.paragraphs[0]) + "</p>" : "";
+    const code = current.code.map(function (snippet) { return "<pre class=\"code-block\"><code>" + escapeHtml(snippet) + "</code></pre>"; }).join("");
     const references = current.paragraphs.filter(function (paragraph) { return paragraph.startsWith("**Current reference"); });
+    const paragraphs = current.paragraphs.filter(function (paragraph) { return !paragraph.startsWith("**Current reference"); });
+    const introduction = paragraphs[0] ? "<p class=\"slide-lede\">" + formatText(paragraphs[0]) + "</p>" : "";
+    const supportingParagraphs = paragraphs.slice(1).map(function (paragraph) { return '<p class="detail-note">' + formatText(paragraph) + '</p>'; }).join("");
     const detailed = current.detailedNotes;
     const detailedCode = detailed ? detailed.code.map(function (snippet) { return "<pre class=\"code-block\"><code>" + escapeHtml(snippet) + "</code></pre>"; }).join("") : "";
     const detail = detailed ? renderList(detailed.listItems) + detailed.paragraphs.map(function (paragraph) { return '<p class="detail-note">' + formatText(paragraph) + '</p>'; }).join("") + renderTables(detailed.tables) + detailedCode + renderVisual(detailed) : "";
     const details = detail ? '<details class="notes-details"><summary>Detailed notes</summary>' + detail + '</details>' : '';
-    const empty = current.unexpanded || !tables && !notes && !current.paragraphs.length && !detail && !visual
+    const empty = current.unexpanded || !tables && !notes && !code && !current.paragraphs.length && !detail && !visual
       ? "<p class=\"empty-note\">This topic is marked in the source notes but has not been expanded yet. Use it as a prompt for deeper study.</p>" : "";
 
     elements.slide.classList.remove("entering");
@@ -274,7 +262,7 @@
       + "<p class=\"slide-index\">" + "Study notes" + "</p>"
       + "<p class=\"slide-section\">" + escapeHtml(section) + "</p>"
       + "<h2>" + escapeHtml(current.title) + "</h2>"
-      + introduction + tables + notes + visual + details
+      + introduction + supportingParagraphs + tables + notes + visual + code + details
       + references.map(function (reference) { return '<p class="source-reference">' + formatText(reference) + '</p>'; }).join("")
       + empty + "</div>";
     elements.slide.classList.add("entering");
