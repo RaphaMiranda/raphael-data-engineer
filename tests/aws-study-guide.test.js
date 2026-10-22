@@ -44,24 +44,33 @@ test('all migrated visuals are owned by their Markdown topics', () => {
   for (const stage of ['Generation', 'Storage', 'Ingestion', 'Transformation', 'Serving']) assert.ok(keyConcepts.source.includes('["' + stage + '"]'));
 });
 
-test('every JOIN overview and SQL example uses a Mermaid Venn diagram', () => {
-  const titles = [
+test('JOIN overviews use flowcharts and SQL examples use Mermaid Venn diagrams', () => {
+  const overviewTitles = [
     /^INNER JOIN$/,
-    /^INNER JOIN(?:: SQL Example| worked example)$/,
     /^LEFT OUTER JOIN$/,
-    /^LEFT JOIN(?:: SQL Example| worked example)$/,
     /^RIGHT OUTER JOIN$/,
-    /^RIGHT JOIN(?:: SQL Example| worked example)$/,
     /^FULL OUTER JOIN$/,
-    /^CROSS JOIN$/,
-    /^CROSS JOIN(?:: SQL Example| worked example)$/
+    /^CROSS JOIN$/
   ];
-  for (const title of titles) {
+  for (const title of overviewTitles) {
     const slide = slides.find(item => title.test(item.title));
     assert.ok(slide, 'Missing JOIN slide: ' + title);
+    assert.equal(slide.visuals.filter(visual => visual.type === 'mermaid').length, 1, slide.title);
+    assert.match(slide.visuals[0].source, /^flowchart LR/);
+  }
+  const exampleTitles = [
+    /^INNER JOIN(?:: SQL Example| worked example)$/,
+    /^LEFT JOIN(?:: SQL Example| worked example)$/,
+    /^RIGHT JOIN(?:: SQL Example| worked example)$/,
+    /^CROSS JOIN(?:: SQL Example| worked example)$/
+  ];
+  for (const title of exampleTitles) {
+    const slide = slides.find(item => title.test(item.title));
+    assert.ok(slide, 'Missing JOIN example: ' + title);
     assert.equal(slide.visuals.filter(visual => visual.type === 'mermaid' && visual.source.startsWith('venn-beta')).length, 1, slide.title);
     if (/^CROSS JOIN/.test(slide.title)) assert.doesNotMatch(slide.visuals.find(visual => visual.type === 'mermaid').source, /\bunion\b/);
   }
+  assert.equal(slides.flatMap(slide => slide.visuals).filter(visual => visual.type === 'mermaid' && visual.source.startsWith('venn-beta')).length, 4);
 });
 
 test('Mermaid fences and captions stay attached to their own repeated headings', () => {
