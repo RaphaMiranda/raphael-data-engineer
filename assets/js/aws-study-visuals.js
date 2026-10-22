@@ -1,5 +1,26 @@
 /* Semantic visuals for Markdown-backed study slides. */
 window.studyVisuals = {
+  "Key Concepts": {
+    type: "diagram",
+    id: "data-engineering-lifecycle",
+    label: "Data Engineering lifecycle",
+    caption: "The five stages of the Data Engineering lifecycle form a continuous cycle.",
+    layout: "circular",
+    nodes: [
+      { key: "generation", text: "Generation", fill: "#2d3449" },
+      { key: "storage", text: "Storage", fill: "#173947" },
+      { key: "ingestion", text: "Ingestion", fill: "#242d52" },
+      { key: "transformation", text: "Transformation", fill: "#173b34" },
+      { key: "serving", text: "Serving", fill: "#173b34" }
+    ],
+    links: [
+      { from: "generation", to: "storage" },
+      { from: "storage", to: "ingestion" },
+      { from: "ingestion", to: "transformation" },
+      { from: "transformation", to: "serving" },
+      { from: "serving", to: "generation" }
+    ]
+  },
   "Data Lakehouses": {
     type: "image",
     src: "/assets/images/lakehouse-databricks.png",

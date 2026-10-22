@@ -215,6 +215,7 @@
     const fallback = elements.slide.querySelector("[data-diagram-fallback]");
     if (!host) return;
     host.classList.toggle("study-diagram--vertical", visual.layout === "vertical");
+    host.classList.toggle("study-diagram--circular", visual.layout === "circular");
     if (!window.go) {
       host.hidden = true;
       if (fallback) fallback.hidden = false;
@@ -224,8 +225,11 @@
 
     const $ = go.GraphObject.make;
     const reduceMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+    const circularLayout = visual.layout === "circular";
     const diagram = $(go.Diagram, host, {
-      layout: visual.layout === "vertical" ? $(go.Layout) : $(go.LayeredDigraphLayout, { direction: 0, layerSpacing: 48, columnSpacing: 28 }),
+      layout: circularLayout
+        ? $(go.CircularLayout, { radius: 155, arrangement: go.CircularArrangement.ConstantDistance, sorting: go.CircularSorting.Forwards })
+        : visual.layout === "vertical" ? $(go.Layout) : $(go.LayeredDigraphLayout, { direction: 0, layerSpacing: 48, columnSpacing: 28 }),
       initialAutoScale: go.AutoScale.Uniform,
       contentAlignment: go.Spot.Center,
       isReadOnly: true,
@@ -242,14 +246,19 @@
     // Keep the vertical diagram below the library attribution on narrow screens.
     if (visual.layout === "vertical") diagram.padding = new go.Margin(80, 8, 8, 8);
 
-    diagram.nodeTemplate = $(go.Node, "Auto", { selectable: false, cursor: "default", locationSpot: visual.layout === "vertical" ? go.Spot.Center : go.Spot.TopLeft },
-      new go.Binding("location", "loc", go.Point.parse),
-      $(go.Shape, "RoundedRectangle", { parameter1: 12, stroke: "#464554", strokeWidth: 1.3 }, new go.Binding("fill", "fill")),
-      $(go.Panel, "Vertical", { margin: 12, defaultAlignment: go.Spot.Left },
-        $(go.TextBlock, { font: "600 13px 'Space Grotesk', sans-serif", stroke: "#dae2fd", maxSize: new go.Size(150, NaN), wrap: go.Wrap.Fit }, new go.Binding("text", "text")),
-        $(go.TextBlock, { margin: new go.Margin(5, 0, 0, 0), font: "10px 'JetBrains Mono', monospace", stroke: "#c7c4d7", maxSize: new go.Size(150, NaN), wrap: go.Wrap.Fit }, new go.Binding("text", "detail"))
+    diagram.nodeTemplate = circularLayout
+      ? $(go.Node, "Auto", { selectable: false, cursor: "default", locationSpot: go.Spot.Center },
+        $(go.Shape, "Circle", { desiredSize: new go.Size(128, 128), stroke: "#5de6ff", strokeWidth: 2 }, new go.Binding("fill", "fill")),
+        $(go.TextBlock, { margin: 14, font: "600 13px 'Space Grotesk', sans-serif", stroke: "#dae2fd", textAlign: "center", maxSize: new go.Size(110, 80), wrap: go.Wrap.Fit }, new go.Binding("text", "text"))
       )
-    );
+      : $(go.Node, "Auto", { selectable: false, cursor: "default", locationSpot: visual.layout === "vertical" ? go.Spot.Center : go.Spot.TopLeft },
+        new go.Binding("location", "loc", go.Point.parse),
+        $(go.Shape, "RoundedRectangle", { parameter1: 12, stroke: "#464554", strokeWidth: 1.3 }, new go.Binding("fill", "fill")),
+        $(go.Panel, "Vertical", { margin: 12, defaultAlignment: go.Spot.Left },
+          $(go.TextBlock, { font: "600 13px 'Space Grotesk', sans-serif", stroke: "#dae2fd", maxSize: new go.Size(150, NaN), wrap: go.Wrap.Fit }, new go.Binding("text", "text")),
+          $(go.TextBlock, { margin: new go.Margin(5, 0, 0, 0), font: "10px 'JetBrains Mono', monospace", stroke: "#c7c4d7", maxSize: new go.Size(150, NaN), wrap: go.Wrap.Fit }, new go.Binding("text", "detail"))
+        )
+      );
     diagram.groupTemplate = $(go.Group, "Auto", { selectable: false, avoidable: false },
       $(go.Shape, "RoundedRectangle", { fill: "rgba(19, 27, 46, .4)", stroke: "#aebad3", strokeWidth: 1.5, strokeDashArray: [8, 6] }),
       $(go.Panel, "Vertical",
@@ -277,7 +286,10 @@
       button.addEventListener("click", function () { diagram.scale *= button.dataset.diagramZoom === "in" ? 1.2 : 1 / 1.2; });
     });
     if (window.ResizeObserver) {
-      state.diagramObserver = new ResizeObserver(function () { diagram.requestUpdate(); });
+      state.diagramObserver = new ResizeObserver(function () {
+        diagram.requestUpdate();
+        if (circularLayout) diagram.commandHandler.zoomToFit();
+      });
       state.diagramObserver.observe(host);
     }
   }

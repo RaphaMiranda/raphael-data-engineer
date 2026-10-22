@@ -16,7 +16,7 @@ The AWS deck keeps the Markdown document as its source of truth. It groups perso
 
 ### Visuals and diagrams
 
-The Key Concepts slide is a Mermaid experiment: its fenced diagram lives beside the notes in `docs/aws-data-eng-associate.md`. Other diagrams remain keyed in `assets/js/aws-study-visuals.js` and use GoJS. This keeps simple flow content in Markdown while preserving the precise layout and interaction available for complex diagrams.
+Study diagrams are keyed in `assets/js/aws-study-visuals.js` and use GoJS. The Key Concepts lifecycle uses a circular layout so its five equally sized stages form a clear cycle.
 
 For an explicitly positioned vertical diagram, set `layout: "vertical"` and give each regular node a `loc: "x y"`. Define containers with `isGroup: true` and assign member nodes their container's key through `group`. A link's `bidirectional: true` adds a second arrowhead and a matching two-way text alternative. The Internet Gateway & NAT Gateways topic demonstrates these options.
 

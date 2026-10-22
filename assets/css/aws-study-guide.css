@@ -69,6 +69,7 @@ button:focus-visible, a:focus-visible { outline: 2px solid var(--cyan); outline-
 .diagram-button:hover { background: rgba(93, 230, 255, .1); }
 .study-diagram { width: 100%; height: clamp(19rem, 38vw, 28rem); overflow: hidden; border-radius: .7rem; background: #060e20; }
 .study-diagram.study-diagram--vertical { height: 37rem; }
+.study-diagram.study-diagram--circular { height: clamp(21rem, 28vw, 24rem); }
 .study-mermaid { display: grid; min-height: clamp(19rem, 38vw, 28rem); place-items: center; overflow: auto; border-radius: .7rem; background: #060e20; }
 .study-mermaid svg { max-width: 100%; height: auto; }
 .slide-visual figcaption { margin-top: .85rem; color: var(--muted); font-size: .88rem; line-height: 1.55; }
