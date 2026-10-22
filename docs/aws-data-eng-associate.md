@@ -894,15 +894,7 @@ INNER JOIN payments p
   ON c.customerNumber = p.customerNumber;
 ```
 
-```mermaid
-venn-beta
-    set Customers["Customers"]
-    set Payments["Payments"]
-    union Customers,Payments["Matching customerNumber"]
-    style Customers fill:#22d3ee,fill-opacity:0.3,stroke:#67e8f9,stroke-width:3,color:#e2e8f0
-    style Payments fill:#34d399,fill-opacity:0.3,stroke:#6ee7b7,stroke-width:3,color:#e2e8f0
-    style Customers,Payments fill:#818cf8,fill-opacity:0.65,stroke:#c4b5fd,stroke-width:3,color:#f8fafc
-```
+
 
 ## LEFT OUTER JOIN
 
@@ -936,15 +928,7 @@ LEFT JOIN payments p
   ON c.customerNumber = p.customerNumber;
 ```
 
-```mermaid
-venn-beta
-    set Customers["Customers"]
-    set Payments["Payments"]
-    union Customers,Payments["Matching customerNumber"]
-    style Customers fill:#34d399,fill-opacity:0.4,stroke:#6ee7b7,stroke-width:3,color:#ecfdf5
-    style Payments fill:#475569,fill-opacity:0.24,stroke:#64748b,stroke-width:2,color:#cbd5e1
-    style Customers,Payments fill:#22d3ee,fill-opacity:0.65,stroke:#67e8f9,stroke-width:3,color:#ecfeff
-```
+
 
 ## RIGHT OUTER JOIN
 
@@ -978,15 +962,7 @@ RIGHT JOIN customers c
   ON c.customerNumber = p.customerNumber;
 ```
 
-```mermaid
-venn-beta
-    set Payments["Payments"]
-    set Customers["Customers"]
-    union Payments,Customers["Matching customerNumber"]
-    style Payments fill:#475569,fill-opacity:0.24,stroke:#64748b,stroke-width:2,color:#cbd5e1
-    style Customers fill:#34d399,fill-opacity:0.4,stroke:#6ee7b7,stroke-width:3,color:#ecfdf5
-    style Payments,Customers fill:#22d3ee,fill-opacity:0.65,stroke:#67e8f9,stroke-width:3,color:#ecfeff
-```
+
 
 ## FULL OUTER JOIN
 
@@ -1040,13 +1016,7 @@ FROM payments p
 CROSS JOIN customers c;
 ```
 
-```mermaid
-venn-beta
-    set Payments["Payments"]
-    set Customers["Customers"]
-    style Payments fill:#22d3ee,fill-opacity:0.32,stroke:#67e8f9,stroke-width:3,color:#e2e8f0
-    style Customers fill:#34d399,fill-opacity:0.32,stroke:#6ee7b7,stroke-width:3,color:#e2e8f0
-```
+
 
 ## SQL Regular Expressions
 

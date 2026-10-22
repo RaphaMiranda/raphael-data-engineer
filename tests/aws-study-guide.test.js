@@ -44,7 +44,7 @@ test('all migrated visuals are owned by their Markdown topics', () => {
   for (const stage of ['Generation', 'Storage', 'Ingestion', 'Transformation', 'Serving']) assert.ok(keyConcepts.source.includes('["' + stage + '"]'));
 });
 
-test('JOIN overviews use flowcharts and SQL examples use Mermaid Venn diagrams', () => {
+test('JOIN overviews use flowcharts and SQL examples have no Venn diagrams', () => {
   const overviewTitles = [
     /^INNER JOIN$/,
     /^LEFT OUTER JOIN$/,
@@ -67,10 +67,9 @@ test('JOIN overviews use flowcharts and SQL examples use Mermaid Venn diagrams',
   for (const title of exampleTitles) {
     const slide = slides.find(item => title.test(item.title));
     assert.ok(slide, 'Missing JOIN example: ' + title);
-    assert.equal(slide.visuals.filter(visual => visual.type === 'mermaid' && visual.source.startsWith('venn-beta')).length, 1, slide.title);
-    if (/^CROSS JOIN/.test(slide.title)) assert.doesNotMatch(slide.visuals.find(visual => visual.type === 'mermaid').source, /\bunion\b/);
+    assert.equal(slide.visuals.filter(visual => visual.type === 'mermaid').length, 0, slide.title);
   }
-  assert.equal(slides.flatMap(slide => slide.visuals).filter(visual => visual.type === 'mermaid' && visual.source.startsWith('venn-beta')).length, 4);
+  assert.equal(slides.flatMap(slide => slide.visuals).filter(visual => visual.type === 'mermaid' && visual.source.startsWith('venn-beta')).length, 0);
 });
 
 test('Mermaid fences and captions stay attached to their own repeated headings', () => {
