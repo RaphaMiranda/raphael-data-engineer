@@ -1,5 +1,14 @@
 # AI session log
 
+## 2026-10-22 - Circular Key Concepts lifecycle diagram
+
+- **Branch:** `feature/aws-explorer-first-use-tour`.
+- **Goal:** Arrange the five Key Concepts lifecycle stages as equal circles around a ring, connected by the five lifecycle arrows.
+- **Changed files:** `README.md`, `assets/css/aws-study-guide.css`, `assets/js/aws-study-guide.js`, `assets/js/aws-study-visuals.js`, `docs/aws-data-eng-associate.md`, `ai-session.md`.
+- **Changes:** Replaced the Mermaid experiment with the existing GoJS renderer's circular layout, equal-sized circle nodes and the established page palette. Refit the circular diagram when the slide resizes; updated the README to match.
+- **Verification:** Browser previews at 1440px and 390px show all five circles and arrows in a ring without clipping. `node --check` passed for both changed scripts and scoped `git diff --check` passed. No test suite was run.
+- **Commit:** `8f8e317` (`fix: arrange lifecycle stages in circular diagram`).
+
 ## 2026-10-22 - Removed diagram text and made detailed notes opt-in
 
 - **Branch:** `feature/aws-explorer-first-use-tour`.
