@@ -2928,8 +2928,6 @@ flowchart TB
 
 **Focus:** RDS best practices: unexpanded source heading — understand the key capabilities, constraints, and trade-offs.
 
-- Unexpanded source area: retain it as a review prompt. Do not attribute invented recommendations to this slide
-
 
 ## RDS Operational guidelines
 
