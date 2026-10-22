@@ -1,5 +1,14 @@
 # AI session log
 
+## 2026-10-22 - Render top-level study tables
+
+- **Branch:** `feat/from-gojs-to-mermaid`.
+- **Goal:** Show Markdown tables written directly under a study topic.
+- **Changed files:** `assets/js/aws-study-guide.js`, `ai-session.md`.
+- **Changes:** Top-level tables were parsed into `current.tables` but `renderSlide()` only emitted tables from explicit Detailed notes. The slide renderer now includes top-level tables. Arrow keys pressed while a table region is focused no longer navigate to another topic.
+- **Verification:** Browser check confirmed all six Key Concepts rows and the `Area` header at 1440px and 390px, with no page horizontal overflow. ArrowRight while the table had focus kept the same topic. Four local page resources returned HTTP 200; `node --check` and `git diff --check` passed. The existing Node suite passed 7/8 tests; its remaining source-count assertion expects 764 slides, while the user's uncommitted Markdown edits currently produce 766. Those Markdown edits were left unstaged.
+- **Commit:** `c5d4a21` (`fix: render top-level study tables`).
+
 ## 2026-10-22 - Markdown and Mermaid study diagrams
 
 - **Branch:** `feat/from-gojs-to-mermaid`.
