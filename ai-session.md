@@ -356,3 +356,12 @@
 - **Changed files:** `docs/aws-data-eng-associate.md`, `tests/aws-study-guide.test.js`, `ai-session.md`.
 - **Verification:** All 10 Node tests passed against the working notes and the exact scoped Markdown target. Desktop and 375 px mobile browser checks showed flowchart and Venn diagrams rendered; Fit diagram and ArrowLeft/ArrowRight navigation worked, three local navigation URLs returned 200, and browser errors were zero.
 - **Commit:** `df8916e`.
+
+## 2026-10-22 — Remove JOIN Venn diagrams
+
+- **Branch:** `feat/from-gojs-to-mermaid`
+- **Goal:** Restore the pre-Venn state for the JOIN examples.
+- **Changes:** Removed the Venn diagrams from the INNER, LEFT, RIGHT, and CROSS JOIN SQL example slides. Kept the five overview flowcharts and changed regression coverage to require no Venn diagrams on JOIN slides.
+- **Changed files:** `docs/aws-data-eng-associate.md`, `tests/aws-study-guide.test.js`, `ai-session.md`.
+- **Verification:** All 10 Node tests passed against the preserved working notes. At desktop and 375 px mobile widths, INNER JOIN showed its flowchart and INNER JOIN: SQL Example showed no diagram; ArrowRight navigation worked and browser errors were zero. A HEAD-only test fixture hit the existing `diagrams.length >= 336` check because the broader study-note edits remain uncommitted.
+- **Commit:** `6fea3cf`.
