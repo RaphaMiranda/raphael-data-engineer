@@ -347,3 +347,12 @@
 - **Changed files:** `docs/aws-data-eng-associate.md`, `tests/aws-study-guide.test.js`, `ai-session.md`.
 - **Verification:** All 10 Node tests passed with `--test-isolation=none`; all nine diagrams rendered at desktop and 375 px mobile widths, with no page-level horizontal overflow. The Fit diagram control worked, ArrowRight navigation advanced slides, local navigation links returned 200, Mermaid console errors: 0, and cached diff check passed.
 - **Commit:** `756ab00`.
+
+## 2026-10-22 — Restore JOIN overview flowcharts
+
+- **Branch:** `feat/from-gojs-to-mermaid`
+- **Goal:** Restore flowcharts on the five JOIN overview slides and keep Venn diagrams only on the four SQL example slides.
+- **Changes:** Restored the INNER, LEFT OUTER, RIGHT OUTER, FULL OUTER, and CROSS JOIN overviews to themed Mermaid flowcharts. Updated regression coverage to assert flowcharts on overviews and Venn diagrams only on JOIN examples.
+- **Changed files:** `docs/aws-data-eng-associate.md`, `tests/aws-study-guide.test.js`, `ai-session.md`.
+- **Verification:** All 10 Node tests passed against the working notes and the exact scoped Markdown target. Desktop and 375 px mobile browser checks showed flowchart and Venn diagrams rendered; Fit diagram and ArrowLeft/ArrowRight navigation worked, three local navigation URLs returned 200, and browser errors were zero.
+- **Commit:** `df8916e`.
