@@ -257,6 +257,7 @@
     const current = state.slides[state.index];
     const section = current.section;
     const notes = renderList(summaryPoints(current.listItems, 4));
+    const tables = renderTables(current.tables);
     const visual = renderVisual(current);
     const introduction = current.paragraphs[0] ? "<p class=\"slide-lede\">" + formatText(current.paragraphs[0]) + "</p>" : "";
     const references = current.paragraphs.filter(function (paragraph) { return paragraph.startsWith("**Current reference"); });
@@ -264,7 +265,7 @@
     const detailedCode = detailed ? detailed.code.map(function (snippet) { return "<pre class=\"code-block\"><code>" + escapeHtml(snippet) + "</code></pre>"; }).join("") : "";
     const detail = detailed ? renderList(detailed.listItems) + detailed.paragraphs.map(function (paragraph) { return '<p class="detail-note">' + formatText(paragraph) + '</p>'; }).join("") + renderTables(detailed.tables) + detailedCode + renderVisual(detailed) : "";
     const details = detail ? '<details class="notes-details"><summary>Detailed notes</summary>' + detail + '</details>' : '';
-    const empty = current.unexpanded || !notes && !current.paragraphs.length && !detail && !visual
+    const empty = current.unexpanded || !tables && !notes && !current.paragraphs.length && !detail && !visual
       ? "<p class=\"empty-note\">This topic is marked in the source notes but has not been expanded yet. Use it as a prompt for deeper study.</p>" : "";
 
     elements.slide.classList.remove("entering");
@@ -273,7 +274,7 @@
       + "<p class=\"slide-index\">" + "Study notes" + "</p>"
       + "<p class=\"slide-section\">" + escapeHtml(section) + "</p>"
       + "<h2>" + escapeHtml(current.title) + "</h2>"
-      + introduction + renderTables(current.tables) + notes + visual + details
+      + introduction + tables + notes + visual + details
       + references.map(function (reference) { return '<p class="source-reference">' + formatText(reference) + '</p>'; }).join("")
       + empty + "</div>";
     elements.slide.classList.add("entering");
