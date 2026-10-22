@@ -7,7 +7,7 @@
 - **Changed files:** `README.md`, `assets/js/aws-study-guide.js`, `assets/js/aws-study-visuals.js`, `aws-study-guide.html`, `docs/aws-data-eng-associate.md`, `docs/aws-study-review.md` (deleted), `docs/aws-study-source-coverage.json` (deleted), `tests/aws-study-guide-browser.js`, `tests/aws-study-guide.test.js`, `ai-session.md`.
 - **Changes:** Removed all 723 page markers and direct source attributions in the notes, removed page search and page-based URLs, and rekeyed all 329 diagrams by section and topic. Retired the source-specific coverage and review files. Existing user edits to the notes were retained.
 - **Verification:** A self-check resolved all 329 diagrams against 763 topics with unique diagram IDs and no unmatched keys. `node --check` passed for the changed JavaScript and test scripts. The full Node and browser suites were not run. `git diff --check` found trailing whitespace in pre-existing edited note lines.
-- **Commit:** Pending.
+- **Commit:** `fc37e65` (`chore: remove study deck source page references`).
 
 ## 2026-10-14 - Selectable Explorer relationships
 
