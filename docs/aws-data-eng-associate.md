@@ -2258,25 +2258,19 @@ flowchart TB
 
 # Section Databases
 
-<!-- original-note: 49 -->
-<!-- section -->
 
 ## Traditional Architecture
 
-
-A conventional web tier scales behind a load balancer while a relational database holds shared state.
+**A conventional web tier scales behind a load balancer while a relational database holds shared state.**
 
 - Traditional applications leverage RDBMS databases
 - These databases have the SQL query language
 - Strong requirements about how the data should be modeled
 - Ability to do query joins, aggregations, complex computations
-- Vertical scaling (getting a more powerful CPU / RAM / IO)
 - Horizontal scaling (increasing reading capability by adding EC2 / RDS Read Replicas)
-
 
 ```mermaid
 flowchart LR
-  accTitle: Traditional Architecture
   n0["Clients"]
   n1["Load balancer"]
   n2["Auto Scaling EC2 tier"]
@@ -2286,70 +2280,50 @@ flowchart LR
   n2 -->|"database queries"| n3
 ```
 
-> A conventional web tier scales behind a load balancer while a relational database holds shared state.
 
 ## NoSQL databases
 
+**NoSQL databases use non-relational models—key-value, document, wide-column or graph—optimized for particular access patterns and scaling needs.**
 
-NoSQL describes several non-relational data models. Choose one from its access pattern and scaling behavior rather than assuming every NoSQL database behaves alike.
+- **Model around queries:** denormalized records and keys can reduce joins.
+- **Capabilities vary:** some engines support aggregations, transactions and joins; do not assume uniform behavior.
+- **Choose by workload:** latency, access pattern, relationships, consistency and cost.
 
-- NoSQL databases include MongoDB, DynamoDB, …
-- NoSQL databases do not support query joins (or just limited support)
-- All the data that is needed for a query is present in one row
-- NoSQL databases don’t perform aggregations such as “SUM”, “AVG”, …
-- NoSQL databases scale horizontally
-- There’s no “right or wrong” for NoSQL vs SQL, they just require to model the data differently and think about user queries
 
 ## DynamoDB (NoSQL DBs)
 
-<!-- original-note: 50 -->
-<!-- title: Amazon DynamoDB -->
+**DynamoDB is a managed key-value/document database built for predictable low-latency access at scale.**
 
-DynamoDB is a managed key-value and document database for predictable, low-latency access at scale. Design keys around the reads and writes the application will perform.
-
-- NoSQL database - not a relational database
-- Scales to massive workloads, distributed database
-- Millions of requests per seconds, trillions of row, 100s of TB of storage
-- Fast and consistent in performance (low latency on retrieval)
-- Integrated with IAM for security, authorization and administration
-- Enables event driven programming with DynamoDB Streams
-- Low cost and auto-scaling capabilities
-
-### Basics
-
-<!-- original-note: 51 -->
-<!-- title: DynamoDB items and tables -->
-
-Each item is identified by its table's primary key; non-key attributes can vary between items. Item size and data types affect capacity and access design.
-
-- DynamoDB is made of Tables
-- Each table has a Primary Key (must be decided at creation time)
-- Each table can have an infinite number of items (= rows)
-- Each item has attributes (can be added over time – can be null)
-- Maximum size of an item is 400KB
-- Data types supported are:
-  - Scalar Types – String, Number, Binary, Boolean, Null
-  - Document Types – List, Map
-  - Set Types – String Set, Number Set, Binary Set
-
-- Non-key attributes can be added as the item model evolves; keep the required primary-key attributes consistent.
-
-### Primary Keys
-
-<!-- original-note: 52 -->
-<!-- title: DynamoDB primary keys -->
-
-A table uses either a partition key alone or a partition key with a sort key. The combined key uniquely identifies an item in the second model.
-
-- Option 1: Partition Key (HASH)
-  - Partition key must be unique for each item
-  - Partition key must be “diverse” so that the data is distributed
-  - Example: “User_ID” for a users table
-
+- **Design first:** partition and sort keys must match access patterns.
+- **Scale:** managed capacity modes, IAM integration and Global Tables where needed.
+- **Event driven:** DynamoDB Streams captures item changes.
 
 ```mermaid
 flowchart LR
-  accTitle: DynamoDB primary keys
+  A[Application] --> K[Partition-key lookup]
+  K --> D[(DynamoDB table)]
+  D --> S[Single-digit millisecond access]
+  D -.-> E[DynamoDB Streams]
+```
+
+
+## DynamoDB — Tables and Items
+
+**A DynamoDB table contains items identified by a primary key. Non-key attributes may differ between items.**
+
+- **Item size:** maximum 400 KB.
+- **Types:** scalar (String, Number, Binary, Boolean, Null); document (Map, List); sets (String, Number, Binary).
+- **Schema:** define key attributes upfront; evolve other attributes as needed.
+
+
+## DynamoDB — Simple Primary Key
+
+**A table uses either a partition key alone or a partition key with a sort key. The combined key uniquely identifies an item in the second model.**
+
+- **Option 1: Partition Key (HASH):** Partition key must be unique for each item; Partition key must be "diverse" so that the data is distributed; Example: "User_ID" for a users table
+
+```mermaid
+flowchart LR
   n0["Table"]
   n1["Partition key"]
   n2["Item attributes"]
@@ -2357,22 +2331,15 @@ flowchart LR
   n0 ---|"non-key attributes"| n2
 ```
 
-> A simple DynamoDB primary key consists of a partition key; its value uniquely identifies an item.
 
-## DynamoDB – Primary Keys
+## DynamoDB — Composite Primary Key
 
+**A composite key identifies an item by partition key plus sort key. Items with the same partition key form an ordered collection.**
 
-A composite key identifies an item by partition key plus sort key. Items with the same partition key form an ordered collection.
-
-- Option 2: Partition Key + Sort Key (HASH + RANGE)
-  - The combination must be unique for each item
-  - Data is grouped by partition key
-  - Example: users-games table, “User_ID” for Partition Key and “Game_ID” for Sort Key
-
+- **Option 2: Partition Key + Sort Key (HASH + RANGE):** The combination must be unique for each item; Data is grouped by partition key; Example: users-games table, "User_ID" for Partition Key and "Game_ID" for Sort Key
 
 ```mermaid
 flowchart LR
-  accTitle: DynamoDB – Primary Keys
   n0["Partition key"]
   n1["Sort key A"]
   n2["Sort key B"]
@@ -2382,96 +2349,76 @@ flowchart LR
   n0 ---|"item C"| n3
 ```
 
-> A composite key identifies an item by partition key plus sort key. Items with the same partition key form an ordered collection.
 
 ## DynamoDB – Partition Keys (Exercise)
 
+**A good movie-table partition key distributes data and traffic while matching the required access pattern.**
 
-A good movie-table partition key distributes data and traffic while matching the required access pattern.
+- We're building a movie database
+- **What is the best Partition Key to maximize data distribution?:** movie_id, producer_name, leader_actor_name, movie_language
+- "movie_id" has the highest cardinality so it's a good candidate
+- "movie_language" doesn't take many values and may be skewed towards English so it's not a great choice for the Partition Key
 
-- We’re building a movie database
-- What is the best Partition Key to maximize data distribution?
-  - movie_id
-  - producer_name
-  - leader_actor_name
-  - movie_language
-- “movie_id” has the highest cardinality so it’s a good candidate
-- “movie_language” doesn’t take many values and may be skewed towards English so it’s not a great choice for the Partition Key
 
-### DynamoDB use cases
+## DynamoDB use cases
 
-<!-- original-note: 53 -->
+**Choose DynamoDB for frequent, low-latency key-based operations with well-defined access patterns.**
 
-DynamoDB suits small, frequently accessed records with known lookup patterns, such as shopping carts, sessions, voting and device events.
+- **Applications:** sessions, shopping carts, gaming and voting.
+- **Operational data:** IoT device state, access records and metadata indexes.
+- **Not ideal:** relational reporting, ad-hoc joins or large blobs; store large objects in S3.
 
-- Common use cases include:
-  - Mobile apps
-  - Gaming
-  - Digital ad serving
-  - Live voting
-  - Audience interaction for live events
-  - Sensor networks
-  - Log ingestion
-  - Access control for web-based content
-  - Metadata storage for Amazon S3 objects
-  - E-commerce shopping carts
-  - Web session management
-                        - Anti Pattern
-                          - Prewritten application tied to a traditional relational database: use RDS instead
-                          - Joins or complex transactions
-                          - Binary Large Object (BLOB) data: store data in S3 & metadata in DynamoDB
-                          - Large data with low I/O rate: use S3 instead
 
-### DynamoDB Anti Pattern
+## DynamoDB Anti Pattern
 
-<!-- original-note: 54 -->
-<!-- title: DynamoDB anti-patterns -->
+**DynamoDB is a poor default for workloads dominated by relational joins, infrequent large scans or large binary objects.**
 
-Reconsider DynamoDB when the application depends on relational joins, large binary objects or large datasets with little request activity.
+- **Relational transactions/joins:** consider RDS or Aurora.
+- **Large binary objects:** store bytes in S3 and index metadata in DynamoDB.
+- **Ad-hoc OLAP:** use a data warehouse or analytics engine.
+
 
 ## DynamoDB capacity modes
 
+**Provisioned capacity and on-demand capacity express different planning and billing choices.**
 
-Provisioned capacity and on-demand capacity express different planning and billing choices.
+- Provisioned: configure RCU/WCU, optionally with Auto Scaling; suitable when capacity can be planned
+- On-demand: pay for read/write requests and let the service manage throughput within its scaling behavior and quotas
 
-- Provisioned: configure RCU/WCU, optionally with Auto Scaling; suitable when capacity can be planned.
-- On-demand: pay for read/write requests and let the service manage throughput within its scaling behavior and quotas.
-- Do not memorize the slide's default-mode or once-per-day switching claims as universal; mode changes have documented direction-specific limits.
+```mermaid
+flowchart TB
+  A{Traffic predictable?} -->|Yes| B[Provisioned capacity]
+  A -->|Variable or unknown| C[On-demand]
+  B --> D[Configure RCU and WCU / autoscaling]
+  C --> E[Pay per request; service scales capacity]
+```
 
-**Current reference (checked 2026-10-13):** [DynamoDB capacity modes](https://docs.aws.amazon.com/amazondynamodb/latest/developerguide/capacity-mode.html).
+<!-- Source reference: https://docs.aws.amazon.com/amazondynamodb/latest/developerguide/capacity-mode.html -->
 
-### Read Capacity Unit and Write Capacity Unit (RCU and WCU)
 
-<!-- original-note: 55 -->
-<!-- title: DynamoDB provisioned capacity -->
+## Read Capacity Unit and Write Capacity Unit (RCU and WCU)
 
-Provisioned capacity sets read and write throughput explicitly. Calculate units from item size and read consistency, then decide whether to adjust capacity manually or through scaling.
+**Provisioned capacity sets read and write throughput explicitly. Calculate units from item size and read consistency, then decide whether to adjust capacity manually or through scaling.**
 
 - Read Capacity Units (RCU) – throughput for reads
 - Write Capacity Units (WCU) – throughput for writes
 - Option to setup auto-scaling of throughput to meet demand
-- Throughput can be exceeded temporarily using “Burst Capacity”
-- If Burst Capacity has been consumed, you’ll get a “ProvisionedThroughputExceededException”
-- It’s then advised to do an exponential backoff retry
+- Throughput can be exceeded temporarily using "Burst Capacity"
+- If Burst Capacity has been consumed, you'll get a "ProvisionedThroughputExceededException"
+- It's then advised to do an exponential backoff retry
+
 
 ## DynamoDB – Write Capacity Units (WCU)
 
+**For standard provisioned writes, round item size up to whole KB, then multiply by writes per second.**
 
-For provisioned standard writes, round each item up to 1 KB and multiply by writes per second; transactional writes cost twice as much.
-
-- One Write Capacity Unit (WCU) represents one write per second for an item up to 1 KB in size
-- If the items are larger than 1 KB, more WCUs are consumed
-- Example 1: we write 10 items per second, with item size 2 KB
-  - We need 10 ∗(
-- Example 2: we write 6 items per second, with item size 4.5 KB
-  - We need 6 ∗( 1 𝐾𝐵) = 30 𝑊𝐶𝑈𝑠 (4.5 gets rounded to the upper KB)
-- Example 3: we write 120 items per minute, with item size 2 KB
-  - We need
-
+- **Formula:** WCUs = writes/s × ceil(item size ÷ 1 KB). Transactional writes use 2× capacity.
+- **Example A:** 10 writes/s × 2 KB = **20 WCUs**.
+- **Example B:** 6 writes/s × 4.5 KB (round to 5) = **30 WCUs**.
+- **Example C:** 120 writes/min (2/s) × 2 KB = **4 WCUs**.
 
 ```mermaid
 flowchart LR
-  accTitle: DynamoDB – Write Capacity Units (WCU)
   n0["Item size"]
   n1["Round up / 1 KB"]
   n2["Writes per second"]
@@ -2481,25 +2428,17 @@ flowchart LR
   n2 -->|"multiply"| n3
 ```
 
-> For provisioned standard writes, round each item up to 1 KB and multiply by writes per second; transactional writes cost twice as much.
 
-### Strongly Consistent Read vs Eventually Conssistent read
+## DynamoDB — Read Consistency
 
-<!-- original-note: 56 -->
-<!-- title: DynamoDB read consistency -->
+**Eventually consistent reads may briefly return stale values. Strongly consistent reads return the latest successful write where supported.**
 
-An eventual read can briefly return an older value. A supported strongly consistent read returns the latest successful write, using more read capacity.
-
-- Eventually Consistent Read (default)
-  - If we read just after a write, it’s possible we’ll get some stale data because of replication
-- Strongly Consistent Read
-  - If we read just after a write, we will get the correct data
-  - Set “ConsistentRead” parameter to True in API calls (GetItem, BatchGetItem, Query, Scan)
-
+- **Default:** eventually consistent reads use less RCU capacity.
+- **Strongly consistent:** use `ConsistentRead=true` for supported table and LSI operations; GSIs do not support strong reads.
+- **Trade-off:** freshness requirements versus read throughput and cost.
 
 ```mermaid
 flowchart LR
-  accTitle: DynamoDB read consistency
   n0["Application"]
   n1["Write path"]
   n2["Replica state"]
@@ -2509,25 +2448,17 @@ flowchart LR
   n2 -->|"consistency depends on read mode"| n3
 ```
 
-> An eventually consistent read can briefly lag a completed write. Strongly consistent reads return the latest successful write where supported.
 
 ## DynamoDB – Read Capacity Units (RCU)
 
+**Provisioned read capacity rounds each item to a 4 KB unit; consistency changes the multiplier.**
 
-Round each item up to 4 KB. Strong reads use one RCU per unit per second; eventual reads use half and transactional reads use two.
-
-- One Read Capacity Unit (RCU) represents one Strongly Consistent Read per second, or two Eventually Consistent Reads per second, for an item up to 4 KB in size
-- If the items are larger than 4 KB, more RCUs are consumed
-- Example 1: 10 Strongly Consistent Reads per second, with item size 4 KB
-  - We need 10 ∗ 4 𝐾𝐵= 10 𝑅𝐶𝑈𝑠
-- Example 2: 16 Eventually Consistent Reads per second, with item size 12 KB
-  - We need 16
-- Example 3: 10 Strongly Consistent Reads per second, with item size 6 KB
-
+- **Formula:** RCUs = reads/s × ceil(item size ÷ 4 KB) × multiplier.
+- **Multipliers:** strong = 1; eventual = 0.5; transactional = 2.
+- **Examples:** 10 strong reads/s of 4 KB → **10 RCUs**; 16 eventual reads/s of 12 KB → **24 RCUs**; 10 strong reads/s of 6 KB → **20 RCUs**.
 
 ```mermaid
 flowchart LR
-  accTitle: DynamoDB – Read Capacity Units (RCU)
   n0["Item size"]
   n1["Round up / 4 KB"]
   n2["Read rate + consistency"]
@@ -2537,27 +2468,17 @@ flowchart LR
   n2 -->|"apply multiplier"| n3
 ```
 
-> Round each item up to 4 KB. Strong reads use one RCU per unit per second; eventual reads use half and transactional reads use two.
 
-### Partitions Internal
+## DynamoDB — Internal Partitions
 
-<!-- original-note: 57 -->
-<!-- title: DynamoDB partitions -->
+**DynamoDB hashes partition-key values to distribute records. Uneven request rates may create hot physical partitions.**
 
-DynamoDB hashes partition keys to place items on physical partitions. Uneven traffic can exhaust a partition even when table-wide capacity appears sufficient.
-
-- Data is stored in partitions
-- Partition Keys go through a hashing algorithm to know to which partition they go to
-- To compute the number of partitions:
-  - # 𝑜𝑓 𝑝𝑎𝑟𝑡𝑖𝑡𝑖𝑜𝑛𝑠𝑏𝑦 𝑐𝑎𝑝𝑎𝑐𝑖𝑡𝑦= + ( )
-  - # 𝑜𝑓 𝑝𝑎𝑟𝑡𝑖𝑡𝑖𝑜𝑛𝑠𝑏𝑦 𝑠𝑖𝑧𝑒=
-  - # 𝑜𝑓 𝑝𝑎𝑟𝑡𝑖𝑡𝑖𝑜𝑛𝑠= ceil(max # 𝑜𝑓 𝑝𝑎𝑟𝑡𝑖𝑡𝑖𝑜𝑛𝑠𝑏𝑦 𝑐𝑎𝑝𝑎𝑐𝑖𝑡𝑦, # 𝑜𝑓 𝑝𝑎𝑟𝑡𝑖𝑡𝑖𝑜𝑛𝑠𝑏𝑦 𝑠𝑖𝑧𝑒)
-- WCUs and RCUs are spread evenly across partitions
-
+- **Good key:** distribute traffic across many partition-key values, not only evenly distribute storage.
+- **Watch:** hot keys, throttled requests, request-unit usage and item sizes.
+- **Response:** revise access patterns, add safe caching or retries, and use adaptive capacity where applicable.
 
 ```mermaid
 flowchart LR
-  accTitle: DynamoDB partitions
   n0["Partition-key value"]
   n1["Hash function"]
   n2["Partition A"]
@@ -2569,154 +2490,108 @@ flowchart LR
   n1 -->|"placement"| n4
 ```
 
-> DynamoDB hashes the partition-key value to place data; uneven key traffic can create a hot partition.
 
-### Throttling
+## DynamoDB — Throttling
 
-<!-- original-note: 58 -->
-<!-- title: DynamoDB throttling -->
+**Throttling means a request exceeded an applicable capacity limit. Inspect hot keys, item sizes and configured capacity before choosing retries, redistribution or a read cache.**
 
-Throttling means a request exceeded an applicable capacity limit. Inspect hot keys, item sizes and configured capacity before choosing retries, redistribution or a read cache.
+- **Reasons:** Hot Keys – one partition key is being read too many times (e.g., popular item); Hot Partitions; Very large items, remember RCU and WCU depends on size of items
+- **Solutions:** Exponential backoff when exception is encountered (already in SDK); Distribute partition keys as much as possible; If RCU issue, we can use DynamoDB Accelerator (DAX)
 
-- Reasons:
-  - Hot Keys – one partition key is being read too many times (e.g., popular item)
-  - Hot Partitions
-  - Very large items, remember RCU and WCU depends on size of items
-- Solutions:
-  - Exponential backoff when exception is encountered (already in SDK)
-  - Distribute partition keys as much as possible
-  - If RCU issue, we can use DynamoDB Accelerator (DAX)
 
-### R/W Capacity Modes - On-Demanda
+## DynamoDB — On-Demand Capacity
 
-<!-- original-note: 59 -->
-<!-- title: DynamoDB on-demand capacity -->
+**On-demand billing removes explicit RCU/WCU provisioning, but hot partitions, quotas and rapid traffic changes can still throttle requests.**
 
-On-demand billing removes explicit RCU/WCU provisioning, but hot partitions, quotas and rapid traffic changes can still throttle requests.
+- Hot partitions, table/account quotas, configured maximum throughput and rapid workload changes can still limit requests
+- Billing uses read/write request units; the item-size and consistency multipliers still matter
+- Compare actual utilization and prices instead of relying on a fixed price ratio
 
-- Hot partitions, table/account quotas, configured maximum throughput and rapid workload changes can still limit requests.
-- Billing uses read/write request units; the item-size and consistency multipliers still matter.
-- Compare actual utilization and prices instead of relying on a fixed price ratio.
+<!-- Source reference: https://docs.aws.amazon.com/amazondynamodb/latest/developerguide/TroubleshootingThrottling.html -->
 
-**Current reference (checked 2026-10-13):** [DynamoDB throttling causes](https://docs.aws.amazon.com/amazondynamodb/latest/developerguide/TroubleshootingThrottling.html).
 
-### Basic APIs
+## DynamoDB — API Overview
 
-<!-- original-note: 60 -->
-<!-- title: DynamoDB APIs -->
+**Use item APIs for individual records, Query for a partition-key access pattern, Scan for a broad examination, and batch APIs to group supported operations.**
 
-Use item APIs for individual records, Query for a partition-key access pattern, Scan for a broad examination, and batch APIs to group supported operations.
+```mermaid
+flowchart LR
+  A[DynamoDB operation] --> B[GetItem / PutItem / UpdateItem]
+  A --> C[Query by partition key]
+  A --> D[Scan table or index]
+  A --> E[BatchGet / BatchWrite]
+```
+
 
 ## DynamoDB – Writing Data
 
+**DynamoDB write APIs differ in whether they replace an item, update attributes or perform grouped work.**
 
-DynamoDB write APIs differ in whether they replace an item, update attributes or perform grouped work.
+- **PutItem:** Creates a new item or fully replace an old item (same Primary Key); Consumes WCUs
+- **UpdateItem:** Edits an existing item's attributes or adds a new item if it doesn't exist; Can be used to implement Atomic Counters – a numeric attribute that's unconditionally incremented
+- **Conditional Writes:** Accept a write/update/delete only if conditions are met, otherwise returns an error; Helps with concurrent access to items; No performance impact
 
-- PutItem
-  - Creates a new item or fully replace an old item (same Primary Key)
-  - Consumes WCUs
-- UpdateItem
-  - Edits an existing item’s attributes or adds a new item if it doesn’t exist
-  - Can be used to implement Atomic Counters – a numeric attribute that’s unconditionally incremented
-- Conditional Writes
-  - Accept a write/update/delete only if conditions are met, otherwise returns an error
-  - Helps with concurrent access to items
-  - No performance impact
 
 ## DynamoDB – Reading Data
 
+**GetItem reads by the complete primary key; use projections and consistency settings deliberately.**
 
-GetItem reads by the complete primary key; use projections and consistency settings deliberately.
+- **GetItem:** Read based on Primary key · Primary Key can be HASH or HASH+RANGE · Eventually Consistent Read (default) · Option to use Strongly Consistent Reads (more RCU - might take longer) · ProjectionExpression can be specified to retrieve…
 
-- GetItem
-  - Read based on Primary key
-  - Primary Key can be HASH or HASH+RANGE
-  - Eventually Consistent Read (default)
-  - Option to use Strongly Consistent Reads (more RCU - might take longer)
-  - ProjectionExpression can be specified to retrieve only certain attributes
 
 ## DynamoDB – Reading Data (Query)
 
+**Query selects one partition-key value and can narrow the sort-key range; a filter is applied after reading.**
 
-Query selects one partition-key value and can narrow the sort-key range; a filter is applied after reading.
-
-- Query returns items based on:
-  - KeyConditionExpression
-    - Partition Key value (must be = operator) – required
-    - Sort Key value (=, <, <=, >, >=, Between, Begins with) – optional
-  - FilterExpression
-    - Additional filtering after the Query operation (before data returned to you)
-    - Use only with non-key attributes (does not allow HASH or RANGE attributes)
-- Returns:
-  - The number of items specified in Limit
-  - Or up to 1 MB of data
+- **Query returns items based on:** KeyConditionExpression · Partition Key value (must be = operator) – required · Sort Key value (=, <, <=, >, >=, Between, Begins with) – optional · FilterExpression · Additional filtering after the Query…
+- **Returns:** The number of items specified in Limit; Or up to 1 MB of data
 - Ability to do pagination on the results
 - Can query table, a Local Secondary Index, or a Global Secondary Index
 
+
 ## DynamoDB – Reading Data (Scan)
 
-
-A Scan examines a broad set of items before applying its filter. Filtering the response does not avoid the read work already performed.
+**A Scan examines a broad set of items before applying its filter. Filtering the response does not avoid the read work already performed.**
 
 - Returns up to 1 MB of data – use pagination to keep on reading
 - Consumes a lot of RCU
 - Limit impact using Limit or reduce the size of the result and pause
-- For faster performance, use Parallel Scan
-  - Multiple workers scan multiple data segments at the same time
-  - Increases the throughput and RCU consumed
-  - Limit the impact of parallel scans just like you would for Scans
+- **For faster performance, use Parallel Scan:** Multiple workers scan multiple data segments at the same time; Increases the throughput and RCU consumed; Limit the impact of parallel scans just like you would for Scans
 - Can use ProjectionExpression & FilterExpression (no changes to RCU)
+
 
 ## DynamoDB – Deleting Data
 
+**Deletion APIs remove individual or batched items; conditions help guard concurrent changes.**
 
-Deletion APIs remove individual or batched items; conditions help guard concurrent changes.
+- **DeleteItem:** Delete an individual item; Ability to perform a conditional delete
+- **DeleteTable:** Delete a whole table and all its items; Much quicker deletion than calling DeleteItem on all items
 
-- DeleteItem
-  - Delete an individual item
-  - Ability to perform a conditional delete
-- DeleteTable
-  - Delete a whole table and all its items
-  - Much quicker deletion than calling DeleteItem on all items
 
 ## DynamoDB – Batch Operations
 
+**Batch APIs reduce request overhead; partial failures must be retried. Batches are not atomic transactions.**
 
-Batch operations group supported requests to reduce call overhead. Inspect unprocessed items and retry them; a grouped request is not automatically an atomic transaction.
+- **BatchWriteItem:** up to 25 puts/deletes, 16 MB total; no UpdateItem; retry `UnprocessedItems`.
+- **BatchGetItem:** up to 100 keys, 16 MB; retry `UnprocessedKeys`.
+- **Reliability:** use exponential backoff, handle duplicate execution, and use transactional APIs when atomicity is required.
 
-- Operations are done in parallel for better efficiency
-- Part of a batch can fail; in which case we need to try again for the failed items
-- BatchWriteItem
-  - Up to 25 PutItem and/or DeleteItem in one call
-  - Up to 16 MB of data written, up to 400 KB of data per item
-  - Can’t update items (use UpdateItem)
-  - UnprocessedItems for failed write operations (exponential backoff or add WCU)
-- BatchGetItem
-  - Return items from one or more tables
-  - Up to 100 items, up to 16 MB of data
-  - Items are retrieved in parallel to minimize latency
-  - UnprocessedKeys for failed read operations (exponential backoff or add RCU)
 
-### DynamoDB – PartiQL
+## DynamoDB – PartiQL
 
-<!-- original-note: 61 -->
-<!-- title: DynamoDB PartiQL -->
+**PartiQL offers SQL-like syntax for DynamoDB operations; it does not turn the table into a relational database or remove key-based access constraints.**
 
-PartiQL offers SQL-like syntax for DynamoDB operations; it does not turn the table into a relational database or remove key-based access constraints.
+- Supported operations include SELECT, INSERT, UPDATE and DELETE
+- A SELECT addresses one table or index; do not infer relational joins across DynamoDB tables
+- A partition-key equality or IN condition can avoid a full scan; filtering only on other attributes can scan the table
+- Submit supported statements through the console, NoSQL Workbench, CLI, SDK or DynamoDB APIs
 
-- Supported operations include SELECT, INSERT, UPDATE and DELETE.
-- A SELECT addresses one table or index; do not infer relational joins across DynamoDB tables.
-- A partition-key equality or IN condition can avoid a full scan; filtering only on other attributes can scan the table.
-- Submit supported statements through the console, NoSQL Workbench, CLI, SDK or DynamoDB APIs.
+<!-- Source reference: https://docs.aws.amazon.com/amazondynamodb/latest/developerguide/ql-reference.select.html -->
 
-**Current reference (checked 2026-10-13):** [DynamoDB PartiQL SELECT](https://docs.aws.amazon.com/amazondynamodb/latest/developerguide/ql-reference.select.html).
 
-### DynamoDB - Local Secondary Index
+## DynamoDB - Local Secondary Index
 
-<!-- original-note: 62 -->
-<!-- title: DynamoDB local secondary indexes -->
-
-An LSI retains the table's partition key and supplies another sort key. Plan it when creating the table because it cannot be added afterward.
+**An LSI retains the table's partition key and supplies another sort key. Plan it when creating the table because it cannot be added afterward.**
 
 - Alternative Sort Key for your table (same Partition Key as that of base table)
 - The Sort Key consists of one scalar attribute (String, Number, or Binary)
@@ -2724,10 +2599,8 @@ An LSI retains the table's partition key and supplies another sort key. Plan it 
 - Must be defined at table creation time
 - Attribute Projections – can contain some or all the attributes of the base table (KEYS_ONLY, INCLUDE, ALL)
 
-
 ```mermaid
 flowchart LR
-  accTitle: DynamoDB local secondary indexes
   n0["Base table partition key"]
   n1["Base sort key"]
   n2["LSI alternate sort key"]
@@ -2735,26 +2608,19 @@ flowchart LR
   n0 ---|"alternate order"| n2
 ```
 
-> An LSI retains the base table's partition key and supplies another sort key within that item collection.
 
-### DynamoDB - GLobal Secondary Indez
+## DynamoDB — Global Secondary Index (GSI)
 
-<!-- original-note: 63 -->
-<!-- title: DynamoDB global secondary indexes -->
-
-A GSI provides another partition-key and optional sort-key access path. Its projections and capacity behavior are separate design choices from the base table.
+**A GSI provides another partition-key and optional sort-key access path. Its projections and capacity behavior are separate design choices from the base table.**
 
 - Alternative Primary Key (HASH or HASH+RANGE) from the base table
 - Speed up queries on non-key attributes
 - The Index Key consists of scalar attributes (String, Number, or Binary)
 - Attribute Projections – some or all the attributes of the base table (KEYS_ONLY, INCLUDE, ALL)
 - Must provision RCUs & WCUs for the index
-- Can be added/modified after table creation
-
 
 ```mermaid
 flowchart LR
-  accTitle: DynamoDB global secondary indexes
   n0["Base table"]
   n1["GSI partition key"]
   n2["GSI sort key"]
@@ -2764,53 +2630,35 @@ flowchart LR
   n1 ---|"index projection"| n3
 ```
 
-> A GSI supports a different partition key and optional sort key; projected attributes determine what the index contains.
 
-## DynamoDB – Indexes and Throttling
+## DynamoDB — Index Capacity & Throttling
 
+**Index capacity and hot keys can constrain table writes as well as index queries.**
 
-Index capacity and hot keys can constrain table writes as well as index queries.
+- **Global Secondary Index (GSI):** If the writes are throttled on the GSI, then the main table will be throttled!; Even if the WCU on the main tables are fine; Choose your GSI partition key carefully!; Assign your WCU capacity carefully!
+- **Local Secondary Index (LSI):** Uses the WCUs and RCUs of the main table; No special throttling considerations
 
-- Global Secondary Index (GSI):
-  - If the writes are throttled on the GSI, then the main table will be throttled!
-  - Even if the WCU on the main tables are fine
-  - Choose your GSI partition key carefully!
-  - Assign your WCU capacity carefully!
-- Local Secondary Index (LSI):
-  - Uses the WCUs and RCUs of the main table
-  - No special throttling considerations
 
 ## DynamoDB PartiQL operations
 
+**PartiQL expresses supported item operations with familiar SQL-like statements. Batch execution is separate from a relational join across tables.**
 
-PartiQL expresses supported item operations with familiar SQL-like statements. Batch execution is separate from a relational join across tables.
-
-- Supports some (but not all) statements:
-  - INSERT
-  - UPDATE
-  - SELECT
-  - DELETE
+- **Supports some (but not all) statements:** INSERT, UPDATE, SELECT, DELETE
 - It supports Batch operations
 
-### DynamoDB Accelerator (DAX)
 
-<!-- original-note: 64 -->
+## DynamoDB Accelerator (DAX)
 
-DAX caches DynamoDB reads to reduce response latency and repeated read traffic. It helps read-heavy access patterns rather than increasing write capacity.
+**DAX caches DynamoDB reads to reduce response latency and repeated read traffic. It helps read-heavy access patterns rather than increasing write capacity.**
 
 - Fully-managed, highly available, seamless in- memory cache for DynamoDB
-- Microseconds latency for cached reads & queries
-- Doesn’t require application logic modification (compatible with existing DynamoDB APIs)
-- Solves the “Hot Key” problem (too many reads)
 - 5 minutes TTL for cache (default)
 - Up to 10 nodes in the cluster
 - Multi-AZ (3 nodes minimum recommended for production)
 - Secure (Encryption at rest with KMS, VPC, IAM, CloudTrail, …)
 
-
 ```mermaid
 flowchart LR
-  accTitle: DynamoDB Accelerator (DAX)
   n0["Application"]
   n1["DAX cluster"]
   n2["DynamoDB"]
@@ -2818,21 +2666,15 @@ flowchart LR
   n1 -->|"miss / write-through"| n2
 ```
 
-> DAX caches supported DynamoDB reads. Cache misses reach DynamoDB; supported writes pass through to the table.
 
-### Dax vs Elasticache
+## DAX vs ElastiCache
 
-<!-- original-note: 65 -->
-<!-- title: DAX and ElastiCache -->
+**Use DAX for DynamoDB-compatible item and query caching. Use an application-managed cache when you need to store independently computed results, such as aggregates.**
 
-Use DAX for DynamoDB-compatible item and query caching. Use an application-managed cache when you need to store independently computed results, such as aggregates.
-
-- Example: cache a computed aggregate in an application cache when it will be read many times, rather than expecting DAX to compute that aggregate.
-
+- Example: cache a computed aggregate in an application cache when it will be read many times, rather than expecting DAX to compute that aggregate
 
 ```mermaid
 flowchart LR
-  accTitle: DAX and ElastiCache
   n0["Application"]
   n1["DAX"]
   n2["DynamoDB"]
@@ -2842,26 +2684,19 @@ flowchart LR
   n0 -->|"aggregate-result cache"| n3
 ```
 
-> DAX accelerates DynamoDB item/query reads; ElastiCache can separately cache computed application results.
 
-### DynamoDB Streams
+## DynamoDB Streams
 
-<!-- original-note: 66 -->
+**DynamoDB Streams records item changes for consumers that react to inserts, updates and deletes. Retention and item-image selection shape what a consumer can reconstruct.**
 
-DynamoDB Streams records item changes for consumers that react to inserts, updates and deletes. Retention and item-image selection shape what a consumer can reconstruct.
-
-- DynamoDB Streams retains changes for 24 hours and preserves modification order for each item.
-- Lambda or a supported Streams adapter can process the change records.
-- Kinesis Data Streams for DynamoDB is a separate change-capture option; it is not an automatic destination appended to DynamoDB Streams.
-- Applications can use changes to send notifications, maintain derived tables or feed search and analytics systems through an appropriate processing path.
-- Consumer retries still require safe handling of repeated processing.
-
-**Current reference (checked 2026-10-13):** [DynamoDB change-capture options](https://docs.aws.amazon.com/amazondynamodb/latest/developerguide/streamsmain.html).
-
+- DynamoDB Streams retains changes for 24 hours and preserves modification order for each item
+- Lambda or a supported Streams adapter can process the change records
+- Kinesis Data Streams for DynamoDB is a separate change-capture option; it is not an automatic destination appended to DynamoDB Streams
+- Applications can use changes to send notifications, maintain derived tables or feed search and analytics systems through an appropriate processing path
+- Consumer retries still require safe handling of repeated processing
 
 ```mermaid
 flowchart LR
-  accTitle: DynamoDB Streams
   n0["DynamoDB table<br/>Create · update · delete"]
   n1["DynamoDB Streams<br/>Ordered change records"]
   n2["AWS Lambda<br/>Event source mapping"]
@@ -2873,17 +2708,15 @@ flowchart LR
   n2 -->|"index"| n4
 ```
 
-> A DynamoDB change record flows through DynamoDB Streams to Lambda, which can route it to analytics, search, or derived data stores.
+<!-- Source reference: https://docs.aws.amazon.com/amazondynamodb/latest/developerguide/streamsmain.html -->
+
 
 ## DynamoDB change-capture paths
 
-
-DynamoDB change capture has separate Streams and Kinesis integration paths; downstream consumers process changes asynchronously.
-
+**DynamoDB change capture has separate Streams and Kinesis integration paths; downstream consumers process changes asynchronously.**
 
 ```mermaid
 flowchart TB
-  accTitle: DynamoDB change-capture paths
   n0["DynamoDB table"]
   n1["DynamoDB Streams"]
   n2["Lambda / Streams consumer"]
@@ -2899,33 +2732,27 @@ flowchart TB
   n5 -->|"configured destination"| n6
 ```
 
-> DynamoDB change capture has separate Streams and Kinesis integration paths; downstream consumers process changes asynchronously.
 
 ## DynamoDB stream images
 
+**StreamViewType selects keys, the old item image, the new image or both. Choose the information that downstream processing needs before enabling change capture.**
 
-StreamViewType selects keys, the old item image, the new image or both. Choose the information that downstream processing needs before enabling change capture.
+- KEYS_ONLY: primary-key attributes
+- NEW_IMAGE: the item after the change
+- NEW_AND_OLD_IMAGES: both versions
+- DynamoDB manages the stream's shards; enabling a stream does not backfill earlier table changes
 
-- KEYS_ONLY: primary-key attributes.
-- NEW_IMAGE: the item after the change.
-- OLD_IMAGE: the item before the change.
-- NEW_AND_OLD_IMAGES: both versions.
-- DynamoDB manages the stream's shards; enabling a stream does not backfill earlier table changes.
 
-### DynamoDB Streams & AWS Lambda
+## DynamoDB Streams & AWS Lambda
 
-<!-- original-note: 67 -->
-
-A Lambda event source mapping polls DynamoDB Streams and invokes the function with batches. Give the function the required stream permissions and handle retries safely.
+**A Lambda event source mapping polls DynamoDB Streams and invokes the function with batches. Give the function the required stream permissions and handle retries safely.**
 
 - You need to define an Event Source Mapping to read from a DynamoDB Streams
 - You need to ensure the Lambda function has the appropriate permissions
 - Your Lambda function is invoked synchronously
 
-
 ```mermaid
 flowchart LR
-  accTitle: DynamoDB Streams & AWS Lambda
   n0["DynamoDB"]
   n1["Streams shards"]
   n2["Lambda event source mapping"]
@@ -2935,27 +2762,19 @@ flowchart LR
   n2 -->|"invoke"| n3
 ```
 
-> A Lambda event source mapping polls DynamoDB Streams and invokes a function with batches; the table does not synchronously call the function.
 
-### DynamoDB – Time To Live (TTL)
+## DynamoDB – Time To Live (TTL)
 
-<!-- original-note: 68 -->
-<!-- title: DynamoDB TTL -->
-
-TTL marks items for eventual deletion using an epoch-time Number attribute. Expiration is not an immediate access-control or deletion boundary.
+**TTL marks items for eventual deletion using an epoch-time Number attribute. Expiration is not an immediate access-control or deletion boundary.**
 
 - Automatically delete items after an expiry timestamp
-- Doesn’t consume any WCUs (i.e., no extra cost)
-- The TTL attribute must be a “Number” data type with “Unix Epoch timestamp” value
+- Doesn't consume any WCUs (i.e., no extra cost)
+- The TTL attribute must be a "Number" data type with "Unix Epoch timestamp" value
 - Expired items deleted within few days of expiration
-- Expired items, that haven’t been deleted, appears in reads/queries/scans (if you don’t want them, filter them out)
-- Expired items are deleted from both LSIs and GSIs
-- A delete operation for each expired item enters the DynamoDB Streams (can help recover expired items)
-
+- Expired items, that haven't been deleted, appears in reads/queries/scans (if you don't want them, filter them out)
 
 ```mermaid
 flowchart LR
-  accTitle: DynamoDB TTL
   n0["TTL attribute"]
   n1["Background expiry"]
   n2["Item deletion"]
@@ -2965,21 +2784,15 @@ flowchart LR
   n2 -->|"deletion record"| n3
 ```
 
-> TTL removes expired items asynchronously; deletions can appear in Streams for downstream processing.
 
-### Use cases Large Objects Pattern / Indexing s3 Objects Metadata
+## DynamoDB + S3 — Large Object Pattern
 
-<!-- original-note: 69 -->
-<!-- title: Large objects and S3 metadata -->
+**Keep large object bytes in S3 and store their identifiers or searchable metadata in DynamoDB. This separates blob storage from low-latency metadata access.**
 
-Keep large object bytes in S3 and store their identifiers or searchable metadata in DynamoDB. This separates blob storage from low-latency metadata access.
-
-- The related metadata-indexing example uses S3 for the object and DynamoDB for the fields needed to find or describe it.
-
+- The related metadata-indexing example uses S3 for the object and DynamoDB for the fields needed to find or describe it
 
 ```mermaid
 flowchart LR
-  accTitle: Large objects and S3 metadata
   n0["Application"]
   n1["S3 object"]
   n2["DynamoDB metadata"]
@@ -2990,17 +2803,13 @@ flowchart LR
   n1 -->|"download authorized object"| n3
 ```
 
-> Store large object bytes in S3 and their searchable metadata and object reference in DynamoDB.
 
 ## DynamoDB – Indexing S3 Objects Metadata
 
-
-An S3 event can trigger metadata extraction into DynamoDB, which an API queries independently of the object download.
-
+**An S3 event can trigger metadata extraction into DynamoDB, which an API queries independently of the object download.**
 
 ```mermaid
 flowchart LR
-  accTitle: DynamoDB – Indexing S3 Objects Metadata
   n0["S3 upload"]
   n1["Lambda"]
   n2["DynamoDB metadata"]
@@ -3012,36 +2821,24 @@ flowchart LR
   n3 -->|"query"| n2
 ```
 
-> An S3 event can trigger metadata extraction into DynamoDB, which an API queries independently of the object download.
 
-### DynamoDB security and other features
+## DynamoDB security and other features
 
-<!-- original-note: 70 -->
+**DynamoDB access combines IAM authorization, network access, encryption and recovery features. Apply fine-grained restrictions where clients access their own records directly.**
 
-DynamoDB access combines IAM authorization, network access, encryption and recovery features. Apply fine-grained restrictions where clients access their own records directly.
-
-- Security
-  - VPC Endpoints available to access DynamoDB without using the Internet
-  - Access fully controlled by IAM
-  - Encryption at rest using AWS KMS and in-transit using SSL/TLS
-- Backup and Restore feature available
-  - Point-in-time Recovery (PITR) like RDS
-  - No performance impact
-- Global Tables
-  - Multi-region, multi-active, fully replicated, high performance
-- DynamoDB Local
-  - Develop and test apps locally without accessing the DynamoDB web service (without Internet)
+- **Security:** VPC Endpoints available to access DynamoDB without using the Internet; Access fully controlled by IAM; Encryption at rest using AWS KMS and in-transit using SSL/TLS
+- **Backup and Restore feature available:** Point-in-time Recovery (PITR) like RDS; No performance impact
+- **Global Tables:** Multi-region, multi-active, fully replicated, high performance
+- **DynamoDB Local:** Develop and test apps locally without accessing the DynamoDB web service (without Internet)
 - AWS Database Migration Service (AWS DMS) can be used to migrate to DynamoDB (from MongoDB, Oracle, MySQL, S3, …)
+
 
 ## DynamoDB – Users Interact with DynamoDB Directly
 
-
-Federated identity obtains temporary AWS credentials; IAM policies then authorize the DynamoDB request.
-
+**Federated identity obtains temporary AWS credentials; IAM policies then authorize the DynamoDB request.**
 
 ```mermaid
 flowchart LR
-  accTitle: DynamoDB – Users Interact with DynamoDB Directly
   n0["Identity provider"]
   n1["Federation / STS"]
   n2["Temporary credentials"]
@@ -3051,188 +2848,156 @@ flowchart LR
   n2 -->|"signed authorized request"| n3
 ```
 
-> Federated identity obtains temporary AWS credentials; IAM policies then authorize the DynamoDB request.
 
 ## DynamoDB – Fine-Grained Access Control
 
-
-Temporary credentials and IAM conditions can restrict direct client access to a user's own keys and attributes. Authentication alone does not establish that data boundary.
+**Temporary credentials and IAM conditions can restrict direct client access to a user's own keys and attributes. Authentication alone does not establish that data boundary.**
 
 - You can assign an IAM Role to these users with a Condition to limit their API access to DynamoDB
 - LeadingKeys – limit row-level access for users on the Primary Key
 - Attributes – limit specific attributes the user can see
 
+
 ## Amazon RDS - Hosted relational Database
 
-<!-- original-note: 71 -->
-<!-- title: Amazon RDS -->
+**Amazon RDS operates managed relational databases for applications that need SQL, transactions and relational constraints.**
 
-RDS manages supported relational engines, while applications remain responsible for transaction design, schemas, queries and access patterns.
+- **Engines:** PostgreSQL, MySQL, MariaDB, Oracle, SQL Server; Aurora is AWS’s compatible managed database family.
+- **Typical workload:** OLTP, indexes, ACID transactions and application data.
+- **Analytics:** export or replicate large analytical workloads to services such as Redshift or S3 when appropriate.
 
-- Hosted relational database
-  - Amazon Aurora
-  - MySQL
-  - PostgreSQL
-  - MariaDB
-  - Oracle
-  - SQL Server
-- Not for “big data”
-  - Might appear on exam as an example of what not to use
-  - Or in the context of migrating from RDS to Redshift etc.
 
 ## ACID
 
+**ACID means atomicity, consistency, isolation and durability; transactions preserve these properties within the engine's documented guarantees.**
 
-ACID means atomicity, consistency, isolation and durability; transactions preserve these properties within the engine's documented guarantees.
+- **RDS databases offer full ACID compliance:** Atomicity, Consistency, Isolation, Durability
 
-- RDS databases offer full ACID compliance
-  - Atomicity
-  - Consistency
-  - Isolation
-  - Durability
+```mermaid
+flowchart TB
+  T[Database transaction] --> A[Atomicity: all or nothing]
+  T --> C[Consistency: preserve constraints]
+  T --> I[Isolation: control concurrent work]
+  T --> D[Durability: committed changes persist]
+```
+
 
 ## Aurora engine and storage model
 
+**Aurora provides MySQL- and PostgreSQL-compatible engines with a distributed managed storage layer.**
 
-Aurora provides MySQL- and PostgreSQL-compatible engines with a distributed managed storage layer.
-
-- MySQL and PostgreSQL – compatible
 - Up to 5X faster than MySQL, 3X faster than PostgreSQL
 - 1/10 the cost of commercial databases
 - Up to 128TB per database volume
 - Up to 15 read replicas
-- Continuous backup to S3
-- Replication across regions and availability zones
-- Automatic scaling with Aurora Serverless
 - Supports Row Level Security
 - Do not integrate with Amazon Cognito for authentication over amazon.com
 
+
 ## Aurora Security
 
-
-Aurora security combines network isolation, database identity, encryption and optional IAM authentication.
+**Aurora security combines network isolation, database identity, encryption and optional IAM authentication.**
 
 - VPC network isolation
-- At-rest with KMS
-  - Data, backup, snapshots, and replicas can be encrypted
+- **At-rest with KMS:** Data, backup, snapshots, and replicas can be encrypted
 - In-transit with SSL
+
 
 ## Relational database concurrency and locks
 
+**Locking coordinates concurrent transactions; the actual conflict rules depend on the engine and isolation level.**
 
-Locking coordinates concurrent transactions; the actual conflict rules depend on the engine and isolation level.
-
-- Locks can apply to rows, ranges, tables or other resources, depending on the operation.
-- Shared and exclusive modes describe compatibility with other locks; they do not universally describe all snapshot-read behavior.
-- MVCC can let ordinary reads observe a consistent snapshot while another transaction holds a write lock. See the MySQL locking example below.
-
-### Lock command
-
-<!-- original-note: 72 -->
-<!-- title: Database locking commands -->
-
-Use engine-specific locking commands to coordinate concurrent operations. Distinguish locking reads from ordinary MVCC snapshot reads and plan for deadlock retries.
-
-- MySQL LOCK TABLES / UNLOCK TABLES are explicit table-lock operations.
-- SELECT ... FOR SHARE and FOR UPDATE request locking reads inside a transaction.
-- Do not infer that FOR UPDATE blocks all ordinary reads: MVCC may serve nonlocking snapshot reads.
-- Keep transactions short, acquire locks in a consistent order and handle deadlock retries.
-
-**Current reference (checked 2026-10-13):** [MySQL InnoDB locking reads](https://dev.mysql.com/doc/refman/8.4/en/innodb-locking-reads.html).
-
-## RDS best practices: unexpanded source heading
+- Locks can apply to rows, ranges, tables or other resources, depending on the operation
+- Shared and exclusive modes describe compatibility with other locks; they do not universally describe all snapshot-read behavior
+- MVCC can let ordinary reads observe a consistent snapshot while another transaction holds a write lock. See the MySQL locking example below
 
 
-This topic has no accompanying best-practice guidance.
+## Relational Database Locking Commands
 
-- Unexpanded source area: retain it as a review prompt. Do not attribute invented recommendations to this slide.
+**Use engine-specific locking commands to coordinate concurrent operations. Distinguish locking reads from ordinary MVCC snapshot reads and plan for deadlock retries.**
 
-### RDS Operational guidelines
+- MySQL LOCK TABLES / UNLOCK TABLES are explicit table-lock operations
+- SELECT ... FOR SHARE and FOR UPDATE request locking reads inside a transaction
+- Do not infer that FOR UPDATE blocks all ordinary reads: MVCC may serve nonlocking snapshot reads
+- Keep transactions short, acquire locks in a consistent order and handle deadlock retries
 
-<!-- original-note: 73 -->
+<!-- Source reference: https://dev.mysql.com/doc/refman/8.4/en/innodb-locking-reads.html -->
 
-Operate RDS from measurements: watch memory, CPU, storage and replica lag, maintain appropriate DNS behavior and tune the working set and queries.
+
+## RDS Best Practices — Review Prompt
+
+**Focus:** RDS best practices: unexpanded source heading — understand the key capabilities, constraints, and trade-offs.
+
+- Unexpanded source area: retain it as a review prompt. Do not attribute invented recommendations to this slide
+
+
+## RDS Operational guidelines
+
+**Operate RDS from measurements: watch memory, CPU, storage and replica lag, maintain appropriate DNS behavior and tune the working set and queries.**
 
 - Perform automatic backups during daily low in write IOPS
-- Insufficient I/O will make recovery after failure slow.
-  - Migrate to DB instance with more I/O
-  - Move to General Purpose or Provisioned IOPS storage
+- **Insufficient I/O will make recovery after failure slow.:** Migrate to DB instance with more I/O; Move to General Purpose or Provisioned IOPS storage
 - Set TTL on DNS for your DB instances to 30 seconds or less from your apps
 - Test failover before you need it
-- Provision enough RAM to include your entire working set
-  - If your ReadIOPS metric is small and stable, you’re good
+- **Provision enough RAM to include your entire working set:** If your ReadIOPS metric is small and stable, you're good
 - Rate limits in Amazon API Gateway can be used to protect your database
 
-## Query optimization in RDS
 
+## Amazon RDS — Query Optimization
 
-Query plans, selective indexes and workload measurements guide relational-query optimization.
+**Query plans, selective indexes and workload measurements guide relational-query optimization.**
 
-- Use indexes to accelerate SELECT statements
-  - Use EXPLAIN plans to identify the indexes you need
+- **Use indexes to accelerate SELECT statements:** Use EXPLAIN plans to identify the indexes you need
 - Avoid full table scans
 - Use ANALYZE TABLE periodically
 - Simplify WHERE clauses
 - Engine-specific optimizations
 
-## DB-specific tweaks
+
+## RDS — MySQL & PostgreSQL Tuning
+
+**Database tuning mechanisms are engine-specific; use the chosen engine's guidance and evaluate the durability and availability tradeoffs of bulk-load settings.**
+
+- **MySQL/MariaDB: keep active indexes in memory and use InnoDB. The documented table-file limit is 16 TiB; partition large tables well below that size.:** Tables above 100 GB can make some operations expensive. Fewer than 10,000 tables is…
+- PostgreSQL bulk loads may benefit from tuning maintenance_work_mem, max_wal_size and checkpoint_timeout
+- Disabling backups, Multi-AZ, synchronous_commit or autovacuum changes protection or behavior. Treat such changes as a controlled load procedure with explicit recovery requirements and restoration of normal settings afterward
+- Keep ordinary maintenance, including appropriate autovacuum behavior, part of the production configuration
+
+<!-- Source reference: https://docs.aws.amazon.com/AmazonRDS/latest/UserGuide/CHAP_BestPractices.html -->
 
 
-Database tuning mechanisms are engine-specific; use the chosen engine's guidance and evaluate the durability and availability tradeoffs of bulk-load settings.
+## RDS — SQL Server & Oracle Considerations
 
-- MySQL/MariaDB: keep active indexes in memory and use InnoDB. The documented table-file limit is 16 TiB; partition large tables well below that size.
-  - Tables above 100 GB can make some operations expensive. Fewer than 10,000 tables is performance guidance, rather than a hard table-count limit.
-- PostgreSQL bulk loads may benefit from tuning maintenance_work_mem, max_wal_size and checkpoint_timeout.
-- Disabling backups, Multi-AZ, synchronous_commit or autovacuum changes protection or behavior. Treat such changes as a controlled load procedure with explicit recovery requirements and restoration of normal settings afterward.
-- Keep ordinary maintenance, including appropriate autovacuum behavior, part of the production configuration.
+**SQL Server tuning and administration options differ from MySQL-family settings.**
 
-**Current reference (checked 2026-10-13):** [RDS engine-specific practices](https://docs.aws.amazon.com/AmazonRDS/latest/UserGuide/CHAP_BestPractices.html).
-
-## DB-specific tweaks
-
-
-SQL Server tuning and administration options differ from MySQL-family settings.
-
-- SQL Server
-  - Use RDS DB Events to monitor failovers
-  - Do not enable simple recover mode, offline mode, or read-only mode (this breaks Multi-AZ)
-  - Deploy into all AZ’s
+- **SQL Server:** Use RDS DB Events to monitor failovers; Do not enable simple recover mode, offline mode, or read-only mode (this breaks Multi-AZ); Deploy into all AZ's
 - Oracle is its own beast
 
-### Amazon Aurora
 
-<!-- original-note: 74 -->
+## Amazon Aurora
 
-Aurora combines MySQL- or PostgreSQL-compatible compute with a managed distributed storage layer. Separate engine compatibility from storage, replica and recovery behavior.
+**Aurora combines MySQL- or PostgreSQL-compatible compute with a managed distributed storage layer. Separate engine compatibility from storage, replica and recovery behavior.**
 
 - Postgres and MySQL are both supported as Aurora DB (that means your drivers will work as if Aurora was a Postgres or MySQL database)
-- Aurora is “AWS cloud optimized” and claims 5x performance improvement over MySQL on RDS, over 3x the performance of Postgres on RDS
-- Aurora storage automatically grows in increments of 10GB, up to 256 TB.
+- Aurora is "AWS cloud optimized" and claims 5x performance improvement over MySQL on RDS, over 3x the performance of Postgres on RDS
+- Aurora storage automatically grows in increments of 10GB, up to 256 TB
 - Aurora can have up to 15 replicas and the replication process is faster than MySQL (sub 10 ms replica lag)
-- Failover in Aurora is instantaneous. It’s HA (High Availability) native.
+- Failover in Aurora is instantaneous. It's HA (High Availability) native
 - Aurora costs more than RDS (20% more) – but is more efficient
 
-#### High Availability and Read Scaling
 
-<!-- original-note: 75 -->
-<!-- title: Aurora availability and read scaling -->
+## High Availability and Read Scaling
 
-Aurora's storage replicas protect data, while database replicas provide read capacity and failover targets. These are related but different forms of replication.
+**Aurora's storage replicas protect data, while database replicas provide read capacity and failover targets. These are related but different forms of replication.**
 
-- 6 copies of your data across 3 AZ:
-  - 4 copies out of 6 needed for writes
-  - 3 copies out of 6 need for reads
-  - Self healing with peer-to-peer replication
-  - Storage is striped across 100s of volumes
+- **6 copies of your data across 3 AZ:** 4 copies out of 6 needed for writes; 3 copies out of 6 need for reads; Self healing with peer-to-peer replication; Storage is striped across 100s of volumes
 - One Aurora Instance takes writes (master)
 - Automated failover for master in less than 30 seconds
 - Master + up to 15 Aurora Read Replicas serve reads
 - Support for Cross Region Replication
 
-
 ```mermaid
 flowchart LR
-  accTitle: Aurora availability and read scaling
   n0["Aurora writer"]
   n1["AZ A<br/>2 storage copies"]
   n2["AZ B<br/>2 storage copies"]
@@ -3242,18 +3007,13 @@ flowchart LR
   n0 -->|"distributed storage"| n3
 ```
 
-> Aurora replicates a cluster volume across three AZs. The course illustrates six copies, a four-copy write quorum and a three-copy read quorum.
 
-#### Aurora DB Cluster
+## Aurora DB Cluster
 
-<!-- original-note: 76 -->
-
-The writer endpoint follows the current writer. The reader endpoint distributes connections across eligible readers; it does not split every query inside one connection.
-
+**The writer endpoint follows the current writer. The reader endpoint distributes connections across eligible readers; it does not split every query inside one connection.**
 
 ```mermaid
 flowchart LR
-  accTitle: Aurora DB Cluster
   n0["Writer endpoint"]
   n1["Primary instance"]
   n2["Reader endpoint"]
@@ -3265,41 +3025,29 @@ flowchart LR
   n3 -->|"storage"| n4
 ```
 
-> The writer endpoint follows the current primary; the reader endpoint distributes connections across available replicas sharing the cluster volume.
 
 ## Features of Aurora
 
-
-Aurora availability, scaling and recovery features address different operational requirements.
+**Aurora availability, scaling and recovery features address different operational requirements.**
 
 - Automatic fail-over
 - Backup and Recovery
 - Isolation and security
 - Industry compliance
 - Push-button scaling
-- Automated Patching with Zero Downtime
-- Advanced Monitoring
-- Routine Maintenance
 - Backtrack: restore data at any point of time without using backups
+
 
 ## Amazon Aurora as a Vector Store
 
+**The pgvector extension stores embeddings and supports vector-distance queries in compatible PostgreSQL databases.**
 
-The pgvector extension stores embeddings and supports vector-distance queries in compatible PostgreSQL databases.
-
-- pgvector extension
-  - Creates a new “vector” column type
-  - Can compute cosine, L2, or inner product distances
-  - The source mentions IVF similarity search but leaves the alternative after "or" unfinished.
-  - Also adds vector operators for SQL
-    - This gives it an advantage over OpenSearch if you need complex filtering logic and stuff.
+- **pgvector extension:** Creates a new "vector" column type; Can compute cosine, L2, or inner product distances; Also adds vector operators for SQL; This gives it an advantage over OpenSearch if you need complex filtering logic and stuff
 - Allows you to store structured and vector data in the same place
 - Can be appropriate for small / medium RAG systems with mostly structured data
 
-
 ```mermaid
 flowchart LR
-  accTitle: Amazon Aurora as a Vector Store
   n0["Text / other content"]
   n1["Embedding model"]
   n2["PostgreSQL + pgvector"]
@@ -3309,28 +3057,22 @@ flowchart LR
   n3 -->|"nearest-neighbor search"| n2
 ```
 
-> The pgvector extension stores embeddings and supports vector-distance queries in compatible PostgreSQL databases.
 
 ## DocumentDB (MongoDB) NoSQL
 
-<!-- original-note: 77 -->
-<!-- title: Amazon DocumentDB -->
-
-DocumentDB provides a managed document database with MongoDB compatibility. Check application and feature compatibility instead of assuming it is the same product as MongoDB.
+**DocumentDB provides a managed document database with MongoDB compatibility. Check application and feature compatibility instead of assuming it is the same product as MongoDB.**
 
 - DocumentDB is the same for MongoDB (which is a NoSQL database)
 - MongoDB is used to store, query, and index JSON data
-- Similar “deployment concepts” as Aurora
+- Similar "deployment concepts" as Aurora
 - Fully Managed, highly available with replication across 3 AZ
 - DocumentDB storage automatically grows in increments of 10GB
 - Automatically scales to workloads with millions of requests per seconds
 
+
 ## MemoryDB for Redis
 
-<!-- original-note: 78 -->
-<!-- title: Amazon MemoryDB -->
-
-MemoryDB combines an in-memory data model with durable storage, making it distinct from using a disposable cache in front of another database.
+**MemoryDB combines an in-memory data model with durable storage, making it distinct from using a disposable cache in front of another database.**
 
 - Redis-compatible, durable, in-memory database service
 - Ultra-fast performance with over 160 millions requests/second
@@ -3338,10 +3080,8 @@ MemoryDB combines an in-memory data model with durable storage, making it distin
 - Scale seamlessly from 10s GBs to 100s TBs of storage
 - Use cases: web and mobile apps, online gaming, media streaming, …
 
-
 ```mermaid
 flowchart LR
-  accTitle: Amazon MemoryDB
   n0["Microservices"]
   n1["MemoryDB in-memory data"]
   n2["Multi-AZ transaction log"]
@@ -3349,47 +3089,31 @@ flowchart LR
   n1 -->|"durable writes"| n2
 ```
 
-> MemoryDB serves low-latency in-memory operations while a distributed transaction log provides durability.
 
 ## Amazon Keyspaces (For Apache Cassandra) NoSQL
 
-<!-- original-note: 79 -->
-<!-- title: Amazon Keyspaces -->
-
-Keyspaces provides a managed Cassandra-compatible database accessed through CQL. It fits applications built around Cassandra's partitioned data model.
+**Keyspaces provides a managed Cassandra-compatible database accessed through CQL. It fits applications built around Cassandra's partitioned data model.**
 
 - A managed Apache Cassandra-compatible database service
 - Serverless, Scalable, highly available, fully managed by AWS
-- Automatically scale tables up/down based on the application’s traffic
 - Tables are replicated 3 times across multiple AZ
-- Using the Cassandra Query Language (CQL)
-- Single-digit millisecond latency at any scale, 1000s of requests per second
 - Capacity: On-demand mode or provisioned mode with auto-scaling
 - Encryption, backup, Point-In-Time Recovery (PITR) up to 35 days
 - Use cases: store IoT devices info, time-series data, …
 
+
 ## Amazon Neptune
 
-<!-- original-note: 80 -->
-
-Neptune stores connected data as a graph. Choose graph models and query languages from the relationships and traversals the application needs.
+**Neptune stores connected data as a graph. Choose graph models and query languages from the relationships and traversals the application needs.**
 
 - Fully managed graph database
-- A popular graph dataset would be a social network
-  - Users have friends
-  - Posts have comments
-  - Comments have likes from users
-  - Users share and like posts…
+- **A popular graph dataset would be a social network:** Users have friends, Posts have comments, Comments have likes from users, Users share and like posts…
 - Highly available across 3 AZ, with up to 15 read replicas
 - Build and run applications working with highly connected datasets – optimized for these complex and hard queries
 - Can store up to billions of relations and query the graph with milliseconds latency
-- Highly available with replications across multiple AZs
-- Great for knowledge graphs (Wikipedia), fraud detection, recommendation engines, social networking
-
 
 ```mermaid
 flowchart LR
-  accTitle: Amazon Neptune
   n0["Person A"]
   n1["Person B"]
   n2["Company"]
@@ -3399,19 +3123,15 @@ flowchart LR
   n1 ---|"lives in"| n3
 ```
 
-> Graph databases represent entities as vertices and relationships as edges; traversal answers connection-oriented questions.
 
-## Amazon Neptune – Query Languges
+## Amazon Neptune — Query Languages
 
-
-A graph statement connects a subject to an object through a predicate; RDF and property graphs use different models and query languages.
+**A graph statement connects a subject to an object through a predicate; RDF and property graphs use different models and query languages.**
 
 - Supported graph query languages: Gremlin, openCypher, SPARQL
 
-
 ```mermaid
 flowchart LR
-  accTitle: Amazon Neptune – Query Languges
   n0["Subject"]
   n1["Object"]
   n2["Graph model"]
@@ -3420,43 +3140,25 @@ flowchart LR
   n2 ---|"model-specific traversal"| n3
 ```
 
-> A graph statement connects a subject to an object through a predicate; RDF and property graphs use different models and query languages.
-
-##
-
-<!-- original-note: 81 -->
-<!-- title: Database review prompt 1 -->
-<!-- unexpanded -->
-
-##
-
-<!-- original-note: 82 -->
-<!-- title: Database review prompt 2 -->
-<!-- unexpanded -->
 
 ## Amazon Timestream
 
-
-Timestream stores time-indexed observations for analytical queries. Its time-series model differs from a general relational or key-value database.
+**Timestream stores time-indexed observations for analytical queries. Its time-series model differs from a general relational or key-value database.**
 
 - Automatically scales up/down to adjust capacity
-- Store and analyze trillions of events per day
-- 1000s times faster & 1/10th the cost of relational databases
+- thousands times faster & 1/10th the cost of relational databases
 - Scheduled queries, multi-measure records, SQL compatibility
 - Data storage tiering: recent data kept in memory and historical data kept in a cost-optimized storage
-- Built-in time series analytics functions (helps you identify patterns in your data in near real-time)
 - Encryption in transit and at rest
 - Use cases: IoT apps, operational applications, real- time analytics, …
 
-## Amazon Timestream – Architecture
 
+## Amazon Timestream — Architecture
 
-Timestream ingests time-series observations through supported APIs and connectors, then serves analytical queries to visualization tools.
-
+**Timestream ingests time-series observations through supported APIs and connectors, then serves analytical queries to visualization tools.**
 
 ```mermaid
 flowchart LR
-  accTitle: Amazon Timestream – Architecture
   n0["IoT / applications"]
   n1["Kinesis / MSK"]
   n2["Managed Flink / Lambda"]
@@ -3468,27 +3170,19 @@ flowchart LR
   n3 -->|"query results"| n4
 ```
 
-> Timestream ingests time-series observations through supported APIs and connectors, then serves analytical queries to visualization tools.
 
 ## Amazon Redshift
 
-<!-- original-note: 83 -->
+**Amazon Redshift is a columnar, parallel SQL data warehouse optimized for large analytical scans, joins and aggregations.**
 
-Redshift is a columnar analytical warehouse. It is designed for large scans, joins and aggregations rather than frequent small transactional updates.
+- **Use cases:** BI dashboards, historical analysis and enterprise reporting.
+- **Execution:** massively parallel processing (MPP), column-oriented storage and compression.
+- **Not designed for:** high-frequency row-level OLTP or storing large media objects.
 
-- 10X better performance than other DW’s
-  - Via machine learning, massively parallel query execution, columnar storage
-- Designed for OLAP, not OLTP
-- Cost effective
-- SQL, ODBC, JDBC interfaces
-- Scale up or down on demand
-- Built-in replication & backups
-- Monitoring via CloudWatch / CloudTrail
 
 ## Redshift Use-Cases
 
-
-Redshift targets analytical workloads that benefit from a managed columnar warehouse.
+**Redshift targets analytical workloads that benefit from a managed columnar warehouse.**
 
 - Accelerate analytics workloads
 - Unified data warehouse & data lake
@@ -3496,18 +3190,14 @@ Redshift targets analytical workloads that benefit from a managed columnar wareh
 - Analyze global sales data
 - Store historical stock trade data
 - Analyze ad impressions & clicks
-- Aggregate gaming data
-- Analyze social trends
+
 
 ## Redshift architecture
 
-
-In a provisioned Redshift cluster, the leader coordinates SQL work across compute nodes and slices; node families in the slide are historical examples.
-
+**In a provisioned Redshift cluster, the leader coordinates SQL work across compute nodes and slices; node families in the slide are historical examples.**
 
 ```mermaid
 flowchart LR
-  accTitle: Redshift architecture
   n0["SQL clients"]
   n1["Leader node"]
   n2["Compute node A<br/>Slices"]
@@ -3517,25 +3207,17 @@ flowchart LR
   n1 -->|"parallel plan"| n3
 ```
 
-> In a provisioned Redshift cluster, the leader coordinates SQL work across compute nodes and slices; node families in the slide are historical examples.
 
-### Redshift Spectrum
+## Redshift Spectrum
 
-<!-- original-note: 84 -->
+**Redshift Spectrum extends SQL queries to cataloged data in S3 without loading every file into warehouse tables.**
 
-Spectrum extends Redshift queries to external data in S3 without first copying all of it into local warehouse tables.
-
-- Query exabytes of unstructured data in S3 without loading
-- Limitless concurrency
-- Horizontal scaling
-- Separate storage & compute resources
-- Wide variety of data formats
-- Support of Gzip and Snappy compression
-
+- **Architecture:** Redshift SQL → catalog schema → external S3 data.
+- **Use for:** joining internal warehouse facts with lake datasets.
+- **Performance:** choose partition pruning and columnar formats to reduce external scans.
 
 ```mermaid
 flowchart LR
-  accTitle: Redshift Spectrum
   n0["S3 data lake"]
   n1["External catalog"]
   n2["Redshift Spectrum"]
@@ -3546,65 +3228,59 @@ flowchart LR
   n0 -->|"scan external data"| n3
 ```
 
-> Redshift Spectrum and Athena can query S3 data through external metadata; this does not imply data flows from Athena into Redshift.
 
 ## Redshift Performance
 
-
-Redshift combines parallel execution, columnar storage and query optimization for analytics.
+**Redshift combines parallel execution, columnar storage and query optimization for analytics.**
 
 - Massively Parallel Processing (MPP)
 - Columnar Data Storage
 - Column Compression
 
-### Redshift Durability
 
-<!-- original-note: 85 -->
+## Redshift Durability
 
-Redshift uses redundant storage and snapshots to protect warehouse data. Recovery planning still needs snapshot retention, copy permissions and restoration procedures.
+**Redshift uses redundant storage and snapshots to protect warehouse data. Recovery planning still needs snapshot retention, copy permissions and restoration procedures.**
 
 - Replication within cluster
-- Backup to S3
-  - Asynchronously replicated to another region
+- **Backup to S3:** Asynchronously replicated to another region
 - Automated snapshots
 - Failed drives / nodes automatically replaced
-- However – limited to a single availability zone (AZ)
-  - Multi-AZ for RA3 clusters now available
+- **However – limited to a single availability zone (AZ):** Multi-AZ for RA3 clusters now available
+
 
 ## Scaling Redshift
 
-
-Redshift scaling changes compute capacity; choose the mechanism that fits the cluster and disruption tolerance.
+**Redshift scaling changes compute capacity; choose the mechanism that fits the cluster and disruption tolerance.**
 
 - Vertical and horizontal scaling on demand
-- During scaling:
-  - A new cluster is created while your old one remains available for reads
-  - CNAME is flipped to new cluster (a few minutes of downtime)
-  - Data moved in parallel to new compute nodes
+- **During scaling:** A new cluster is created while your old one remains available for reads; CNAME is flipped to new cluster (a few minutes of downtime); Data moved in parallel to new compute nodes
+
 
 ## Redshift Distribution Styles
 
+**Distribution style controls placement of rows and the data movement needed for joins.**
 
-Distribution style controls placement of rows and the data movement needed for joins.
+- **AUTO:** Redshift figures it out based on size of data
+- **EVEN:** Rows distributed across slices in round-robin
+- **KEY:** Rows distributed based on one column
+- **ALL:** Entire table is copied to every node
 
-- AUTO
-  - Redshift figures it out based on size of data
-- EVEN
-  - Rows distributed across slices in round-robin
-- KEY
-  - Rows distributed based on one column
-- ALL
-  - Entire table is copied to every node
+```mermaid
+flowchart TB
+  T[Table rows] --> A[AUTO: optimizer chooses]
+  T --> E[EVEN: round robin]
+  T --> K[KEY: hash selected column]
+  T --> L[ALL: full copies on nodes]
+```
+
 
 ## EVEN distribution
 
-
-EVEN distribution spreads rows across slices without selecting a distribution key.
-
+**EVEN distribution spreads rows across slices without selecting a distribution key.**
 
 ```mermaid
 flowchart LR
-  accTitle: EVEN distribution
   n0["Rows"]
   n1["Slice A"]
   n2["Slice B"]
@@ -3614,17 +3290,13 @@ flowchart LR
   n0 -->|"round robin"| n3
 ```
 
-> EVEN distribution spreads rows across slices without selecting a distribution key.
 
 ## KEY distribution
 
-
-KEY distribution hashes the chosen column; matching join keys can colocate rows, while skewed keys can overload one slice.
-
+**KEY distribution hashes the chosen column; matching join keys can colocate rows, while skewed keys can overload one slice.**
 
 ```mermaid
 flowchart LR
-  accTitle: KEY distribution
   n0["Distribution-key value"]
   n1["Hash"]
   n2["Slice A"]
@@ -3636,17 +3308,13 @@ flowchart LR
   n1 -->|"placement"| n4
 ```
 
-> KEY distribution hashes the chosen column; matching join keys can colocate rows, while skewed keys can overload one slice.
 
 ## ALL distribution
 
-
-ALL distribution copies the complete table to every compute node, trading storage and load cost for fewer redistributions.
-
+**ALL distribution copies the complete table to every compute node, trading storage and load cost for fewer redistributions.**
 
 ```mermaid
 flowchart LR
-  accTitle: ALL distribution
   n0["Small dimension table"]
   n1["Node A full copy"]
   n2["Node B full copy"]
@@ -3656,67 +3324,48 @@ flowchart LR
   n0 -->|"replicate"| n3
 ```
 
-> ALL distribution copies the complete table to every compute node, trading storage and load cost for fewer redistributions.
 
 ## Importing / Exporting data
 
+**Redshift bulk movement typically uses COPY for loading and UNLOAD for exporting query results.**
 
-COPY loads bulk data into Redshift; UNLOAD writes query results out to supported external storage.
+- **COPY:** parallel loading from supported sources such as S3; manifests are optional for supported scenarios.
+- **UNLOAD:** export query results to S3, including columnar Parquet.
+- **Other ingestion:** streaming integrations and supported zero-ETL paths.
+- **Security:** configure IAM roles, object permissions and network routes.
 
-- COPY command
-  - Parallelized; efficient
-  - From S3, EMR, DynamoDB, remote hosts
-  - S3 requires a manifest file and IAM role
-- UNLOAD command
-  - Unload from a table into files in S3
-- Enhanced VPC routing
-- Auto-copy from Amazon S3
-- Amazon Aurora zero-ETL integration
-  - Auto replication from Aurora -> Redshift
-- Redshift Streaming Ingestion
-  - From Kinesis Data Streams or MSK
 
 ## COPY command: More depth
 
+**COPY loads data in bulk from supported sources. Plan file layout, permissions, compression and error handling for parallel warehouse ingestion.**
 
-COPY loads data in bulk from supported sources. Plan file layout, permissions, compression and error handling for parallel warehouse ingestion.
-
-- If your data is already in Redshift in another table,
-  - Use INSERT INTO …SELECT
-  - Or CREATE TABLE AS
-- COPY can decrypt data as it is loaded from S3
-  - Hardware-accelerated SSL used to keep it fast
+- **If your data is already in Redshift in another table,:** Use INSERT INTO …SELECT, Or CREATE TABLE AS
+- **COPY can decrypt data as it is loaded from S3:** Hardware-accelerated SSL used to keep it fast
 - Gzip, lzop, and bzip2 compression supported to speed it up further
-- Automatic compression option
-  - Analyzes data being loaded and figures out optimal compression scheme for storing it
-- Special case: narrow tables (lots of rows, few columns)
-  - Load with a single COPY transaction if possible
-  - Otherwise hidden metadata columns consume too much space
+- **Automatic compression option:** Analyzes data being loaded and figures out optimal compression scheme for storing it
+- **Special case: narrow tables (lots of rows, few columns):** Load with a single COPY transaction if possible; Otherwise hidden metadata columns consume too much space
+
 
 ## Redshift copy grants for cross-region snapshot copies
 
-
-An encrypted snapshot copy needs the correct destination-Region key and copy grant. Data replication and permission to use an encryption key are separate concerns.
+**An encrypted snapshot copy needs the correct destination-Region key and copy grant. Data replication and permission to use an encryption key are separate concerns.**
 
 - You want to copy that snapshot to another region for backup
-- In the destination AWS region:
-  - Create a KMS key if you don’t have one already
-  - Specify a unique name for your snapshot copy grant
-  - Specify the KMS key ID for which you’re creating the copy grant
-- In the source AWS region:
-  - Enable copying of snapshots to the copy grant you just created
+- **In the destination AWS region:** Create a KMS key if you don't have one already; Specify a unique name for your snapshot copy grant; Specify the KMS key ID for which you're creating the copy grant
+- **In the source AWS region:** Enable copying of snapshots to the copy grant you just created
+
 
 ## DBLINK
 
+**The source notes mention PostgreSQL DBLINK; Redshift uses its documented federated-query mechanisms for supported external RDS/Aurora access.**
 
-DBLINK provides a PostgreSQL-based connection path in the source example. Keep it distinct from Redshift's supported federated-query mechanisms.
+- **Distinguish:** PostgreSQL extensions are not automatically supported as Redshift data-ingestion tools.
+- **Pattern:** use federated queries or dedicated ingestion/replication according to workload and supported source.
 
-- Good way to copy and sync data between PostgreSQL and Redshift
 
 ## Integration with other services
 
-
-Redshift integrations cover data ingestion, catalog access, visualization and model training through different mechanisms.
+**Redshift integrations cover data ingestion, catalog access, visualization and model training through different mechanisms.**
 
 - S3
 - DynamoDB
@@ -3724,123 +3373,95 @@ Redshift integrations cover data ingestion, catalog access, visualization and mo
 - Database Migration Service
 - AWS Glue Connector for Redshift
 
+
 ## Redshift Workload Management (WLM)
 
-
-WLM assigns query workloads to execution resources so short interactive work and longer analytical jobs can be governed deliberately.
+**WLM assigns query workloads to execution resources so short interactive work and longer analytical jobs can be governed deliberately.**
 
 - Query queues
 - Via console, CLI, or API
 
+```mermaid
+flowchart LR
+  A[SQL requests] --> B[WLM priorities and queues]
+  B --> C[Query execution resources]
+  B -.-> D[Concurrency scaling where eligible]
+```
+
+
 ## Concurrency Scaling
 
-
-Concurrency Scaling supplies additional supported query capacity during bursts. Eligibility and usage charges determine how it fits the workload.
+**Concurrency Scaling supplies additional supported query capacity during bursts. Eligibility and usage charges determine how it fits the workload.**
 
 - Support virtually unlimited concurrent users & queries
 - WLM queues manage which queries are sent to the concurrency scaling cluster
 
+
 ## Automatic Workload Management
 
-
-Automatic workload management allocates execution resources across configured query workloads.
+**Automatic workload management allocates execution resources across configured query workloads.**
 
 - Creates up to 8 queues
 - Default 5 queues with even memory allocation
 - Large queries (ie big hash joins) -> concurrency lowered
 - Small queries (ie inserts, scans, aggregations) -> concurrency raised
-- Configuring query queues
-  - Priority
-  - Concurrency scaling mode
-  - User groups
-  - Query groups
-  - Query monitoring rules
+- **Configuring query queues:** Priority · Concurrency scaling mode · User groups · Query groups · Query monitoring rules
+
 
 ## Manual Workload Management
 
-
-Manual WLM uses configured queues and concurrency settings. Queue allocation trades simultaneous execution against the memory available to each query.
+**Manual WLM uses configured queues and concurrency settings. Queue allocation trades simultaneous execution against the memory available to each query.**
 
 - Superuser queue with concurrency level 1
-- Define up to 8 queues, up to concurrency level 50
-  - Each can have defined concurrency scaling mode, concurrency level, user groups, query groups, memory, timeout, query monitoring rules
-  - Can also enable query queue hopping
-    - Timed out queries “hop” to next queue to try again
+- **Define up to 8 queues, up to concurrency level 50:** Each can have defined concurrency scaling mode, concurrency level, user groups, query groups, memory, timeout, query monitoring rules; Can also enable query queue hopping; Timed out queries…
+
 
 ## Short Query Acceleration (SQA)
 
+**Short Query Acceleration gives eligible short queries a separate execution path so they spend less time waiting behind longer work.**
 
-Short Query Acceleration gives eligible short queries a separate execution path so they spend less time waiting behind longer work.
-
-- Short queries run in a dedicated space, won’t wait in queue behind long queries
+- Short queries run in a dedicated space, won't wait in queue behind long queries
 - Can be used in place of WLM queues for short queries
-- Works with:
-  - CREATE TABLE AS (CTAS)
-  - Read-only queries (SELECT statements)
-- Uses machine learning to predict a query’s execution time
-- Can configure how many seconds is “short”
+- **Works with:** CREATE TABLE AS (CTAS); Read-only queries (SELECT statements)
+- Uses machine learning to predict a query's execution time
+- Can configure how many seconds is "short"
+
 
 ## Resizing Redshift Clusters
 
+**Elastic and classic resize have different constraints and interruption characteristics.**
 
-Elastic and classic resize have different constraints and interruption characteristics.
+- **Elastic resize:** Quickly add or remove nodes of same type · (It *can* change node types, but not without dropping connections – it creates a whole new cluster) · Cluster is down for a few minutes · Tries to keep connections open across the…
+- **Classic resize:** Change node type and/or number of nodes; Cluster is read-only for hours to days
+- **Snapshot, restore, resize:** Used to keep cluster available during a classic resize; Copy cluster, resize new cluster
 
-- Elastic resize
-  - Quickly add or remove nodes of same type
-    - (It *can* change node types, but not without dropping connections – it creates a whole new cluster)
-  - Cluster is down for a few minutes
-  - Tries to keep connections open across the downtime
-  - Limited to doubling or halving for some dc2 and ra3 node types.
-- Classic resize
-  - Change node type and/or number of nodes
-  - Cluster is read-only for hours to days
-- Snapshot, restore, resize
-  - Used to keep cluster available during a classic resize
-  - Copy cluster, resize new cluster
 
 ## VACUUM command
 
-
-VACUUM reclaims deleted space or restores sorting according to the chosen operation. Use the table's maintenance needs and supported automatic behavior to decide when to run it.
+**VACUUM reclaims deleted space or restores sorting according to the chosen operation. Use the table's maintenance needs and supported automatic behavior to decide when to run it.**
 
 - VACUUM FULL
-- VACUUM DELETE ONLY
-  - Skips the sort
-- VACUUM SORT ONLY
-  - Does not reclaim space!
-- VACUUM REINDEX
-  - Re-analyzes distribution of sort key columns
-  - Then does a full VACUUM
+- **VACUUM DELETE ONLY:** Skips the sort
+- **VACUUM SORT ONLY:** Does not reclaim space!
+- **VACUUM REINDEX:** Re-analyzes distribution of sort key columns; Then does a full VACUUM
+
 
 ## Newer Redshift features
 
+**Separate compute/storage and serverless features change capacity and administration choices; check support for the selected deployment.**
 
-Separate compute/storage and serverless features change capacity and administration choices; check support for the selected deployment.
+- **RA3 nodes with managed storage:** Enable independent scaling of compute and storage; SSD-based
+- **Redshift data lake export:** Unload Redshift query to S3 in Apache Parquet format; Parquet is 2x faster to unload and consumes up to 6X less storage; Compatible with Redshift Spectrum, Athena, EMR, SageMaker; Automatically partitioned
+- **Spatial data types:** GEOMETRY, GEOGRAPHY
+- **Cross-Region Data Sharing:** Share live data across Redshift clusters without copying; Requires new RA3 node type; Secure, across regions and across accounts
 
-- RA3 nodes with managed storage
-  - Enable independent scaling of compute and storage
-  - SSD-based
-- Redshift data lake export
-  - Unload Redshift query to S3 in Apache Parquet format
-  - Parquet is 2x faster to unload and consumes up to 6X less storage
-  - Compatible with Redshift Spectrum, Athena, EMR, SageMaker
-  - Automatically partitioned
-- Spatial data types
-  - GEOMETRY, GEOGRAPHY
-- Cross-Region Data Sharing
-  - Share live data across Redshift clusters without copying
-  - Requires new RA3 node type
-  - Secure, across regions and across accounts
 
 ## Amazon Redshift ML
 
-
-Redshift ML creates a model from SQL-selected training data using SageMaker; SQL functions then expose supported inference.
-
+**Redshift ML creates a model from SQL-selected training data using SageMaker; SQL functions then expose supported inference.**
 
 ```mermaid
 flowchart LR
-  accTitle: Amazon Redshift ML
   n0["Redshift training query"]
   n1["CREATE MODEL"]
   n2["SageMaker training"]
@@ -3852,125 +3473,86 @@ flowchart LR
   n3 -->|"predict"| n4
 ```
 
-> Redshift ML creates a model from SQL-selected training data using SageMaker; SQL functions then expose supported inference.
 
 ## Redshift anti-patterns
 
+**A warehouse is usually a poor fit for tiny workloads or transactional access patterns that do not need analytical scans.**
 
-A warehouse is usually a poor fit for tiny workloads or transactional access patterns that do not need analytical scans.
+- **Small data sets:** Use RDS instead
+- **OLTP:** Use RDS or DynamoDB instead
+- **Unstructured data:** ETL first with EMR etc
+- **BLOB data:** Store references to large binary files in S3, not the files themselves
 
-- Small data sets
-  - Use RDS instead
-- OLTP
-  - Use RDS or DynamoDB instead
-- Unstructured data
-  - ETL first with EMR etc.
-- BLOB data
-  - Store references to large binary files in S3, not the files themselves.
 
 ## Redshift security concerns
 
+**Redshift security requires appropriate encryption, identity permissions and private/public network access controls.**
 
-Redshift security requires appropriate encryption, identity permissions and private/public network access controls.
-
-- Using a Hardware Security Module (HSM)
-  - Must use a client and server certificate to configure a trusted connection between Redshift and the HSM
-  - If migrating an unencrypted cluster to an HSM-encrypted cluster, you must create the new encrypted cluster and then move data to it.
-- Defining access privileges for user or group
-  - Use the GRANT or REVOKE commands in SQL
-  - Example: grant select on table foo to bob;
-
-## Redshift Serverless
+- **Using a Hardware Security Module (HSM):** Must use a client and server certificate to configure a trusted connection between Redshift and the HSM; If migrating an unencrypted cluster to an HSM-encrypted cluster, you must create the new…
+- **Defining access privileges for user or group:** Use the GRANT or REVOKE commands in SQL; Example: grant select on table foo to bob;
 
 
-Serverless manages warehouse compute provisioning around the workload. Data organization, authorization and cost controls remain design responsibilities.
+## Redshift Serverless — Compute Model
 
-- Optimizes costs & performance
-  - Pay only when in use
+**Serverless manages warehouse compute provisioning around the workload. Data organization, authorization and cost controls remain design responsibilities.**
+
+- **Optimizes costs & performance:** Pay only when in use
 - Uses ML to maintain performance across variable & sporadic workloads
 - Easy spinup of development and test environments
 - Easy ad-hoc business analysis
-- You get back a serverless endpoint, JDBC/ODBC connection, or just query via the console’s query editor.
+- You get back a serverless endpoint, JDBC/ODBC connection, or just query via the console's query editor
+
 
 ## Redshift Serverless: Getting Started
 
-
-Create a Serverless namespace/workgroup with deliberate identity, network, encryption and audit settings.
+**Create a Serverless namespace/workgroup with deliberate identity, network, encryption and audit settings.**
 
 - Need an IAM role with this policy
-- Define your
-  - Database name
-  - Admin user credentials
-  - VPC
-  - Encryption settings
-    - AWS-owned KMS by default
-  - Audit logging
+- **Define your:** Database name · Admin user credentials · VPC · Encryption settings · AWS-owned KMS by default · Audit logging
 - Can manage snapshots & recovery points after creation
 
-### Resource Scaling in Redshift Serverless
 
-<!-- original-note: 86 -->
+## Resource Scaling in Redshift Serverless
 
-Redshift Serverless measures compute capacity in RPUs. Compare base and maximum capacity with query performance and the resulting usage charges.
+**Redshift Serverless measures compute capacity in RPUs. Compare base and maximum capacity with query performance and the resulting usage charges.**
 
 - You pay for RPU-hours (per second) plus storage
-- Base RPU’s
-  - You can adjust base capacity
-  - Defaults to AUTO
-  - But you can adjust from 32-512 RPU’s to improve query performance
-- Max RPU’s
-  - Can set a usage limit to control costs
-  - Or, increase it to improve throughput
+- **Base RPU's:** You can adjust base capacity; Defaults to AUTO; But you can adjust from 32-512 RPU's to improve query performance
+- **Max RPU's:** Can set a usage limit to control costs; Or, increase it to improve throughput
 
-### Redshift Serverless
 
-<!-- original-note: 87 -->
+## Redshift Serverless — Network & Admin
 
-Redshift Serverless separates namespaces from workgroups and changes several administration controls. It can be configured for public accessibility when routing and security rules permit it.
+**Redshift Serverless separates namespaces from workgroups and changes several administration controls. It can be configured for public accessibility when routing and security rules permit it.**
 
-- Parameter groups, maintenance controls and workload-management configuration differ; check the current feature matrix.
-- Correction: Serverless can be configured for public accessibility. The slide's "no public endpoints" statement is outdated.
-- Use private connectivity when that fits the requirement; public accessibility still requires routing and security-group authorization.
+- Parameter groups, maintenance controls and workload-management configuration differ; check the current feature matrix
+- Correction: Serverless can be configured for public accessibility. The slide's "no public endpoints" statement is outdated
+- Use private connectivity when that fits the requirement; public accessibility still requires routing and security-group authorization
 
-**Current reference (checked 2026-10-13):** [Connecting to Redshift Serverless](https://docs.aws.amazon.com/redshift/latest/mgmt/serverless-connecting.html).
+<!-- Source reference: https://docs.aws.amazon.com/redshift/latest/mgmt/serverless-connecting.html -->
 
-###  Serverless Monitoring
 
-<!-- original-note: 88 -->
-<!-- title: Redshift Serverless monitoring -->
+## Serverless Monitoring
 
-Use query, load and serverless usage views alongside CloudWatch metrics to connect workload behavior with capacity consumption.
+**Use query, load and serverless usage views alongside CloudWatch metrics to connect workload behavior with capacity consumption.**
 
-- Monitoring views
-  - SYS_QUERY_HISTORY
-  - SYS_LOAD_HISTORY
-  - SYS_SERVERLESS_USAGE
-  - …and many more
-- CloudWatch logs
-  - Connection & user logs enabled by default
-  - Optional user activity log data
-  - Under /aws/redshift/serverless/
-- CloudWatch metrics
-  - QueriesCompletedPerSecond, QueryDuration, QueriesRunning,etc.
-  - Dimensions: DatabaseName, latency (short/medium/long), QueryType, stage
+- **Monitoring views:** SYS_QUERY_HISTORY, SYS_LOAD_HISTORY, SYS_SERVERLESS_USAGE, …and many more
+- **CloudWatch logs:** Connection & user logs enabled by default; Optional user activity log data; Under /aws/redshift/serverless/
+- **CloudWatch metrics:** QueriesCompletedPerSecond, QueryDuration, QueriesRunning,etc; Dimensions: DatabaseName, latency (short/medium/long), QueryType, stage
 
-### Redshift Materialized Views
 
-<!-- original-note: 89 -->
+## Redshift Materialized Views
 
-A materialized view stores the result of a query so later reads can reuse it. Faster queries must be balanced against refresh cost and acceptable staleness.
+**A materialized view stores the result of a query so later reads can reuse it. Faster queries must be balanced against refresh cost and acceptable staleness.**
 
-- Contain precomputed results based on SQL queries over one or more base tables.
-  - This differs from a “normal” view in that it actually stores the results of the query
-- Provide a way to speed up complex queries in a data warehouse environment, especially on large tables.
-- You can query materialized views just like any other tables or views.
-- Queries return results faster since they use precomputed results without accessing base tables.
-- They're particularly beneficial for predictable and recurring queries, e.g., populating dashboards like Amazon QuickSight.
-
+- **Contain precomputed results based on SQL queries over one or more base tables.:** This differs from a "normal" view in that it actually stores the results of the query
+- Provide a way to speed up complex queries in a data warehouse environment, especially on large tables
+- You can query materialized views just like any other tables or views
+- Queries return results faster since they use precomputed results without accessing base tables
+- They're particularly beneficial for predictable and recurring queries, e.g., populating dashboards like Amazon QuickSight
 
 ```mermaid
 flowchart LR
-  accTitle: Redshift Materialized Views
   n0["Base tables"]
   n1["Aggregate / join query"]
   n2["Materialized view"]
@@ -3980,41 +3562,27 @@ flowchart LR
   n2 -->|"reuse result"| n3
 ```
 
-> A materialized view stores a query result derived from base tables. Refresh policy determines when the stored result reflects later changes.
 
 ## Using Materialized Views
 
-
-Create, refresh and query materialized views according to the freshness required by the consuming workload.
+**Create, refresh and query materialized views according to the freshness required by the consuming workload.**
 
 - CREATE MATERIALIZED VIEW…
-- Keeping them refreshed
-  - REFRESH MATERIALIZED VIEW…
-  - Set AUTO REFRESH option on creation
+- **Keeping them refreshed:** REFRESH MATERIALIZED VIEW…; Set AUTO REFRESH option on creation
 - Query them just like any other table or view
-- Materialized views can be built from other materialized views
-  - Useful for re-using expensive joins
+- **Materialized views can be built from other materialized views:** Useful for re-using expensive joins
 
-### Data Sharing
 
-<!-- original-note: 90 -->
-<!-- title: Redshift data sharing -->
+## Data Sharing
 
-A producer grants consumers access to live warehouse data. Sharing avoids a separate data copy and allows consumers to isolate their query workloads.
+**A producer grants consumers access to live warehouse data. Sharing avoids a separate data copy and allows consumers to isolate their query workloads.**
 
 - Securely share live data across Redshift clusters for read purposes
-- Why?
-  - Workload isolation
-  - Cross-group collaboration
-  - Sharing data between dev/test/prod
-  - Licensing data access in AWS Data Exchange
-- Can share DB’s, schemas, tables, views, and/or UDFs.
-  - Fine-grained access control
-
+- **Why?:** Workload isolation; Cross-group collaboration; Sharing data between dev/test/prod; Licensing data access in AWS Data Exchange
+- **Can share DB's, schemas, tables, views, and/or UDFs.:** Fine-grained access control
 
 ```mermaid
 flowchart LR
-  accTitle: Redshift data sharing
   n0["Producer namespace"]
   n1["Datashare"]
   n2["Consumer namespace"]
@@ -4022,28 +3590,18 @@ flowchart LR
   n1 -->|"authorized reads"| n2
 ```
 
-> Redshift data sharing exposes selected live data to authorized consumers without copying the shared dataset.
 
 ## Redshift Data Sharing
 
+**Producer and consumer compute can scale independently while consumers read shared data.**
 
-Producer and consumer compute can scale independently while consumers read shared data.
-
-- Producer / consumer architecture
-  - Producer controls security
-  - Isolation to ensure producer performance unaffected by consumers
-  - Data is live and transactionally consistent
+- **Producer / consumer architecture:** Producer controls security; Isolation to ensure producer performance unaffected by consumers; Data is live and transactionally consistent
 - Both must be encrypted, must use RA3 nodes
 - Cross-region data sharing involves transfer charges
-- Types of data shares
-  - Standard
-  - AWS Data Exchange
-  - AWS Lake Formation - managed
-
+- **Types of data shares:** Standard, AWS Data Exchange, AWS Lake Formation - managed
 
 ```mermaid
 flowchart LR
-  accTitle: Redshift Data Sharing
   n0["Producer compute"]
   n1["Shared data"]
   n2["Consumer A"]
@@ -4053,30 +3611,18 @@ flowchart LR
   n1 -->|"read"| n3
 ```
 
-> Producer and consumer compute can scale independently while consumers read shared data.
 
-### Redshift Lambda UDF
+## Redshift Lambda UDF — Architecture
 
-<!-- original-note: 91 -->
+**Register a Lambda-backed external function to apply custom logic from Redshift SQL. Function permissions, invocation overhead and supported data handling remain constraints.**
 
-Register a Lambda-backed external function to apply custom logic from Redshift SQL. Function permissions, invocation overhead and supported data handling remain constraints.
-
-- Lambda UDFs remain a distinct supported external-function mechanism; Redshift Python UDF end of support after June 30, 2026 does not mean Lambda UDFs were retired.
-- Use custom functions in AWS Lambda inside SQL queries
-  - Using any language you want!
-  - Do anything you want!
-    - Call other services (AI?)
-    - Access external systems
-    - Integrate with location service
+- Lambda UDFs remain a distinct supported external-function mechanism; Redshift Python UDF end of support after June 30, 2026 does not mean Lambda UDFs were retired
+- **Use custom functions in AWS Lambda inside SQL queries:** Using any language you want! · Do anything you want! · Call other services (AI?) · Access external systems · Integrate with location service
 - Register with CREATE EXTERNAL FUNCTION
 - Must GRANT USAGE ON LANGUAGE EXFUNC for permissions
 
-**Current reference (checked 2026-10-13):** [Redshift Lambda UDF syntax](https://docs.aws.amazon.com/redshift/latest/dg/r_CREATE_EXTERNAL_FUNCTION.html).
-
-
 ```mermaid
 flowchart LR
-  accTitle: Redshift Lambda UDF
   n0["SQL query"]
   n1["External function"]
   n2["Lambda"]
@@ -4086,26 +3632,20 @@ flowchart LR
   n2 -->|"custom logic"| n3
 ```
 
-> A Lambda UDF calls an external function from Redshift SQL; it is distinct from retired Redshift Python UDFs.
-
-## Redshift Lambda UDF
+<!-- Source reference: https://docs.aws.amazon.com/redshift/latest/dg/r_CREATE_EXTERNAL_FUNCTION.html -->
 
 
-Lambda UDF requests contain batches of arguments; the handler must return a correctly shaped response with corresponding results.
+## Redshift Lambda UDF — IAM & Payloads
 
-- Lambda UDFs remain a distinct supported external-function mechanism; Redshift Python UDF end of support after June 30, 2026 does not mean Lambda UDFs were retired.
-- Use AWSLambdaRole IAM policy to grant permissions to Lambda on your cluster’s IAM role
-  - Or roll your own policy, to allow lambda:InvokeFunction
-- You also need this IAM role in your CREATE EXTERNAL FUNCTION command
-  - Possible to invoke functions in other accounts in the same Region, using IAM role chaining
+**Lambda UDF requests contain batches of arguments; the handler must return a correctly shaped response with corresponding results.**
+
+- Lambda UDFs remain a distinct supported external-function mechanism; Redshift Python UDF end of support after June 30, 2026 does not mean Lambda UDFs were retired
+- **Use AWSLambdaRole IAM policy to grant permissions to Lambda on your cluster's IAM role:** Or roll your own policy, to allow lambda:InvokeFunction
+- **You also need this IAM role in your CREATE EXTERNAL FUNCTION command:** Possible to invoke functions in other accounts in the same Region, using IAM role chaining
 - Redshift communicates with Lambda using JSON
-
-**Current reference (checked 2026-10-13):** [Redshift Lambda UDF syntax](https://docs.aws.amazon.com/redshift/latest/dg/r_CREATE_EXTERNAL_FUNCTION.html).
-
 
 ```mermaid
 flowchart LR
-  accTitle: Redshift Lambda UDF
   n0["Argument rows"]
   n1["JSON request"]
   n2["Lambda handler"]
@@ -4117,24 +3657,19 @@ flowchart LR
   n3 -->|"map to rows"| n4
 ```
 
-> Lambda UDF requests contain batches of arguments; the handler must return a correctly shaped response with corresponding results.
+<!-- Source reference: https://docs.aws.amazon.com/redshift/latest/dg/r_CREATE_EXTERNAL_FUNCTION.html -->
 
-### Redshift Federated Queries
 
-<!-- original-note: 92 -->
+## Redshift Federation — Architecture
 
-Federated queries read supported RDS or Aurora databases from Redshift. Network connectivity and Secrets Manager credentials are required in addition to SQL definitions.
+**Federated queries read supported RDS or Aurora databases from Redshift. Network connectivity and Secrets Manager credentials are required in addition to SQL definitions.**
 
 - Query and analyze across databases, warehouses, and lakes
-- Ties Redshift to Amazon RDS or Aurora for PostgreSQL and MySQL
-  - Incorporate live data in RDS into your Redshift queries
-  - Avoids the need for ETL pipelines
+- **Ties Redshift to Amazon RDS or Aurora for PostgreSQL and MySQL:** Incorporate live data in RDS into your Redshift queries; Avoids the need for ETL pipelines
 - Offloads computation to remote databases to reduce data movement
-
 
 ```mermaid
 flowchart LR
-  accTitle: Redshift Federated Queries
   n0["Redshift query"]
   n1["Local tables"]
   n2["RDS / Aurora external schema"]
@@ -4142,51 +3677,31 @@ flowchart LR
   n0 -->|"remote query"| n2
 ```
 
-> Federated queries combine Redshift data with supported remote RDS or Aurora databases; authorization and pushdown affect performance.
 
-## Redshift Federated Queries
+## Redshift Federation — Connectivity
 
+**A federated query needs a reachable external database and permission to retrieve its credentials. SQL definitions cannot substitute for network connectivity.**
 
-A federated query needs a reachable external database and permission to retrieve its credentials. SQL definitions cannot substitute for network connectivity.
-
-  - Put them in the same VPC subnet
-  - Or use VPC peering
+- Put them in the same VPC subnet
+- Or use VPC peering
 - Credentials must be in AWS Secrets Manager
 - Include secrets in IAM role for your Redshift cluster
-- Connect using CREATE EXTERNAL SCHEMA
-  - Can also connect to S3 / Redshift Spectrum this way
+- **Connect using CREATE EXTERNAL SCHEMA:** Can also connect to S3 / Redshift Spectrum this way
 - The SVV_EXTERNAL_SCHEMAS view contains available external schemas
 
-## Redshift Federated Queries
 
+## Redshift Federation — Read Behavior
 
-Federation reads supported external databases without first loading all remote data into local warehouse tables.
+**Federation reads supported external databases without first loading all remote data into local warehouse tables.**
 
 - Read-only access to external data sources
-- Costs will be incurred on external DB’s
+- Costs will be incurred on external DB's
 - You can query RDS/Aurora from Redshift, but not the other way around
 
-### Redshift System Tables and Views
 
-<!-- original-note: 93 -->
+## Redshift System Tables and Views
 
-In Amazon Redshift, system tables and system views are built-in metadata objects that record what is happening inside your cluster or workgroup.
-
-```
-                    REDSHIFT SYSTEM INFORMATION
-                              │
-          ┌───────────────────┼────────────────────┐
-          │                   │                    │
-     Historical          Current State        Metadata
-          │                   │                    │
-        STL_*               STV_*                SVV_*
-          │
-        SVL_*
-
-                    Modern / Unified
-                              │
-                            SYS_*
-```
+**In Amazon Redshift, system tables and system views are built-in metadata objects that record what is happening inside your cluster or workgroup.**
 
 | Prefix | General purpose |
 |---|---|
@@ -4196,28 +3711,19 @@ In Amazon Redshift, system tables and system views are built-in metadata objects
 | `SVV_` | System metadata/status views |
 | `SYS_` | Newer unified monitoring views (available for serverless) |
 
-### Redshift Data API
 
-<!-- original-note: 94 -->
+## Redshift Data API
 
-The Redshift Data API submits SQL over HTTPS and returns asynchronous statement status and results. It supports application and workflow integration without a persistent database connection.
+**The Redshift Data API submits SQL over HTTPS and returns asynchronous statement status and results. It supports application and workflow integration without a persistent database connection.**
 
-- Secure HTTP endpoint for SQL statements to Redshift clusters
-  - Provisioned or serverless
-  - Individual or batch queries
-- Asynchronous
-- Does not require managing connections
-  - No drivers needed
-- Passwords not sent via API
-  - Uses AWS Secrets Manager or temporary credentials
-- Can be invoked by AWS SDK
-  - C++, Go, Java, JavaScript, .NET, Node.js, PHP, Python, Ruby
+- **Secure HTTP endpoint for SQL statements to Redshift clusters:** Provisioned or serverless, Individual or batch queries
+- **Does not require managing connections:** No drivers needed
+- **Passwords not sent via API:** Uses AWS Secrets Manager or temporary credentials
+- **Can be invoked by AWS SDK:** C++, Go, Java, JavaScript, .NET, Node.js, PHP, Python, Ruby
 - AWS CloudTrail captures API calls
-
 
 ```mermaid
 flowchart LR
-  accTitle: Redshift Data API
   n0["Application / SDK"]
   n1["Data API"]
   n2["Redshift"]
@@ -4228,29 +3734,17 @@ flowchart LR
   n3 -->|"poll / retrieve"| n0
 ```
 
-> The Redshift Data API accepts authenticated HTTPS requests and returns a statement identifier for asynchronous status and result retrieval.
 
 ## Redshift Data API: Other use cases
 
+**Lambda, EventBridge and Step Functions can orchestrate Data API calls without maintaining a JDBC connection.**
 
-Lambda, EventBridge and Step Functions can orchestrate Data API calls without maintaining a JDBC connection.
-
-- Application integration
-  - REST endpoints
-- It can also integrate with a variety of other services
-  - ETL Orchestration with AWS Step Functions
-    - Serverless data processing workflows
-    - Event-driven ETL
-  - Access from SageMaker notebooks
-- Use with Amazon EventBridge
-  - Stream data from application to Lambda
-    - Set WithEvent parameter to true
-  - Schedule Data API operations
-
+- **Application integration:** REST endpoints
+- **It can also integrate with a variety of other services:** ETL Orchestration with AWS Step Functions; Serverless data processing workflows; Event-driven ETL; Access from SageMaker notebooks
+- **Use with Amazon EventBridge:** Stream data from application to Lambda; Set WithEvent parameter to true; Schedule Data API operations
 
 ```mermaid
 flowchart LR
-  accTitle: Redshift Data API: Other use cases
   n0["Event / workflow"]
   n1["Lambda / Step Functions"]
   n2["Redshift Data API"]
@@ -4260,403 +3754,17 @@ flowchart LR
   n2 -->|"SQL"| n3
 ```
 
-> Lambda, EventBridge and Step Functions can orchestrate Data API calls without maintaining a JDBC connection.
 
-### Maximum for Data API:
+## Redshift Data API — Limits
 
-<!-- original-note: 95 -->
-<!-- title: Redshift Data API limits -->
+**Query duration, concurrent statements, result size and result retention are separate Data API limits. Check the current quota for the chosen operation.**
 
-Query duration, concurrent statements, result size and result retention are separate Data API limits. Check the current quota for the chosen operation.
-
-- Maximum…
-  - Query duration: 24 hours
-  - Active queries: 500
-  - Query result size (gzip’ed): 100 MB
-  - Result retention time: 24 hours
-  - Query statement size: 100 KB
-  - Packet for query (data per row) : 64 KB
-  - Client token retention time: 8 hours
-  - Transaction per Second quotas per API (30 for ExecuteStatement)
-- API Calls
-  - ExecuteStatement, BatchExecuteStatement
-  - DescribeStatement, DescribeTable
-  - GetStatementResult, CancelStatement
-  - Users must have same IAM role or permissions to operate on a given statement
+- **Maximum…:** Query duration: 24 hours · Active queries: 500 · Query result size (gzip'ed): 100 MB · Result retention time: 24 hours · Query statement size: 100 KB · Packet for query (data per row) : 64 KB · Client token retention time: 8 hours · …
+- **API Calls:** ExecuteStatement, BatchExecuteStatement; DescribeStatement, DescribeTable; GetStatementResult, CancelStatement; Users must have same IAM role or permissions to operate on a given statement
 - Cluster must be in a VPC
 
-# Migration And Transfer
 
-<!-- original-note: 96 -->
-<!-- title: Migration and transfer -->
-<!-- section -->
-
-## AWS Application Discovery Service
-
-
-Application Discovery collects on-premises inventory and dependency information to help plan migration waves and target resources.
-
-- Server utilization data and dependency mapping are important for migrations
-- Agentless Discovery (AWS Agentless Discovery Connector)
-  - VM inventory, configuration, and performance history such as CPU, memory, and disk usage
-- Agent-based Discovery (AWS Application Discovery Agent)
-  - System configuration, system performance, running processes, and details of the network connections between systems
-- Resulting data can be viewed within AWS Migration Hub
-
-## AWS Application Migration Service (MGN)
-
-
-Application Migration Service replicates server disks to a staging area before test and cutover instances are launched.
-
-- The “AWS evolution” of CloudEndure Migration, replacing AWS Server Migration Service (SMS)
-- Lift-and-shift (rehost) solution which simplify migrating applications to AWS
-- Converts your physical, virtual, and cloud-based servers to run natively on AWS
-- Supports wide range of platforms, Operating Systems, and databases
-- Minimal downtime, reduced costs
-
-
-```mermaid
-flowchart LR
-  accTitle: AWS Application Migration Service (MGN)
-  n0["Source server + agent"]
-  n1["Replication staging area"]
-  n2["Test EC2 instance"]
-  n3["Cutover EC2 instance"]
-  n0 -->|"continuous replication"| n1
-  n1 -->|"test launch"| n2
-  n1 -->|"cutover launch"| n3
-```
-
-> Application Migration Service replicates server disks to a staging area before test and cutover instances are launched.
-
-## AWS Database Migration Service
-
-<!-- original-note: 97 -->
-
-DMS moves data between supported sources and targets, using full loads and change data capture where supported. Schema conversion is a separate migration task.
-
-- Quickly and securely migrate databases to AWS, resilient, self healing
-- The source database remains available during the migration
-- Supports:
-  - Homogeneous migrations: ex Oracle to Oracle
-  - Heterogeneous migrations: ex Microsoft SQL Server to Aurora
-- Continuous Data Replication using CDC
-- You must create an EC2 instance to perform the replication tasks
-
-
-```mermaid
-flowchart LR
-  accTitle: AWS Database Migration Service
-  n0["Source database"]
-  n1["DMS replication task"]
-  n2["Target database"]
-  n0 -->|"full load / CDC"| n1
-  n1 -->|"apply changes"| n2
-```
-
-> DMS moves database data through a replication task; source/target compatibility and full-load versus CDC settings matter.
-
-## DMS Sources and Targets
-
-
-DMS supports specific source-target combinations, with different full-load and CDC capabilities. Validate the chosen engines and versions as a pair.
-
-- Azure: Azure SQL Database
-- Amazon RDS: all including Aurora
-- Amazon S3
-- DocumentDB
-                        - On-Premises and EC2 instances databases: Oracle, MS SQL Server, MySQL, MariaDB, PostgreSQL, SAP
-                        - Amazon RDS
-                        - Redshift, DynamoDB, S3
-                        - OpenSearch Service
-                        - Kinesis Data Streams
-                        - Apache Kafka
-                        - DocumentDB & Amazon Neptune
-                        - Redis & Babelfish
-
-### AWS Schema Conversion Tool (SCT)
-
-<!-- original-note: 98 -->
-
-SCT translates schema and related objects when moving between different database engines. DMS handles the data movement; same-engine migrations may not need conversion.
-
-- Convert your Database’s Schema from one engine to another
-- Example OLTP: (SQL Server or Oracle) to MySQL, PostgreSQL, Aurora
-- Example OLAP: (Teradata or Oracle) to Amazon Redshift
-- Prefer compute-intensive instances to optimize data conversions
-- You do not need to use SCT if you are migrating the same DB engine
-  - Ex: On-Premise PostgreSQL => RDS PostgreSQL
-  - The DB engine is still PostgreSQL (RDS is the platform)
-
-
-```mermaid
-flowchart LR
-  accTitle: AWS Schema Conversion Tool (SCT)
-  n0["Source schema / code"]
-  n1["SCT assessment + conversion"]
-  n2["Target schema"]
-  n3["Manual remediation"]
-  n0 -->|"analyze"| n1
-  n1 -->|"convert supported objects"| n2
-  n1 -->|"unsupported constructs"| n3
-```
-
-> Schema Conversion Tool converts compatible schema and code and reports objects requiring manual remediation.
-
-## DMS - Continuous Replication
-
-
-For a heterogeneous migration, schema conversion and data replication are separate paths that converge on the target.
-
-
-```mermaid
-flowchart LR
-  accTitle: DMS - Continuous Replication
-  n0["Source database"]
-  n1["SCT"]
-  n2["DMS full load + CDC"]
-  n3["Target database"]
-  n0 -->|"schema"| n1
-  n1 -->|"converted schema"| n3
-  n0 -->|"data / change log"| n2
-  n2 -->|"replicate data"| n3
-```
-
-> For a heterogeneous migration, schema conversion and data replication are separate paths that converge on the target.
-
-## AWS DMS – Multi-AZ Deployment
-
-
-A Multi-AZ DMS deployment provides a standby for replication-instance availability; it does not itself make a migration task parallel.
-
-- When Multi-AZ Enabled, DMS provisions and maintains a synchronously stand replica in a different AZ
-- Advantages:
-  - Provides Data Redundancy
-  - Eliminates I/O freezes
-  - Minimizes latency spikes
-
-
-```mermaid
-flowchart LR
-  accTitle: AWS DMS – Multi-AZ Deployment
-  n0["Source"]
-  n1["Primary replication instance"]
-  n2["Standby in another AZ"]
-  n3["Target"]
-  n0 -->|"source changes"| n1
-  n1 -->|"standby replication"| n2
-  n1 -->|"apply changes"| n3
-```
-
-> A Multi-AZ DMS deployment provides a standby for replication-instance availability; it does not itself make a migration task parallel.
-
-## AWS DataSync
-
-<!-- original-note: 99 -->
-
-DataSync schedules and verifies transfers between supported storage locations, including on-premises or other-cloud sources and AWS storage.
-
-- Move large amount of data to and from
-  - On-premises / other cloud to AWS (NFS, SMB, HDFS, S3 API…) – needs agent
-  - AWS to AWS (different storage services) – no agent needed
-- Can synchronize to:
-  - Amazon S3 (any storage classes – including Glacier)
-  - Amazon EFS
-  - Amazon FSx (Windows, Lustre, NetApp, OpenZFS...)
-- Replication tasks can be scheduled hourly, daily, weekly
-- File permissions and metadata are preserved (NFS POSIX, SMB…)
-- One agent task can use 10 Gbps, can setup a bandwidth limit
-
-## AWS DataSync NFS / SMB to AWS (S3, EFS, FSx…)
-
-
-An on-premises DataSync agent accesses supported local storage and transfers data to AWS storage over encrypted transport.
-
-
-```mermaid
-flowchart LR
-  accTitle: AWS DataSync NFS / SMB to AWS (S3, EFS, FSx…)
-  n0["NFS / SMB storage"]
-  n1["DataSync agent"]
-  n2["DataSync service"]
-  n3["S3 / EFS / FSx"]
-  n0 -->|"read files"| n1
-  n1 -->|"TLS transfer"| n2
-  n2 -->|"write destination"| n3
-```
-
-> An on-premises DataSync agent accesses supported local storage and transfers data to AWS storage over encrypted transport.
-
-## AWS DataSync Transfer between AWS storage services
-
-
-DataSync also transfers between supported AWS storage locations; agent requirements depend on the location types.
-
-
-```mermaid
-flowchart LR
-  accTitle: AWS DataSync Transfer between AWS storage services
-  n0["AWS source storage"]
-  n1["DataSync task"]
-  n2["AWS destination storage"]
-  n0 -->|"read / verify"| n1
-  n1 -->|"copy / verify"| n2
-```
-
-> DataSync also transfers between supported AWS storage locations; agent requirements depend on the location types.
-
-## AWS Snow Family
-
-<!-- original-note: 100 -->
-
-Snow devices illustrate offline transfer and edge processing where connectivity is limited. Their availability and support notices determine whether they remain an option.
-
-- Availability correction: Snowball Edge closed new-customer access November 7, 2025. AWS announces commercial-Region device support ending December 31, 2026, with stated exceptions for active GovCloud/ADC jobs. Review current migration options rather than treating this as a new-customer recommendation.
-- Both pictured models list 104 vCPUs and 416 GB memory.
-- The storage-optimized model lists 210 TB SSD storage; the compute-optimized model lists 28 TB.
-- Treat these hardware specifications as model-specific course examples, not universal capacities for every generation.
-
-| Model in course | vCPUs | Memory | SSD |
-| --- | --- | --- | --- |
-| Storage Optimized | 104 | 416 GB | 210 TB |
-| Compute Optimized | 104 | 416 GB | 28 TB |
-
-**Current reference (checked 2026-10-13):** [Snowball end-of-support notice](https://aws.amazon.com/snowball/).
-
-## Estimate network transfer time
-
-
-Compare online transfer time with the complete offline workflow, including preparation, shipping and import.
-
-- Approximate ideal transfer time = data size in bits ÷ usable bits per second; actual utilization and protocol overhead increase it.
-- The source examples round a 10 TB transfer to 12 days at 100 Mbps, 30 hours at 1 Gbps and 3 hours at 10 Gbps.
-- Check shared bandwidth, cost, reliability and the migration deadline. The one-week threshold is a heuristic, not an AWS eligibility rule.
-
-| Dataset | 100 Mbps (course) | 1 Gbps (course) | 10 Gbps (course) |
-| --- | --- | --- | --- |
-| 10 TB | 12 days | 30 hours | 3 hours |
-| 100 TB | 124 days | 12 days | 30 hours |
-| 1 PB | 3 years | 124 days | 12 days |
-
-## Offline transfer workflow
-
-
-Offline appliance transfer trades network upload time for device preparation, shipping and AWS import; eligibility is a dated service constraint.
-
-- Direct upload to S3:
-- With Snowball:
-
-
-```mermaid
-flowchart LR
-  accTitle: Offline transfer workflow
-  n0["Local dataset"]
-  n1["Network upload"]
-  n2["Transfer appliance"]
-  n3["Shipping + import"]
-  n4["S3"]
-  n0 -->|"online option"| n1
-  n1 -->|"network transfer"| n4
-  n0 -->|"offline option"| n2
-  n2 -->|"ship device"| n3
-  n3 -->|"AWS import"| n4
-```
-
-> Offline appliance transfer trades network upload time for device preparation, shipping and AWS import; eligibility is a dated service constraint.
-
-## What is Edge Computing?
-
-
-Edge processing performs useful work near the data's origin, such as a remote site or vehicle, when connectivity or latency makes cloud-only processing unsuitable.
-
-  - A truck on the road, a ship on the sea, a mining station underground...
-- These locations may have limited internet and no access to computing power
-- We setup a Snowball Edge device to do edge computing
-  - Snowball Edge Compute Optimized (dedicated for that use case) & Storage Optimized
-  - Run EC2 Instances or Lambda functions at the edge
-- Use cases: preprocess data, machine learning, transcoding media
-
-## AWS Data Exchange
-
-<!-- original-note: 101 -->
-
-Data Exchange lets subscribers obtain third-party datasets through supported delivery and sharing products, including S3 objects, Redshift data and APIs.
-
-  - Reuters, who curate data from over 2.2 million unique news stories per year in multiple languages
-  - Change Healthcare, who process and anonymize more than 14 billion healthcare transactions and $1 trillion in claims annually
-  - Dun & Bradstreet, who maintain a database of more than 330 million global business records;
-  - Foursquare, whose location data is derived from 220 million unique consumers and includes more than 60 million global commercial venues.
-- Once subscribed to a data product, you can use the AWS Data Exchange API to load data directly into Amazon S3 and then analyze it with a wide variety of AWS analytics and machine learning services
-
-## AWS Data Exchange
-
-
-Data Exchange grants subscribed access to provider datasets; analytics then uses the licensed data through the delivery method configured.
-
-
-```mermaid
-flowchart LR
-  accTitle: AWS Data Exchange
-  n0["Data provider"]
-  n1["Data Exchange subscription"]
-  n2["Delivered / shared dataset"]
-  n3["Analytics / SageMaker"]
-  n0 -->|"publish product"| n1
-  n1 -->|"entitlement + delivery"| n2
-  n2 -->|"analyze"| n3
-```
-
-> Data Exchange grants subscribed access to provider datasets; analytics then uses the licensed data through the delivery method configured.
-
-## AWS Data Exchange – Other Products
-
-
-Data Exchange products can expose data through different delivery or sharing mechanisms, not only copied S3 objects.
-
-- AWS Data Exchange for Redshift
-  - Find and subscribe to third-party data in AWS Data Exchange that you can query in an Amazon Redshift data warehouse in minutes
-  - Easily license your data in Amazon Redshift through AWS Data Exchange
-- AWS Data Exchange for APIs
-  - Find and subscribe to third-party APIs with a consistent access using AWS SDKs
-  - Consistent AWS-native authentication and governance
-
-## AWS Transfer Family
-
-<!-- original-note: 102 -->
-
-Transfer Family exposes managed file-transfer endpoints backed by S3 or EFS. Match the protocol and identity integration to the clients that will connect.
-
-- Supported Protocols
-  - AWS Transfer for FTP (File Transfer Protocol (FTP))
-  - AWS Transfer for FTPS (File Transfer Protocol over SSL (FTPS))
-  - AWS Transfer for SFTP (Secure File Transfer Protocol (SFTP))
-- Managed infrastructure, Scalable, Reliable, Highly Available (multi-AZ)
-- Pay per provisioned endpoint per hour + data transfers in GB
-- Store and manage users’ credentials within the service
-- Integrate with existing authentication systems (Microsoft Active Directory, LDAP, Okta, Amazon Cognito, custom)
-- Usage: sharing files, public datasets, CRM, ERP, …
-
-## AWS Transfer Family
-
-
-Transfer Family provides managed file-transfer endpoints with configured identity and storage permissions.
-
-
-```mermaid
-flowchart LR
-  accTitle: AWS Transfer Family
-  n0["SFTP / FTPS / FTP client"]
-  n1["Transfer Family"]
-  n2["Identity provider / IAM"]
-  n3["S3 / EFS"]
-  n0 -->|"file-transfer protocol"| n1
-  n1 -->|"authenticate / authorize"| n2
-  n1 -->|"read / write files"| n3
-```
-
-> Transfer Family provides managed file-transfer endpoints with configured identity and storage permissions.
-
-# Computing
+# Section Computing
 
 <!-- original-note: 103 -->
 <!-- title: Compute -->
