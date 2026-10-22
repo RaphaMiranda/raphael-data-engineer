@@ -40,7 +40,8 @@
   assert(choices.length === matching.all.length + matching.subset.length && choices.every((choice, index) => choice.textContent.trim().startsWith(`R${index + 1} ·`)), 'Notebook exposes numbered controls for every relationship');
   document.querySelector('#graph-world [data-relationship="spectrum"]').dispatchEvent(new MouseEvent('click', { bubbles: true }));
   assert(summary().includes('Spectrum') && $('graph-pattern').value === 'spectrum', 'Map relationship click updates the notebook and selector');
-  change('graph-pattern', '');
+  document.querySelector('#graph-world [data-relationship="spectrum"]').dispatchEvent(new MouseEvent('click', { bubbles: true }));
+  assert($('graph-pattern').value === '' && document.querySelectorAll('.junction').length === matching.all.length + matching.subset.length && !document.querySelector('#relationship-choices [aria-pressed="true"]'), 'Selecting an active map relationship again restores all relationships');
   const unloadJunction = document.querySelector('#graph-world [data-relationship="unload"]');
   unloadJunction.focus();
   unloadJunction.dispatchEvent(new KeyboardEvent('keydown', { key: 'Enter', bubbles: true, cancelable: true }));
@@ -50,6 +51,8 @@
   assert(summary().includes('Spectrum') && $('graph-pattern').value === 'spectrum' && document.querySelectorAll('.junction').length === 1, 'Notebook relationship click switches to another relationship');
   const spectrumNumber = choices.findIndex(choice => choice.dataset.relationship === 'spectrum') + 1;
   assert($('graph-world').textContent.includes(`R${spectrumNumber} · Redshift Spectrum`), 'Focused map preserves the relationship number shown in the notebook');
+  document.querySelector('#relationship-choices [data-relationship="spectrum"]').click();
+  assert($('graph-pattern').value === '' && document.querySelectorAll('.junction').length === matching.all.length + matching.subset.length && !document.querySelector('#relationship-choices [aria-pressed="true"]'), 'Selecting an active notebook relationship again restores all relationships');
   const graph = $('graph-viewport').getBoundingClientRect(), note = $('notebook').getBoundingClientRect();
   assert(graph.right <= note.left + 1 || graph.bottom <= note.top + 1, 'Notebook never covers graph nodes');
   if (innerWidth <= 760) assert(note.top >= graph.bottom - 1, 'Mobile notebook docks below the canvas');

@@ -52,7 +52,7 @@
       const relevant = relevantRelationships();
       const relationship = relevant.find(r => r.id === pattern) || matches.all[0] || matches.subset[0];
       const summary = relationship ? `<p class="eyebrow">${matches.all.includes(relationship) ? 'Selected connection' : 'Subset of your selection'}</p><h3>${esc(relationship.name)}</h3><p>${esc(relationship.why)}</p>${relationship.participants.some(id => !selected.includes(id)) ? `<p class="additional">Also needs: ${relationship.participants.filter(id => !selected.includes(id)).map(id => esc(byId.get(id).name)).join(', ')}.</p>` : ''}<h4>How they connect</h4><ol class="flow-list">${relationship.flow.slice(0, 2).map(f => `<li>${esc(shortName(f.from))} → ${esc(shortName(f.to))}: ${esc(f.label)}${f.type === 'control' ? ' (control / metadata)' : ''}</li>`).join('')}</ol>${relationship.flow.length > 2 ? '<p class="small muted">Full flow in More details.</p>' : ''}<h4>Main tradeoffs</h4><p>${esc(relationship.tradeoffs)}</p>` : '<h3>No verified relationship</h3><p>Try fewer services or another combination. A missing result does not mean integration is impossible.</p>';
-      const choices = relevant.length > 1 ? `<section class="relationship-choices" aria-label="Choose a relationship"><p class="eyebrow">Choose a relationship</p><div id="relationship-choices">${relevant.map((r, index) => `<button type="button" data-relationship="${esc(r.id)}" aria-pressed="${r.id === relationship?.id}">R${index + 1} · ${esc(r.name)}</button>`).join('')}</div></section>` : '';
+  const choices = relevant.length > 1 ? `<section class="relationship-choices" aria-label="Choose a relationship"><p class="eyebrow">Choose a relationship</p><div id="relationship-choices">${relevant.map((r, index) => `<button type="button" data-relationship="${esc(r.id)}" aria-pressed="${r.id === pattern}">R${index + 1} · ${esc(r.name)}</button>`).join('')}</div></section>` : '';
       panel.innerHTML = `<div class="notebook-summary">${choices}${summary}<p class="small muted">${matches.all.length} whole-selection matches · ${matches.subset.length} subset matches. Select a relationship here or on the map to update this notebook.</p></div><details id="notebook-more" class="notebook-more"><summary>More details · all matches & sources</summary><h3>Involving all ${selected.length} selected services</h3><p class="small muted">Results may need additional participants or supporting services, identified in each card.</p>${matches.all.length ? matches.all.map(relationshipCard).join('') : `<div class="empty-state"><p>No verified relationship involving all selected services is recorded in this dataset.</p><p>Try a smaller working set or review the official documentation. We do not infer connections from shared categories.</p></div>`}${matches.subset.length ? `<h3 class="subset-heading">Relationships involving a subset</h3><p class="small muted">These results include at least two of your selected services, but do not connect the entire working set.</p>${matches.subset.map(relationshipCard).join('')}` : ''}</details>`;
     }
     panel.parentElement.scrollTop = 0;
@@ -82,7 +82,7 @@
   }
   function chooseRelationship(id, focusTarget) {
     if (!relevantRelationships().some(relationship => relationship.id === id)) return;
-    pattern = id;
+  pattern = pattern === id ? '' : id;
     renderSelections();
     if (focusTarget) document.querySelector(`${focusTarget}[data-relationship="${id}"]`)?.focus({ preventScroll: true });
   }
