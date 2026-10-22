@@ -3764,6 +3764,316 @@ flowchart LR
 - Cluster must be in a VPC
 
 
+# Section Migration And Transfer
+
+## AWS Application Discovery Service
+
+**Application Discovery collects on-premises inventory and dependency information to help plan migration waves and target resources.**
+
+- Server utilization data and dependency mapping are important for migrations
+- **Agentless Discovery (AWS Agentless Discovery Connector):** VM inventory, configuration, and performance history such as CPU, memory, and disk usage
+- **Agent-based Discovery (AWS Application Discovery Agent):** System configuration, system performance, running processes, and details of the network connections between systems
+- Resulting data can be viewed within AWS Migration Hub
+
+```mermaid
+flowchart LR
+  A[On-prem servers / VMs] --> B[Agentless inventory]
+  A --> C[Agent-based dependencies]
+  B --> D[Migration assessment]
+  C --> D
+  D --> E[Plan migration waves]
+```
+
+
+## AWS Application Migration Service (MGN)
+
+**Application Migration Service replicates server disks to a staging area before test and cutover instances are launched.**
+
+- The "AWS evolution" of CloudEndure Migration, replacing AWS Server Migration Service (SMS)
+- Lift-and-shift (rehost) solution which simplify migrating applications to AWS
+- Converts your physical, virtual, and cloud-based servers to run natively on AWS
+- Supports wide range of platforms, Operating Systems, and databases
+- Minimal downtime, reduced costs
+
+```mermaid
+flowchart LR
+  n0["Source server + agent"]
+  n1["Replication staging area"]
+  n2["Test EC2 instance"]
+  n3["Cutover EC2 instance"]
+  n0 -->|"continuous replication"| n1
+  n1 -->|"test launch"| n2
+  n1 -->|"cutover launch"| n3
+```
+
+
+## AWS Database Migration Service
+
+**DMS moves data between supported sources and targets, using full loads and change data capture where supported. Schema conversion is a separate migration task.**
+
+- Quickly and securely migrate databases to AWS, resilient, self healing
+- **Supports:** Homogeneous migrations: ex Oracle to Oracle; Heterogeneous migrations: ex Microsoft SQL Server to Aurora
+- Continuous Data Replication using CDC
+- You must create an EC2 instance to perform the replication tasks
+
+```mermaid
+flowchart LR
+  n0["Source database"]
+  n1["DMS replication task"]
+  n2["Target database"]
+  n0 -->|"full load / CDC"| n1
+  n1 -->|"apply changes"| n2
+```
+
+
+## DMS Sources and Targets
+
+**DMS supports specific source-target combinations, with different full-load and CDC capabilities. Validate the chosen engines and versions as a pair.**
+
+- Azure: Azure SQL Database
+- Amazon RDS: all including Aurora
+- Amazon S3
+- **DocumentDB:** On-Premises and EC2 instances databases: Oracle, MS SQL Server, MySQL, MariaDB, PostgreSQL, SAP · Amazon RDS · Redshift, DynamoDB, S3 · OpenSearch Service · Kinesis Data Streams · Apache Kafka · DocumentDB & Amazon Neptune · …
+
+
+## AWS Schema Conversion Tool (SCT)
+
+**SCT translates schema and related objects when moving between different database engines. DMS handles the data movement; same-engine migrations may not need conversion.**
+
+- Convert your Database's Schema from one engine to another
+- Example OLTP: (SQL Server or Oracle) to MySQL, PostgreSQL, Aurora
+- Example OLAP: (Teradata or Oracle) to Amazon Redshift
+- Prefer compute-intensive instances to optimize data conversions
+- **You do not need to use SCT if you are migrating the same DB engine:** Ex: On-Premise PostgreSQL => RDS PostgreSQL; The DB engine is still PostgreSQL (RDS is the platform)
+
+```mermaid
+flowchart LR
+  n0["Source schema / code"]
+  n1["SCT assessment + conversion"]
+  n2["Target schema"]
+  n3["Manual remediation"]
+  n0 -->|"analyze"| n1
+  n1 -->|"convert supported objects"| n2
+  n1 -->|"unsupported constructs"| n3
+```
+
+
+## DMS - Continuous Replication
+
+**For a heterogeneous migration, schema conversion and data replication are separate paths that converge on the target.**
+
+```mermaid
+flowchart LR
+  n0["Source database"]
+  n1["SCT"]
+  n2["DMS full load + CDC"]
+  n3["Target database"]
+  n0 -->|"schema"| n1
+  n1 -->|"converted schema"| n3
+  n0 -->|"data / change log"| n2
+  n2 -->|"replicate data"| n3
+```
+
+
+## AWS DMS – Multi-AZ Deployment
+
+**A Multi-AZ DMS deployment provides a standby for replication-instance availability; it does not itself make a migration task parallel.**
+
+- When Multi-AZ Enabled, DMS provisions and maintains a synchronously stand replica in a different AZ
+- **Advantages:** Provides Data Redundancy, Eliminates I/O freezes, Minimizes latency spikes
+
+```mermaid
+flowchart LR
+  n0["Source"]
+  n1["Primary replication instance"]
+  n2["Standby in another AZ"]
+  n3["Target"]
+  n0 -->|"source changes"| n1
+  n1 -->|"standby replication"| n2
+  n1 -->|"apply changes"| n3
+```
+
+
+## AWS DataSync
+
+**DataSync schedules and verifies transfers between supported storage locations, including on-premises or other-cloud sources and AWS storage.**
+
+- **Move large amount of data to and from:** On-premises / other cloud to AWS (NFS, SMB, HDFS, S3 API…) – needs agent; AWS to AWS (different storage services) – no agent needed
+- **Can synchronize to:** Amazon S3 (any storage classes – including Glacier); Amazon EFS; Amazon FSx (Windows, Lustre, NetApp, OpenZFS...)
+- Replication tasks can be scheduled hourly, daily, weekly
+- File permissions and metadata are preserved (NFS POSIX, SMB…)
+- One agent task can use 10 Gbps, can setup a bandwidth limit
+
+```mermaid
+flowchart LR
+  A[On-prem or cloud storage] --> B[DataSync task]
+  B --> C[S3 / EFS / FSx]
+  B -.-> D[Schedule + verification + metadata]
+```
+
+
+## AWS DataSync NFS / SMB to AWS (S3, EFS, FSx…)
+
+**An on-premises DataSync agent accesses supported local storage and transfers data to AWS storage over encrypted transport.**
+
+```mermaid
+flowchart LR
+  n0["NFS / SMB storage"]
+  n1["DataSync agent"]
+  n2["DataSync service"]
+  n3["S3 / EFS / FSx"]
+  n0 -->|"read files"| n1
+  n1 -->|"TLS transfer"| n2
+  n2 -->|"write destination"| n3
+```
+
+
+## AWS DataSync Transfer between AWS storage services
+
+**DataSync also transfers between supported AWS storage locations; agent requirements depend on the location types.**
+
+```mermaid
+flowchart LR
+  n0["AWS source storage"]
+  n1["DataSync task"]
+  n2["AWS destination storage"]
+  n0 -->|"read / verify"| n1
+  n1 -->|"copy / verify"| n2
+```
+
+
+## AWS Snow Family
+
+**Snow-family devices were used for offline transfer and edge processing, but availability is constrained by announced service changes.**
+
+- **Historical comparison:** Storage Optimized 210 TB SSD; Compute Optimized 28 TB SSD (course models).
+- **Source notice:** Snowball Edge closed to new customers on 7 Nov 2025; a commercial-Region support end is announced for 31 Dec 2026 with exceptions.
+- **Migration planning:** compare supported current options rather than assuming a new device order is available.
+
+| Model in course | vCPUs | Memory | SSD |
+| --- | --- | --- | --- |
+| Storage Optimized | 104 | 416 GB | 210 TB |
+| Compute Optimized | 104 | 416 GB | 28 TB |
+
+
+<!-- Source reference: https://aws.amazon.com/snowball/ -->
+
+
+## Estimate network transfer time
+
+**Compare online transfer time with the complete offline workflow, including preparation, shipping and import.**
+
+| Dataset | 100 Mbps (course) | 1 Gbps (course) | 10 Gbps (course) |
+| --- | --- | --- | --- |
+| 10 TB | 12 days | 30 hours | 3 hours |
+| 100 TB | 124 days | 12 days | 30 hours |
+| 1 PB | 3 years | 124 days | 12 days |
+
+- Approximate ideal transfer time = data size in bits ÷ usable bits per second; actual utilization and protocol overhead increase it
+- Check shared bandwidth, cost, reliability and the migration deadline. The one-week threshold is a heuristic, not an AWS eligibility rule
+
+
+## Offline transfer workflow
+
+**Offline appliance transfer trades network upload time for device preparation, shipping and AWS import; eligibility is a dated service constraint.**
+
+- Direct upload to S3
+- With Snowball
+
+```mermaid
+flowchart LR
+  n0["Local dataset"]
+  n1["Network upload"]
+  n2["Transfer appliance"]
+  n3["Shipping + import"]
+  n4["S3"]
+  n0 -->|"online option"| n1
+  n1 -->|"network transfer"| n4
+  n0 -->|"offline option"| n2
+  n2 -->|"ship device"| n3
+  n3 -->|"AWS import"| n4
+```
+
+
+## Edge Computing — Processing Near Data
+
+**Edge processing performs useful work near the data's origin, such as a remote site or vehicle, when connectivity or latency makes cloud-only processing unsuitable.**
+
+- A truck on the road, a ship on the sea, a mining station underground
+- These locations may have limited internet and no access to computing power
+- **We setup a Snowball Edge device to do edge computing:** Snowball Edge Compute Optimized (dedicated for that use case) & Storage Optimized; Run EC2 Instances or Lambda functions at the edge
+- Use cases: preprocess data, machine learning, transcoding media
+
+```mermaid
+flowchart LR
+  A[Remote sensors / equipment] --> B[Local processing]
+  B --> C[Fast local decisions]
+  B -->|When connected| D[Cloud data platform]
+```
+
+
+## AWS Data Exchange — Third-Party Data
+
+**Data Exchange lets subscribers obtain third-party datasets through supported delivery and sharing products, including S3 objects, Redshift data and APIs.**
+
+- Reuters, who curate data from over 2.2 million unique news stories per year in multiple languages
+- Change Healthcare, who process and anonymize more than 14 billion healthcare transactions and $1 trillion in claims annually
+- Dun & Bradstreet, who maintain a database of more than 330 million global business records
+- Foursquare, whose location data is derived from 220 million unique consumers and includes more than 60 million global commercial venues
+- Once subscribed to a data product, you can use the AWS Data Exchange API to load data directly into Amazon S3 and then analyze it with a wide variety of AWS analytics and machine learning services
+
+
+## AWS Data Exchange — Subscription Flow
+
+**Data Exchange grants subscribed access to provider datasets; analytics then uses the licensed data through the delivery method configured.**
+
+```mermaid
+flowchart LR
+  n0["Data provider"]
+  n1["Data Exchange subscription"]
+  n2["Delivered / shared dataset"]
+  n3["Analytics / SageMaker"]
+  n0 -->|"publish product"| n1
+  n1 -->|"entitlement + delivery"| n2
+  n2 -->|"analyze"| n3
+```
+
+
+## AWS Data Exchange – Other Products
+
+**Data Exchange products can expose data through different delivery or sharing mechanisms, not only copied S3 objects.**
+
+- **AWS Data Exchange for Redshift:** Find and subscribe to third-party data in AWS Data Exchange that you can query in an Amazon Redshift data warehouse in minutes; Easily license your data in Amazon Redshift through AWS Data Exchange
+- **AWS Data Exchange for APIs:** Find and subscribe to third-party APIs with a consistent access using AWS SDKs; Consistent AWS-native authentication and governance
+
+
+## AWS Transfer Family — Managed Protocols
+
+**Transfer Family exposes managed file-transfer endpoints backed by S3 or EFS. Match the protocol and identity integration to the clients that will connect.**
+
+- **Supported Protocols:** AWS Transfer for FTP (File Transfer Protocol (FTP)); AWS Transfer for FTPS (File Transfer Protocol over SSL (FTPS)); AWS Transfer for SFTP (Secure File Transfer Protocol (SFTP))
+- Managed infrastructure, Scalable, Reliable, Highly Available (multi-AZ)
+- Pay per provisioned endpoint per hour + data transfers in GB
+- Store and manage users' credentials within the service
+- Integrate with existing authentication systems (Microsoft Active Directory, LDAP, Okta, Amazon Cognito, custom)
+- Usage: sharing files, public datasets, CRM, ERP, …
+
+
+## AWS Transfer Family — Architecture
+
+**Transfer Family provides managed file-transfer endpoints with configured identity and storage permissions.**
+
+```mermaid
+flowchart LR
+  n0["SFTP / FTPS / FTP client"]
+  n1["Transfer Family"]
+  n2["Identity provider / IAM"]
+  n3["S3 / EFS"]
+  n0 -->|"file-transfer protocol"| n1
+  n1 -->|"authenticate / authorize"| n2
+  n1 -->|"read / write files"| n3
+```
+
 # Section Computing
 
 <!-- original-note: 103 -->
