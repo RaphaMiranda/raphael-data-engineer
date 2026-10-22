@@ -1,6 +1,6 @@
-<!-- Unified personal study notes; PDF material through physical page 765. -->
+<!-- Unified personal study notes -->
 
-Personal notes supplemented and paraphrased from **AWSCertifiedDataEngineerSlides.pdf**, by **Stephane Maarek and Frank Kane** (PDF metadata: 25 September 2026). Reviewed 13 October 2026. Limits, prices and availability are dated study material unless a current reference is linked; this is not an official AWS reference.
+Personal AWS data engineering study notes. Technical details that change over time should be checked against current AWS documentation.
 
 # Section Fundamentals
 
@@ -9,7 +9,6 @@ Personal notes supplemented and paraphrased from **AWSCertifiedDataEngineerSlide
 
 # Types of Data
 
-<!-- pdf-page: 13 -->
 <!-- original-note: 1 -->
 
 Start by identifying the data's structure: fixed columns, flexible named fields, or content that needs interpretation before it can be queried.
@@ -20,7 +19,6 @@ Start by identifying the data's structure: fixed columns, flexible named fields,
 
 ## Structured Data
 
-<!-- pdf-page: 14 -->
 
 Structured data follows an explicit model, such as named columns with consistent meanings and types, which makes repeated queries straightforward.
 
@@ -30,7 +28,6 @@ Structured data follows an explicit model, such as named columns with consistent
 
 ## Unstructured Data
 
-<!-- pdf-page: 15 -->
 
 Unstructured data lacks a ready-made row-and-column model. Extract useful features or text before applying the analysis the content requires.
 
@@ -40,7 +37,6 @@ Unstructured data lacks a ready-made row-and-column model. Extract useful featur
 
 ## Semi-Structured Data
 
-<!-- pdf-page: 16 -->
 
 Semi-structured records use tags, keys or nesting to provide organization without requiring every record to share the same fixed layout.
 
@@ -50,7 +46,6 @@ Semi-structured records use tags, keys or nesting to provide organization withou
 
 # Properties of Data
 
-<!-- pdf-page: 17 -->
 <!-- original-note: 2 -->
 
 The three Vs describe different design pressures: how much data exists, how quickly it arrives, and how many shapes and sources must be supported.
@@ -63,7 +58,6 @@ The three Vs describe different design pressures: how much data exists, how quic
 
 ## Volume
 
-<!-- pdf-page: 18 -->
 
 Volume is the amount of data to store and process. Estimate both today's working set and its growth before selecting storage and compute capacity.
 
@@ -76,7 +70,6 @@ Volume is the amount of data to store and process. Estimate both today's working
 
 ## Velocity
 
-<!-- pdf-page: 19 -->
 
 Velocity is the rate at which data arrives and must be processed. The required freshness determines whether batch, near-real-time or streaming operation is appropriate.
 
@@ -89,7 +82,6 @@ Velocity is the rate at which data arrives and must be processed. The required f
 
 ## Variety
 
-<!-- pdf-page: 20 -->
 
 Variety describes differences in source systems, formats and structure. A pipeline may combine relational records with API documents, logs, images or other content.
 
@@ -99,7 +91,6 @@ Variety describes differences in source systems, formats and structure. A pipeli
 
 # Data Warehouse
 
-<!-- pdf-page: 22 -->
 <!-- original-note: 3 -->
 
 A warehouse brings curated, structured data together for reporting and analytical queries. Model the data before loading it and optimize for repeated reads.
@@ -116,13 +107,11 @@ A warehouse brings curated, structured data together for reporting and analytica
 
 ## Data Warehouse example
 
-<!-- pdf-page: 23 -->
 
 Source systems feed a central warehouse; subject-specific data marts serve accounting, analysis and machine learning.
 
 # Data Lake
 
-<!-- pdf-page: 24 -->
 <!-- original-note: 4 -->
 
 A lake keeps source data in its original form so different processing engines can reuse it. Raw storage is flexible, but useful analysis still needs metadata, quality checks and access control.
@@ -139,7 +128,6 @@ A lake keeps source data in its original form so different processing engines ca
 
 ## Comparisons
 
-<!-- pdf-page: 25 -->
 <!-- original-note: 5 -->
 
 Compare a lake and a warehouse by when structure is imposed, which data types they retain and how much preparation each query needs.
@@ -157,7 +145,6 @@ Compare a lake and a warehouse by when structure is imposed, which data types th
 
 ## When to use datawarehouse:
 
-<!-- pdf-page: 26 -->
 <!-- original-note: 6 -->
 
 Many pipelines use both: retain incoming data in a lake, then publish curated datasets to a warehouse for stable business reporting.
@@ -175,7 +162,6 @@ Many pipelines use both: retain incoming data in a lake, then publish curated da
 
 # Data Lakehouses
 
-<!-- pdf-page: 27 -->
 <!-- original-note: 7 -->
 
 A lakehouse adds table management and warehouse-style reliability to lake storage, aiming to keep open data access while supporting dependable analytics.
@@ -194,7 +180,6 @@ A lakehouse adds table management and warehouse-style reliability to lake storag
 
 # Data Mesh
 
-<!-- pdf-page: 28 -->
 <!-- original-note: 8 -->
 
 Data mesh is an ownership model: domain teams publish usable data products, while shared tooling and federated standards keep the organization coordinated.
@@ -210,7 +195,6 @@ Data mesh is an ownership model: domain teams publish usable data products, whil
 
 # ETL Pipelines
 
-<!-- pdf-page: 29 -->
 <!-- original-note: 9 -->
 
 ETL extracts source records, prepares them for the target model and loads them into an analytical store. Choose batch or streaming operation from the freshness requirement.
@@ -228,7 +212,6 @@ Extraction gathers records from databases, applications, files or APIs while pre
 
 # Transform
 
-<!-- pdf-page: 30 -->
 <!-- original-note: 11 -->
 
 Transformation turns source records into usable target data: clean values, align formats, enrich fields, calculate measures and handle missing information.
@@ -243,7 +226,6 @@ Transformation turns source records into usable target data: clean values, align
 
 # Load
 
-<!-- pdf-page: 31 -->
 <!-- original-note: 12 -->
 
 Loading writes prepared data into its destination. Batch size, streaming behavior and integrity checks must match the target system's constraints.
@@ -253,7 +235,6 @@ Loading writes prepared data into its destination. Batch size, streaming behavio
 
 # Managing ETL pipelines
 
-<!-- pdf-page: 32 -->
 <!-- original-note: 13 -->
 
 Orchestration makes the pipeline repeatable: schedule work, enforce dependencies, observe failures and arrange retries instead of relying on manual execution.
@@ -269,7 +250,6 @@ Orchestration makes the pipeline repeatable: schedule work, enforce dependencies
 
 # Data sources
 
-<!-- pdf-page: 33 -->
 <!-- original-note: 14 -->
 
 A source connection depends on both the interface and the driver. JDBC and ODBC provide database access; APIs, logs and streams require their own ingestion paths.
@@ -315,7 +295,6 @@ Choose a format for the access pattern: readable interchange, schema-aware recor
 
 ## CSV : Text based format that represents data in tabular form where each line corresponds to a row and values are separeted by comma or similar separator
 
-<!-- pdf-page: 35 -->
 <!-- original-note: 19 -->
 <!-- title: CSV -->
 
@@ -330,7 +309,6 @@ CSV represents rows as delimited text. It is convenient for exchanging and inspe
 
 ## Json
 
-<!-- pdf-page: 36 -->
 <!-- original-note: 20 -->
 <!-- title: JSON -->
 
@@ -344,7 +322,6 @@ JSON represents values with named fields and nested structures. It suits APIs an
 
 ## AVRO
 
-<!-- pdf-page: 37 -->
 <!-- original-note: 21 -->
 <!-- title: Avro -->
 
@@ -358,7 +335,6 @@ Avro stores records in a compact binary representation with schema information. 
 
 ## Parquet
 
-<!-- pdf-page: 38 -->
 <!-- original-note: 22 -->
 
 Parquet stores values by column, allowing analytical engines to read selected fields and compress similar values efficiently.
@@ -371,7 +347,6 @@ Parquet stores values by column, allowing analytical engines to read selected fi
 
 # Data Modelling
 
-<!-- pdf-page: 39 -->
 <!-- original-note: 23 -->
 
 Choose the grain of a fact table, identify its measures and connect descriptive dimensions through keys. The enrollment example illustrates this separation.
@@ -396,7 +371,6 @@ A star schema keeps the fact table at the center with direct links to its dimens
 
 # Data Lineage
 
-<!-- pdf-page: 40 -->
 <!-- original-note: 26 -->
 
 Lineage records where data originated, which transformations changed it and which outputs depend on it. Use that history to trace errors and assess downstream impact.
@@ -411,7 +385,6 @@ Lineage records where data originated, which transformations changed it and whic
 
 ## Capturing Spark lineage
 
-<!-- pdf-page: 41 -->
 
 In the illustrated lineage solution, a Spline agent observes Glue/Spark jobs; Lambda loads lineage metadata into Neptune for traversal.
 
@@ -421,7 +394,6 @@ In the illustrated lineage solution, a Spline agent observes Glue/Spark jobs; La
 
 # schema evolution
 
-<!-- pdf-page: 42 -->
 <!-- original-note: 27 -->
 <!-- title: Schema evolution -->
 
@@ -438,7 +410,6 @@ Schema evolution changes fields or their definitions without unexpectedly breaki
 
 # Database Performance Optimization
 
-<!-- pdf-page: 43 -->
 <!-- original-note: 28 -->
 
 Improve performance by addressing the actual bottleneck: indexes narrow lookups, partitions reduce work, and compression lowers storage and transfer volume.
@@ -458,7 +429,6 @@ Improve performance by addressing the actual bottleneck: indexes narrow lookups,
 
 # Data Sampling Techniques
 
-<!-- pdf-page: 44 -->
 <!-- original-note: 29 -->
 
 Sampling reduces the amount of data examined while preserving the properties needed for the question. Match the selection method to the population's structure.
@@ -470,28 +440,24 @@ Sampling reduces the amount of data examined while preserving the properties nee
 
 ## Random Sampling
 
-<!-- pdf-page: 45 -->
 
 Random sampling gives each eligible item a chance of selection; highlighted items need not be regularly spaced.
 
 ## Stratified Sampling
 
-<!-- pdf-page: 46 -->
 
 Stratified sampling takes samples from books, music, home/garden and apparel separately, then combines them.
 
 ## Systematic sampling
 
-<!-- pdf-page: 47 -->
 
 Select every kth observation after choosing a starting point.
 
-- The PDF labels this "systemic" sampling; the statistical term is systematic.
+- Systematic sampling selects every kth record after a randomized start.
 - Avoid a sampling interval that aligns with periodic structure in the population.
 
 # Data Skew mechanisms
 
-<!-- pdf-page: 48 -->
 <!-- original-note: 30 -->
 
 Skew occurs when some keys or partitions receive much more work than others. A celebrity account or a busy recent partition can become the limiting part of a distributed job.
@@ -508,7 +474,6 @@ Skew occurs when some keys or partitions receive much more work than others. A c
 
 ## Solutions
 
-<!-- pdf-page: 49 -->
 <!-- original-note: 31 -->
 <!-- title: Reducing data skew -->
 
@@ -524,7 +489,6 @@ Redistribute work with better partitioning, sampling or salting, and verify that
 
 # Data Validation and Profiling
 
-<!-- pdf-page: 50 -->
 <!-- original-note: 32 -->
 
 Profile data along four separate dimensions: missing information, contradictory values, incorrect values and broken relationships.
@@ -545,7 +509,6 @@ Profile data along four separate dimensions: missing information, contradictory 
 
 ## Aggregation
 
-<!-- pdf-page: 52 -->
 
 COUNT, SUM, AVG, MIN and MAX summarize a set of input rows.
 
@@ -560,11 +523,10 @@ COUNT, SUM, AVG, MIN and MAX summarize a set of input rows.
 
 ## Conditional aggregation with CASE
 
-<!-- pdf-page: 53 -->
 
 WHERE filters input rows before grouping; CASE lets one query calculate several conditional aggregates.
 
-- HAVING filters groups after aggregation. The PDF reverses the WHERE order in its explanation.
+- WHERE filters input rows before grouping; HAVING filters groups after aggregation.
 - COUNT(CASE WHEN condition THEN 1 END) counts matches because COUNT(expression) ignores NULL.
 - SUM(CASE WHEN condition THEN amount ELSE 0 END) totals values within a condition.
 
@@ -580,7 +542,6 @@ FROM employees;
 
 ## Grouping
 
-<!-- pdf-page: 54 -->
 
 GROUP BY returns one aggregate row per distinct grouping key.
 
@@ -596,7 +557,6 @@ GROUP BY department_id;
 
 ## Multiple grouping keys and sorting
 
-<!-- pdf-page: 55 -->
 
 Grouping by year and product produces one row for each year/product combination.
 
@@ -613,7 +573,6 @@ ORDER BY sale_year, total_sales DESC;
 
 # SQL Pivoting
 
-<!-- pdf-page: 56 -->
 <!-- original-note: 33 -->
 
 Pivoting changes category values into report columns. For sales reporting, group by salesperson and aggregate the amount for each month.
@@ -623,7 +582,6 @@ Pivoting changes category values into report columns. For sales reporting, group
 
 ## Pivoting with conditional aggregation
 
-<!-- pdf-page: 57 -->
 
 Use CASE inside an aggregate to build a cross-tab report without a dedicated PIVOT operator.
 
@@ -640,13 +598,11 @@ GROUP BY salesperson;
 
 ## INNER JOIN
 
-<!-- pdf-page: 58 -->
 
 INNER JOIN returns matching row pairs. Duplicate keys can produce multiple output rows.
 
 ## INNER JOIN worked example
 
-<!-- pdf-page: 59 -->
 
 An inner join emits rows only when the join condition matches. A customer with several matching payments contributes several joined rows.
 
@@ -661,13 +617,11 @@ INNER JOIN payments p
 
 ## LEFT OUTER JOIN
 
-<!-- pdf-page: 60 -->
 
 LEFT OUTER JOIN keeps every left row; unmatched right-side columns become NULL.
 
 ## LEFT JOIN worked example
 
-<!-- pdf-page: 61 -->
 
 A left join preserves every row from its left input. When no payment matches a customer, the payment columns in the result are NULL.
 
@@ -682,13 +636,11 @@ LEFT JOIN payments p
 
 ## RIGHT OUTER JOIN
 
-<!-- pdf-page: 62 -->
 
 RIGHT OUTER JOIN keeps every right row; unmatched left-side columns become NULL.
 
 ## RIGHT JOIN worked example
 
-<!-- pdf-page: 63 -->
 
 A right join preserves every row from its right input. Swapping the inputs changes which unmatched records remain in the result.
 
@@ -703,22 +655,19 @@ RIGHT JOIN customers c
 
 ## FULL OUTER JOIN
 
-<!-- pdf-page: 64 -->
 
 FULL OUTER JOIN preserves unmatched rows from both inputs and includes all matching row pairs.
 
 ## CROSS JOIN
 
-<!-- pdf-page: 65 -->
 
 A cross join returns the Cartesian product: m rows times n rows yields m × n combinations.
 
-- The PDF says "CROSS OUTER JOIN"; use CROSS JOIN.
+- CROSS JOIN returns the Cartesian product of its inputs.
 - There is no matching ON predicate in this example.
 
 ## CROSS JOIN worked example
 
-<!-- pdf-page: 66 -->
 
 A cross join pairs each row from one input with every row from the other, producing all combinations without a matching-key condition.
 
@@ -732,7 +681,6 @@ CROSS JOIN customers c;
 
 ## SQL Regular Expressions
 
-<!-- pdf-page: 67 -->
 
 Regular expressions match patterns inside text; SQL syntax and supported operators depend on the database.
 
@@ -755,13 +703,11 @@ Regular expressions match patterns inside text; SQL syntax and supported operato
 
 ## Git review
 
-<!-- pdf-page: 68 -->
 
 Git separates working files, the staging area, local commits and the remote repository.
 
 ## Common git commands
 
-<!-- pdf-page: 69 -->
 
 Git configuration sets identity and preferences; init and clone create a local repository in different ways.
 
@@ -780,7 +726,6 @@ Git configuration sets identity and preferences; init and clone create a local r
 
 ## Branching with git
 
-<!-- pdf-page: 70 -->
 
 Branches diverge from a common commit and may later merge; branch pointers identify the current tip.
 
@@ -793,7 +738,6 @@ Branches diverge from a common commit and may later merge; branch pointers ident
 
 ## Remote repositories
 
-<!-- pdf-page: 71 -->
 
 Remote repositories provide shared references for collaboration. Configure a remote, fetch its history and explicitly push the branches you intend to publish.
 
@@ -803,7 +747,6 @@ Remote repositories provide shared references for collaboration. Configure a rem
 
 ## Undoing changes
 
-<!-- pdf-page: 72 -->
 
 Choose an undo operation by what must change: the staging area, working files or committed history. Check the affected scope before resetting or reverting.
 
@@ -812,7 +755,6 @@ Choose an undo operation by what must change: the staging area, working files or
 
 ## Advanced git
 
-<!-- pdf-page: 73 -->
 
 Stashing, rebasing, cherry-picking and bisecting solve different history-management problems; select the operation from the result you need.
 
@@ -822,7 +764,6 @@ Stashing, rebasing, cherry-picking and bisecting solve different history-managem
 
 ## Git collaboration and inspection
 
-<!-- pdf-page: 74 -->
 
 Inspect commits, file attribution and differences to understand a change before integrating it. Use patches when exchanging changes outside the usual branch workflow.
 
@@ -831,7 +772,6 @@ Inspect commits, file attribution and differences to understand a change before 
 
 ## Git maintenance and data recovery
 
-<!-- pdf-page: 75 -->
 
 Git integrity checks, cleanup and the reflog support local repository maintenance and recovery.
 
@@ -844,9 +784,8 @@ Git integrity checks, cleanup and the reflog support local repository maintenanc
 <!-- original-note: 35 -->
 <!-- section -->
 
-## Amazon S3 overview
+## Amazon S3
 
-<!-- pdf-page: 78 -->
 
 S3 stores objects for data lakes, backups, archives, application assets and content distribution. Other AWS services often use it as a durable exchange point.
 
@@ -855,9 +794,8 @@ S3 stores objects for data lakes, backups, archives, application assets and cont
 - Analytics: retain datasets and exchange outputs between processing tools.
 - The personal notes use long-retention financial archives and analytical reports as example workloads; they are examples rather than current customer claims.
 
-## Amazon S3 Use cases
+### Amazon S3 Use cases
 
-<!-- pdf-page: 79 -->
 
 S3 supports object-backed storage, archives, recovery copies, content delivery and analytical lakes.
 
@@ -871,9 +809,8 @@ S3 supports object-backed storage, archives, recovery copies, content delivery a
 - Software delivery
 - Static website
 
-## Buckets
+### Buckets
 
-<!-- pdf-page: 80 -->
 <!-- original-note: 36 -->
 <!-- title: S3 buckets -->
 
@@ -887,9 +824,8 @@ A bucket is the container for S3 objects in a Region. Choose its namespace delib
 
 **Current reference (checked 2026-10-13):** [S3 bucket namespaces and naming](https://docs.aws.amazon.com/AmazonS3/latest/userguide/bucketnamingrules.html).
 
-## Amazon S3 - Objects
+### Amazon S3 - Objects
 
-<!-- pdf-page: 81 -->
 
 An S3 object key identifies the object within its bucket; slash-separated prefixes do not create ordinary filesystem directories.
 
@@ -901,9 +837,8 @@ An S3 object key identifies the object within its bucket; slash-separated prefix
 - There’s no concept of “directories” within buckets (although the UI will trick you to think otherwise)
 - Just keys with very long names that contain slashes (“/”) with Objects
 
-## Amazon S3 – Objects (cont.)
+### Amazon S3 – Objects (cont.)
 
-<!-- pdf-page: 82 -->
 
 An S3 object combines its bytes with metadata, optional tags and a version identifier when versioning is enabled.
 
@@ -917,9 +852,8 @@ An S3 object combines its bytes with metadata, optional tags and a version ident
 
 **Current reference (checked 2026-10-13):** [S3 object limits](https://docs.aws.amazon.com/AmazonS3/latest/userguide/UsingObjects.html).
 
-### Security
+### S3 - Security
 
-<!-- pdf-page: 83 -->
 <!-- original-note: 37 -->
 <!-- title: S3 security -->
 
@@ -936,9 +870,8 @@ S3 access depends on the requesting identity, applicable resource policies and b
   - AND there’s no explicit DENY
 - Encryption: encrypt objects in Amazon S3 using encryption keys
 
-## S3 Bucket Policies
+### S3 - Bucket Policies
 
-<!-- pdf-page: 84 -->
 
 A bucket policy is a resource policy that scopes S3 actions by principal, resource and optional conditions.
 
@@ -952,42 +885,36 @@ A bucket policy is a resource policy that scopes S3 actions by principal, resour
   - Force objects to be encrypted at upload
   - Grant access to another account (Cross Account)
 
-## Example: Public Access - Use Bucket Policy
+### Example: Public Access - Use Bucket Policy
 
-<!-- pdf-page: 85 -->
 
 Anonymous access requires an applicable bucket policy and public-access settings that permit it; public access is an explicit configuration choice.
 
-## Example: User Access to S3 – IAM permissions
+### Example: User Access to S3 – IAM permissions
 
-<!-- pdf-page: 86 -->
 
 An IAM user's identity policy can authorize same-account S3 access, subject to all applicable policy restrictions.
 
-## Example: EC2 instance access - Use IAM Roles
+### Example: EC2 instance access - Use IAM Roles
 
-<!-- pdf-page: 87 -->
 
 An EC2 instance uses an IAM role and temporary credentials to access S3 without embedded long-lived keys.
 
-## Advanced: Cross-Account Access – Use Bucket Policy
+### Advanced: Cross-Account Access – Use Bucket Policy
 
-<!-- pdf-page: 88 -->
 
 Cross-account S3 access requires authorization on both sides; the destination bucket policy trusts the external principal.
 
-## Bucket settings for Block Public Access
+### Bucket settings for Block Public Access
 
-<!-- pdf-page: 89 -->
 
 Block Public Access adds controls against unintended public exposure. Evaluate these settings together with the bucket's policies and access-control configuration.
 
 - If you know your bucket should never be public, leave these on
 - Can be set at the account level
 
-## Amazon S3 - Versioning
+### Amazon S3 - Versioning
 
-<!-- pdf-page: 90 -->
 
 Versioning retains distinct versions under the same object key; a delete marker hides the current object without erasing retained versions.
 
@@ -1001,9 +928,8 @@ Versioning retains distinct versions under the same object key; a delete marker 
   - Any file that is not versioned prior to enabling versioning will have version “null”
   - Suspending versioning does not delete the previous versions
 
-### Replication
+### Amazon S3 - Replication
 
-<!-- pdf-page: 91 -->
 <!-- original-note: 38 -->
 <!-- title: S3 replication -->
 
@@ -1019,9 +945,8 @@ Replication copies eligible objects to another bucket in the same Region or a di
   - CRR – compliance, lower latency access, replication across accounts
   - SRR – log aggregation, live replication between production and test accounts
 
-## Amazon S3 – Replication (Notes)
+### Amazon S3 – Replication (Notes)
 
-<!-- pdf-page: 92 -->
 
 A newly enabled replication rule handles eligible new writes. Use a separate batch-replication workflow when existing objects also need to be copied.
 
@@ -1034,9 +959,8 @@ A newly enabled replication rule handles eligible new writes. Use a separate bat
   - If bucket 1 has replication into bucket 2, which has replication into bucket 3
   - Then objects created in bucket 1 are not replicated to bucket 3
 
-## Amazon S3 – Replication Time Control (RTC)
+### Amazon S3 – Replication Time Control (RTC)
 
-<!-- pdf-page: 93 -->
 
 Replication Time Control adds a defined replication-time objective and monitoring to supported replication rules, with additional charges and documented eligibility.
 
@@ -1048,9 +972,8 @@ Replication Time Control adds a defined replication-time objective and monitorin
 - Helps you meet compliance or business requirements
 - Extra cost per GB for the replication
 
-### s3 Classes
+### S3 Classes
 
-<!-- pdf-page: 94 -->
 <!-- original-note: 39 -->
 <!-- title: S3 storage classes -->
 
@@ -1065,9 +988,8 @@ Choose a storage class by access frequency, retrieval delay, resilience and rete
 - Amazon S3 Intelligent Tiering
 - Can move between classes manually or using S3 Lifecycle configurations
 
-## S3 Durability and Availability
+### S3 Durability and Availability
 
-<!-- pdf-page: 95 -->
 
 Durability measures protection against data loss; availability measures successful access over time.
 
@@ -1080,9 +1002,8 @@ Durability measures protection against data loss; availability measures successf
   - Varies depending on storage class
   - Example: S3 standard has 99.99% availability = not available 53 minutes a year
 
-## S3 Standard – General Purpose
+### S3 Standard – General Purpose
 
-<!-- pdf-page: 96 -->
 
 S3 Standard targets frequently accessed data with immediate access and multi-AZ resilience.
 
@@ -1092,9 +1013,8 @@ S3 Standard targets frequently accessed data with immediate access and multi-AZ 
 - Sustain 2 concurrent facility failures
 - Use Cases: Big Data analytics, mobile & gaming applications, content distribution…
 
-## S3 Storage Classes – Infrequent Access
+### S3 Storage Classes – Infrequent Access
 
-<!-- pdf-page: 97 -->
 
 Infrequent-access classes trade lower storage prices for retrieval charges and minimum-duration rules while retaining immediate object access.
 
@@ -1107,9 +1027,8 @@ Infrequent-access classes trade lower storage prices for retrieval charges and m
   - 99.5% Availability
   - Use Cases: Storing secondary backup copies of on-premises data, or data you can recreate
 
-## Amazon S3 Glacier Storage Classes
+### Amazon S3 Glacier Storage Classes
 
-<!-- pdf-page: 98 -->
 
 Glacier classes serve long-retention and rarely accessed data. Choose between immediate reads and restore workflows according to the acceptable retrieval delay.
 
@@ -1123,9 +1042,8 @@ Glacier classes serve long-retention and rarely accessed data. Choose between im
   - Standard (12 hours), Bulk (48 hours)
   - Minimum storage duration of 180 days
 
-## S3 Intelligent-Tiering
+### S3 Intelligent-Tiering
 
-<!-- pdf-page: 99 -->
 
 Intelligent-Tiering adapts eligible objects to changing access patterns, with monitoring and optional archive-tier considerations.
 
@@ -1137,9 +1055,8 @@ Intelligent-Tiering adapts eligible objects to changing access patterns, with mo
 - Archive Instant Access tier (automatic): objects not accessed for 90 days
 - Archive Access tier (optional): configurable from 90 days to 700+ days
 
-## S3 storage-class comparison
+### S3 storage-class comparison
 
-<!-- pdf-page: 100 -->
 
 Compare access latency, AZ resilience, retention charges and retrieval fees before comparing storage price.
 
@@ -1157,11 +1074,10 @@ Compare access latency, AZ resilience, retention charges and retrieval fees befo
 | Glacier Flexible Retrieval | Archives with restore delay | Restore tier and temporary restored copy |
 | Glacier Deep Archive | Long retention, hours acceptable | Longer restore time and minimum duration |
 
-## S3 pricing: compare the complete workload
+### S3 pricing: compare the complete workload
 
-<!-- pdf-page: 101 -->
 
-The us-east-1 dollar amounts are a course snapshot, not a current quote.
+The us-east-1 dollar amounts are an illustrative snapshot, not a current quote.
 
 - Include storage, requests, retrieved bytes, lifecycle transitions, monitoring and transfer in the estimate.
 - Frequent small reads can make the lowest per-GB storage class more expensive overall.
@@ -1169,9 +1085,8 @@ The us-east-1 dollar amounts are a course snapshot, not a current quote.
 
 **Current reference (checked 2026-10-13):** [S3 pricing](https://aws.amazon.com/s3/pricing/).
 
-## S3 Express One Zone
+### S3 Express One Zone
 
-<!-- pdf-page: 102 -->
 
 S3 Express One Zone places a directory bucket in one Availability Zone; co-locating compute reduces access latency.
 
@@ -1184,9 +1099,8 @@ S3 Express One Zone places a directory bucket in one Availability Zone; co-locat
 - Use cases: latency-sensitive apps, data-intensive apps, AI & ML training, financial modeling, media processing, HPC…
 - Best integrated with SageMaker Model Training,
 
-## Amazon S3 – Moving between Storage Classes
+### Amazon S3 – Moving between Storage Classes
 
-<!-- pdf-page: 103 -->
 
 The lifecycle waterfall shows alternative permitted transitions, not a mandatory sequence. Intelligent-Tiering exits depend on the object's access tier; eligibility and minimum-duration rules still apply.
 
@@ -1197,9 +1111,8 @@ The lifecycle waterfall shows alternative permitted transitions, not a mandatory
 
 **Current reference (checked 2026-10-13):** [S3 supported lifecycle transitions](https://docs.aws.amazon.com/AmazonS3/latest/userguide/lifecycle-transition-general-considerations.html).
 
-## Amazon S3 – Lifecycle Rules
+### Amazon S3 – Lifecycle Rules
 
-<!-- pdf-page: 104 -->
 
 Lifecycle rules transition or expire eligible objects, versions and uploads. Scope each rule to the intended dataset and retention requirement.
 
@@ -1211,18 +1124,16 @@ Lifecycle rules transition or expire eligible objects, versions and uploads. Sco
   - Can be used to delete incomplete Multi-Part uploads
 - Rules can be created for a certain prefix (example: s3://mybucket/mp3/*)
 
-## Amazon S3 – Lifecycle Rules (Scenario 1)
+### Amazon S3 – Lifecycle Rules (Scenario 1)
 
-<!-- pdf-page: 105 -->
 
 Store profile originals for immediate access for 60 days, then allow a six-hour retrieval delay. Treat reproducible thumbnails separately because they can be deleted and regenerated.
 
 - S3 source images can be on Standard, with a lifecycle configuration to transition them to Glacier after 60 days
 - S3 thumbnails can be on One-Zone IA, with a lifecycle configuration to expire them (delete them) after 60 days
 
-## Amazon S3 – Lifecycle Rules (Scenario 2)
+### Amazon S3 – Lifecycle Rules (Scenario 2)
 
-<!-- pdf-page: 106 -->
 
 Combine versioning and lifecycle transitions to keep deleted objects immediately recoverable for 30 days, then recoverable with a longer delay through day 365.
 
@@ -1230,9 +1141,8 @@ Combine versioning and lifecycle transitions to keep deleted objects immediately
 - Transition the “noncurrent versions” of the object to Standard IA
 - Transition afterwards the “noncurrent versions” to Glacier Deep Archive
 
-## Amazon S3 Analytics – Storage Class Analysis
+### Amazon S3 Analytics – Storage Class Analysis
 
-<!-- pdf-page: 107 -->
 
 S3 storage-class analysis produces reports to inform lifecycle decisions; recommendations do not themselves move objects.
 
@@ -1243,13 +1153,13 @@ S3 storage-class analysis produces reports to inform lifecycle decisions; recomm
 - 24 to 48 hours to start seeing data analysis
 - Good first step to put together Lifecycle Rules (or improve them)!
 
-### s3 Event Notifications
+### S3 Event Notifications
 
-<!-- pdf-page: 108 -->
 <!-- original-note: 40 -->
 <!-- title: S3 event notifications -->
 
-Object events can trigger downstream processing. Select the event type, destination and destination permissions as separate parts of the notification setup.
+With s3 event notifications object events can trigger downstream processing. 
+Select the event type, destination and destination permissions as separate parts of the notification setup.
 
 - S3:ObjectCreated, S3:ObjectRemoved, S3:ObjectRestore, S3:Replication…
 - Object name filtering possible (*.jpg)
@@ -1257,15 +1167,13 @@ Object events can trigger downstream processing. Select the event type, destinat
 - Can create as many “S3 events” as desired
 - S3 event notifications typically deliver events in seconds but can sometimes take a minute or longer
 
-## S3 Event Notifications – IAM Permissions
+### S3 Event Notifications – IAM Permissions
 
-<!-- pdf-page: 109 -->
 
 Notification destinations need resource policies allowing the S3 service to publish, send or invoke as appropriate.
 
-## S3 Event Notifications with Amazon EventBridge
+### S3 Event Notifications with Amazon EventBridge
 
-<!-- pdf-page: 110 -->
 
 S3 events enter EventBridge, where rules filter event detail and route to configured targets.
 
@@ -1273,48 +1181,101 @@ S3 events enter EventBridge, where rules filter event detail and route to config
 - Multiple Destinations – ex Step Functions, Kinesis Streams / Firehose…
 - EventBridge Capabilities – Archive, Replay Events, Reliable delivery
 
-### s3 Performance
+### S3 Performance
 
-<!-- pdf-page: 111 -->
 <!-- original-note: 41 -->
 <!-- title: S3 performance -->
 
-S3 scales request handling across key prefixes. Parallel transfers and selective reads improve throughput without changing the data's durable storage location.
+The key idea is that Amazon S3 is designed for massive parallelism, rather than behaving like a traditional disk or filesystem.
 
-- Your application can achieve at least 3,500 PUT/COPY/POST/DELETE or 5,500 GET/HEAD requests per second per prefix in a bucket.
-- There are no limits to the number of prefixes in a bucket.
-- Example (object path => prefix):
-  - bucket/folder1/sub1/file => /folder1/sub1/
-  - bucket/folder1/sub2/file => /folder1/sub2/
-  - bucket/1/file => /1/
-  - bucket/2/file => /2/
-- If you spread reads across all four prefixes evenly, you can achieve 22,000 requests per second for GET and HEAD
+AWS documents performance of at least:
+- 3,500 requests/second per prefix for write-type operations such as PUT, COPY, POST, and DELETE
+- 5,500 requests/second per prefix for GET and HEAD
 
-## S3 Performance
+```
+s3://my-data-lake/
+    raw/
+    silver/
+    gold/
+```
 
-<!-- pdf-page: 112 -->
+```
+                S3 Bucket
+                    │
+        ┌───────────┼───────────┐
+        ▼           ▼           ▼
+      raw/        silver/      gold/
+    5,500 GET/s   5,500 GET/s  5,500 GET/s
+```
 
-Multipart upload sends parts in parallel; Transfer Acceleration routes uploads through an edge location toward the destination bucket.
+- If you spread reads across all three prefixes evenly, you can achieve 16,500 (GET/HEAD) per second.
 
-- Multi-Part upload:
-  - recommended for files > 100MB, must use for files > 5GB
-  - Can help parallelize uploads (speed up transfers)
-                        - S3 Transfer Acceleration
-                          - Increase transfer speed by transferring file to an AWS edge location which will forward the data to the S3 bucket in the target region
-                          - Compatible with multi-part upload
+### S3 Performance - Multipart Upload
 
-## S3 Performance – S3 Byte-Range Fetches
 
-<!-- pdf-page: 113 -->
+For large objects, you shouldn't necessarily upload the entire object as one request.
+Instead, S3 supports multipart upload which sends parts in parallel.
 
-Byte-range GETs can download separate ranges concurrently or retrieve only a file header.
+- recommended for files > 100MB
+- Mandatory for files > 5GB
+- S3 objects can be up to 5TB.
+```
+                  10 GB file
+                      │
+       ┌──────────────┼──────────────┐
+       ▼              ▼              ▼
+     Part 1         Part 2         Part 3 ...
+       │              │              │
+       └──────────────┼──────────────┘
+                      ▼
+                     S3
+```
 
-- Parallelize GETs by requesting specific byte ranges
-- Better resilience in case of failures
+### S3 Performance – S3 Byte-Range Fetches
 
-### Encryption
 
-<!-- pdf-page: 114 -->
+There's effectively an equivalent concept on the download side. You don't necessarily have to download an entire object.
+You can request specific byte ranges.
+
+- can download separate ranges concurrently or retrieve only a file header.
+
+```
+                    S3 Object
+                       │
+         ┌─────────────┼─────────────┐
+         ▼             ▼             ▼
+     Range 1        Range 2       Range 3
+         │             │             │
+         └─────────────┼─────────────┘
+                       ▼
+                  Application
+```
+
+
+### S3 Performance – Transfer Acceleration
+
+S3 Transfer Acceleration allows to accelerate uploads/downloads to/from s3 by entering in AWS's network through a nearby edge location.
+
+- Compatible with multi-part upload
+- Transfer Acceleration has additional cost
+- Do not confuse with CloudFront, which cache/distribute content globally
+
+```
+Client
+Melbourne AWS region
+    │
+    ▼
+Nearby AWS Edge Location
+    │
+    │ AWS global network (faster)
+    │
+    ▼
+S3 Bucket (us-east-1)
+```
+                          
+
+### S3 Encryption
+
 <!-- original-note: 42 -->
 <!-- title: S3 encryption -->
 
@@ -1329,7 +1290,6 @@ Distinguish encryption at rest from protection in transit, then identify who man
 
 ## Amazon S3 Encryption – SSE-S3
 
-<!-- pdf-page: 115 -->
 
 With SSE-S3, S3 encrypts the received object using keys managed by S3; TLS separately protects upload transport.
 
@@ -1341,7 +1301,6 @@ With SSE-S3, S3 encrypts the received object using keys managed by S3; TLS separ
 
 ## Amazon S3 Encryption – SSE-KMS
 
-<!-- pdf-page: 116 -->
 
 With SSE-KMS, S3 integrates with KMS for key authorization and data-key operations, then stores the encrypted object.
 
@@ -1352,7 +1311,6 @@ With SSE-KMS, S3 integrates with KMS for key authorization and data-key operatio
 
 ## SSE-KMS Limitation
 
-<!-- pdf-page: 117 -->
 
 SSE-KMS operations depend on both S3 and KMS capacity; key-operation quotas can become a bottleneck.
 
@@ -1364,7 +1322,6 @@ SSE-KMS operations depend on both S3 and KMS capacity; key-operation quotas can 
 
 ## Amazon S3 Encryption – DSSE-KMS
 
-<!-- pdf-page: 118 -->
 
 DSSE-KMS applies two independent encryption layers, combining KMS-controlled key use with an additional S3-managed layer.
 
@@ -1377,7 +1334,6 @@ DSSE-KMS applies two independent encryption layers, combining KMS-controlled key
 
 ## Amazon S3 Encryption – SSE-C
 
-<!-- pdf-page: 119 -->
 
 SSE-C performs encryption in S3 using a customer-provided key sent over HTTPS; S3 does not retain that key for later requests.
 
@@ -1388,7 +1344,6 @@ SSE-C performs encryption in S3 using a customer-provided key sent over HTTPS; S
 
 ## Amazon S3 Encryption – Client-Side Encryption
 
-<!-- pdf-page: 120 -->
 
 Client-side encryption encrypts the object before upload; the client manages encryption and decryption.
 
@@ -1399,7 +1354,6 @@ Client-side encryption encrypts the object before upload; the client manages enc
 
 ## Amazon S3 – Encryption in transit (SSL/TLS)
 
-<!-- pdf-page: 121 -->
 
 TLS protects S3 traffic in transit independently of object encryption at rest.
 
@@ -1413,45 +1367,55 @@ TLS protects S3 traffic in transit independently of object encryption at rest.
 
 ## Amazon S3 – Force Encryption in Transit aws:SecureTransport
 
-<!-- pdf-page: 122 -->
 
 A bucket-policy explicit deny on aws:SecureTransport=false rejects unencrypted transport even if another policy allows the action.
 
 ## Amazon S3 – Default Encryption vs. Bucket Policies
 
-<!-- pdf-page: 123 -->
 
 Default encryption supplies encryption for new uploads, while a bucket policy can enforce request and access requirements. These controls serve different purposes.
 
 - Optionally, you can “force encryption” using a bucket policy and refuse any API call to PUT an S3 object without encryption headers
 - Note: Bucket Policies are evaluated before “Default Encryption”
 
-### Access Points
+## S3 Access Points
 
-<!-- pdf-page: 124 -->
 <!-- original-note: 43 -->
 <!-- title: S3 access points -->
 
-Access points give teams or applications separate named access paths and policies to shared S3 data. A VPC origin can constrain the network path.
+Amazon S3 Access Points are a feature that allows you to create multiple, independently managed access paths to the same S3 bucket, each with its own permissions and network restrictions. 
 
-- Access Points simplify security management for S3 Buckets
-- Each Access Point has:
-  - its own DNS name (Internet Origin or VPC Origin)
-  - an access point policy (similar to bucket policy) – manage security at scale
+They are especially useful in Data Engineering when multiple applications, teams, or pipelines need access to the same data lake but require different permissions.
 
-## S3 – Access Points – VPC Origin
+- When you create an S3 Access Point, AWS provides a unique DNS name.
+- An access point policy is a resource-based IAM policy, similar to an S3 bucket policy.
 
-<!-- pdf-page: 125 -->
 
-A VPC-origin S3 access point is reached through a gateway endpoint; endpoint, access-point and bucket policies all participate.
+### Internet Origin vs. VPC Origin
 
-- We can define the access point to be accessible only from within the VPC
-- You must create a VPC Endpoint to access the Access Point (Gateway or Interface Endpoint)
-- The VPC Endpoint Policy must allow access to the target bucket and Access Point
+
+An Access Point can have one of two network origins.
+
+1. Internet Origin - Requests can reach the access point through the public S3 endpoint, subject to authentication and authorization.
+> This does not mean the data is publicly accessible. IAM, resource policies, and Block Public Access settings still apply.
+
+2. VPC Origin - Requests must come through an S3 VPC endpoint from the configured VPC.
+> This is useful for private workloads such as AWS Glue jobs, EC2 applications, and data pipelines that should access S3 through controlled network paths.
+
+
+### Key points for Certification
+
+- One S3 bucket can have multiple Access Points.
+- Each Access Point has its own unique DNS endpoint and resource-based policy.
+- Access Points simplify managing different access requirements for shared data.
+- An Access Point can use Internet Origin or VPC Origin.
+- VPC-origin access points restrict requests to the configured VPC through S3 VPC endpoints.
+- Access Points do not replicate data or create separate buckets.
+- IAM policies, bucket policies, access point policies, and applicable endpoint policies must be evaluated together.
+
 
 ### S3 Tables
 
-<!-- pdf-page: 126 -->
 <!-- original-note: 44 -->
 
 S3 Tables combines table-oriented storage with managed maintenance for Iceberg datasets. Table buckets and table permissions differ from an ordinary collection of objects.
@@ -1465,7 +1429,6 @@ S3 Tables combines table-oriented storage with managed maintenance for Iceberg d
 
 ## Wait,what’s Iceberg?
 
-<!-- pdf-page: 127 -->
 
 Iceberg is an open table format that adds transaction and metadata management to lake files.
 
@@ -1488,15 +1451,13 @@ Iceberg is an open table format that adds transaction and metadata management to
 
 ## Iceberg means S3 Tables is compatible with a lot of stuff
 
-<!-- pdf-page: 128 -->
 
 S3 Tables exposes Iceberg-compatible tabular data to supported engines; the Glue catalog and Iceberg REST endpoint provide metadata access paths.
 
 ## Features of S3 Tables
 
-<!-- pdf-page: 129 -->
 
-S3 Tables provides purpose-built storage and maintenance for Iceberg tables; feature support is a dated course snapshot.
+S3 Tables provides purpose-built storage and maintenance for Iceberg tables; verify current feature support in AWS documentation.
 
 - Purpose-built for tabular data
   - Better than just storing data in S3 buckets
@@ -1511,7 +1472,6 @@ S3 Tables provides purpose-built storage and maintenance for Iceberg tables; fea
 
 ## Table Buckets
 
-<!-- pdf-page: 130 -->
 
 Table buckets contain namespaces, which organize Iceberg tables; these are not ordinary object-key folders.
 
@@ -1531,9 +1491,8 @@ Table buckets contain namespaces, which organize Iceberg tables; these are not o
 
 ## S3 Tables Intelligent-Tiering
 
-<!-- pdf-page: 131 -->
 
-The course's S3 Tables tiering example uses 30 and 90 days of inactivity; table access returns a colder table to frequent access. Timings are a dated course snapshot.
+S3 Tables tiering can transition tables after periods of inactivity; confirm current timing and access behavior in AWS documentation.
 
 - Cost optimization feature
   - Automatically move data between storage tiers based on access frequency
@@ -1548,7 +1507,6 @@ The course's S3 Tables tiering example uses 30 and 90 days of inactivity; table 
 
 ## S3 Tables Replication
 
-<!-- pdf-page: 132 -->
 
 Table replication creates read-only replicas for backup, compliance or local reads; replicas are not independent writable primaries.
 
@@ -1564,7 +1522,6 @@ Table replication creates read-only replicas for backup, compliance or local rea
 
 ## S3 Tables Security
 
-<!-- pdf-page: 133 -->
 
 Table-bucket and table access uses identity and resource permissions, with organizational controls and supported analytics-governance tools where appropriate.
 
@@ -1584,7 +1541,6 @@ Table-bucket and table access uses identity and resource permissions, with organ
 
 ### Storage Lens
 
-<!-- pdf-page: 134 -->
 <!-- original-note: 45 -->
 <!-- title: S3 Storage Lens -->
 
@@ -1598,7 +1554,6 @@ Storage Lens summarizes storage and access patterns across buckets and accounts 
 
 ## Storage Lens – Default Dashboard
 
-<!-- pdf-page: 135 -->
 
 The Storage Lens dashboard presents storage trends and metric summaries for the selected scope. Drill into anomalies rather than treating totals as an explanation.
 
@@ -1608,7 +1563,6 @@ The Storage Lens dashboard presents storage trends and metric summaries for the 
 
 ## Storage Lens – Metrics
 
-<!-- pdf-page: 136 -->
 
 Storage Lens summary metrics describe storage volume, object counts and activity across a chosen scope.
 
@@ -1623,7 +1577,6 @@ Storage Lens summary metrics describe storage volume, object counts and activity
 
 ## Storage Lens – Metrics
 
-<!-- pdf-page: 137 -->
 
 Storage Lens data-protection metrics reveal adoption of protection controls across buckets.
 
@@ -1641,7 +1594,6 @@ Storage Lens data-protection metrics reveal adoption of protection controls acro
 
 ## Storage Lens – Metrics
 
-<!-- pdf-page: 138 -->
 
 Storage Lens performance metrics help distinguish request activity, errors and latency signals.
 
@@ -1657,7 +1609,6 @@ Storage Lens performance metrics help distinguish request activity, errors and l
 
 ## Storage Lens – Free vs. Paid
 
-<!-- pdf-page: 139 -->
 
 Storage Lens free and paid metric sets differ in detail, retention and available capabilities.
 
@@ -1674,7 +1625,6 @@ Storage Lens free and paid metric sets differ in detail, retention and available
 
 ## EBS Elastic Block Store
 
-<!-- pdf-page: 141 -->
 <!-- original-note: 46 -->
 <!-- title: EBS volumes -->
 
@@ -1687,7 +1637,6 @@ EBS provides persistent block storage for EC2 within an Availability Zone. Volum
 
 ## EBS Volume
 
-<!-- pdf-page: 142 -->
 
 EBS exposes network-attached block storage to supported compute within an Availability Zone.
 
@@ -1703,13 +1652,11 @@ EBS exposes network-attached block storage to supported compute within an Availa
 
 ## EBS Volume - Example
 
-<!-- pdf-page: 143 -->
 
 EBS volumes belong to one Availability Zone and may remain unattached; the example includes multiple volumes on one instance.
 
 ## EBS – Delete on Termination attribute
 
-<!-- pdf-page: 144 -->
 
 DeleteOnTermination determines whether an attached EBS volume is removed with its instance. Check the root and additional volumes separately.
 
@@ -1720,7 +1667,6 @@ DeleteOnTermination determines whether an attached EBS volume is removed with it
 
 ## Amazon EBS Elastic Volumes
 
-<!-- pdf-page: 145 -->
 
 Elastic Volumes can change supported volume characteristics without first removing the volume. Filesystem growth and applicable modification limits still require attention.
 
@@ -1735,7 +1681,6 @@ Elastic Volumes can change supported volume characteristics without first removi
 
 ## EFS Elastic file system
 
-<!-- pdf-page: 146 -->
 <!-- original-note: 47 -->
 <!-- title: EFS filesystems -->
 
@@ -1747,7 +1692,6 @@ EFS provides a managed shared filesystem for compatible clients. Multiple instan
 
 ## Amazon EFS – Elastic File System
 
-<!-- pdf-page: 147 -->
 
 Shared content, web serving and application files are typical EFS workloads. Select client compatibility, mount security and encryption for the participating instances.
 
@@ -1760,7 +1704,6 @@ Shared content, web serving and application files are typical EFS workloads. Sel
 
 ## EFS – Performance & Storage Classes
 
-<!-- pdf-page: 148 -->
 
 EFS performance choices and storage-class choices solve different throughput, latency and cost requirements.
 
@@ -1779,7 +1722,6 @@ EFS performance choices and storage-class choices solve different throughput, la
 
 ## EFS – Storage Classes
 
-<!-- pdf-page: 149 -->
 
 EFS lifecycle policies move eligible files between storage tiers; Standard and One Zone describe a separate availability choice.
 
@@ -1795,7 +1737,6 @@ EFS lifecycle policies move eligible files between storage tiers; Standard and O
 
 ## EBS vs EFS – Elastic Block Storage
 
-<!-- pdf-page: 150 -->
 
 To move EBS data between Availability Zones, snapshot the source volume and restore a new volume in the target AZ.
 
@@ -1812,7 +1753,6 @@ To move EBS data between Availability Zones, snapshot the source volume and rest
 
 ## EBS vs EFS – Elastic File System
 
-<!-- pdf-page: 151 -->
 
 EFS clients in separate AZs mount one shared filesystem; EBS ordinarily supplies block storage to an instance in one AZ.
 
@@ -1825,7 +1765,6 @@ EFS clients in separate AZs mount one shared filesystem; EBS ordinarily supplies
 
 ## AWS Backup
 
-<!-- pdf-page: 152 -->
 <!-- original-note: 48 -->
 
 AWS Backup applies centrally managed backup plans to supported resources. Select schedules, retention, destinations and recovery options from the workload's recovery objectives.
@@ -1845,7 +1784,6 @@ AWS Backup applies centrally managed backup plans to supported resources. Select
 
 ## AWS Backup
 
-<!-- pdf-page: 153 -->
 
 Backup plans, recovery options and resource support determine whether a backup meets the recovery requirement.
 
@@ -1860,13 +1798,11 @@ Backup plans, recovery options and resource support determine whether a backup m
 
 ## AWS Backup
 
-<!-- pdf-page: 154 -->
 
 A backup plan defines frequency and retention, assigns supported resources and writes recovery points to a backup vault.
 
 ## AWS Backup Vault Lock
 
-<!-- pdf-page: 155 -->
 
 Vault Lock protects recovery points with retention controls; compliance-mode immutability applies after its changeable period.
 
@@ -1883,7 +1819,6 @@ Vault Lock protects recovery points with retention controls; compliance-mode imm
 
 ## Traditional Architecture
 
-<!-- pdf-page: 158 -->
 
 A conventional web tier scales behind a load balancer while a relational database holds shared state.
 
@@ -1896,7 +1831,6 @@ A conventional web tier scales behind a load balancer while a relational databas
 
 ## NoSQL databases
 
-<!-- pdf-page: 159 -->
 
 NoSQL describes several non-relational data models. Choose one from its access pattern and scaling behavior rather than assuming every NoSQL database behaves alike.
 
@@ -1909,7 +1843,6 @@ NoSQL describes several non-relational data models. Choose one from its access p
 
 ## DynamoDB (NoSQL DBs)
 
-<!-- pdf-page: 160 -->
 <!-- original-note: 50 -->
 <!-- title: Amazon DynamoDB -->
 
@@ -1925,7 +1858,6 @@ DynamoDB is a managed key-value and document database for predictable, low-laten
 
 ### Basics
 
-<!-- pdf-page: 161 -->
 <!-- original-note: 51 -->
 <!-- title: DynamoDB items and tables -->
 
@@ -1945,7 +1877,6 @@ Each item is identified by its table's primary key; non-key attributes can vary 
 
 ### Primary Keys
 
-<!-- pdf-page: 162 -->
 <!-- original-note: 52 -->
 <!-- title: DynamoDB primary keys -->
 
@@ -1958,7 +1889,6 @@ A table uses either a partition key alone or a partition key with a sort key. Th
 
 ## DynamoDB – Primary Keys
 
-<!-- pdf-page: 163 -->
 
 A composite key identifies an item by partition key plus sort key. Items with the same partition key form an ordered collection.
 
@@ -1969,7 +1899,6 @@ A composite key identifies an item by partition key plus sort key. Items with th
 
 ## DynamoDB – Partition Keys (Exercise)
 
-<!-- pdf-page: 164 -->
 
 A good movie-table partition key distributes data and traffic while matching the required access pattern.
 
@@ -1984,7 +1913,6 @@ A good movie-table partition key distributes data and traffic while matching the
 
 ### DynamoDB use cases
 
-<!-- pdf-page: 165 -->
 <!-- original-note: 53 -->
 
 DynamoDB suits small, frequently accessed records with known lookup patterns, such as shopping carts, sessions, voting and device events.
@@ -2016,7 +1944,6 @@ Reconsider DynamoDB when the application depends on relational joins, large bina
 
 ## DynamoDB capacity modes
 
-<!-- pdf-page: 166 -->
 
 Provisioned capacity and on-demand capacity express different planning and billing choices.
 
@@ -2028,7 +1955,6 @@ Provisioned capacity and on-demand capacity express different planning and billi
 
 ### Read Capacity Unit and Write Capacity Unit (RCU and WCU)
 
-<!-- pdf-page: 167 -->
 <!-- original-note: 55 -->
 <!-- title: DynamoDB provisioned capacity -->
 
@@ -2043,7 +1969,6 @@ Provisioned capacity sets read and write throughput explicitly. Calculate units 
 
 ## DynamoDB – Write Capacity Units (WCU)
 
-<!-- pdf-page: 168 -->
 
 For provisioned standard writes, round each item up to 1 KB and multiply by writes per second; transactional writes cost twice as much.
 
@@ -2058,7 +1983,6 @@ For provisioned standard writes, round each item up to 1 KB and multiply by writ
 
 ### Strongly Consistent Read vs Eventually Conssistent read
 
-<!-- pdf-page: 169 -->
 <!-- original-note: 56 -->
 <!-- title: DynamoDB read consistency -->
 
@@ -2072,7 +1996,6 @@ An eventual read can briefly return an older value. A supported strongly consist
 
 ## DynamoDB – Read Capacity Units (RCU)
 
-<!-- pdf-page: 170 -->
 
 Round each item up to 4 KB. Strong reads use one RCU per unit per second; eventual reads use half and transactional reads use two.
 
@@ -2086,7 +2009,6 @@ Round each item up to 4 KB. Strong reads use one RCU per unit per second; eventu
 
 ### Partitions Internal
 
-<!-- pdf-page: 171 -->
 <!-- original-note: 57 -->
 <!-- title: DynamoDB partitions -->
 
@@ -2102,7 +2024,6 @@ DynamoDB hashes partition keys to place items on physical partitions. Uneven tra
 
 ### Throttling
 
-<!-- pdf-page: 172 -->
 <!-- original-note: 58 -->
 <!-- title: DynamoDB throttling -->
 
@@ -2119,7 +2040,6 @@ Throttling means a request exceeded an applicable capacity limit. Inspect hot ke
 
 ### R/W Capacity Modes - On-Demanda
 
-<!-- pdf-page: 173 -->
 <!-- original-note: 59 -->
 <!-- title: DynamoDB on-demand capacity -->
 
@@ -2127,7 +2047,7 @@ On-demand billing removes explicit RCU/WCU provisioning, but hot partitions, quo
 
 - Hot partitions, table/account quotas, configured maximum throughput and rapid workload changes can still limit requests.
 - Billing uses read/write request units; the item-size and consistency multipliers still matter.
-- Choose it for uncertain or variable traffic. Compare actual utilization and prices instead of memorizing the PDF's 2.5× price ratio.
+- Compare actual utilization and prices instead of relying on a fixed price ratio.
 
 **Current reference (checked 2026-10-13):** [DynamoDB throttling causes](https://docs.aws.amazon.com/amazondynamodb/latest/developerguide/TroubleshootingThrottling.html).
 
@@ -2140,7 +2060,6 @@ Use item APIs for individual records, Query for a partition-key access pattern, 
 
 ## DynamoDB – Writing Data
 
-<!-- pdf-page: 174 -->
 
 DynamoDB write APIs differ in whether they replace an item, update attributes or perform grouped work.
 
@@ -2157,7 +2076,6 @@ DynamoDB write APIs differ in whether they replace an item, update attributes or
 
 ## DynamoDB – Reading Data
 
-<!-- pdf-page: 175 -->
 
 GetItem reads by the complete primary key; use projections and consistency settings deliberately.
 
@@ -2170,7 +2088,6 @@ GetItem reads by the complete primary key; use projections and consistency setti
 
 ## DynamoDB – Reading Data (Query)
 
-<!-- pdf-page: 176 -->
 
 Query selects one partition-key value and can narrow the sort-key range; a filter is applied after reading.
 
@@ -2189,7 +2106,6 @@ Query selects one partition-key value and can narrow the sort-key range; a filte
 
 ## DynamoDB – Reading Data (Scan)
 
-<!-- pdf-page: 177 -->
 
 A Scan examines a broad set of items before applying its filter. Filtering the response does not avoid the read work already performed.
 
@@ -2204,7 +2120,6 @@ A Scan examines a broad set of items before applying its filter. Filtering the r
 
 ## DynamoDB – Deleting Data
 
-<!-- pdf-page: 178 -->
 
 Deletion APIs remove individual or batched items; conditions help guard concurrent changes.
 
@@ -2217,7 +2132,6 @@ Deletion APIs remove individual or batched items; conditions help guard concurre
 
 ## DynamoDB – Batch Operations
 
-<!-- pdf-page: 179 -->
 
 Batch operations group supported requests to reduce call overhead. Inspect unprocessed items and retry them; a grouped request is not automatically an atomic transaction.
 
@@ -2236,7 +2150,6 @@ Batch operations group supported requests to reduce call overhead. Inspect unpro
 
 ### DynamoDB – PartiQL
 
-<!-- pdf-page: 180 -->
 <!-- original-note: 61 -->
 <!-- title: DynamoDB PartiQL -->
 
@@ -2251,7 +2164,6 @@ PartiQL offers SQL-like syntax for DynamoDB operations; it does not turn the tab
 
 ### DynamoDB - Local Secondary Index
 
-<!-- pdf-page: 181 -->
 <!-- original-note: 62 -->
 <!-- title: DynamoDB local secondary indexes -->
 
@@ -2265,7 +2177,6 @@ An LSI retains the table's partition key and supplies another sort key. Plan it 
 
 ### DynamoDB - GLobal Secondary Indez
 
-<!-- pdf-page: 182 -->
 <!-- original-note: 63 -->
 <!-- title: DynamoDB global secondary indexes -->
 
@@ -2280,7 +2191,6 @@ A GSI provides another partition-key and optional sort-key access path. Its proj
 
 ## DynamoDB – Indexes and Throttling
 
-<!-- pdf-page: 183 -->
 
 Index capacity and hot keys can constrain table writes as well as index queries.
 
@@ -2295,7 +2205,6 @@ Index capacity and hot keys can constrain table writes as well as index queries.
 
 ## DynamoDB PartiQL operations
 
-<!-- pdf-page: 184 -->
 
 PartiQL expresses supported item operations with familiar SQL-like statements. Batch execution is separate from a relational join across tables.
 
@@ -2308,7 +2217,6 @@ PartiQL expresses supported item operations with familiar SQL-like statements. B
 
 ### DynamoDB Accelerator (DAX)
 
-<!-- pdf-page: 185 -->
 <!-- original-note: 64 -->
 
 DAX caches DynamoDB reads to reduce response latency and repeated read traffic. It helps read-heavy access patterns rather than increasing write capacity.
@@ -2324,7 +2232,6 @@ DAX caches DynamoDB reads to reduce response latency and repeated read traffic. 
 
 ### Dax vs Elasticache
 
-<!-- pdf-page: 186 -->
 <!-- original-note: 65 -->
 <!-- title: DAX and ElastiCache -->
 
@@ -2334,7 +2241,6 @@ Use DAX for DynamoDB-compatible item and query caching. Use an application-manag
 
 ### DynamoDB Streams
 
-<!-- pdf-page: 187 -->
 <!-- original-note: 66 -->
 
 DynamoDB Streams records item changes for consumers that react to inserts, updates and deletes. Retention and item-image selection shape what a consumer can reconstruct.
@@ -2349,13 +2255,11 @@ DynamoDB Streams records item changes for consumers that react to inserts, updat
 
 ## DynamoDB change-capture paths
 
-<!-- pdf-page: 188 -->
 
 DynamoDB change capture has separate Streams and Kinesis integration paths; downstream consumers process changes asynchronously.
 
 ## DynamoDB stream images
 
-<!-- pdf-page: 189 -->
 
 StreamViewType selects keys, the old item image, the new image or both. Choose the information that downstream processing needs before enabling change capture.
 
@@ -2367,7 +2271,6 @@ StreamViewType selects keys, the old item image, the new image or both. Choose t
 
 ### DynamoDB Streams & AWS Lambda
 
-<!-- pdf-page: 190 -->
 <!-- original-note: 67 -->
 
 A Lambda event source mapping polls DynamoDB Streams and invokes the function with batches. Give the function the required stream permissions and handle retries safely.
@@ -2378,7 +2281,6 @@ A Lambda event source mapping polls DynamoDB Streams and invokes the function wi
 
 ### DynamoDB – Time To Live (TTL)
 
-<!-- pdf-page: 191 -->
 <!-- original-note: 68 -->
 <!-- title: DynamoDB TTL -->
 
@@ -2394,7 +2296,6 @@ TTL marks items for eventual deletion using an epoch-time Number attribute. Expi
 
 ### Use cases Large Objects Pattern / Indexing s3 Objects Metadata
 
-<!-- pdf-page: 192 -->
 <!-- original-note: 69 -->
 <!-- title: Large objects and S3 metadata -->
 
@@ -2404,13 +2305,11 @@ Keep large object bytes in S3 and store their identifiers or searchable metadata
 
 ## DynamoDB – Indexing S3 Objects Metadata
 
-<!-- pdf-page: 193 -->
 
 An S3 event can trigger metadata extraction into DynamoDB, which an API queries independently of the object download.
 
 ### DynamoDB security and other features
 
-<!-- pdf-page: 194 -->
 <!-- original-note: 70 -->
 
 DynamoDB access combines IAM authorization, network access, encryption and recovery features. Apply fine-grained restrictions where clients access their own records directly.
@@ -2430,13 +2329,11 @@ DynamoDB access combines IAM authorization, network access, encryption and recov
 
 ## DynamoDB – Users Interact with DynamoDB Directly
 
-<!-- pdf-page: 195 -->
 
 Federated identity obtains temporary AWS credentials; IAM policies then authorize the DynamoDB request.
 
 ## DynamoDB – Fine-Grained Access Control
 
-<!-- pdf-page: 196 -->
 
 Temporary credentials and IAM conditions can restrict direct client access to a user's own keys and attributes. Authentication alone does not establish that data boundary.
 
@@ -2446,7 +2343,6 @@ Temporary credentials and IAM conditions can restrict direct client access to a 
 
 ## Amazon RDS - Hosted relational Database
 
-<!-- pdf-page: 198 -->
 <!-- original-note: 71 -->
 <!-- title: Amazon RDS -->
 
@@ -2465,7 +2361,6 @@ RDS manages supported relational engines, while applications remain responsible 
 
 ## ACID
 
-<!-- pdf-page: 199 -->
 
 ACID means atomicity, consistency, isolation and durability; transactions preserve these properties within the engine's documented guarantees.
 
@@ -2477,7 +2372,6 @@ ACID means atomicity, consistency, isolation and durability; transactions preser
 
 ## Aurora engine and storage model
 
-<!-- pdf-page: 200 -->
 
 Aurora provides MySQL- and PostgreSQL-compatible engines with a distributed managed storage layer.
 
@@ -2489,10 +2383,11 @@ Aurora provides MySQL- and PostgreSQL-compatible engines with a distributed mana
 - Continuous backup to S3
 - Replication across regions and availability zones
 - Automatic scaling with Aurora Serverless
+- Supports Row Level Security
+- Do not integrate with Amazon Cognito for authentication over amazon.com
 
 ## Aurora Security
 
-<!-- pdf-page: 201 -->
 
 Aurora security combines network isolation, database identity, encryption and optional IAM authentication.
 
@@ -2503,17 +2398,15 @@ Aurora security combines network isolation, database identity, encryption and op
 
 ## Relational database concurrency and locks
 
-<!-- pdf-page: 202 -->
 
 Locking coordinates concurrent transactions; the actual conflict rules depend on the engine and isolation level.
 
 - Locks can apply to rows, ranges, tables or other resources, depending on the operation.
 - Shared and exclusive modes describe compatibility with other locks; they do not universally describe all snapshot-read behavior.
-- MVCC can let ordinary reads observe a consistent snapshot while another transaction holds a write lock. See the MySQL example on page 203.
+- MVCC can let ordinary reads observe a consistent snapshot while another transaction holds a write lock. See the MySQL locking example below.
 
 ### Lock command
 
-<!-- pdf-page: 203 -->
 <!-- original-note: 72 -->
 <!-- title: Database locking commands -->
 
@@ -2528,15 +2421,13 @@ Use engine-specific locking commands to coordinate concurrent operations. Distin
 
 ## RDS best practices: unexpanded source heading
 
-<!-- pdf-page: 204 -->
 
-The PDF contains a heading and a service icon, with no written best-practice guidance on this page.
+This topic has no accompanying best-practice guidance.
 
 - Unexpanded source area: retain it as a review prompt. Do not attribute invented recommendations to this slide.
 
 ### RDS Operational guidelines
 
-<!-- pdf-page: 205 -->
 <!-- original-note: 73 -->
 
 Operate RDS from measurements: watch memory, CPU, storage and replica lag, maintain appropriate DNS behavior and tune the working set and queries.
@@ -2553,7 +2444,6 @@ Operate RDS from measurements: watch memory, CPU, storage and replica lag, maint
 
 ## Query optimization in RDS
 
-<!-- pdf-page: 206 -->
 
 Query plans, selective indexes and workload measurements guide relational-query optimization.
 
@@ -2566,7 +2456,6 @@ Query plans, selective indexes and workload measurements guide relational-query 
 
 ## DB-specific tweaks
 
-<!-- pdf-page: 207 -->
 
 Database tuning mechanisms are engine-specific; use the chosen engine's guidance and evaluate the durability and availability tradeoffs of bulk-load settings.
 
@@ -2580,7 +2469,6 @@ Database tuning mechanisms are engine-specific; use the chosen engine's guidance
 
 ## DB-specific tweaks
 
-<!-- pdf-page: 208 -->
 
 SQL Server tuning and administration options differ from MySQL-family settings.
 
@@ -2592,7 +2480,6 @@ SQL Server tuning and administration options differ from MySQL-family settings.
 
 ### Amazon Aurora
 
-<!-- pdf-page: 209 -->
 <!-- original-note: 74 -->
 
 Aurora combines MySQL- or PostgreSQL-compatible compute with a managed distributed storage layer. Separate engine compatibility from storage, replica and recovery behavior.
@@ -2606,7 +2493,6 @@ Aurora combines MySQL- or PostgreSQL-compatible compute with a managed distribut
 
 #### High Availability and Read Scaling
 
-<!-- pdf-page: 210 -->
 <!-- original-note: 75 -->
 <!-- title: Aurora availability and read scaling -->
 
@@ -2624,14 +2510,12 @@ Aurora's storage replicas protect data, while database replicas provide read cap
 
 #### Aurora DB Cluster
 
-<!-- pdf-page: 211 -->
 <!-- original-note: 76 -->
 
 The writer endpoint follows the current writer. The reader endpoint distributes connections across eligible readers; it does not split every query inside one connection.
 
 ## Features of Aurora
 
-<!-- pdf-page: 212 -->
 
 Aurora availability, scaling and recovery features address different operational requirements.
 
@@ -2647,7 +2531,6 @@ Aurora availability, scaling and recovery features address different operational
 
 ## Amazon Aurora as a Vector Store
 
-<!-- pdf-page: 213 -->
 
 The pgvector extension stores embeddings and supports vector-distance queries in compatible PostgreSQL databases.
 
@@ -2662,7 +2545,6 @@ The pgvector extension stores embeddings and supports vector-distance queries in
 
 ## DocumentDB (MongoDB) NoSQL
 
-<!-- pdf-page: 214 -->
 <!-- original-note: 77 -->
 <!-- title: Amazon DocumentDB -->
 
@@ -2677,7 +2559,6 @@ DocumentDB provides a managed document database with MongoDB compatibility. Chec
 
 ## MemoryDB for Redis
 
-<!-- pdf-page: 215 -->
 <!-- original-note: 78 -->
 <!-- title: Amazon MemoryDB -->
 
@@ -2691,7 +2572,6 @@ MemoryDB combines an in-memory data model with durable storage, making it distin
 
 ## Amazon Keyspaces (For Apache Cassandra) NoSQL
 
-<!-- pdf-page: 216 -->
 <!-- original-note: 79 -->
 <!-- title: Amazon Keyspaces -->
 
@@ -2709,7 +2589,6 @@ Keyspaces provides a managed Cassandra-compatible database accessed through CQL.
 
 ## Amazon Neptune
 
-<!-- pdf-page: 217 -->
 <!-- original-note: 80 -->
 
 Neptune stores connected data as a graph. Choose graph models and query languages from the relationships and traversals the application needs.
@@ -2728,7 +2607,6 @@ Neptune stores connected data as a graph. Choose graph models and query language
 
 ## Amazon Neptune – Query Languges
 
-<!-- pdf-page: 218 -->
 
 A graph statement connects a subject to an object through a predicate; RDF and property graphs use different models and query languages.
 
@@ -2748,7 +2626,6 @@ A graph statement connects a subject to an object through a predicate; RDF and p
 
 ## Amazon Timestream
 
-<!-- pdf-page: 219 -->
 
 Timestream stores time-indexed observations for analytical queries. Its time-series model differs from a general relational or key-value database.
 
@@ -2763,13 +2640,11 @@ Timestream stores time-indexed observations for analytical queries. Its time-ser
 
 ## Amazon Timestream – Architecture
 
-<!-- pdf-page: 220 -->
 
 Timestream ingests time-series observations through supported APIs and connectors, then serves analytical queries to visualization tools.
 
 ## Amazon Redshift
 
-<!-- pdf-page: 222 -->
 <!-- original-note: 83 -->
 
 Redshift is a columnar analytical warehouse. It is designed for large scans, joins and aggregations rather than frequent small transactional updates.
@@ -2785,7 +2660,6 @@ Redshift is a columnar analytical warehouse. It is designed for large scans, joi
 
 ## Redshift Use-Cases
 
-<!-- pdf-page: 223 -->
 
 Redshift targets analytical workloads that benefit from a managed columnar warehouse.
 
@@ -2800,13 +2674,11 @@ Redshift targets analytical workloads that benefit from a managed columnar wareh
 
 ## Redshift architecture
 
-<!-- pdf-page: 224 -->
 
 In a provisioned Redshift cluster, the leader coordinates SQL work across compute nodes and slices; node families in the slide are historical examples.
 
 ### Redshift Spectrum
 
-<!-- pdf-page: 225 -->
 <!-- original-note: 84 -->
 
 Spectrum extends Redshift queries to external data in S3 without first copying all of it into local warehouse tables.
@@ -2820,7 +2692,6 @@ Spectrum extends Redshift queries to external data in S3 without first copying a
 
 ## Redshift Performance
 
-<!-- pdf-page: 226 -->
 
 Redshift combines parallel execution, columnar storage and query optimization for analytics.
 
@@ -2830,7 +2701,6 @@ Redshift combines parallel execution, columnar storage and query optimization fo
 
 ### Redshift Durability
 
-<!-- pdf-page: 227 -->
 <!-- original-note: 85 -->
 
 Redshift uses redundant storage and snapshots to protect warehouse data. Recovery planning still needs snapshot retention, copy permissions and restoration procedures.
@@ -2845,7 +2715,6 @@ Redshift uses redundant storage and snapshots to protect warehouse data. Recover
 
 ## Scaling Redshift
 
-<!-- pdf-page: 228 -->
 
 Redshift scaling changes compute capacity; choose the mechanism that fits the cluster and disruption tolerance.
 
@@ -2857,7 +2726,6 @@ Redshift scaling changes compute capacity; choose the mechanism that fits the cl
 
 ## Redshift Distribution Styles
 
-<!-- pdf-page: 229 -->
 
 Distribution style controls placement of rows and the data movement needed for joins.
 
@@ -2872,25 +2740,21 @@ Distribution style controls placement of rows and the data movement needed for j
 
 ## EVEN distribution
 
-<!-- pdf-page: 230 -->
 
 EVEN distribution spreads rows across slices without selecting a distribution key.
 
 ## KEY distribution
 
-<!-- pdf-page: 231 -->
 
 KEY distribution hashes the chosen column; matching join keys can colocate rows, while skewed keys can overload one slice.
 
 ## ALL distribution
 
-<!-- pdf-page: 232 -->
 
 ALL distribution copies the complete table to every compute node, trading storage and load cost for fewer redistributions.
 
 ## Importing / Exporting data
 
-<!-- pdf-page: 233 -->
 
 COPY loads bulk data into Redshift; UNLOAD writes query results out to supported external storage.
 
@@ -2909,7 +2773,6 @@ COPY loads bulk data into Redshift; UNLOAD writes query results out to supported
 
 ## COPY command: More depth
 
-<!-- pdf-page: 234 -->
 
 COPY loads data in bulk from supported sources. Plan file layout, permissions, compression and error handling for parallel warehouse ingestion.
 
@@ -2927,7 +2790,6 @@ COPY loads data in bulk from supported sources. Plan file layout, permissions, c
 
 ## Redshift copy grants for cross-region snapshot copies
 
-<!-- pdf-page: 235 -->
 
 An encrypted snapshot copy needs the correct destination-Region key and copy grant. Data replication and permission to use an encryption key are separate concerns.
 
@@ -2941,7 +2803,6 @@ An encrypted snapshot copy needs the correct destination-Region key and copy gra
 
 ## DBLINK
 
-<!-- pdf-page: 236 -->
 
 DBLINK provides a PostgreSQL-based connection path in the source example. Keep it distinct from Redshift's supported federated-query mechanisms.
 
@@ -2949,7 +2810,6 @@ DBLINK provides a PostgreSQL-based connection path in the source example. Keep i
 
 ## Integration with other services
 
-<!-- pdf-page: 237 -->
 
 Redshift integrations cover data ingestion, catalog access, visualization and model training through different mechanisms.
 
@@ -2961,7 +2821,6 @@ Redshift integrations cover data ingestion, catalog access, visualization and mo
 
 ## Redshift Workload Management (WLM)
 
-<!-- pdf-page: 238 -->
 
 WLM assigns query workloads to execution resources so short interactive work and longer analytical jobs can be governed deliberately.
 
@@ -2970,7 +2829,6 @@ WLM assigns query workloads to execution resources so short interactive work and
 
 ## Concurrency Scaling
 
-<!-- pdf-page: 239 -->
 
 Concurrency Scaling supplies additional supported query capacity during bursts. Eligibility and usage charges determine how it fits the workload.
 
@@ -2979,7 +2837,6 @@ Concurrency Scaling supplies additional supported query capacity during bursts. 
 
 ## Automatic Workload Management
 
-<!-- pdf-page: 240 -->
 
 Automatic workload management allocates execution resources across configured query workloads.
 
@@ -2996,7 +2853,6 @@ Automatic workload management allocates execution resources across configured qu
 
 ## Manual Workload Management
 
-<!-- pdf-page: 241 -->
 
 Manual WLM uses configured queues and concurrency settings. Queue allocation trades simultaneous execution against the memory available to each query.
 
@@ -3008,7 +2864,6 @@ Manual WLM uses configured queues and concurrency settings. Queue allocation tra
 
 ## Short Query Acceleration (SQA)
 
-<!-- pdf-page: 242 -->
 
 Short Query Acceleration gives eligible short queries a separate execution path so they spend less time waiting behind longer work.
 
@@ -3022,7 +2877,6 @@ Short Query Acceleration gives eligible short queries a separate execution path 
 
 ## Resizing Redshift Clusters
 
-<!-- pdf-page: 243 -->
 
 Elastic and classic resize have different constraints and interruption characteristics.
 
@@ -3041,7 +2895,6 @@ Elastic and classic resize have different constraints and interruption character
 
 ## VACUUM command
 
-<!-- pdf-page: 244 -->
 
 VACUUM reclaims deleted space or restores sorting according to the chosen operation. Use the table's maintenance needs and supported automatic behavior to decide when to run it.
 
@@ -3056,7 +2909,6 @@ VACUUM reclaims deleted space or restores sorting according to the chosen operat
 
 ## Newer Redshift features
 
-<!-- pdf-page: 245 -->
 
 Separate compute/storage and serverless features change capacity and administration choices; check support for the selected deployment.
 
@@ -3077,13 +2929,11 @@ Separate compute/storage and serverless features change capacity and administrat
 
 ## Amazon Redshift ML
 
-<!-- pdf-page: 246 -->
 
 Redshift ML creates a model from SQL-selected training data using SageMaker; SQL functions then expose supported inference.
 
 ## Redshift anti-patterns
 
-<!-- pdf-page: 247 -->
 
 A warehouse is usually a poor fit for tiny workloads or transactional access patterns that do not need analytical scans.
 
@@ -3098,7 +2948,6 @@ A warehouse is usually a poor fit for tiny workloads or transactional access pat
 
 ## Redshift security concerns
 
-<!-- pdf-page: 248 -->
 
 Redshift security requires appropriate encryption, identity permissions and private/public network access controls.
 
@@ -3111,7 +2960,6 @@ Redshift security requires appropriate encryption, identity permissions and priv
 
 ## Redshift Serverless
 
-<!-- pdf-page: 249 -->
 
 Serverless manages warehouse compute provisioning around the workload. Data organization, authorization and cost controls remain design responsibilities.
 
@@ -3124,7 +2972,6 @@ Serverless manages warehouse compute provisioning around the workload. Data orga
 
 ## Redshift Serverless: Getting Started
 
-<!-- pdf-page: 250 -->
 
 Create a Serverless namespace/workgroup with deliberate identity, network, encryption and audit settings.
 
@@ -3140,7 +2987,6 @@ Create a Serverless namespace/workgroup with deliberate identity, network, encry
 
 ### Resource Scaling in Redshift Serverless
 
-<!-- pdf-page: 251 -->
 <!-- original-note: 86 -->
 
 Redshift Serverless measures compute capacity in RPUs. Compare base and maximum capacity with query performance and the resulting usage charges.
@@ -3156,7 +3002,6 @@ Redshift Serverless measures compute capacity in RPUs. Compare base and maximum 
 
 ### Redshift Serverless
 
-<!-- pdf-page: 252 -->
 <!-- original-note: 87 -->
 
 Redshift Serverless separates namespaces from workgroups and changes several administration controls. It can be configured for public accessibility when routing and security rules permit it.
@@ -3169,7 +3014,6 @@ Redshift Serverless separates namespaces from workgroups and changes several adm
 
 ###  Serverless Monitoring
 
-<!-- pdf-page: 253 -->
 <!-- original-note: 88 -->
 <!-- title: Redshift Serverless monitoring -->
 
@@ -3190,7 +3034,6 @@ Use query, load and serverless usage views alongside CloudWatch metrics to conne
 
 ### Redshift Materialized Views
 
-<!-- pdf-page: 254 -->
 <!-- original-note: 89 -->
 
 A materialized view stores the result of a query so later reads can reuse it. Faster queries must be balanced against refresh cost and acceptable staleness.
@@ -3204,7 +3047,6 @@ A materialized view stores the result of a query so later reads can reuse it. Fa
 
 ## Using Materialized Views
 
-<!-- pdf-page: 255 -->
 
 Create, refresh and query materialized views according to the freshness required by the consuming workload.
 
@@ -3218,7 +3060,6 @@ Create, refresh and query materialized views according to the freshness required
 
 ### Data Sharing
 
-<!-- pdf-page: 256 -->
 <!-- original-note: 90 -->
 <!-- title: Redshift data sharing -->
 
@@ -3235,7 +3076,6 @@ A producer grants consumers access to live warehouse data. Sharing avoids a sepa
 
 ## Redshift Data Sharing
 
-<!-- pdf-page: 257 -->
 
 Producer and consumer compute can scale independently while consumers read shared data.
 
@@ -3252,7 +3092,6 @@ Producer and consumer compute can scale independently while consumers read share
 
 ### Redshift Lambda UDF
 
-<!-- pdf-page: 258 -->
 <!-- original-note: 91 -->
 
 Register a Lambda-backed external function to apply custom logic from Redshift SQL. Function permissions, invocation overhead and supported data handling remain constraints.
@@ -3271,7 +3110,6 @@ Register a Lambda-backed external function to apply custom logic from Redshift S
 
 ## Redshift Lambda UDF
 
-<!-- pdf-page: 259 -->
 
 Lambda UDF requests contain batches of arguments; the handler must return a correctly shaped response with corresponding results.
 
@@ -3286,7 +3124,6 @@ Lambda UDF requests contain batches of arguments; the handler must return a corr
 
 ### Redshift Federated Queries
 
-<!-- pdf-page: 260 -->
 <!-- original-note: 92 -->
 
 Federated queries read supported RDS or Aurora databases from Redshift. Network connectivity and Secrets Manager credentials are required in addition to SQL definitions.
@@ -3299,7 +3136,6 @@ Federated queries read supported RDS or Aurora databases from Redshift. Network 
 
 ## Redshift Federated Queries
 
-<!-- pdf-page: 261 -->
 
 A federated query needs a reachable external database and permission to retrieve its credentials. SQL definitions cannot substitute for network connectivity.
 
@@ -3313,7 +3149,6 @@ A federated query needs a reachable external database and permission to retrieve
 
 ## Redshift Federated Queries
 
-<!-- pdf-page: 262 -->
 
 Federation reads supported external databases without first loading all remote data into local warehouse tables.
 
@@ -3323,24 +3158,36 @@ Federation reads supported external databases without first loading all remote d
 
 ### Redshift System Tables and Views
 
-<!-- pdf-page: 263 -->
 <!-- original-note: 93 -->
 
-System views and tables expose warehouse activity, query history, loads and metadata. Choose the appropriate view family and account for its visibility and retention.
+In Amazon Redshift, system tables and system views are built-in metadata objects that record what is happening inside your cluster or workgroup.
 
-- Contains info about how Redshift is functioning
-- Types of system tables / views
-  - SYS views: Monitor query & workload usage
-  - STV tables: Transient data containing snapshots of current system data
-  - SVV views: metadata about DB objects that reference STV tables
-  - STL views: Generated from logs persisted to disk
-  - SVCS views: Details about queries on main & concurrency scaling clusters
-  - SVL views: Details about queries on main clusters
-- Many system monitoring views & tables are only for provisioned clusters, not serverless
+```
+                    REDSHIFT SYSTEM INFORMATION
+                              │
+          ┌───────────────────┼────────────────────┐
+          │                   │                    │
+     Historical          Current State        Metadata
+          │                   │                    │
+        STL_*               STV_*                SVV_*
+          │
+        SVL_*
+
+                    Modern / Unified
+                              │
+                            SYS_*
+```
+
+| Prefix | General purpose |
+|---|---|
+| `STL_` | Historical system log tables |
+| `STV_` | Current/transient system information |
+| `SVL_` | System log views |
+| `SVV_` | System metadata/status views |
+| `SYS_` | Newer unified monitoring views (available for serverless) |
 
 ### Redshift Data API
 
-<!-- pdf-page: 264 -->
 <!-- original-note: 94 -->
 
 The Redshift Data API submits SQL over HTTPS and returns asynchronous statement status and results. It supports application and workflow integration without a persistent database connection.
@@ -3359,7 +3206,6 @@ The Redshift Data API submits SQL over HTTPS and returns asynchronous statement 
 
 ## Redshift Data API: Other use cases
 
-<!-- pdf-page: 265 -->
 
 Lambda, EventBridge and Step Functions can orchestrate Data API calls without maintaining a JDBC connection.
 
@@ -3377,7 +3223,6 @@ Lambda, EventBridge and Step Functions can orchestrate Data API calls without ma
 
 ### Maximum for Data API:
 
-<!-- pdf-page: 266 -->
 <!-- original-note: 95 -->
 <!-- title: Redshift Data API limits -->
 
@@ -3407,7 +3252,6 @@ Query duration, concurrent statements, result size and result retention are sepa
 
 ## AWS Application Discovery Service
 
-<!-- pdf-page: 268 -->
 
 Application Discovery collects on-premises inventory and dependency information to help plan migration waves and target resources.
 
@@ -3420,7 +3264,6 @@ Application Discovery collects on-premises inventory and dependency information 
 
 ## AWS Application Migration Service (MGN)
 
-<!-- pdf-page: 269 -->
 
 Application Migration Service replicates server disks to a staging area before test and cutover instances are launched.
 
@@ -3432,7 +3275,6 @@ Application Migration Service replicates server disks to a staging area before t
 
 ## AWS Database Migration Service
 
-<!-- pdf-page: 270 -->
 <!-- original-note: 97 -->
 
 DMS moves data between supported sources and targets, using full loads and change data capture where supported. Schema conversion is a separate migration task.
@@ -3447,7 +3289,6 @@ DMS moves data between supported sources and targets, using full loads and chang
 
 ## DMS Sources and Targets
 
-<!-- pdf-page: 271 -->
 
 DMS supports specific source-target combinations, with different full-load and CDC capabilities. Validate the chosen engines and versions as a pair.
 
@@ -3466,7 +3307,6 @@ DMS supports specific source-target combinations, with different full-load and C
 
 ### AWS Schema Conversion Tool (SCT)
 
-<!-- pdf-page: 272 -->
 <!-- original-note: 98 -->
 
 SCT translates schema and related objects when moving between different database engines. DMS handles the data movement; same-engine migrations may not need conversion.
@@ -3481,13 +3321,11 @@ SCT translates schema and related objects when moving between different database
 
 ## DMS - Continuous Replication
 
-<!-- pdf-page: 273 -->
 
 For a heterogeneous migration, schema conversion and data replication are separate paths that converge on the target.
 
 ## AWS DMS – Multi-AZ Deployment
 
-<!-- pdf-page: 274 -->
 
 A Multi-AZ DMS deployment provides a standby for replication-instance availability; it does not itself make a migration task parallel.
 
@@ -3499,7 +3337,6 @@ A Multi-AZ DMS deployment provides a standby for replication-instance availabili
 
 ## AWS DataSync
 
-<!-- pdf-page: 275 -->
 <!-- original-note: 99 -->
 
 DataSync schedules and verifies transfers between supported storage locations, including on-premises or other-cloud sources and AWS storage.
@@ -3517,19 +3354,16 @@ DataSync schedules and verifies transfers between supported storage locations, i
 
 ## AWS DataSync NFS / SMB to AWS (S3, EFS, FSx…)
 
-<!-- pdf-page: 276 -->
 
 An on-premises DataSync agent accesses supported local storage and transfers data to AWS storage over encrypted transport.
 
 ## AWS DataSync Transfer between AWS storage services
 
-<!-- pdf-page: 277 -->
 
 DataSync also transfers between supported AWS storage locations; agent requirements depend on the location types.
 
 ## AWS Snow Family
 
-<!-- pdf-page: 278 -->
 <!-- original-note: 100 -->
 
 Snow devices illustrate offline transfer and edge processing where connectivity is limited. Their availability and support notices determine whether they remain an option.
@@ -3548,13 +3382,12 @@ Snow devices illustrate offline transfer and edge processing where connectivity 
 
 ## Estimate network transfer time
 
-<!-- pdf-page: 279 -->
 
 Compare online transfer time with the complete offline workflow, including preparation, shipping and import.
 
 - Approximate ideal transfer time = data size in bits ÷ usable bits per second; actual utilization and protocol overhead increase it.
 - The source examples round a 10 TB transfer to 12 days at 100 Mbps, 30 hours at 1 Gbps and 3 hours at 10 Gbps.
-- Check shared bandwidth, cost, reliability and the migration deadline. The PDF's one-week threshold is a heuristic, not an AWS eligibility rule.
+- Check shared bandwidth, cost, reliability and the migration deadline. The one-week threshold is a heuristic, not an AWS eligibility rule.
 
 | Dataset | 100 Mbps (course) | 1 Gbps (course) | 10 Gbps (course) |
 | --- | --- | --- | --- |
@@ -3564,7 +3397,6 @@ Compare online transfer time with the complete offline workflow, including prepa
 
 ## Offline transfer workflow
 
-<!-- pdf-page: 280 -->
 
 Offline appliance transfer trades network upload time for device preparation, shipping and AWS import; eligibility is a dated service constraint.
 
@@ -3573,7 +3405,6 @@ Offline appliance transfer trades network upload time for device preparation, sh
 
 ## What is Edge Computing?
 
-<!-- pdf-page: 281 -->
 
 Edge processing performs useful work near the data's origin, such as a remote site or vehicle, when connectivity or latency makes cloud-only processing unsuitable.
 
@@ -3586,7 +3417,6 @@ Edge processing performs useful work near the data's origin, such as a remote si
 
 ## AWS Data Exchange
 
-<!-- pdf-page: 282 -->
 <!-- original-note: 101 -->
 
 Data Exchange lets subscribers obtain third-party datasets through supported delivery and sharing products, including S3 objects, Redshift data and APIs.
@@ -3599,13 +3429,11 @@ Data Exchange lets subscribers obtain third-party datasets through supported del
 
 ## AWS Data Exchange
 
-<!-- pdf-page: 283 -->
 
 Data Exchange grants subscribed access to provider datasets; analytics then uses the licensed data through the delivery method configured.
 
 ## AWS Data Exchange – Other Products
 
-<!-- pdf-page: 284 -->
 
 Data Exchange products can expose data through different delivery or sharing mechanisms, not only copied S3 objects.
 
@@ -3618,7 +3446,6 @@ Data Exchange products can expose data through different delivery or sharing mec
 
 ## AWS Transfer Family
 
-<!-- pdf-page: 285 -->
 <!-- original-note: 102 -->
 
 Transfer Family exposes managed file-transfer endpoints backed by S3 or EFS. Match the protocol and identity integration to the clients that will connect.
@@ -3635,7 +3462,6 @@ Transfer Family exposes managed file-transfer endpoints backed by S3 or EFS. Mat
 
 ## AWS Transfer Family
 
-<!-- pdf-page: 286 -->
 
 Transfer Family provides managed file-transfer endpoints with configured identity and storage permissions.
 
@@ -3647,7 +3473,6 @@ Transfer Family provides managed file-transfer endpoints with configured identit
 
 ## EC2
 
-<!-- pdf-page: 288 -->
 <!-- original-note: 104 -->
 
 EC2 provides configurable compute for data workloads. Select instance resources and purchase options from utilization, runtime and interruption tolerance.
@@ -3665,7 +3490,6 @@ EC2 provides configurable compute for data workloads. Select instance resources 
 
 ## AWS Graviton
 
-<!-- pdf-page: 289 -->
 <!-- original-note: 105 -->
 
 Graviton is AWS's Arm-based processor family. Compare compatible instance and service options using the application's actual workload rather than a universal performance ratio.
@@ -3681,7 +3505,6 @@ Graviton is AWS's Arm-based processor family. Compare compatible instance and se
 
 ## AWS Lambda
 
-<!-- pdf-page: 291 -->
 <!-- original-note: 106 -->
 
 Lambda executes event-driven code in managed environments. It is useful for file, stream, API and orchestration tasks that fit the selected execution model.
@@ -3703,19 +3526,16 @@ Common Lambda patterns process object events, update derived records from stream
 
 ## Example: Serverless Website
 
-<!-- pdf-page: 292 -->
 
 A serverless API resolves its domain, accepts HTTP requests, invokes business logic and accesses persistent storage.
 
 ## Example: Order history app
 
-<!-- pdf-page: 293 -->
 
 Streaming events can update an application-facing table asynchronously; client reads are a separate path.
 
 ## Example: Transaction rate alarm
 
-<!-- pdf-page: 294 -->
 
 Historical architecture: Kinesis SQL analytics processed an input stream and emitted results for alerting. Use a supported engine for new work.
 
@@ -3725,7 +3545,6 @@ Historical architecture: Kinesis SQL analytics processed an input stream and emi
 
 ## Why not just run a server?
 
-<!-- pdf-page: 295 -->
 
 Managed execution removes much host administration, but the economic choice still depends on utilization, scaling behavior and the work that must stay running.
 
@@ -3735,7 +3554,6 @@ Managed execution removes much host administration, but the economic choice stil
 
 ## Main uses of Lambda
 
-<!-- pdf-page: 296 -->
 
 Lambda commonly handles event-driven file, stream, API and application tasks.
 
@@ -3747,7 +3565,6 @@ Lambda commonly handles event-driven file, stream, API and application tasks.
 
 ## Supported languages
 
-<!-- pdf-page: 297 -->
 
 Lambda runtime support depends on language and runtime version; distinguish managed runtimes from custom-runtime options.
 
@@ -3763,25 +3580,21 @@ Lambda runtime support depends on language and runtime version; distinguish mana
 
 ## Lambda triggers
 
-<!-- pdf-page: 298 -->
 
 Lambda integrations include request/response invocations, asynchronous events and polled event sources; these invocation models have different retry behavior.
 
 ## Lambda and Amazon OpenSearch Service
 
-<!-- pdf-page: 299 -->
 
 An S3 upload can trigger Lambda to extract and index content in OpenSearch.
 
 ## Lambda and Redshift
 
-<!-- pdf-page: 300 -->
 
 An event-driven loader can submit a Redshift COPY from S3 and track processed objects in DynamoDB; retry-safe bookkeeping is essential.
 
 ## Lambda + Kinesis
 
-<!-- pdf-page: 301 -->
 
 The Lambda event source mapping reads Kinesis shards and invokes batches, preserving order within a shard subject to configured parallelization.
 
@@ -3796,7 +3609,6 @@ The Lambda event source mapping reads Kinesis shards and invokes batches, preser
 
 ## Cost Model
 
-<!-- pdf-page: 302 -->
 
 Lambda cost depends on request volume, execution duration, configured resources and optional capabilities.
 
@@ -3807,7 +3619,6 @@ Lambda cost depends on request volume, execution duration, configured resources 
 
 ## Other promises
 
-<!-- pdf-page: 303 -->
 
 Managed scaling and availability do not remove the need to configure concurrency, permissions and recovery behavior.
 
@@ -3821,7 +3632,6 @@ Managed scaling and availability do not remove the need to configure concurrency
 
 ## Anti-patterns
 
-<!-- pdf-page: 304 -->
 
 Long-running or locally stateful workloads need a different execution/state design than one short Lambda invocation.
 
@@ -3834,7 +3644,6 @@ Long-running or locally stateful workloads need a different execution/state desi
 
 ### Lambda - File Systems Mounting
 
-<!-- pdf-page: 305 -->
 <!-- original-note: 108 -->
 <!-- title: Lambda filesystem access -->
 
@@ -3847,7 +3656,6 @@ Lambda can mount EFS through a configured VPC connection. Distinguish shared per
 
 ## Lambda storage choices
 
-<!-- pdf-page: 306 -->
 
 Separate per-environment scratch space, packaged dependencies, object storage and shared filesystem storage.
 
@@ -3867,7 +3675,6 @@ Separate per-environment scratch space, packaged dependencies, object storage an
 
 ### Lambda - SAM
 
-<!-- pdf-page: 307 -->
 <!-- original-note: 109 -->
 <!-- title: AWS SAM -->
 
@@ -3882,7 +3689,6 @@ SAM describes serverless resources in templates and builds on CloudFormation dep
 
 ## AWS SAM – Recipe
 
-<!-- pdf-page: 308 -->
 
 A SAM template declares its transform and serverless resource types, then supplies the properties used to build and deploy the application.
 
@@ -3896,13 +3702,11 @@ A SAM template declares its transform and serverless resource types, then suppli
 
 ## Deep Dive into SAM Deployment
 
-<!-- pdf-page: 309 -->
 
 SAM builds and packages application artifacts, then deploys the transformed infrastructure through CloudFormation.
 
 ## SAM Accelerate (sam sync)
 
-<!-- pdf-page: 310 -->
 
 SAM sync accelerates development: eligible code updates use service APIs, while infrastructure changes still use CloudFormation.
 
@@ -3913,7 +3717,6 @@ SAM sync accelerates development: eligible code updates use service APIs, while 
 
 ## SAM Accelerate (sam sync) – Examples
 
-<!-- pdf-page: 311 -->
 
 Watch mode monitors local changes and selects the supported sync route; it is a development workflow.
 
@@ -3932,7 +3735,6 @@ Watch mode monitors local changes and selects the supported sync route; it is a 
 
  ## AWS BATCH
 
-<!-- pdf-page: 312 -->
 <!-- original-note: 110 -->
 <!-- title: AWS Batch -->
 
@@ -3947,7 +3749,6 @@ Batch schedules containerized jobs and provisions supported compute to run them.
 
 ### AWS BATCH vs Glue
 
-<!-- pdf-page: 313 -->
 <!-- original-note: 111 -->
 <!-- title: AWS Batch and Glue -->
 
@@ -3968,7 +3769,6 @@ Choose Glue for its managed ETL and catalog integration. Choose Batch for broade
 
 ## Docker
 
-<!-- pdf-page: 316 -->
 <!-- original-note: 113 -->
 
 Containers package an application with its dependencies for a compatible runtime. They share a host kernel, so portability still depends on the operating-system and processor environment.
@@ -3987,13 +3787,11 @@ Containers package an application with its dependencies for a compatible runtime
 
 ## Docker on an OS
 
-<!-- pdf-page: 317 -->
 
 Containers package applications and dependencies while sharing the host kernel.
 
 ## Where are Docker images stored?
 
-<!-- pdf-page: 318 -->
 
 A registry stores versioned container images for later deployment. Distinguish a public image source from a private repository with controlled access.
 
@@ -4006,7 +3804,6 @@ A registry stores versioned container images for later deployment. Distinguish a
 
 ## Docker vs. Virtual Machines
 
-<!-- pdf-page: 319 -->
 
 The source compares a hosted hypervisor stack with containers. Virtual machines include guest operating systems; containers share the host kernel through their runtime.
 
@@ -4015,13 +3812,11 @@ The source compares a hosted hypervisor stack with containers. Virtual machines 
 
 ## Getting Started with Docker
 
-<!-- pdf-page: 320 -->
 
 A Dockerfile builds an image. A registry distributes images, and a runtime creates containers from them.
 
 ## Docker Containers Management on AWS
 
-<!-- pdf-page: 321 -->
 
 ECS and EKS orchestrate containers with different APIs; Fargate supplies supported serverless compute beneath those orchestration choices.
 
@@ -4036,7 +3831,6 @@ ECS and EKS orchestrate containers with different APIs; Fargate supplies support
 
 ## AWS ECS
 
-<!-- pdf-page: 322 -->
 <!-- original-note: 114 -->
 <!-- title: Amazon ECS -->
 
@@ -4050,7 +3844,6 @@ ECS runs task definitions on a cluster using supported compute options. With EC2
 
 ## Amazon ECS – Fargate Launch Type
 
-<!-- pdf-page: 323 -->
 
 Fargate runs ECS tasks without exposing host-instance administration to the application team.
 
@@ -4063,7 +3856,6 @@ Fargate runs ECS tasks without exposing host-instance administration to the appl
 
 ### ECS - IAM roles
 
-<!-- pdf-page: 324 -->
 <!-- original-note: 115 -->
 <!-- title: ECS IAM roles -->
 
@@ -4082,7 +3874,6 @@ Separate the permissions used by container infrastructure from the task role use
 
 ## Amazon ECS – Load Balancer Integrations
 
-<!-- pdf-page: 325 -->
 
 An Application Load Balancer routes HTTP traffic to registered ECS task targets with health checks.
 
@@ -4092,7 +3883,6 @@ An Application Load Balancer routes HTTP traffic to registered ECS task targets 
 
 ## Amazon ECS – Data Volumes (EFS)
 
-<!-- pdf-page: 326 -->
 
 ECS tasks on supported EC2 or Fargate configurations can mount a shared EFS filesystem.
 
@@ -4104,7 +3894,6 @@ ECS tasks on supported EC2 or Fargate configurations can mount a shared EFS file
 
 ## Amazon ECS – Data Volumes (S3 Files)
 
-<!-- pdf-page: 327 -->
 
 The source's S3 Files example mounts a filesystem from Fargate or ECS Managed Instances and synchronizes with an S3 bucket. Verify current feature support before deployment.
 
@@ -4115,7 +3904,6 @@ The source's S3 Files example mounts a filesystem from Fargate or ECS Managed In
 
 ### ECR
 
-<!-- pdf-page: 328 -->
 <!-- original-note: 116 -->
 <!-- title: Amazon ECR -->
 
@@ -4130,7 +3918,6 @@ ECR stores container images for deployment. Image repository access, lifecycle p
 
 ### EKS
 
-<!-- pdf-page: 329 -->
 <!-- original-note: 117 -->
 <!-- title: Amazon EKS -->
 
@@ -4147,13 +3934,11 @@ EKS manages a Kubernetes control plane. Choose node groups or supported serverle
 
 ## Amazon EKS - Diagram
 
-<!-- pdf-page: 330 -->
 
 EKS separates a managed Kubernetes control plane from worker capacity deployed across AZs; a load balancer exposes selected services.
 
 ## Amazon EKS – Node Types
 
-<!-- pdf-page: 331 -->
 
 EKS compute options differ in who provisions and maintains nodes. Compare managed groups, self-managed nodes and supported Fargate workloads.
 
@@ -4168,7 +3953,6 @@ EKS compute options differ in who provisions and maintains nodes. Compare manage
 
 ## Amazon EKS – Data Volumes
 
-<!-- pdf-page: 332 -->
 
 Kubernetes persistent-volume claims use a compatible CSI driver to provision or mount the selected AWS storage backend.
 
@@ -4187,7 +3971,6 @@ Kubernetes persistent-volume claims use a compatible CSI driver to provision or 
 
 ## AWS Glue
 
-<!-- pdf-page: 335 -->
 <!-- original-note: 119 -->
 
 Glue combines data discovery, a shared catalog and managed ETL. Crawlers describe datasets; jobs transform their contents; orchestration connects the steps.
@@ -4203,7 +3986,6 @@ Glue combines data discovery, a shared catalog and managed ETL. Crawlers describ
 
 ## Glue Crawler / Data Catalog
 
-<!-- pdf-page: 336 -->
 
 Glue crawlers discover metadata; query engines use that catalog to interpret data that remains in S3.
 
@@ -4220,7 +4002,6 @@ Glue crawlers discover metadata; query engines use that catalog to interpret dat
 
 ## Glue and S3 Partitions
 
-<!-- pdf-page: 337 -->
 
 Partition keys organize data prefixes so a query predicate can prune irrelevant partitions.
 
@@ -4234,7 +4015,6 @@ Partition keys organize data prefixes so a query predicate can prune irrelevant 
 
 ## Glue + Hive
 
-<!-- pdf-page: 338 -->
 
 Glue's catalog can act as a Hive metastore for compatible analytics engines, separating shared table metadata from the jobs that process data.
 
@@ -4243,7 +4023,6 @@ Glue's catalog can act as a Hive metastore for compatible analytics engines, sep
 
 ## Glue ETL
 
-<!-- pdf-page: 339 -->
 
 Glue ETL jobs use generated or authored code to read, prepare and write data. A generated script still needs review against the transformation requirements.
 
@@ -4260,7 +4039,6 @@ Glue ETL jobs use generated or authored code to read, prepare and write data. A 
 
 ## Glue ETL
 
-<!-- pdf-page: 340 -->
 
 An ETL job cleans and reshapes records for later analysis. Scaling choices and processing abstractions depend on the supported Glue job type.
 
@@ -4274,7 +4052,6 @@ An ETL job cleans and reshapes records for later analysis. Scaling choices and p
 
 ## Glue ETL: The DynamicFrame
 
-<!-- pdf-page: 341 -->
 
 A DynamicFrame is a distributed collection of self-describing DynamicRecords, allowing inconsistent fields to be resolved during ETL.
 
@@ -4285,7 +4062,6 @@ A DynamicFrame is a distributed collection of self-describing DynamicRecords, al
 
 ## AWS Glue Transformations
 
-<!-- pdf-page: 342 -->
 <!-- original-note: 120 -->
 
 Glue transformations remove or select fields, filter records, join datasets and apply custom mappings. Match the transformation to the quality or modeling problem.
@@ -4302,7 +4078,6 @@ Glue transformations remove or select fields, filter records, join datasets and 
 
 ## Glue ETL: ResolveChoice
 
-<!-- pdf-page: 343 -->
 
 ResolveChoice makes a mixed-type field explicit by casting, projecting, creating separate columns or creating a struct.
 
@@ -4316,7 +4091,6 @@ ResolveChoice makes a mixed-type field explicit by casting, projecting, creating
 
 ## AWS Glue Modifying Data Catalog
 
-<!-- pdf-page: 344 -->
 <!-- original-note: 121 -->
 
 An ETL job can publish supported schema and partition changes to the Data Catalog. Updating files alone does not necessarily update the metadata used by query engines.
@@ -4336,7 +4110,6 @@ An ETL job can publish supported schema and partition changes to the Data Catalo
 
 ## AWS Glue Development Endpoints
 
-<!-- pdf-page: 345 -->
 
 Development endpoints and notebooks illustrate interactive ETL development. Check the supported environment and stop resources that continue accruing charges.
 
@@ -4351,7 +4124,6 @@ Development endpoints and notebooks illustrate interactive ETL development. Chec
 
 ## AWS Running Glue Jobs
 
-<!-- pdf-page: 346 -->
 <!-- original-note: 122 -->
 <!-- title: Running Glue jobs -->
 
@@ -4370,7 +4142,6 @@ Run Glue jobs from schedules, triggers or workflows. Bookmarks retain processing
 
 ## AWS Glue Cost Model
 
-<!-- pdf-page: 347 -->
 <!-- original-note: 123 -->
 
 Glue charges depend on compute time, catalog usage and optional development resources. Estimate the complete workflow rather than one ETL run alone.
@@ -4380,7 +4151,6 @@ Glue charges depend on compute time, catalog usage and optional development reso
 
 ## Glue Anti-patterns
 
-<!-- pdf-page: 348 -->
 
 Choose a different execution environment when the job depends on unsupported engines or runtime behavior. Glue's ETL model does not cover every distributed application.
 
@@ -4389,7 +4159,6 @@ Choose a different execution environment when the job depends on unsupported eng
 
 ## No longer an anti-pattern: streaming
 
-<!-- pdf-page: 349 -->
 
 Glue streaming ETL continuously processes supported Kinesis or Kafka input using Spark Structured Streaming rather than waiting for a bounded batch.
 
@@ -4400,7 +4169,6 @@ Glue streaming ETL continuously processes supported Kinesis or Kafka input using
 
 ## AWS Glue Studio
 
-<!-- pdf-page: 350 -->
 <!-- original-note: 125 -->
 
 Glue Studio builds and monitors ETL jobs through a visual graph. The graph still represents concrete sources, transformations and targets that need review.
@@ -4417,7 +4185,6 @@ Glue Studio builds and monitors ETL jobs through a visual graph. The graph still
 
 ## AWS Glue Data Quality
 
-<!-- pdf-page: 351 -->
 <!-- original-note: 126 -->
 
 Glue Data Quality evaluates datasets against rules that you define or refine from recommendations. Integrate the checks into the job's success and failure handling.
@@ -4439,7 +4206,6 @@ Rules = [
 
 ## More on Data Quality Definition Language (DQDL)
 
-<!-- pdf-page: 352 -->
 
 DQDL expresses quality checks as a ruleset. Read the rule names, thresholds and combined conditions to understand what makes a dataset pass.
 
@@ -4458,13 +4224,11 @@ DQDL expresses quality checks as a ruleset. Read the rule names, thresholds and 
 
 ## AWS Glue Data Quality
 
-<!-- pdf-page: 353 -->
 
 The quality-results screen connects each configured rule to a pass/fail outcome and supporting metrics.
 
 ## AWS Glue DataBrew
 
-<!-- pdf-page: 354 -->
 <!-- original-note: 127 -->
 
 DataBrew expresses visual data-preparation steps as reusable recipes and jobs. Use profiling and quality checks to evaluate the dataset before publishing the result.
@@ -4484,7 +4248,6 @@ DataBrew expresses visual data-preparation steps as reusable recipes and jobs. U
 
 ## Handling PII in DataBRew Transformations
 
-<!-- pdf-page: 355 -->
 <!-- original-note: 128 -->
 <!-- title: PII transformations in DataBrew -->
 
@@ -4501,7 +4264,6 @@ Identify sensitive fields, then choose whether to replace, shuffle or encrypt th
 
 ## Glue Workflows
 
-<!-- pdf-page: 356 -->
 <!-- original-note: 129 -->
 
 Glue Workflows coordinate related jobs and crawlers with dependencies and triggers. Use them for ETL orchestration rather than general application workflows.
@@ -4512,7 +4274,6 @@ Glue Workflows coordinate related jobs and crawlers with dependencies and trigge
 
 ## Glue Workflow Triggers
 
-<!-- pdf-page: 357 -->
 
 Workflow triggers start jobs or crawlers from schedules, requests, events or dependency conditions. A trigger is the activation rule, not the transformation itself.
 
@@ -4529,7 +4290,6 @@ Workflow triggers start jobs or crawlers from schedules, requests, events or dep
 
 ## AWS Glue Flex Jobs
 
-<!-- pdf-page: 358 -->
 <!-- original-note: 124 -->
 
 Flex uses available capacity for eligible nonurgent Glue jobs. Lower cost comes with capacity-dependent startup and execution behavior.
@@ -4544,7 +4304,6 @@ Flex uses available capacity for eligible nonurgent Glue jobs. Lower cost comes 
 
 ## Glue Flex Jobs
 
-<!-- pdf-page: 359 -->
 
 Flex is limited to supported job types. Python shell, streaming and ML-transform jobs in this source comparison use other execution choices.
 
@@ -4557,7 +4316,6 @@ Flex is limited to supported job types. Python shell, streaming and ML-transform
 
 ## AWS Lake Formation
 
-<!-- pdf-page: 360 -->
 <!-- original-note: 130 -->
 
 Lake Formation centralizes governance of a data lake using catalog metadata and access permissions, working with Glue and the underlying storage services.
@@ -4572,13 +4330,11 @@ Lake Formation centralizes governance of a data lake using catalog metadata and 
 
 ## AWS Lake Formation
 
-<!-- pdf-page: 361 -->
 
 Lake Formation governs a data lake while supported query engines enforce granted permissions on cataloged data.
 
 ## AWS Lake Formation: Pricing
 
-<!-- pdf-page: 362 -->
 
 Estimate Lake Formation together with the storage, processing and optional features used around it. A course statement about the service's price is not a full workload estimate.
 
@@ -4591,13 +4347,11 @@ Estimate Lake Formation together with the storage, processing and optional featu
 
 ## AWS Lake Formation: Building a Data Lake
 
-<!-- pdf-page: 363 -->
 
 Building a governed lake combines storage registration, discovery, ingestion and permission grants rather than only copying files.
 
 ## AWS Lake Formation: The Finer Points
 
-<!-- pdf-page: 364 -->
 
 Cross-account governance combines catalog sharing, recipient setup and authorization. Confirm which principal can discover and query the shared data.
 
@@ -4610,7 +4364,6 @@ Cross-account governance combines catalog sharing, recipient setup and authoriza
 
 ## Data Permissions in Lake formation
 
-<!-- pdf-page: 365 -->
 <!-- original-note: 131 -->
 <!-- title: Lake Formation data permissions -->
 
@@ -4622,7 +4375,6 @@ Lake Formation grants access to cataloged data at supported scopes. Coordinate t
 
 ## Data filters in Lake Formation
 
-<!-- pdf-page: 366 -->
 <!-- original-note: 132 -->
 <!-- title: Lake Formation data filters -->
 
@@ -4637,7 +4389,6 @@ Data filters limit the rows, columns or cells a principal can read. Apply the fi
 
 ## Amazon Athena
 
-<!-- pdf-page: 368 -->
 <!-- original-note: 133 -->
 
 Athena runs SQL against data in S3 without a database server to administer. Catalog metadata, file layout and the amount scanned determine much of its usefulness and cost.
@@ -4656,7 +4407,6 @@ Athena runs SQL against data in S3 without a database server to administer. Cata
 
 ## Athena workloads
 
-<!-- pdf-page: 369 -->
 
 Athena suits exploratory SQL over logs, staging datasets and other files, with results available to applications or visualization tools.
 
@@ -4668,14 +4418,12 @@ Athena suits exploratory SQL over logs, staging datasets and other files, with r
 
 ## Athena + Glue
 
-<!-- pdf-page: 370 -->
 <!-- original-note: 134 -->
 
 S3 holds the data, Glue describes it, Athena queries it and QuickSight can visualize the results. Metadata discovery is separate from data processing.
 
 ### Athena Workgroups
 
-<!-- pdf-page: 371 -->
 <!-- original-note: 135 -->
 
 Workgroups separate Athena workloads and govern query history, access settings and usage controls for teams or applications.
@@ -4690,7 +4438,6 @@ Workgroups separate Athena workloads and govern query history, access settings a
 
 ## Athena cost model
 
-<!-- pdf-page: 372 -->
 
 Athena query cost depends on the selected capacity or scan-pricing model and supporting services. Reducing unnecessary scans can improve both cost and latency.
 
@@ -4704,7 +4451,6 @@ Athena query cost depends on the selected capacity or scan-pricing model and sup
 
 ## Athena Security
 
-<!-- pdf-page: 373 -->
 <!-- original-note: 136 -->
 
 Athena needs permission to query the catalog, read source data and write results. Protect the result location and encryption keys as well as the source bucket.
@@ -4720,7 +4466,6 @@ Athena needs permission to query the catalog, read source data and write results
 
 ## Athena anti-patterns
 
-<!-- pdf-page: 374 -->
 
 Athena is a query engine rather than a report-layout or general ETL product. Use a visualization tool or processing service when those are the main requirement.
 
@@ -4730,7 +4475,6 @@ Athena is a query engine rather than a report-layout or general ETL product. Use
 
 ## Athena: Optimizing performance
 
-<!-- pdf-page: 375 -->
 
 Columnar formats, compression, useful partitions and sensible file sizes reduce the work Athena must scan to answer a query.
 
@@ -4740,7 +4484,6 @@ Columnar formats, compression, useful partitions and sensible file sizes reduce 
 
 ## Athena ACID transactions
 
-<!-- pdf-page: 376 -->
 <!-- original-note: 137 -->
 
 Athena uses supported Iceberg tables for transactional updates and time travel. Plan table maintenance and compaction alongside concurrent reads and writes.
@@ -4756,7 +4499,6 @@ Athena uses supported Iceberg tables for transactional updates and time travel. 
 
 ## Athena Fine-Grained Access to AWS Glue Data Catalog
 
-<!-- pdf-page: 377 -->
 
 Catalog permissions determine which metadata a caller can use. Coordinate table and database authorization with permissions on the underlying data and keys.
 
@@ -4766,7 +4508,6 @@ Catalog permissions determine which metadata a caller can use. Coordinate table 
 
 ## Athena Fine-Grained Access to AWS Glue Data Catalog
 
-<!-- pdf-page: 378 -->
 
 Map catalog operations to their IAM actions and resource scope. Restricting one operation does not automatically restrict every way of accessing the data.
 
@@ -4781,7 +4522,6 @@ Map catalog operations to their IAM actions and resource scope. Restricting one 
 
 ## Wait,what’s Iceberg?
 
-<!-- pdf-page: 379 -->
 
 Iceberg adds table metadata, snapshots and transactional behavior over lake files. It is a table format, separate from the physical file format.
 
@@ -4802,7 +4542,6 @@ Iceberg adds table metadata, snapshots and transactional behavior over lake file
 
 ## Iceberg + AWS Glue / S3
 
-<!-- pdf-page: 380 -->
 
 Iceberg separates metadata from data files; compatible engines use catalog coordination to locate table metadata and S3 objects.
 
@@ -4816,7 +4555,6 @@ Iceberg separates metadata from data files; compatible engines use catalog coord
 
 ## Migrating Glue Data Catalogs to Iceberg
 
-<!-- pdf-page: 381 -->
 
 Catalog migration requires compatible Iceberg metadata and APIs. Treat metadata conversion and the data files themselves as different parts of the change.
 
@@ -4836,7 +4574,6 @@ Catalog migration requires compatible Iceberg metadata and APIs. Treat metadata 
 
 ## CREATE TABLE AS SELECT
 
-<!-- pdf-page: 382 -->
 
 CTAS creates a table from query output. In Athena it can also reorganize or convert S3 data into a layout better suited to subsequent queries.
 
@@ -4848,7 +4585,6 @@ CTAS creates a table from query output. In Athena it can also reorganize or conv
 
 ### Athena Federated Queries
 
-<!-- pdf-page: 383 -->
 <!-- original-note: 141 -->
 
 Athena federation uses connectors to query supported sources beyond S3. Connections, credentials and source-side work remain necessary even though the query is submitted to Athena.
@@ -4869,7 +4605,6 @@ Athena federation uses connectors to query supported sources beyond S3. Connecti
 
 ## Athena Federated Queries
 
-<!-- pdf-page: 384 -->
 
 Federated-query support varies by connector. Views, native passthrough queries, credential handling and cross-account access have their own requirements.
 
@@ -4886,7 +4621,6 @@ Federated-query support varies by connector. Views, native passthrough queries, 
 
 ### Hadoop
 
-<!-- pdf-page: 385 -->
 <!-- original-note: 146 -->
 
 Hadoop separates distributed storage, resource scheduling and processing: HDFS stores blocks, YARN allocates resources and MapReduce executes map and reduce stages.
@@ -4908,7 +4642,6 @@ Hadoop separates distributed storage, resource scheduling and processing: HDFS s
 
 ## Apache Spark
 
-<!-- pdf-page: 386 -->
 <!-- original-note: 138 -->
 
 Spark distributes computation across executors coordinated by a driver and cluster manager. It supports analytical processing and reusable transformations rather than transactional database serving.
@@ -4921,13 +4654,11 @@ Spark distributes computation across executors coordinated by a driver and clust
 
 ## Spark Components
 
-<!-- pdf-page: 387 -->
 
 Spark Core underpins higher-level SQL, streaming, ML and graph APIs.
 
 ### Spark Structured Streaming
 
-<!-- pdf-page: 388 -->
 <!-- original-note: 139 -->
 
 Structured Streaming treats arriving records as additions to an unbounded table. Queries continuously transform that input and publish results to a configured sink.
@@ -4936,13 +4667,11 @@ Structured Streaming treats arriving records as additions to an unbounded table.
 
 ## Spark Streaming + Kinesis
 
-<!-- pdf-page: 389 -->
 
 A supported Spark connector consumes Kinesis records for distributed stream processing; checkpointing governs recovery.
 
 ## Spark + Redshift
 
-<!-- pdf-page: 390 -->
 
 Spark can exchange bulk data with Redshift through S3 staging; S3 is the transfer path, not a Spark SQL database endpoint.
 
@@ -4952,7 +4681,6 @@ Spark can exchange bulk data with Redshift through S3 staging; S3 is the transfe
 
 ### Spark + Athena
 
-<!-- pdf-page: 391 -->
 <!-- original-note: 140 -->
 <!-- title: Spark in Athena -->
 
@@ -4969,212 +4697,476 @@ Athena can run Spark notebook sessions in supported workgroups. Session resource
 
 ## AWS EMR
 
-<!-- pdf-page: 393 -->
 <!-- original-note: 142 -->
 
-EMR runs distributed data frameworks on managed infrastructure. Separate the cluster's control role, storage-bearing core nodes and compute-only task nodes.
+Amazon EMR (Elastic MapReduce) is AWS's managed platform for running distributed big-data processing frameworks.
+Instead of manually creating EC2 instances and configuring Hadoop, Spark, Hive, HDFS, networking, monitoring, etc., EMR automates much of that infrastructure setup.
 
-- Managed Hadoop framework on EC2 instances
-- Includes Spark, HBase, Presto, Flink, Hive & more
-- EMR Notebooks
-- Several integration points with AWS
+```
+                  Amazon S3
+               Raw / Lake Data
+                     │
+                     ▼
+              ┌─────────────┐
+              │     EMR     │
+              │             │
+              │ Spark       │
+              │ Hive        │
+              │ Hadoop      │
+              │ Flink       │
+              │ Presto      │
+              │ HBase       │
+              └──────┬──────┘
+                     │
+                     ▼
+                  Results
+                     │
+                     ▼
+                     S3
+```
 
-## An EMR Cluster
+### EMR - Use Cases
 
-<!-- pdf-page: 394 -->
+Typical use cases include:
+- ETL / ELT processing
+- Large-scale transformations
+- Log processing
+- Machine learning preprocessing
+- Batch processing
+- SQL analytics with Hive/Presto
+- Streaming with Flink/Spark
+- Processing data stored in S3
 
-An EMR on EC2 cluster separates orchestration, core compute with HDFS and optional task compute without HDFS storage.
+### EMR Cluster
 
-- Master node: manages the cluster
-  - Tracks status of tasks, monitors cluster health
-  - Single EC2 instance (it can be a single node cluster even)
-  - AKA “leader node”
-- Core node: Hosts HDFS data and runs tasks
-  - Can be scaled up & down, but with some risk
-  - Multi-node clusters have at least one
-- Task node: Runs tasks, does not host data
-  - Optional
-  - No risk of data loss when removing
-  - Good use of spot instances
+
+With traditional EMR on EC2, the cluster contains different types of nodes.
+```
+                    EMR Cluster
+                         │
+                ┌────────┴────────┐
+                │  Primary Node   │
+                │    CONTROL      │
+                └────────┬────────┘
+                         │
+          ┌──────────────┼──────────────┐
+          ▼              ▼              ▼
+      Core Node      Core Node      Task Node
+      COMPUTE        COMPUTE        COMPUTE
+         +               +             only
+      HDFS DATA       HDFS DATA
+```
+
+### EMR - Primary node
+
+Previously called the master node. It coordinates and manages the cluster.
+Responsibilities include:
+  - coordinating distributed jobs
+  - tracking tasks
+  - monitoring cluster health
+  - coordinating Hadoop/YARN services
+
+- It is not where you should intentionally depend on durable business data being stored.
+
+### EMR - Core nodes
+
+Core nodes perform two jobs:
+1. Run processing tasks.
+2. Store HDFS data.
+
+```
+          HDFS dataset
+
+         sales.parquet
+              │
+      ┌───────┼───────┐
+      ▼       ▼       ▼
+    Core 1  Core 2   Core 3
+```
+
+- HDFS distributes and replicates data across core nodes.
+- Adding core nodes therefore increases both: Compute and HDFS
+- Removing them is more complicated because they may contain HDFS blocks (Data Loss)
+
+### EMR - Task node: 
+
+- Task nodes provide compute only.
+- They do not store HDFS data.
+- No risk of data loss when removing
+- Good use of spot instances
+- Once the workload finis
 
 ### EMR Usage
 
-<!-- pdf-page: 395 -->
 <!-- original-note: 143 -->
 
-Use a transient EMR cluster for a bounded sequence of steps, or retain a cluster for repeated work. Termination behavior and durable output storage determine the lifecycle.
+There are two major lifecycle patterns for EMR on EC2:
 
-- Transient clusters terminate once all steps are complete
-  - Loading data, processing, storing – then shut down
-  - Saves money
-- Long-running clusters must be manually terminated
-  - Basically a data warehouse with periodic processing on large datasets
+- Transient clusters:
+  - terminate once all steps are complete.  
+  - Create the cluster → process data → save results → destroy cluster.
+  - This is often highly cost-effective for batch workloads.
+
+- Long-running clusters:
+  - The cluster remains available for repeated workloads.
+  - must be manually terminated
   - Can spin up task nodes using Spot instances for temporary capacity
   - Can use reserved instances on long-running clusters to save $
-  - Termination protection on by default, auto-termination off
+  - Termination protection "ON" by default
 
-## Submitting EMR work
+  - Useful when:
+    - jobs run frequently
+    - users need interactive access
+    - startup latency is undesirable
+    - applications depend on a continuously available cluster
 
-<!-- pdf-page: 396 -->
 
-Select EMR applications and frameworks for the jobs that will run. Submit steps or connect through supported interfaces, then store outputs in the intended destination.
+### Submitting EMR workloads
 
-- Connect directly to master to run jobs directly
-- Or, submit ordered steps via the console
-  - Process data in S3 or HDFS
-  - Output data to S3 or somewhere
-  - Once defined, steps can be invoked via the console
 
-## EMR / AWS Integration
+There are several ways to run workloads. One concept is an EMR Step.
+A step is essentially: "Run this job on my cluster."
 
-<!-- pdf-page: 397 -->
+```
+EMR Cluster
+    │
+    ├── Step 1
+    │    Import data
+    │
+    ├── Step 2
+    │    Spark transformation
+    │
+    ├── Step 3
+    │    Hive aggregation
+    │
+    └── Step 4
+         Write results
+```
+- Jobs can be submitted using mechanisms such as the AWS Console, CLI, SDKs, APIs and supported application-specific interfaces.
+- You can also interact with the primary node when direct cluster/application access is appropriate.
 
-EMR uses surrounding AWS services for compute, networking, storage and monitoring. Track the role of each service rather than viewing the cluster in isolation.
 
-- Amazon VPC to configure the virtual network in which you launch your instances
-- Amazon S3 to store input and output data
-- Amazon CloudWatch to monitor cluster performance and configure alarms
-- AWS IAM to configure permissions
-- AWS CloudTrail to audit requests made to the service
+### EMR / AWS Integration
+
+
+EMR doesn't operate in isolation.
+
+```
+                       EMR
+                        │
+        ┌───────────────┼───────────────┐
+        ▼               ▼               ▼
+       VPC             IAM              S3
+    networking      permissions       storage
+
+        ▼               ▼
+   CloudWatch       CloudTrail
+   monitoring        auditing
+```
+
+- **AWS VPC** - Controls the cluster's network environment. (Subnets, routing, Security Groups, Network Access)
+- **AWS IAM** - Controls what EMR and its jobs are allowed to access.
+- **AWS S3** -  Provides durable input/output storage.
+- **AWS CloudWatch** - Used for operational monitoring, metrics and alarms.
+- **AWS CloudTrail** - Records AWS API activity.
 
 ### EMR Storage
 
-<!-- pdf-page: 398 -->
 <!-- original-note: 144 -->
 
-Use HDFS for suitable cluster-local work and S3 for data that must survive cluster termination. Historical EMRFS consistency workarounds are distinct from S3's current strong consistency.
+This is one of the most important EMR topics.
+> HDFS → cluster storage (end on termination)
+> S3 → durable external object storage
 
-- HDFS distributes blocks across cluster nodes; replication protects against some node failures, not cluster termination.
-- EMRFS gives Hadoop applications access to S3, with different semantics from a local filesystem.
-- Historical EMRFS Consistent View used DynamoDB metadata. S3 now has strong read-after-write and LIST consistency; that historical workaround is not required for S3 consistency.
+HDFS stands for Hadoop Distributed File System distributes data across core nodes.
+```
+                HDFS
 
+            Dataset A
+                │
+      ┌─────────┼─────────┐
+      ▼         ▼         ▼
+    Core 1    Core 2    Core 3
+```
+HDFS replication helps protect against individual node failures.
+
+### EMRFS
+
+EMRFS allows Hadoop ecosystem applications running on EMR to interact with Amazon S3.
+
+Conceptually:
+```
+Spark / Hive / Hadoop
+          │
+        EMRFS
+          │
+          ▼
+          S3
+```
+
+#### EMRFS Consistent View Feature
+
+Older EMR architectures had to account for historical S3 lack of consistency characteristics by using workarounds.
+```
+Step 1:
+Spark writes 100 files to S3
+        ↓
+Step 2:
+Hive immediately lists the directory
+        ↓
+Hive temporarily sees only 97 files
+        ↓
+Incomplete processing ❌
+```
+
+
+For example, **Consistent View Feature**:
+```
+Spark
+  │
+  ▼
+EMRFS
+  │
+  ├──► Write object → S3
+  │
+  └──► Record metadata → DynamoDB
+```
+
+So:
+```
+S3 LIST: 97 objects
+
+DynamoDB metadata: 100 objects
+        ↓
+EMRFS knows something
+is temporarily inconsistent
+```
+
+But Amazon S3 now provides strong read-after-write and LIST consistency, so this historical workaround is no longer necessary for S3 consistency.
 **Current reference (checked 2026-10-13):** [S3 consistency model](https://aws.amazon.com/s3/consistency/).
 
-## EMR local and attached storage
+### EMR Local Storage and Attached Storages
 
-<!-- pdf-page: 399 -->
 
-Local disks hold temporary working data, while EBS can provide supported cluster storage. Neither should be confused with outputs deliberately persisted outside the cluster.
+There are three storage concepts worth separating:
+- Local / Instance Storage
+- EBS
+- HDFS
 
-  - Suitable only for temporary data (buffers, caches, etc)
-- EBS for HDFS
+**Local Storage** Good for temporary working data such as: buffer, caches, shuffle, temp files.
+**EBS** EMR can use supported EBS volumes as additional storage attached to EC2 instances. 
+
+EBS can therefore contribute storage to HDFS.
   - Allows use of EMR on EBS-only types (M4, C4)
   - Deleted when cluster is terminated
   - EBS volumes can only be attached when launching a cluster
-  - If you manually detach an EBS volume, EMR treats that as a failure and replaces it
 
-## EMR promises
+> If you need data to survive cluster destruction, persist it somewhere appropriate such as S3.
 
-<!-- pdf-page: 400 -->
-
-EMR manages parts of provisioning and replacement, while the cluster still consumes infrastructure and requires workload monitoring and termination decisions.
-
-  - Plus EC2 charges
-- Provisions new nodes if a core node fails
-- Can add and remove tasks nodes on the fly
-  - Increase processing capacity, but not HDFS capacity
-- Can resize a running cluster’s core nodes
-  - Increases both processing and HDFS capacity
-- Core nodes can also be added or removed
-  - But removing risks data loss.
+Manually detaching a managed EBS volume can cause EMR to interpret the situation as an infrastructure failure.
 
 ### AWS EMR Managed Scaling
 
-<!-- pdf-page: 401 -->
 <!-- original-note: 145 -->
 
-Managed Scaling adjusts eligible EMR resources within configured limits. Core-node storage responsibilities and task-node compute requirements influence safe scaling.
+Imagine your workload changes throughout the day:
+```
+Workload
 
-  - The old way of doing it
-  - Custom scaling rules based on CloudWatch metrics
-  - Supports instance groups only
-- EMR Managed Scaling
-  - Introduced in 2020
-  - Support instance groups and instance fleets
-  - Scales spot, on-demand, and instances in a Savings Plan within the same cluster
-  - Available for Spark, Hive, YARN workloads
-- Scale-up Strategy
-  - First adds core nodes, then task nodes, up to max units specified
-- Scale-down Strategy
-  - First removes task nodes, then core nodes, no further than minimum constraints
-  - Spot nodes always removed before on-demand instances
+High      ████
+          ████       ███
+Medium    █████     █████
+Low    ███████████████████
+       00  06  12  18  24
+```
+- Keeping maximum capacity running all day wastes money.
+- Managed Scaling dynamically adjusts cluster capacity within boundaries you configure (MIN/MAX).
+
+EMR can manage capacity involving:
+- On-Demand Instances
+- Spot Instances
+- instance groups
+- instance fleets
+
+### AWS EMR - Older Approach Scaling policies
+
+You could create scaling rules based on CloudWatch metrics.
+```
+YARNMemoryAvailablePercentage < threshold
+                ↓
+           add nodes
+```
+- Supports instance groups only
+
 
 ### EMR Serverless
 
-<!-- pdf-page: 402 -->
 <!-- original-note: 147 -->
 
-EMR Serverless runs jobs through applications without a cluster fleet to manage. Application state, worker sizing and pre-initialized capacity affect startup and cost.
+EMR Serverless changes the operational model significantly. 
+```
+You
+ │
+ ▼
+Create application
+ │
+ ▼
+Submit job
+ │
+ ▼
+EMR allocates workers
+ │
+ ▼
+Job executes
+```
 
-- Submit queries / scripts via job run requests
-- EMR manages underlying capacity
-  - But you can specify default worker sizes & pre-initialized capacity
-  - EMR computes resources needed for your job & schedules workers accordingly
-  - All within one region (across multiple AZ’s)
-- Why is this a big deal?
-  - You no longer have to estimate how many workers are needed for your workloads – they are provisioned as needed, automatically.
-- Serverless? Really?
-  - TBH you still need to think about worker nodes and how they are configured.
+### EMR Serverless Example
 
-- Lifecycle exercise: explain application creation, startup, job submission and stopping using the following application-flow diagrams.
+1. You submit a script as an EMR Serverless job.
 
-## Using EMR Serverless
+```python
+  transactions = spark.read.parquet(
+      "s3://company/raw/"
+  )
 
-<!-- pdf-page: 403 -->
+  results = transactions.groupBy("country").sum("amount")
 
-EMR Serverless runs submitted jobs with a job execution role; caller permissions and job data permissions are distinct.
+  results.write.parquet(
+      "s3://company/processed/"
+  )
+```
 
-## EMR Serverless Application Lifecycle
+2. EMR Serverless handles the underlying worker capacity needed to execute it.
 
-<!-- pdf-page: 404 -->
+```
+             Spark job
+                 │
+                 ▼
+         EMR Serverless
+                 │           (capacity required)
+         ┌───────┼───────┐-------┐
+         ▼       ▼       ▼       ▼
+       Worker  Worker  Worker  Add Worker
+```
 
-An EMR Serverless application can start, stop and restart before termination.
+### EMR Serverless Permissions
 
-## Pre-Initialized Capacity
 
-<!-- pdf-page: 405 -->
+There are two distinct permission concepts worth understanding.
+**Caller permissions** Determine whether: "Is User/application X allowed to submit or manage this EMR Serverless job?"
+**Job execution role** Determines: "What AWS resources can the running job access?"
 
-Pre-initialized capacity can shorten job startup. Size workers for both the application's requested resources and framework overhead.
+```
+User / Application
+        │
+        │ IAM caller permission
+        ▼
+Submit EMR Serverless job
+        │
+        ▼
+Job Execution Role
+        │
+        ├── Read S3
+        ├── Write S3
+        └── Access other permitted AWS resources
+```
 
-- Be sure initial capacity is at least 10% more than requested by the job
+### EMR Serverless Application Lifecycle
 
-## EMR Serverless Security
 
-<!-- pdf-page: 406 -->
+An EMR Serverless application can start, stop, restart and terminate.
+```
+STOP
+ ↓
+Application still exists
+Can restart later
 
-Protect EMR Serverless data, execution identities and network paths just as deliberately as a cluster-based job, using the supported encryption controls.
 
-- EMRFS
-  - S3 encryption (SSE or CSE) at rest
-  - TLS in transit between EMR nodes and S3
-- S3
-  - SSE-S3, SSE-KMS
-- Local disk encryption
+TERMINATE / delete
+ ↓
+Application lifecycle ends
+```
+
+
+### EMR Serverless Pre-Initialized Capacity
+
+
+Serverless doesn't necessarily mean:
+> "Every resource magically exists instantly."
+
+Workers may need to be provisioned before a job can execute.
+That introduces startup latency.
+If jobs are latency-sensitive, you can configure **pre-initialized capacity**.
+
+> Note: When sizing workers, remember that frameworks such as Spark need resources not only for your application payload but also for framework/worker overhead.
+
+### EMR Serverless Security
+
+
+Security still applies even though AWS manages the underlying compute.
+Think about four areas:
+```
+        EMR Serverless Security
+                 │
+     ┌───────────┼───────────┐
+     ▼           ▼           ▼
+   IAM       Encryption    Network
+     │           │           │
+     └───────────┼───────────┘
+                 ▼
+                S3
+```
+Supported EMR Serverless framework communication uses encryption mechanisms for relevant traffic, 
+including Spark driver/executor communication and TLS for supported AWS service interactions.
+
+The broader principle is:
+  Protect data at rest (SSE-S3, SSE-KMS, or CSE), in transit (TLS/HTTPS), and through IAM authorization.
+
 - Spark communication between drivers & executors is encrypted
 - Hive communication between Glue Metastore and EMR uses TLS
-- Force HTTPS (TLS) on S3 policies with aws:SecureTransport
+- A bucket policy can enforce secure transport using: aws:SecureTransport
 
 ### EMR On EKS
 
-<!-- pdf-page: 407 -->
 <!-- original-note: 148 -->
 
-EMR on EKS submits supported analytics jobs to Kubernetes infrastructure. The EKS cluster still exists and can share resources with other compatible workloads.
+The third major deployment model is EMR on EKS = Elastic Kubernetes Service.
+You can execute supported EMR analytics workloads using Kubernetes infrastructure
+```
+               EKS Cluster
+                    │
+        ┌───────────┼───────────┐
+        ▼           ▼           ▼
+    Web/API       Spark      Other
+    workload      jobs       workloads
+                    ▲
+                    │
+                EMR on EKS
+```
 
-- Allows submitting Spark job on Elastic Kubernetes Service without provisioning clusters
-- Fully managed
-- Share resources between Spark and other apps on Kubernetes
+This is particularly useful for organizations that already operate Kubernetes and want analytics workloads to share Kubernetes infrastructure with other compatible workloads.
+
+> EMR on EKS removes the need for a dedicated EMR EC2 cluster, but it does not remove the EKS cluster.
+
+### EMR Models Comparison
+
+| | EMR on EC2 | EMR Serverless | EMR on EKS |
+|---|---|---|---|
+| Infrastructure | EC2 cluster | AWS-managed workers | EKS |
+| You manage cluster capacity? | Yes | Much less | Kubernetes capacity still matters |
+| HDFS | Yes | Not traditional cluster HDFS | Not traditional EMR HDFS |
+| Good for | Traditional Hadoop/Spark clusters | Job-oriented Spark/Hive workloads | Kubernetes-centric organizations |
+| Scaling | Manual/Managed Scaling | Serverless worker scaling | Kubernetes + EMR mechanisms |
+| Operational overhead | Highest | Lowest | Depends on EKS environment |
 
 ## Amazon Kinesis Data Streams
 
-<!-- pdf-page: 408 -->
 <!-- original-note: 149 -->
 
 Kinesis Data Streams retains ordered shard records for independent consumers and replay. Partition-key distribution and consumer type determine throughput and read behavior.
 
 ## Kinesis Data Streams
 
-<!-- pdf-page: 409 -->
 
 Retention enables replay independently of the rate at which consumers process records. Record-size limits, ordering and delivery behavior remain separate constraints.
 
@@ -5191,7 +5183,6 @@ Retention enables replay independently of the rate at which consumers process re
 
 ## Kinesis Data Streams – Capacity Modes
 
-<!-- pdf-page: 410 -->
 
 Provisioned streams expose shard-count planning; on-demand streams manage capacity differently. Compare scaling behavior, limits and billing for the chosen mode.
 
@@ -5210,7 +5201,6 @@ Provisioned streams expose shard-count planning; on-demand streams manage capaci
 
 ## Kinesis data streams security
 
-<!-- pdf-page: 411 -->
 <!-- original-note: 150 -->
 
 Protect stream access with IAM and network controls, use TLS in transit and configure encryption at rest. Client-side encryption remains an application responsibility.
@@ -5224,7 +5214,6 @@ Protect stream access with IAM and network controls, use TLS in transit and conf
 
 ## Kinesis Producers
 
-<!-- pdf-page: 412 -->
 <!-- original-note: 151 -->
 
 Choose a producer by where records originate: SDK calls for application code, KPL for buffered high-throughput publishing or an agent for supported log-file ingestion.
@@ -5236,7 +5225,6 @@ Choose a producer by where records originate: SDK calls for application code, KP
 
 ### SDK
 
-<!-- pdf-page: 413 -->
 <!-- original-note: 152 -->
 <!-- title: Kinesis producer SDK -->
 
@@ -5253,7 +5241,6 @@ PutRecord sends one record; PutRecords groups records in a request. Inspect indi
 
 ## AWS Kinesis API – Exceptions
 
-<!-- pdf-page: 414 -->
 
 Throughput exceptions signal that an applicable shard or stream limit was exceeded. Inspect partition-key distribution before repeatedly retrying the same load.
 
@@ -5266,7 +5253,6 @@ Throughput exceptions signal that an applicable shard or stream limit was exceed
 
 ### KPL (Kinesis Producer Library)
 
-<!-- pdf-page: 415 -->
 <!-- original-note: 153 -->
 <!-- title: Kinesis Producer Library -->
 
@@ -5288,7 +5274,6 @@ KPL buffers, aggregates and collects records to improve publishing efficiency. T
 
 ## Kinesis Producer Library (KPL) Batching
 
-<!-- pdf-page: 416 -->
 
 KPL aggregation packs user records into a Kinesis record; collection batches multiple Kinesis records into one PutRecords request.
 
@@ -5296,7 +5281,6 @@ KPL aggregation packs user records into a Kinesis record; collection batches mul
 
 ### Anti pattern:
 
-<!-- pdf-page: 417 -->
 <!-- original-note: 154 -->
 <!-- title: When to avoid KPL buffering -->
 
@@ -5308,7 +5292,6 @@ Buffering improves packing efficiency but delays delivery. Use a more direct pub
 
 ### Kinesis Agent
 
-<!-- pdf-page: 418 -->
 <!-- original-note: 155 -->
 
 The Kinesis Agent watches supported log files and publishes their contents, handling rotation, checkpoints and retries while exposing operational metrics.
@@ -5324,7 +5307,6 @@ The Kinesis Agent watches supported log files and publishes their contents, hand
 
 ## Kinesis Consumers - Classic
 
-<!-- pdf-page: 419 -->
 <!-- original-note: 156 -->
 <!-- title: Kinesis shared-throughput consumers -->
 
@@ -5340,7 +5322,6 @@ Classic consumers poll shards and share each shard's read throughput. More consu
 
 ### Kinesis SDK
 
-<!-- pdf-page: 420 -->
 <!-- original-note: 157 -->
 <!-- title: Kinesis consumer SDK -->
 
@@ -5354,7 +5335,6 @@ GetRecords reads through a shard iterator. Polling frequency, batch size and sha
 
 ### Kinesis Client Library (KCL)
 
-<!-- pdf-page: 421 -->
 <!-- original-note: 158 -->
 <!-- title: Kinesis Client Library -->
 
@@ -5368,7 +5348,6 @@ KCL coordinates workers, leases shards, checkpoints progress and handles reshard
 
 ### Kinesis Connector Library
 
-<!-- pdf-page: 422 -->
 <!-- original-note: 159 -->
 
 The older connector library combines KCL consumption with destination writers. For supported use cases, compare it with managed Firehose delivery or Lambda processing.
@@ -5390,7 +5369,6 @@ A Firehose delivery stream can consume Kinesis records and deliver buffered outp
 
 ### AWS Lambda
 
-<!-- pdf-page: 423 -->
 <!-- original-note: 161 -->
 <!-- title: Lambda as a stream consumer -->
 
@@ -5408,7 +5386,6 @@ A Lambda event source mapping reads Kinesis batches and invokes the function. Co
 
 ### Kinesis Enhanced Fan out
 
-<!-- pdf-page: 424 -->
 <!-- original-note: 162 -->
 <!-- title: Kinesis enhanced fan-out -->
 
@@ -5424,7 +5401,6 @@ Enhanced fan-out gives registered consumers dedicated per-shard read throughput 
 
 ## Enhanced Fan-Out vs Standard Consumers
 
-<!-- pdf-page: 425 -->
 
 Shared consumers compete for shard read throughput; enhanced fan-out isolates supported consumers. Compare both throughput allocation and registered-consumer quotas.
 
@@ -5441,7 +5417,6 @@ Shared consumers compete for shard read throughput; enhanced fan-out isolates su
 
 ### Kinesis Operations - Adding Sharts
 
-<!-- pdf-page: 426 -->
 <!-- original-note: 163 -->
 <!-- title: Splitting Kinesis shards -->
 
@@ -5454,7 +5429,6 @@ Splitting a shard increases provisioned capacity or divides a hot key range. Exi
 
 ### Merging Sharts
 
-<!-- pdf-page: 427 -->
 <!-- original-note: 164 -->
 <!-- title: Merging Kinesis shards -->
 
@@ -5466,7 +5440,6 @@ Merging adjacent shards reduces provisioned capacity. Continue consuming the clo
 
 ### Out of order records after resahrding
 
-<!-- pdf-page: 428 -->
 <!-- original-note: 165 -->
 <!-- title: Ordering after Kinesis resharding -->
 
@@ -5480,7 +5453,6 @@ Read a parent shard fully before its child shards to preserve the ordering depen
 
 ### Kinesis Operations - Auto Scaling
 
-<!-- pdf-page: 429 -->
 <!-- original-note: 166 -->
 <!-- title: Kinesis scaling -->
 
@@ -5494,7 +5466,6 @@ Distinguish managed on-demand capacity from a provisioned stream's shard-scaling
 
 ## Kinesis Scaling Limitations
 
-<!-- pdf-page: 430 -->
 
 Provisioned resharding has operational and quota constraints. Plan a capacity change before the current stream becomes the bottleneck.
 
@@ -5510,7 +5481,6 @@ Provisioned resharding has operational and quota constraints. Plan a capacity ch
 
 ### Kinesis Handling duplicates for Producers
 
-<!-- pdf-page: 431 -->
 <!-- original-note: 167 -->
 <!-- title: Producer duplicates -->
 
@@ -5522,7 +5492,6 @@ A timed-out producer can retry a write that already succeeded. Include a stable 
 
 ### Kinesis Handling duplicates for consumers
 
-<!-- pdf-page: 432 -->
 <!-- original-note: 168 -->
 <!-- title: Consumer duplicates -->
 
@@ -5536,7 +5505,6 @@ Worker restarts, checkpoints and resharding can cause records to be processed ag
 
 ## Kinesis Security
 
-<!-- pdf-page: 433 -->
 
 IAM controls who can publish or consume, while TLS and KMS protect data on its network and storage paths. These are complementary controls.
 
@@ -5547,7 +5515,6 @@ IAM controls who can publish or consume, while TLS and KMS protect data on its n
 
 ## Kinesis Data Firehose
 
-<!-- pdf-page: 434 -->
 <!-- original-note: 169 -->
 <!-- title: Amazon Data Firehose -->
 
@@ -5555,7 +5522,6 @@ Firehose buffers incoming records and delivers them to supported destinations, w
 
 ## Firehose operations
 
-<!-- pdf-page: 435 -->
 
 Firehose manages the delivery infrastructure, but buffering, destinations, transformation and failed-data handling still require configuration.
 
@@ -5572,13 +5538,11 @@ Firehose manages the delivery infrastructure, but buffering, destinations, trans
 
 ## Data Firehose Delivery Diagram
 
-<!-- pdf-page: 436 -->
 
 Firehose delivery to Redshift stages files in S3 and issues COPY; Lambda transformation and failed-record backup are optional branches.
 
 ### Kinesis Firehose Buffer Sizing
 
-<!-- pdf-page: 437 -->
 <!-- original-note: 170 -->
 <!-- title: Firehose buffering -->
 
@@ -5593,7 +5557,6 @@ Delivery occurs according to the configured size and time thresholds. Larger buf
 
 ### Kinesis Data Streams vs Firehose
 
-<!-- pdf-page: 438 -->
 <!-- original-note: 171 -->
 <!-- title: Kinesis Data Streams and Firehose -->
 
@@ -5609,7 +5572,6 @@ Choose Streams for retained records, independent consumers and replay. Choose Fi
 
 ### Troubleshooting Kinesis data stream producers
 
-<!-- pdf-page: 439 -->
 <!-- original-note: 172 -->
 <!-- title: Troubleshooting Kinesis producers -->
 
@@ -5626,7 +5588,6 @@ When publishing is slow, distinguish hot shards, insufficient capacity, batching
 
 ## Kinesis producer errors
 
-<!-- pdf-page: 440 -->
 
 Differentiate temporary service errors from invalid requests and oversize records. Apply retries only to recoverable failures and inspect per-record outcomes.
 
@@ -5646,7 +5607,6 @@ Differentiate temporary service errors from invalid requests and oversize record
 
 ### Troubleshooting Kinesis data stream Consumers
 
-<!-- pdf-page: 441 -->
 <!-- original-note: 173 -->
 <!-- title: Troubleshooting Kinesis consumers -->
 
@@ -5672,7 +5632,6 @@ Investigate missing or delayed processing through checkpoints, record handlers, 
 
 ## Kinesis and Lambda invocation failures
 
-<!-- pdf-page: 442 -->
 
 If Lambda is not processing a stream, inspect its event source mapping, execution permissions and failure behavior before changing producer code.
 
@@ -5689,7 +5648,6 @@ If Lambda is not processing a stream, inspect its event source mapping, executio
 
 ## Kinesis consumer latency
 
-<!-- pdf-page: 443 -->
 
 High iterator age can indicate slow processing, insufficient consumer capacity or downstream delays. Follow the processing path to locate the bottleneck.
 
@@ -5707,7 +5665,6 @@ High iterator age can indicate slow processing, insufficient consumer capacity o
 
 ## Amazon Kinesis Data Analytics for SQL Applications
 
-<!-- pdf-page: 445 -->
 
 Historical Kinesis Data Analytics SQL architecture; applications of this service were discontinued in 2026.
 
@@ -5717,7 +5674,6 @@ Historical Kinesis Data Analytics SQL architecture; applications of this service
 
 ## In more depth…
 
-<!-- pdf-page: 446 -->
 
 Historical SQL analytics could join streaming input with S3 reference data; this is not a current deployment recommendation.
 
@@ -5727,7 +5683,6 @@ Historical SQL analytics could join streaming input with S3 reference data; this
 
 ## Reference tables are cool
 
-<!-- pdf-page: 447 -->
 
 Historical in-application streams separated source, SQL transformation, destination and error handling.
 
@@ -5741,7 +5696,6 @@ Historical in-application streams separated source, SQL transformation, destinat
 
 ## Kinesis Data Analytics + Lambda
 
-<!-- pdf-page: 448 -->
 
 Historical SQL analytics used Lambda for custom output handling; use a supported processing service for new designs.
 
@@ -5759,7 +5713,6 @@ Historical SQL analytics used Lambda for custom output handling; use a supported
 
 ## Managed Service for Apache Flink
 
-<!-- pdf-page: 449 -->
 
 Managed Service for Apache Flink runs stateful streaming jobs with supported Kinesis, Kafka and other connectors.
 
@@ -5774,7 +5727,6 @@ Managed Service for Apache Flink runs stateful streaming jobs with supported Kin
 
 ## Apache Flink Capabilities
 
-<!-- pdf-page: 450 -->
 
 Flink builds a processing graph of stateless and stateful operators, including event-time windows.
 
@@ -5793,7 +5745,6 @@ Flink builds a processing graph of stateless and stateful operators, including e
 
 ## Common use-cases
 
-<!-- pdf-page: 451 -->
 
 Streaming analytics can transform events, calculate ongoing metrics and detect conditions before delivering results to downstream systems.
 
@@ -5802,7 +5753,6 @@ Streaming analytics can transform events, calculate ongoing metrics and detect c
 
 ## Kinesis Analytics
 
-<!-- pdf-page: 452 -->
 
 Managed analytics charges follow the resources and processing model in use. Historical product names and example prices require dated interpretation.
 
@@ -5814,7 +5764,6 @@ Managed analytics charges follow the resources and processing model in use. Hist
 
 ## RANDOM_CUT_FOREST
 
-<!-- pdf-page: 453 -->
 
 RANDOM_CUT_FOREST is a historical Kinesis SQL anomaly-detection example. Retain the anomaly-detection concept while using a supported engine for new work.
 
@@ -5824,7 +5773,6 @@ RANDOM_CUT_FOREST is a historical Kinesis SQL anomaly-detection example. Retain 
 
 ## Amazon Managed Streaming for Apache Kafka (Amazon MSK)
 
-<!-- pdf-page: 454 -->
 
 MSK provides managed Apache Kafka infrastructure. Its Kafka APIs and ecosystem differ from Kinesis even when both serve streaming architectures.
 
@@ -5841,13 +5789,11 @@ MSK provides managed Apache Kafka infrastructure. Its Kafka APIs and ecosystem d
 
 ## Apache Kafka at a high level
 
-<!-- pdf-page: 455 -->
 
 Kafka producers append to topic partitions on brokers; independent consumer groups process those records.
 
 ## MSK – Configurations
 
-<!-- pdf-page: 456 -->
 
 The course depicts a multi-AZ Kafka cluster with ZooKeeper. Coordination architecture depends on the Kafka/MSK version and cluster mode.
 
@@ -5859,7 +5805,6 @@ The course depicts a multi-AZ Kafka cluster with ZooKeeper. Coordination archite
 
 ## MSK – Security
 
-<!-- pdf-page: 457 -->
 
 MSK security separates transport encryption, client authentication and authorization.
 
@@ -5877,7 +5822,6 @@ MSK security separates transport encryption, client authentication and authoriza
 
 ## MSK – Monitoring
 
-<!-- pdf-page: 458 -->
 
 Monitor MSK through supported service and broker metrics, logs and monitoring integrations. Observe partition health and consumer lag alongside resource use.
 
@@ -5894,7 +5838,6 @@ Monitor MSK through supported service and broker metrics, logs and monitoring in
 
 ## MSK Connect
 
-<!-- pdf-page: 459 -->
 
 MSK Connect runs a compatible connector that consumes Kafka records and delivers them to a configured sink such as S3.
 
@@ -5906,7 +5849,6 @@ MSK Connect runs a compatible connector that consumes Kafka records and delivers
 
 ## MSK Serverless
 
-<!-- pdf-page: 460 -->
 
 MSK Serverless reduces broker-capacity administration while retaining Kafka's application model and documented service constraints.
 
@@ -5922,7 +5864,6 @@ MSK Serverless reduces broker-capacity administration while retaining Kafka's ap
 
 ## Kinesis Data Streams vs Amazon MSK
 
-<!-- pdf-page: 461 -->
 
 Compare Kafka and Kinesis by protocol, partitioning, retention, consumer behavior and operating model. Message limits depend on the selected service configuration.
 
@@ -5942,7 +5883,6 @@ Compare Kafka and Kinesis by protocol, partitioning, retention, consumer behavio
 
 ## What is OpenSearch?
 
-<!-- pdf-page: 463 -->
 
 OpenSearch indexes documents for search and aggregation. It originated from Elasticsearch and provides its own supported APIs and visualization ecosystem.
 
@@ -5955,7 +5895,6 @@ OpenSearch indexes documents for search and aggregation. It originated from Elas
 
 ## OpenSearch Dashboards
 
-<!-- pdf-page: 464 -->
 
 Dashboards turn indexed search and aggregation results into interactive visualizations.
 
@@ -5964,7 +5903,6 @@ Dashboards turn indexed search and aggregation results into interactive visualiz
 
 ## OpenSearch applications
 
-<!-- pdf-page: 465 -->
 
 Search, log analysis and document aggregation are typical OpenSearch workloads. The index model is different from transactional database serving.
 
@@ -5975,25 +5913,21 @@ Search, log analysis and document aggregation are typical OpenSearch workloads. 
 
 ## OpenSearch concepts
 
-<!-- pdf-page: 466 -->
 
 OpenSearch indexes JSON documents; the slide's document-type terminology is historical and should not guide new index design.
 
 ## An index is split into shards
 
-<!-- pdf-page: 467 -->
 
 Document routing assigns documents to primary shards within an index; shard design affects scale and query overhead.
 
 ## Redundancy
 
-<!-- pdf-page: 468 -->
 
 Writes reach a primary shard and are replicated; reads may use eligible primary or replica copies on different nodes.
 
 ## Amazon OpenSearch Service (Managed)
 
-<!-- pdf-page: 469 -->
 
 Managed OpenSearch domains supply service-managed infrastructure with explicit sizing and configuration choices. They are distinct from the serverless deployment model.
 
@@ -6012,7 +5946,6 @@ Managed OpenSearch domains supply service-managed infrastructure with explicit s
 
 ## Amazon OpenSearch options
 
-<!-- pdf-page: 470 -->
 
 Node roles, storage choices and deployment sizing affect both query behavior and cluster stability. Assign resources to the work each role performs.
 
@@ -6023,7 +5956,6 @@ Node roles, storage choices and deployment sizing affect both query behavior and
 
 ## Cold / warm / ultrawarm / hot storage
 
-<!-- pdf-page: 471 -->
 
 Hot, warm and cold tiers trade query performance and access behavior for storage cost. Move data according to how often it must be searched.
 
@@ -6044,7 +5976,6 @@ Hot, warm and cold tiers trade query performance and access behavior for storage
 
 ## Index State Management
 
-<!-- pdf-page: 472 -->
 
 Index State Management applies lifecycle actions when configured conditions are met. Policies automate maintenance rather than changing the underlying retention requirement.
 
@@ -6060,7 +5991,6 @@ Index State Management applies lifecycle actions when configured conditions are 
 
 ## More Index Management
 
-<!-- pdf-page: 473 -->
 
 Rollups and transforms prepare derived data for repeated analysis. Decide which detail can be summarized and which original data must remain available.
 
@@ -6073,7 +6003,6 @@ Rollups and transforms prepare derived data for repeated analysis. Decide which 
 
 ## Cross-cluster replication
 
-<!-- pdf-page: 474 -->
 
 Cross-cluster replication follows supported indices and metadata into another domain. Replication direction, permissions and destination configuration still matter.
 
@@ -6085,7 +6014,6 @@ Cross-cluster replication follows supported indices and metadata into another do
 
 ## OpenSearch Stability
 
-<!-- pdf-page: 475 -->
 
 Separate cluster-management responsibilities from data processing and distribute supported resources appropriately. Stable sizing is part of reliable search performance.
 
@@ -6104,7 +6032,6 @@ Separate cluster-management responsibilities from data processing and distribute
 
 ## Amazon OpenSearch Security
 
-<!-- pdf-page: 476 -->
 
 OpenSearch authorization can combine network, resource-policy and fine-grained controls. Apply the layers required by the application's access path.
 
@@ -6116,7 +6043,6 @@ OpenSearch authorization can combine network, resource-policy and fine-grained c
 
 ## Securing Dashboards
 
-<!-- pdf-page: 477 -->
 
 A private OpenSearch dashboard needs network access through a supported private path plus application authentication.
 
@@ -6129,7 +6055,6 @@ A private OpenSearch dashboard needs network access through a supported private 
 
 ## Amazon OpenSearch anti-patterns
 
-<!-- pdf-page: 478 -->
 
 OpenSearch is a poor substitute for a transactional database or for workloads without a search or aggregation requirement.
 
@@ -6141,7 +6066,6 @@ OpenSearch is a poor substitute for a transactional database or for workloads wi
 
 ## Amazon OpenSearch performance
 
-<!-- pdf-page: 479 -->
 
 JVM memory pressure and shard layout can constrain search performance. Investigate field choices, aggregation load and resource distribution together.
 
@@ -6152,7 +6076,6 @@ JVM memory pressure and shard layout can constrain search performance. Investiga
 
 ## Amazon OpenSearch Serverless
 
-<!-- pdf-page: 480 -->
 
 OpenSearch Serverless separates collection access from managed indexing and search capacity; network, encryption and data-access policies are distinct.
 
@@ -6168,7 +6091,6 @@ OpenSearch Serverless separates collection access from managed indexing and sear
 
 ## What is Quick Suite / Quick Sight?
 
-<!-- pdf-page: 482 -->
 
 QuickSight provides business-intelligence analysis and dashboards within the broader product suite described by the source. Keep analytics features separate from branding changes.
 
@@ -6184,7 +6106,6 @@ QuickSight provides business-intelligence analysis and dashboards within the bro
 
 ## Quick Sight Data Sources
 
-<!-- pdf-page: 483 -->
 
 QuickSight can analyze supported databases, lake data and uploaded files. The selected source determines connectivity, refresh and permission requirements.
 
@@ -6201,7 +6122,6 @@ QuickSight can analyze supported databases, lake data and uploaded files. The se
 
 ## Quick Sight Is SPICE!
 
-<!-- pdf-page: 484 -->
 
 SPICE imports datasets into an analytical cache for interactive queries. Importing creates a refresh and capacity-planning responsibility.
 
@@ -6216,7 +6136,6 @@ SPICE imports datasets into an analytical cache for interactive queries. Importi
 
 ## Quick Sight Use Cases
 
-<!-- pdf-page: 485 -->
 
 Use QuickSight to explore data and communicate results through interactive visuals. Prepare and govern the underlying datasets before presenting their conclusions.
 
@@ -6230,7 +6149,6 @@ Use QuickSight to explore data and communicate results through interactive visua
 
 ## Quick Sight Anti-Patterns
 
-<!-- pdf-page: 486 -->
 
 QuickSight is not a general data-transformation engine or a substitute for the systems that ingest and prepare analytical data.
 
@@ -6238,7 +6156,6 @@ QuickSight is not a general data-transformation engine or a substitute for the s
 
 ## Quick Sight Security
 
-<!-- pdf-page: 487 -->
 
 Protect account access and choose the edition and identity integration required by the organization. Data access remains a separate permission boundary.
 
@@ -6251,7 +6168,6 @@ Protect account access and choose the edition and identity integration required 
 
 ## Quick Sight Security
 
-<!-- pdf-page: 488 -->
 
 QuickSight needs explicit access to supported AWS resources and encryption keys. A user who can open the application may still lack access to a dataset.
 
@@ -6262,7 +6178,6 @@ QuickSight needs explicit access to supported AWS resources and encryption keys.
 
 ## QuickSight database connectivity: public and private paths
 
-<!-- pdf-page: 489 -->
 
 Choose connectivity for the database endpoint; access also requires database credentials and network authorization.
 
@@ -6274,7 +6189,6 @@ Choose connectivity for the database endpoint; access also requires database cre
 
 ## Quick Sight / Redshift / RDS cross-region
 
-<!-- pdf-page: 490 -->
 
 An Enterprise VPC connection places network interfaces in the configured VPC; subnet routes and security rules determine reachable private data sources.
 
@@ -6286,7 +6200,6 @@ An Enterprise VPC connection places network interfaces in the configured VPC; su
 
 ## Quick Suite / Redshift / RDS cross-region
 
-<!-- pdf-page: 491 -->
 
 VPC peering connects the QuickSight connection VPC to the database VPC, with routes on both sides and database authorization.
 
@@ -6295,7 +6208,6 @@ VPC peering connects the QuickSight connection VPC to the database VPC, with rou
 
 ## Quick Sight / Redshift / RDS cross- account
 
-<!-- pdf-page: 492 -->
 
 Transit Gateway routing, a supported PrivateLink endpoint and VPC sharing are alternative private-access designs, not one combined chain. Each requires its own supported configuration.
 
@@ -6307,7 +6219,6 @@ Transit Gateway routing, a supported PrivateLink endpoint and VPC sharing are al
 
 ## Quick Sight User Management
 
-<!-- pdf-page: 493 -->
 
 User and group management depends on the supported identity model and edition. Assign access according to authoring and consumption responsibilities.
 
@@ -6318,7 +6229,6 @@ User and group management depends on the supported identity model and edition. A
 
 ## Quick Sight pricing
 
-<!-- pdf-page: 494 -->
 
 QuickSight pricing depends on the chosen roles, capacity and subscription model. Treat the source's dollar amounts as examples rather than a current quote.
 
@@ -6337,7 +6247,6 @@ QuickSight pricing depends on the chosen roles, capacity and subscription model.
 
 ## Quick Sight Dashboards
 
-<!-- pdf-page: 495 -->
 
 A dashboard publishes a read-oriented view of an analysis. Updates to the analysis and publication determine what readers see.
 
@@ -6350,7 +6259,6 @@ A dashboard publishes a read-oriented view of an analysis. Updates to the analys
 
 ## Quick Sight Machine Learning Insights
 
-<!-- pdf-page: 496 -->
 
 ML insights can highlight anomalies or forecast patterns in suitable data. Validate the input, interval and interpretation before using an insight to make a decision.
 
@@ -6367,7 +6275,6 @@ ML insights can highlight anomalies or forecast patterns in suitable data. Valid
 
 ## Quick Sight Calculated Fields
 
-<!-- pdf-page: 497 -->
 
 Calculated fields derive values from dataset fields. Understand whether an expression operates at row or aggregation level before comparing its results.
 
@@ -6388,7 +6295,6 @@ Calculated fields derive values from dataset fields. Understand whether an expre
 
 ## Level-Aware Calculations (LAC)
 
-<!-- pdf-page: 498 -->
 
 LAC-A changes the grouping level at which an aggregate is evaluated before the visual's final aggregation.
 
@@ -6405,7 +6311,6 @@ LAC-A changes the grouping level at which an aggregate is evaluated before the v
 
 ## Level-Aware Calculations – Window (LAC-W)
 
-<!-- pdf-page: 499 -->
 
 LAC-W calculates a window expression at the selected prefilter or preaggregation stage; evaluation order changes the result.
 
@@ -6418,11 +6323,10 @@ LAC-W calculates a window expression at the selected prefilter or preaggregation
 
 ## QuickSight numeric precision: decimal and floating point
 
-<!-- pdf-page: 500 -->
 
 Choose a numeric type for the required precision and range; floating point is approximate.
 
-- The PDF contrasts a four-decimal fixed representation with approximately 16 significant floating-point digits.
+- Fixed-decimal and floating-point types use different precision models.
 - FLOAT may represent a wider range, but it does not universally avoid rounding or calculation error.
 - Use appropriate decimal precision for exact decimal requirements such as financial values; validate import and calculated-field behavior.
 
@@ -6432,13 +6336,11 @@ Choose a numeric type for the required precision and range; floating point is ap
 
 ## AWS SQS What’s a queue?
 
-<!-- pdf-page: 502 -->
 
 SQS decouples producers from competing consumers; a message is processed by a consumer, then explicitly deleted on success.
 
 ## AWS SQS – Standard Queue
 
-<!-- pdf-page: 503 -->
 
 SQS Standard is a decoupling work queue with at-least-once delivery and best-effort ordering.
 
@@ -6455,7 +6357,6 @@ SQS Standard is a decoupling work queue with at-least-once delivery and best-eff
 
 ## SQS – Producing Messages
 
-<!-- pdf-page: 504 -->
 
 A queue message contains a body and optional attributes used by applications and supported integrations.
 
@@ -6468,7 +6369,6 @@ A queue message contains a body and optional attributes used by applications and
 
 ## SQS – Consuming Messages
 
-<!-- pdf-page: 505 -->
 
 Receive makes a message temporarily invisible; delete it after successful work. Expired visibility permits another receive.
 
@@ -6479,20 +6379,18 @@ Receive makes a message temporarily invisible; delete it after successful work. 
 
 ## SQS FIFO: ordering and deduplication
 
-<!-- pdf-page: 506 -->
 
 FIFO queues preserve order within a message group and support send deduplication.
 
 - The queue name ends in .fifo. Use MessageGroupId for the ordering domain.
 - Provide MessageDeduplicationId or enable content-based deduplication; the send-deduplication interval is five minutes.
 - A failed or timed-out consumer may receive the message again. Make side effects idempotent and delete after successful work.
-- The PDF's 300/3,000 throughput examples describe a particular configuration; high-throughput FIFO and Regional quotas differ.
+- Throughput examples depend on configuration; high-throughput FIFO and Regional quotas differ.
 
 **Current reference (checked 2026-10-13):** [SQS deduplication](https://docs.aws.amazon.com/AWSSimpleQueueService/latest/SQSDeveloperGuide/FIFO-queues-exactly-once-processing.html); [SQS visibility and retries](https://docs.aws.amazon.com/AWSSimpleQueueService/latest/SQSDeveloperGuide/sqs-visibility-timeout.html).
 
 ## SQS Extended Client
 
-<!-- pdf-page: 507 -->
 
 The extended-client pattern places a large payload in S3 and a reference in SQS; the consumer retrieves the object separately.
 
@@ -6501,7 +6399,6 @@ The extended-client pattern places a large payload in S3 and a reference in SQS;
 
 ## AWS SQS Use Cases
 
-<!-- pdf-page: 508 -->
 
 A work queue decouples request arrival from processing capacity, such as accepting payment work for asynchronous handling.
 
@@ -6511,7 +6408,6 @@ A work queue decouples request arrival from processing capacity, such as accepti
 
 ## SQS Limits
 
-<!-- pdf-page: 509 -->
 
 SQS quotas constrain in-flight work and API behavior separately from queue retention. Check the queue type and current documented limits.
 
@@ -6527,7 +6423,6 @@ SQS quotas constrain in-flight work and API behavior separately from queue reten
 
 ## AWS SQS Security
 
-<!-- pdf-page: 510 -->
 
 Protect SQS with HTTPS, supported at-rest encryption and IAM or queue policies. Delivery to a queue and access to its encryption key require separate authorization.
 
@@ -6541,7 +6436,6 @@ Protect SQS with HTTPS, supported at-rest encryption and IAM or queue policies. 
 
 ## Kinesis Data Stream vs SQS
 
-<!-- pdf-page: 511 -->
 
 Kinesis retains records for independent readers; SQS distributes work to receivers that acknowledge completion by deleting messages.
 
@@ -6563,7 +6457,6 @@ Kinesis retains records for independent readers; SQS distributes work to receive
 
 ## Stream, delivery service or queue?
 
-<!-- pdf-page: 512 -->
 
 Choose by replay, consumer independence, ordering and delivery behavior rather than a single throughput number.
 
@@ -6582,7 +6475,6 @@ Choose by replay, consumer independence, ordering and delivery behavior rather t
 
 ## SQS vs Kinesis – Use cases
 
-<!-- pdf-page: 513 -->
 
 Use a queue to distribute tasks and buffer uneven demand. Use a stream when independent consumers or replay of ordered records are central requirements.
 
@@ -6602,7 +6494,6 @@ Use a queue to distribute tasks and buffer uneven demand. Use a stream when inde
 
 ## Amazon SQS – Dead Letter Queue (DLQ)
 
-<!-- pdf-page: 514 -->
 
 Repeated unsuccessful receives can move a message to a dead-letter queue according to maxReceiveCount.
 
@@ -6617,7 +6508,6 @@ Repeated unsuccessful receives can move a message to a dead-letter queue accordi
 
 ## SQS DLQ – Redrive to Source
 
-<!-- pdf-page: 515 -->
 
 Inspect dead-letter messages, fix the cause and redrive eligible messages to a source or other supported destination.
 
@@ -6626,7 +6516,6 @@ Inspect dead-letter messages, fix the cause and redrive eligible messages to a s
 
 ## Amazon SNS
 
-<!-- pdf-page: 516 -->
 
 SNS fan-out replaces separate producer calls with one publication to independently subscribed consumers.
 
@@ -6634,7 +6523,6 @@ SNS fan-out replaces separate producer calls with one publication to independent
 
 ## Amazon SNS
 
-<!-- pdf-page: 517 -->
 
 A topic delivers to supported subscription protocols; delivery, ordering and retry behavior depend on the protocol and topic type.
 
@@ -6646,7 +6534,6 @@ A topic delivers to supported subscription protocols; delivery, ordering and ret
 
 ## SNS integrates with a lot of AWS services
 
-<!-- pdf-page: 518 -->
 
 Supported AWS services publish notifications into SNS, which fans out to subscriptions.
 
@@ -6654,7 +6541,6 @@ Supported AWS services publish notifications into SNS, which fans out to subscri
 
 ## Amazon SNS – How to publish
 
-<!-- pdf-page: 519 -->
 
 Mobile push can target a platform endpoint directly or reach multiple subscribed endpoints through a topic.
 
@@ -6670,7 +6556,6 @@ Mobile push can target a platform endpoint directly or reach multiple subscribed
 
 ## Amazon SNS – Security
 
-<!-- pdf-page: 520 -->
 
 SNS combines topic permissions with transport and at-rest protection. Authorize publishers and subscribers for the intended delivery paths.
 
@@ -6684,7 +6569,6 @@ SNS combines topic permissions with transport and at-rest protection. Authorize 
 
 ## SNS + SQS: Fan Out
 
-<!-- pdf-page: 521 -->
 
 SNS plus separate SQS queues lets fraud and shipping consumers process the same order independently.
 
@@ -6696,7 +6580,6 @@ SNS plus separate SQS queues lets fraud and shipping consumers process the same 
 
 ## Application: S3 Events to multiple queues
 
-<!-- pdf-page: 522 -->
 
 An S3 event can publish to SNS, which distributes notifications to independent queue and function subscribers.
 
@@ -6705,7 +6588,6 @@ An S3 event can publish to SNS, which distributes notifications to independent q
 
 ## Application: SNS to Amazon S3 through Data Firehose
 
-<!-- pdf-page: 523 -->
 
 An SNS Firehose subscription can archive topic events to S3 through buffered delivery.
 
@@ -6713,7 +6595,6 @@ An SNS Firehose subscription can archive topic events to S3 through buffered del
 
 ## Amazon SNS – FIFO Topic
 
-<!-- pdf-page: 524 -->
 
 SNS FIFO and SQS FIFO preserve supported per-group ordering and deduplication; consumers must still handle retries idempotently.
 
@@ -6726,7 +6607,6 @@ SNS FIFO and SQS FIFO preserve supported per-group ordering and deduplication; c
 
 ## SNS FIFO + SQS FIFO: Fan Out
 
-<!-- pdf-page: 525 -->
 
 FIFO fan-out gives each subscribed queue its own ordered processing path.
 
@@ -6734,7 +6614,6 @@ FIFO fan-out gives each subscribed queue its own ordered processing path.
 
 ## SNS – Message Filtering
 
-<!-- pdf-page: 526 -->
 
 Subscription filter policies route only matching events; a subscription without a filter receives all supported messages.
 
@@ -6743,7 +6622,6 @@ Subscription filter policies route only matching events; a subscription without 
 
 ## AWS Step Functions
 
-<!-- pdf-page: 527 -->
 
 Step Functions models a workflow as states and transitions. Define success, retries, error handling and service calls as part of the state machine.
 
@@ -6755,25 +6633,21 @@ Step Functions models a workflow as states and transitions. Define success, retr
 
 ## Step Functions – Examples Train a Machine Learning Model
 
-<!-- pdf-page: 528 -->
 
 A training workflow makes data preparation, training, evaluation and conditional deployment explicit orchestration steps.
 
 ## Step Functions – Examples Tune a Machine Learning Model
 
-<!-- pdf-page: 529 -->
 
 A tuning workflow launches a search, waits for its outcome and selects the best eligible model.
 
 ## Step Functions – Examples Manage a Batch Job
 
-<!-- pdf-page: 530 -->
 
 Step Functions can submit a Batch job and coordinate success or failure paths with downstream work.
 
 ## AWS Step Functions
 
-<!-- pdf-page: 531 -->
 
 Map iterates a dataset, Parallel runs branches and Choice selects a path; these states express different orchestration semantics.
 
@@ -6790,7 +6664,6 @@ Map iterates a dataset, Parallel runs branches and Choice selects a path; these 
 
 ## Amazon AppFlow
 
-<!-- pdf-page: 532 -->
 
 AppFlow transfers supported SaaS application data to or from supported AWS destinations, with connectors, mappings and run settings controlling the exchange.
 
@@ -6803,13 +6676,11 @@ AppFlow transfers supported SaaS application data to or from supported AWS desti
 
 ## Amazon AppFlow
 
-<!-- pdf-page: 533 -->
 
 AppFlow transfers supported SaaS data to configured AWS or SaaS destinations with optional mapping and filtering.
 
 ## Amazon EventBridge (formerly CloudWatch Events)
 
-<!-- pdf-page: 534 -->
 
 EventBridge routes matching events to targets; scheduled workflows may use EventBridge Scheduler or supported schedule rules.
 
@@ -6819,13 +6690,11 @@ EventBridge routes matching events to targets; scheduled workflows may use Event
 
 ## Amazon EventBridge Rules
 
-<!-- pdf-page: 535 -->
 
 An event envelope carries source, detail type and detail fields; rules match patterns before invoking targets.
 
 ## Amazon EventBridge
 
-<!-- pdf-page: 536 -->
 
 Default, partner and custom buses separate event intake; each has configured rules and permissions.
 
@@ -6835,7 +6704,6 @@ Default, partner and custom buses separate event intake; each has configured rul
 
 ## Amazon EventBridge – Schema Registry
 
-<!-- pdf-page: 537 -->
 
 An event schema describes the structure consumers should expect. EventBridge can infer supported schemas and provide code bindings for integration.
 
@@ -6844,7 +6712,6 @@ An event schema describes the structure consumers should expect. EventBridge can
 
 ## Amazon EventBridge – Resource-based Policy
 
-<!-- pdf-page: 538 -->
 
 Cross-account event routing requires a permitted target bus and receiver resource policy before receiver rules invoke local targets.
 
@@ -6854,7 +6721,6 @@ Cross-account event routing requires a permitted target bus and receiver resourc
 
 ## Amazon Managed Workflows for Apache Airflow (MWAA)
 
-<!-- pdf-page: 539 -->
 
 MWAA hosts Apache Airflow for scheduled, dependency-based batch workflows. Airflow orchestrates tasks rather than acting as the data-processing engine itself.
 
@@ -6868,7 +6734,6 @@ MWAA hosts Apache Airflow for scheduled, dependency-based batch workflows. Airfl
 
 ## Airflow DAG: schedule and task dependency
 
-<!-- pdf-page: 540 -->
 
 A DAG defines tasks and their dependency order; the sample runs a Bash task before a Python TaskFlow task.
 
@@ -6895,7 +6760,6 @@ with DAG("study_demo", start_date=datetime(2022, 1, 1),
 
 ## Airflow + MWAA
 
-<!-- pdf-page: 541 -->
 
 MWAA loads DAG definitions and supporting files from S3 and schedules task execution in its managed Airflow environment.
 
@@ -6912,7 +6776,6 @@ MWAA loads DAG definitions and supporting files from S3 and schedules task execu
 
 ## Amazon MWAA Integration
 
-<!-- pdf-page: 542 -->
 
 MWAA operators and integrations invoke surrounding data and compute services. Execution roles, credentials and network access govern those calls.
 
@@ -6924,7 +6787,6 @@ MWAA operators and integrations invoke surrounding data and compute services. Ex
 
 ## Amazon MWAA Architecture
 
-<!-- pdf-page: 543 -->
 
 MWAA separates customer-VPC schedulers/workers from service-VPC web and metadata services; private endpoints, IAM, KMS, S3, ECR and CloudWatch support the environment.
 
@@ -6932,13 +6794,12 @@ MWAA separates customer-VPC schedulers/workers from service-VPC web and metadata
 
 ## Least privilege
 
-<!-- pdf-page: 545 -->
 
 Grant only the actions and resource scope required by the workload.
 
 - Use roles and temporary credentials for workloads; scope bucket listing separately from object reads.
 - IAM Access Analyzer can help generate policies from observed activity, followed by review and refinement.
-- The PDF suggests starting broadly during development. Treat that as an isolated learning shortcut, not a recommended production baseline.
+- Start broadly only as an isolated learning shortcut, not as a recommended production baseline.
 
 ```json
 {
@@ -6957,7 +6818,6 @@ Grant only the actions and resource scope required by the workload.
 
 ## Data Masking and Anonymization
 
-<!-- pdf-page: 546 -->
 
 Sensitive-data handling starts by identifying the fields and the permitted use. Masking, encryption and anonymization solve different disclosure problems.
 
@@ -6968,7 +6828,6 @@ Sensitive-data handling starts by identifying the fields and the permitted use. 
 
 ## Masking, pseudonymization and anonymization
 
-<!-- pdf-page: 547 -->
 
 Reducing identifiability requires a threat model, not just changing the displayed value.
 
@@ -6978,19 +6837,17 @@ Reducing identifiability requires a threat model, not just changing the displaye
 
 ## Password salts and hashing
 
-<!-- pdf-page: 548 -->
 
 A unique random salt prevents identical passwords from producing identical stored hashes and defeats reusable precomputed lookup tables.
 
 - Use a suitable password-hashing scheme with a cost factor; do not substitute a single fast general-purpose hash.
 - Store the salt and scheme parameters with the derived hash. Salts are not passwords or encryption keys.
-- The PDF's periodic-salt-rotation bullet is not a standalone password-storage recipe; use the selected scheme's supported password-change and rehash process.
+- Salt rotation is not a standalone password-storage recipe; use the selected scheme's supported password-change and rehash process.
 
 **Current reference (checked 2026-10-13):** [NIST password storage guidance](https://pages.nist.gov/800-63-4/sp800-63b.html).
 
 ## Key Salting: Example
 
-<!-- pdf-page: 549 -->
 
 A password-hashing illustration combines a salt with a password. A fast SHA-256 hash alone is not an appropriate production password-storage scheme.
 
@@ -6998,7 +6855,6 @@ A password-hashing illustration combines a salt with a password. A fast SHA-256 
 
 ## Keeping Data Where it Belongs
 
-<!-- pdf-page: 550 -->
 
 Data-residency requirements constrain where data may be stored, copied or processed. Apply the constraint to backups and supporting services as well as the primary dataset.
 
@@ -7010,13 +6866,11 @@ Data-residency requirements constrain where data may be stored, copied or proces
 
 ## Keeping Data Where it Belongs
 
-<!-- pdf-page: 551 -->
 
 The policy example restricts specified RDS backup actions to selected Regions. Verify the action, resource and condition together rather than generalizing it to all data movement.
 
 ## IAM: Users & Groups
 
-<!-- pdf-page: 552 -->
 
 IAM users can belong to multiple groups; groups collect permissions and do not contain other groups.
 
@@ -7028,7 +6882,6 @@ IAM users can belong to multiple groups; groups collect permissions and do not c
 
 ## IAM: Permissions
 
-<!-- pdf-page: 553 -->
 
 IAM policies grant actions on resources subject to conditions. Effective access depends on all applicable policies and explicit denies.
 
@@ -7037,13 +6890,11 @@ IAM policies grant actions on resources subject to conditions. Effective access 
 
 ## IAM Policies inheritance
 
-<!-- pdf-page: 554 -->
 
 Identity permissions may come from direct and group policies, but explicit denies, boundaries and organization controls constrain effective access.
 
 ## IAM Policies Structure
 
-<!-- pdf-page: 555 -->
 
 A policy statement defines its effect, allowed or denied actions, resources and optional conditions; resource policies also identify principals.
 
@@ -7061,7 +6912,6 @@ A policy statement defines its effect, allowed or denied actions, resources and 
 
 ## IAM – Password Policy
 
-<!-- pdf-page: 556 -->
 
 A password policy defines supported composition and lifecycle requirements for applicable IAM users. It complements federation and stronger authentication factors.
 
@@ -7078,7 +6928,6 @@ A password policy defines supported composition and lifecycle requirements for a
 
 ## Multi Factor Authentication - MFA
 
-<!-- pdf-page: 557 -->
 
 MFA adds an independent authentication factor to the password sign-in path.
 
@@ -7089,16 +6938,14 @@ MFA adds an independent authentication factor to the password sign-in path.
 
 ## MFA: authenticator applications and security keys
 
-<!-- pdf-page: 558 -->
 
 Choose a supported independent authentication factor for the sign-in context.
 
 - Authenticator applications generate time-based codes; supported security keys/passkeys use a different mechanism.
-- The PDF names example vendors. Check current supported devices rather than treating those names as an exhaustive list.
+- Check currently supported devices rather than treating example vendors as an exhaustive list.
 
 ## MFA: hardware devices
 
-<!-- pdf-page: 559 -->
 
 Hardware MFA devices are another supported factor option; availability differs by account environment.
 
@@ -7107,7 +6954,6 @@ Hardware MFA devices are another supported factor option; availability differs b
 
 ## IAM Roles for Services
 
-<!-- pdf-page: 560 -->
 
 An EC2 instance profile exposes temporary role credentials to software on the instance; role permissions govern subsequent AWS calls.
 
@@ -7120,7 +6966,6 @@ An EC2 instance profile exposes temporary role credentials to software on the in
 
 ## Why encryption? Encryption in flight (TLS / SSL)
 
-<!-- pdf-page: 561 -->
 
 TLS protects data while it crosses the network; it is separate from storage encryption.
 
@@ -7130,7 +6975,6 @@ TLS protects data while it crosses the network; it is separate from storage encr
 
 ## Why encryption? Server-side encryption at rest
 
-<!-- pdf-page: 562 -->
 
 With server-side encryption, the storage service receives data and encrypts it before persistence.
 
@@ -7141,7 +6985,6 @@ With server-side encryption, the storage service receives data and encrypts it b
 
 ## Why encryption? Client-side encryption
 
-<!-- pdf-page: 563 -->
 
 With client-side encryption, the service stores ciphertext and the client controls decryption.
 
@@ -7152,7 +6995,6 @@ With client-side encryption, the service stores ciphertext and the client contro
 
 ## AWS KMS (Key Management Service)
 
-<!-- pdf-page: 564 -->
 
 KMS manages cryptographic keys and authorized operations used by many AWS integrations. Control of a key is distinct from permission to access encrypted data.
 
@@ -7166,7 +7008,6 @@ KMS manages cryptographic keys and authorized operations used by many AWS integr
 
 ## KMS key types and operations
 
-<!-- pdf-page: 565 -->
 
 Key type and key usage determine which cryptographic operations a KMS key supports.
 
@@ -7179,11 +7020,10 @@ Key type and key usage determine which cryptographic operations a KMS key suppor
 
 ## AWS KMS (Key Management Service)
 
-<!-- pdf-page: 566 -->
 
 Distinguish AWS-owned, AWS-managed and customer-managed keys, including control, rotation and billing.
 
-- Pricing figures on this source page are a dated illustration. Check current Region, usage and feature pricing before making a cost decision.
+- Pricing figures are illustrative. Check current Region, usage and feature pricing before making a cost decision.
 - Types of KMS Keys:
   - AWS Owned Keys (free): SSE-S3, SSE-SQS, SSE-DDB (default key)
   - AWS Managed Key: free (aws/service-name, example: aws/rds or aws/ebs)
@@ -7196,13 +7036,11 @@ Distinguish AWS-owned, AWS-managed and customer-managed keys, including control,
 
 ## Copying Snapshots across regions
 
-<!-- pdf-page: 567 -->
 
 KMS keys are Regional. Copying an encrypted EBS snapshot to another Region uses an appropriate destination-Region key.
 
 ## KMS Key Policies
 
-<!-- pdf-page: 568 -->
 
 KMS authorization combines key-policy rules and applicable identity permissions or grants; a key does not become usable merely because a caller knows its ID.
 
@@ -7218,22 +7056,21 @@ KMS authorization combines key-policy rules and applicable identity permissions 
 
 ## Copying Snapshots across accounts
 
-<!-- pdf-page: 569 -->
 
 Cross-account encrypted snapshot sharing requires snapshot permission and use of the source customer-managed key; the recipient can copy under its own key.
 
 ## AWS Macie
 
-<!-- pdf-page: 570 -->
 
-Macie discovers sensitive S3 data and emits findings that EventBridge can route to response workflows.
+Amazon Macie is a security service that helps the institution discover, classify, and protect sensitive data, including PII. 
+While it can help identify PII data, it does not directly obfuscate the data or control access to it during preprocessing.
 
-- Amazon Macie is a fully managed data security and data privacy service that uses machine learning and pattern matching to discover and protect your sensitive data in AWS.
-- Macie helps identify and alert you to sensitive data, such as personally identifiable information (PII)
+- Emits findings that EventBridge can route to response workflows.
+- Amazon Macie is a fully managed data security and data privacy service 
+- Uses machine learning and pattern matching to discover and protect your sensitive data in AWS.
 
 ## AWS Secrets Manager
 
-<!-- pdf-page: 571 -->
 
 Secrets Manager stores application secrets and supports configured rotation workflows. Retrieving a secret and rotating the associated credential are separate operations.
 
@@ -7245,7 +7082,6 @@ Secrets Manager stores application secrets and supports configured rotation work
 
 ## AWS Secrets Manager – Multi-Region Secrets
 
-<!-- pdf-page: 572 -->
 
 Secrets Manager can replicate a secret into another Region; replication and rotation behavior must be planned for regional access.
 
@@ -7256,7 +7092,6 @@ Secrets Manager can replicate a secret into another Region; replication and rota
 
 ## AWS WAF – Web Application Firewall
 
-<!-- pdf-page: 573 -->
 
 WAF evaluates application-layer HTTP(S) requests at supported attachment points.
 
@@ -7271,7 +7106,6 @@ WAF evaluates application-layer HTTP(S) requests at supported attachment points.
 
 ## AWS WAF – Web Application Firewall
 
-<!-- pdf-page: 574 -->
 
 A web ACL evaluates HTTP(S) requests through configured WAF rules. Choose rules and attachment points from the application traffic that needs inspection.
 
@@ -7284,7 +7118,6 @@ A web ACL evaluates HTTP(S) requests through configured WAF rules. Choose rules 
 
 ## WAF – Fixed IP while using WAF with a Load Balancer
 
-<!-- pdf-page: 575 -->
 
 Global Accelerator can expose static anycast addresses in front of an ALB protected by WAF; WAF attaches to supported application endpoints.
 
@@ -7293,7 +7126,6 @@ Global Accelerator can expose static anycast addresses in front of an ALB protec
 
 ## AWS Shield: protect from DDoS attack
 
-<!-- pdf-page: 576 -->
 
 Shield addresses distributed-denial-of-service threats at supported AWS resources. Compare the protection and operational features of its service tiers.
 
@@ -7309,7 +7141,6 @@ Shield addresses distributed-denial-of-service threats at supported AWS resource
 
 ## Security - Kinesis
 
-<!-- pdf-page: 577 -->
 
 Stream security combines permitted producers and consumers, encrypted transport, at-rest protection and optional private network paths.
 
@@ -7326,7 +7157,6 @@ Stream security combines permitted producers and consumers, encrypted transport,
 
 ## Security - SQS
 
-<!-- pdf-page: 578 -->
 
 Queue security must cover message publishers, receivers, encryption keys and resource policies used by service integrations.
 
@@ -7338,7 +7168,6 @@ Queue security must cover message publishers, receivers, encryption keys and res
 
 ## Security – AWS IoT
 
-<!-- pdf-page: 579 -->
 
 IoT policies authorize device operations separately from IAM permissions used by other AWS principals. Secure both the device connection and its data destination.
 
@@ -7353,7 +7182,6 @@ IoT policies authorize device operations separately from IAM permissions used by
 
 ## Security – Amazon S3
 
-<!-- pdf-page: 580 -->
 
 S3 protection combines access policies, public-access controls, encryption and appropriate network paths. Use each control for its own boundary.
 
@@ -7370,7 +7198,6 @@ S3 protection combines access policies, public-access controls, encryption and a
 
 ## Security – DynamoDB
 
-<!-- pdf-page: 581 -->
 
 DynamoDB protects requests and stored data through transport encryption, key management and IAM authorization, with optional private access paths.
 
@@ -7385,7 +7212,6 @@ DynamoDB protects requests and stored data through transport encryption, key man
 
 ## Security - RDS
 
-<!-- pdf-page: 582 -->
 
 RDS security separates VPC reachability, database authentication and encryption. Recovery copies and monitoring data also require protection.
 
@@ -7399,7 +7225,6 @@ RDS security separates VPC reachability, database authentication and encryption.
 
 ## Security - Aurora
 
-<!-- pdf-page: 583 -->
 
 Aurora uses the same broad network, identity and encryption layers as RDS, with permissions and recovery behavior matched to its cluster model.
 
@@ -7412,7 +7237,6 @@ Aurora uses the same broad network, identity and encryption layers as RDS, with 
 
 ## Security - Lambda
 
-<!-- pdf-page: 584 -->
 
 A Lambda execution role authorizes the function's AWS calls. Permissions to invoke the function are a separate part of the request path.
 
@@ -7425,7 +7249,6 @@ A Lambda execution role authorizes the function's AWS calls. Permissions to invo
 
 ## Security - Glue
 
-<!-- pdf-page: 585 -->
 
 Glue needs permissions for job execution, source and destination data, catalog operations and encryption keys. Scope the execution role to the workflow.
 
@@ -7439,7 +7262,6 @@ Glue needs permissions for job execution, source and destination data, catalog o
 
 ## Security - EMR
 
-<!-- pdf-page: 586 -->
 
 EMR protection spans cluster access, instance identities, application permissions and encrypted storage or transport. Separate operator access from job access.
 
@@ -7459,7 +7281,6 @@ EMR protection spans cluster access, instance identities, application permission
 
 ## Security – EMR Encryption (security config)
 
-<!-- pdf-page: 587 -->
 
 An EMR security configuration controls supported at-rest and in-transit encryption paths; data and local/HDFS storage require their own settings.
 
@@ -7477,7 +7298,6 @@ An EMR security configuration controls supported at-rest and in-transit encrypti
 
 ## Security – OpenSearch Service
 
-<!-- pdf-page: 588 -->
 
 OpenSearch security layers network reachability with supported domain and fine-grained permissions. Encryption alone does not authorize a query.
 
@@ -7489,7 +7309,6 @@ OpenSearch security layers network reachability with supported domain and fine-g
 
 ## Security - Redshift
 
-<!-- pdf-page: 589 -->
 
 Redshift access combines network rules, database permissions and encryption-key access. Audit settings determine which activity is retained for review.
 
@@ -7503,7 +7322,6 @@ Redshift access combines network rules, database permissions and encryption-key 
 
 ## Security - Athena
 
-<!-- pdf-page: 590 -->
 
 Athena authorization includes the query service, catalog, data locations and keys. Protect query results with the same care as source data.
 
@@ -7514,7 +7332,6 @@ Athena authorization includes the query service, catalog, data locations and key
 
 ## Security - Quicksight
 
-<!-- pdf-page: 591 -->
 
 QuickSight security features vary by edition and connection model. Evaluate identity, dataset permissions and source connectivity together.
 
@@ -7532,7 +7349,6 @@ QuickSight security features vary by edition and connection model. Evaluate iden
 
 ## VPC & Subnets Primer
 
-<!-- pdf-page: 593 -->
 
 A VPC is Regional; subnets each occupy one AZ, with route tables determining public or private routing.
 
@@ -7544,13 +7360,11 @@ A VPC is Regional; subnets each occupy one AZ, with route tables determining pub
 
 ## VPC Diagram
 
-<!-- pdf-page: 594 -->
 
 Subnet CIDRs divide a VPC address range into nonoverlapping ranges within individual AZs.
 
 ## Internet Gateway & NAT Gateways
 
-<!-- pdf-page: 595 -->
 
 Private IPv4 workloads can initiate internet traffic through a NAT gateway in a public subnet and an internet gateway; unsolicited inbound access is not provided.
 
@@ -7560,7 +7374,6 @@ Private IPv4 workloads can initiate internet traffic through a NAT gateway in a 
 
 ## Network ACL & Security Groups
 
-<!-- pdf-page: 596 -->
 
 NACLs act at subnet boundaries and security groups at network interfaces; both apply alongside route and application controls.
 
@@ -7576,13 +7389,11 @@ NACLs act at subnet boundaries and security groups at network interfaces; both a
 
 ## Network ACLs vs Security Groups
 
-<!-- pdf-page: 597 -->
 
 Security groups are stateful allow rules; NACLs are stateless ordered allow/deny rules requiring return-path allowances.
 
 ## VPC Flow Logs
 
-<!-- pdf-page: 598 -->
 
 VPC Flow Logs capture network-flow metadata, not packet payloads, and publish to a configured supported destination.
 
@@ -7599,7 +7410,6 @@ VPC Flow Logs capture network-flow metadata, not packet payloads, and publish to
 
 ## VPC Peering
 
-<!-- pdf-page: 599 -->
 
 VPC peering is nontransitive: A-to-B and B-to-C do not establish A-to-C connectivity.
 
@@ -7610,7 +7420,6 @@ VPC peering is nontransitive: A-to-B and B-to-C do not establish A-to-C connecti
 
 ## VPC Endpoints
 
-<!-- pdf-page: 600 -->
 
 Interface endpoints use private ENIs for supported services; gateway endpoints route S3 or DynamoDB traffic through route-table entries.
 
@@ -7622,7 +7431,6 @@ Interface endpoints use private ENIs for supported services; gateway endpoints r
 
 ## Site to Site VPN & Direct Connect
 
-<!-- pdf-page: 601 -->
 
 A site-to-site VPN encrypts over an IP path; Direct Connect provides dedicated connectivity but is not encrypted by default.
 
@@ -7638,7 +7446,6 @@ A site-to-site VPN encrypts over an IP path; Direct Connect provides dedicated c
 
 ## VPC connectivity review
 
-<!-- pdf-page: 602 -->
 
 VPC networking connects addressing, subnet routes, gateways and filtering controls. Trace the complete request and return path when explaining connectivity.
 
@@ -7655,7 +7462,6 @@ VPC networking connects addressing, subnet routes, gateways and filtering contro
 
 ## AWS PrivateLink (VPC Endpoint Services)
 
-<!-- pdf-page: 603 -->
 
 PrivateLink exposes a provider service through an endpoint service and consumer interface endpoint, without broad VPC peering.
 
@@ -7665,7 +7471,6 @@ PrivateLink exposes a provider service through an endpoint service and consumer 
 
 ## What is DNS?
 
-<!-- pdf-page: 604 -->
 
 DNS resolves human-readable names to records used by clients to locate services. Caching and TTLs influence when a client observes changes.
 
@@ -7675,7 +7480,6 @@ DNS resolves human-readable names to records used by clients to locate services.
 
 ## DNS Terminologies
 
-<!-- pdf-page: 605 -->
 
 DNS is the Internet’s address book: it maps names people remember to records computers can use.
 
@@ -7688,7 +7492,6 @@ DNS is the Internet’s address book: it maps names people remember to records c
 
 ## How DNS Works
 
-<!-- pdf-page: 606 -->
 
 - Your device asks a DNS resolver for the record behind a name such as `www.example.com`.
 - If the answer is not cached, the resolver follows referrals: root → `.com` → the domain’s authoritative name server.
@@ -7696,7 +7499,6 @@ DNS is the Internet’s address book: it maps names people remember to records c
 
 ## Amazon Route 53
 
-<!-- pdf-page: 607 -->
 
 Route 53 is AWS’s managed authoritative DNS service: it stores domain records and answers queries for them.
 
@@ -7705,7 +7507,6 @@ Route 53 is AWS’s managed authoritative DNS service: it stores domain records 
 
 ## Route 53 – Records
 
-<!-- pdf-page: 608 -->
 
 A DNS record tells Route 53 what answer to return for a name and how long resolvers can reuse it.
 
@@ -7716,7 +7517,6 @@ A DNS record tells Route 53 what answer to return for a name and how long resolv
 
 ## Route 53 – Record Types
 
-<!-- pdf-page: 609 -->
 
 Choose a record type by the kind of answer DNS should return.
 
@@ -7728,7 +7528,6 @@ Choose a record type by the kind of answer DNS should return.
 
 ## Route 53 – Hosted Zones
 
-<!-- pdf-page: 610 -->
 
 A hosted zone is Route 53’s container for the DNS records of a domain or subdomain.
 
@@ -7737,7 +7536,6 @@ A hosted zone is Route 53’s container for the DNS records of a domain or subdo
 
 ## Route 53 – Public vs. Private Hosted Zones
 
-<!-- pdf-page: 611 -->
 
 - Public zone — public DNS resolvers return its records to Internet clients.
 - Private zone — the VPC resolver returns its records to clients inside associated VPCs.
@@ -7746,7 +7544,6 @@ A hosted zone is Route 53’s container for the DNS records of a domain or subdo
 
 ## Amazon CloudFront
 
-<!-- pdf-page: 612 -->
 
 A CDN serves geographically distributed clients from nearby edge caches while retaining an origin for uncached content.
 
@@ -7758,7 +7555,6 @@ A CDN serves geographically distributed clients from nearby edge caches while re
 
 ## CloudFront – Origins
 
-<!-- pdf-page: 613 -->
 
 A CloudFront origin supplies content that the distribution caches or forwards. S3 and HTTP origins require different access and request configurations.
 
@@ -7774,19 +7570,16 @@ A CloudFront origin supplies content that the distribution caches or forwards. S
 
 ## CloudFront at a high level
 
-<!-- pdf-page: 614 -->
 
 CloudFront serves cache hits at the edge and fetches cache misses from the origin according to its cache behavior.
 
 ## CloudFront – S3 as an Origin
 
-<!-- pdf-page: 615 -->
 
 Origin Access Control authorizes CloudFront access to a private S3 origin while viewers use the distribution endpoint.
 
 ## CloudFront vs S3 Cross Region Replication
 
-<!-- pdf-page: 616 -->
 
 CloudFront caches content at edge locations for delivery; cross-Region replication creates separate S3 copies. These solve different access and recovery requirements.
 
@@ -7801,7 +7594,6 @@ CloudFront caches content at edge locations for delivery; cross-Region replicati
 
 ## CloudFront – ALB or EC2 as an origin Using VPC Origins
 
-<!-- pdf-page: 617 -->
 
 A supported CloudFront VPC origin reaches a private ALB, NLB or EC2 origin through managed connectivity.
 
@@ -7813,13 +7605,11 @@ A supported CloudFront VPC origin reaches a private ALB, NLB or EC2 origin throu
 
 ## CloudFront – ALB or EC2 as an origin Using Public Network
 
-<!-- pdf-page: 618 -->
 
 For a public custom origin, security-group restrictions can limit origin ingress to CloudFront origin-facing addresses; application authorization remains separate.
 
 ## CloudFront – Cache Invalidations
 
-<!-- pdf-page: 619 -->
 
 Updating the origin does not instantly replace cached objects. Invalidation requests remove selected cached paths before their normal expiry.
 
@@ -7831,7 +7621,6 @@ Updating the origin does not instantly replace cached objects. Invalidation requ
 
 ## Amazon CloudWatch Metrics
 
-<!-- pdf-page: 621 -->
 
 A metric is a time series identified by its namespace, name and dimensions. Select statistics and intervals that answer the operational question.
 
@@ -7845,7 +7634,6 @@ A metric is a time series identified by its namespace, name and dimensions. Sele
 
 ## CloudWatch Metric Streams
 
-<!-- pdf-page: 622 -->
 
 CloudWatch Metric Streams continuously deliver selected metric updates through Firehose to supported analysis destinations.
 
@@ -7856,7 +7644,6 @@ CloudWatch Metric Streams continuously deliver selected metric updates through F
 
 ## CloudWatch Logs
 
-<!-- pdf-page: 623 -->
 
 Log groups organize streams and their retention or access settings. Plan collection, storage and querying as separate steps.
 
@@ -7873,7 +7660,6 @@ Log groups organize streams and their retention or access settings. Plan collect
 
 ## CloudWatch Logs - Sources
 
-<!-- pdf-page: 624 -->
 
 Logs reach CloudWatch from agents, SDKs and supported service integrations. The collection path determines what context and permissions are required.
 
@@ -7887,13 +7673,11 @@ Logs reach CloudWatch from agents, SDKs and supported service integrations. The 
 
 ## CloudWatch Logs Insights
 
-<!-- pdf-page: 625 -->
 
 Logs Insights queries selected log groups and a time range; results help diagnose events rather than mutate the source logs.
 
 ## CloudWatch Logs Insights
 
-<!-- pdf-page: 626 -->
 
 Logs Insights queries collected log data to find events, patterns and aggregates. Scope the time range and log groups to the investigation.
 
@@ -7907,7 +7691,6 @@ Logs Insights queries collected log data to find events, patterns and aggregates
 
 ## CloudWatch Logs – S3 Export
 
-<!-- pdf-page: 627 -->
 
 CreateExportTask exports CloudWatch Logs to S3 asynchronously; it is not a low-latency streaming delivery mechanism.
 
@@ -7917,7 +7700,6 @@ CreateExportTask exports CloudWatch Logs to S3 asynchronously; it is not a low-l
 
 ## CloudWatch Logs Subscriptions
 
-<!-- pdf-page: 628 -->
 
 Subscription filters route matching log events to supported stream, delivery or function destinations.
 
@@ -7927,13 +7709,11 @@ Subscription filters route matching log events to supported stream, delivery or 
 
 ## CloudWatch Logs Aggregation Multi-Account & Multi Region
 
-<!-- pdf-page: 629 -->
 
 A centralized logging design forwards account/Region log groups into a configured aggregation path and archival storage.
 
 ## CloudWatch Logs Subscriptions
 
-<!-- pdf-page: 630 -->
 
 Cross-account log subscriptions use a destination resource policy and appropriate roles to permit forwarding to the destination stream.
 
@@ -7941,7 +7721,6 @@ Cross-account log subscriptions use a destination resource policy and appropriat
 
 ## CloudWatch Logs for EC2
 
-<!-- pdf-page: 631 -->
 
 The CloudWatch agent collects configured host metrics and logs from EC2 or on-premises hosts.
 
@@ -7952,7 +7731,6 @@ The CloudWatch agent collects configured host metrics and logs from EC2 or on-pr
 
 ## CloudWatch Logs Agent & Unified Agent
 
-<!-- pdf-page: 632 -->
 
 The unified agent collects supported host metrics and logs beyond basic instance monitoring. Configure what to collect and where to publish it.
 
@@ -7966,7 +7744,6 @@ The unified agent collects supported host metrics and logs beyond basic instance
 
 ## CloudWatch Unified Agent – Metrics
 
-<!-- pdf-page: 633 -->
 
 Host-level telemetry can reveal memory, disk, network and process behavior that is not captured by every default service metric.
 
@@ -7980,7 +7757,6 @@ Host-level telemetry can reveal memory, disk, network and process behavior that 
 
 ## CloudWatch Alarms
 
-<!-- pdf-page: 634 -->
 
 An alarm evaluates a metric over configured periods and changes state when its conditions are met. Missing-data treatment is part of the rule.
 
@@ -7995,7 +7771,6 @@ An alarm evaluates a metric over configured periods and changes state when its c
 
 ## CloudWatch Alarm Targets
 
-<!-- pdf-page: 635 -->
 
 Alarm actions can notify operators or invoke supported recovery and scaling behavior. Match the action to the resource and failure being observed.
 
@@ -8004,7 +7779,6 @@ Alarm actions can notify operators or invoke supported recovery and scaling beha
 
 ## CloudWatch Alarms – Composite Alarms
 
-<!-- pdf-page: 636 -->
 
 A composite alarm evaluates the states of other alarms, such as CPU and IOPS, before notifying.
 
@@ -8015,7 +7789,6 @@ A composite alarm evaluates the states of other alarms, such as CPU and IOPS, be
 
 ## EC2 Instance Recovery
 
-<!-- pdf-page: 637 -->
 
 A supported EC2 status-check alarm can request instance recovery and separately send a notification.
 
@@ -8027,7 +7800,6 @@ A supported EC2 status-check alarm can request instance recovery and separately 
 
 ## CloudWatch Alarm: good to know
 
-<!-- pdf-page: 638 -->
 
 A metric filter turns matching log patterns into numeric metrics; an alarm evaluates the metric and invokes configured actions.
 
@@ -8036,7 +7808,6 @@ A metric filter turns matching log patterns into numeric metrics; an alarm evalu
 
 ## AWS CloudTrail
 
-<!-- pdf-page: 639 -->
 
 CloudTrail records supported AWS API activity for investigation and governance. Event type, collection scope and retention determine the available evidence.
 
@@ -8052,13 +7823,11 @@ CloudTrail records supported AWS API activity for investigation and governance. 
 
 ## CloudTrail Diagram
 
-<!-- pdf-page: 640 -->
 
 CloudTrail records supported account activity across console, CLI and SDK calls and can deliver trails to S3 and CloudWatch Logs.
 
 ## CloudTrail Events
 
-<!-- pdf-page: 641 -->
 
 Management events describe control-plane activity; data events cover supported resource-level operations. Enable the event categories needed for the audit question.
 
@@ -8078,7 +7847,6 @@ Management events describe control-plane activity; data events cover supported r
 
 ## CloudTrail Insights
 
-<!-- pdf-page: 642 -->
 
 CloudTrail Insights compares supported activity against a baseline and emits unusual-activity events when enabled.
 
@@ -8095,7 +7863,6 @@ CloudTrail Insights compares supported activity against a baseline and emits unu
 
 ## CloudTrail Events Retention
 
-<!-- pdf-page: 643 -->
 
 Event history provides a limited management-event window; trails in S3 support longer retention and Athena analysis.
 
@@ -8104,7 +7871,6 @@ Event history provides a limited management-event window; trails in S3 support l
 
 ## AWS CloudTrail Lake
 
-<!-- pdf-page: 644 -->
 
 CloudTrail Lake stores selected activity in queryable event data stores. The source labels this offering as maintenance-mode material, so availability needs a dated check.
 
@@ -8116,7 +7882,6 @@ CloudTrail Lake stores selected activity in queryable event data stores. The sou
 
 ## AWS CloudTrail Lake
 
-<!-- pdf-page: 645 -->
 
 Event data store settings select which activity is collected and retained. Query access and collection configuration are separate controls.
 
@@ -8130,7 +7895,6 @@ Event data store settings select which activity is collected and retained. Query
 
 ## CloudTrail advanced event selector example
 
-<!-- pdf-page: 646 -->
 
 Advanced selectors choose event categories, resource types, event names and resource ARN prefixes.
 
@@ -8157,7 +7921,6 @@ Advanced selectors choose event categories, resource types, event names and reso
 
 ## Querying CloudTrail Lake
 
-<!-- pdf-page: 647 -->
 
 CloudTrail Lake SQL and dashboards analyze stored events. Results reflect the event types, retention and permissions configured for the store.
 
@@ -8167,7 +7930,6 @@ CloudTrail Lake SQL and dashboards analyze stored events. Results reflect the ev
 
 ## AWS Config
 
-<!-- pdf-page: 648 -->
 
 Config records resource configuration and evaluates compliance against rules. It answers different questions from application monitoring or an API activity log.
 
@@ -8183,7 +7945,6 @@ Config records resource configuration and evaluates compliance against rules. It
 
 ## Config Rules
 
-<!-- pdf-page: 649 -->
 
 Config rules evaluate recorded resources with managed or custom logic. A noncompliant result identifies a condition; remediation is another action.
 
@@ -8198,7 +7959,6 @@ Config rules evaluate recorded resources with managed or custom logic. A noncomp
 
 ## AWS Config Resource
 
-<!-- pdf-page: 650 -->
 
 Config associates resource configuration history with compliance evaluations; CloudTrail supplies a separate API-activity history.
 
@@ -8208,7 +7968,6 @@ Config associates resource configuration history with compliance evaluations; Cl
 
 ## Config Rules – Remediations
 
-<!-- pdf-page: 651 -->
 
 A Config remediation can invoke a Systems Manager Automation document; role permissions and retry limits control the corrective action.
 
@@ -8219,7 +7978,6 @@ A Config remediation can invoke a Systems Manager Automation document; role perm
 
 ## Config Rules – Notifications
 
-<!-- pdf-page: 652 -->
 
 Config changes and compliance events can route through EventBridge; SNS delivery is another configured notification path.
 
@@ -8228,7 +7986,6 @@ Config changes and compliance events can route through EventBridge; SNS delivery
 
 ## CloudWatch vs CloudTrail vs Config
 
-<!-- pdf-page: 653 -->
 
 Use CloudWatch for operational telemetry, CloudTrail for API activity and Config for configuration history and compliance. Combine their evidence when investigating a change.
 
@@ -8246,7 +8003,6 @@ Use CloudWatch for operational telemetry, CloudTrail for API activity and Config
 
 ## For an Elastic Load Balancer
 
-<!-- pdf-page: 654 -->
 
 For a load balancer, monitor traffic and errors with CloudWatch, investigate API changes with CloudTrail and evaluate configuration with Config.
 
@@ -8262,7 +8018,6 @@ For a load balancer, monitor traffic and errors with CloudWatch, investigate API
 
 ## What is CloudFormation
 
-<!-- pdf-page: 655 -->
 
 CloudFormation declares infrastructure in templates and manages it as stacks. Review the proposed resources and dependencies before applying a change.
 
@@ -8275,7 +8030,6 @@ CloudFormation declares infrastructure in templates and manages it as stacks. Re
 
 ## Benefits of AWS CloudFormation (1/2)
 
-<!-- pdf-page: 656 -->
 
 Infrastructure templates make resource definitions repeatable and reviewable. Stack metadata also helps associate deployed resources with an application and its costs.
 
@@ -8288,7 +8042,6 @@ Infrastructure templates make resource definitions repeatable and reviewable. St
 
 ## Benefits of AWS CloudFormation (2/2)
 
-<!-- pdf-page: 657 -->
 
 Reusable templates and change sets support consistent deployment. Automation still requires deliberate permissions, dependency handling and review of destructive changes.
 
@@ -8304,7 +8057,6 @@ Reusable templates and change sets support consistent deployment. Automation sti
 
 ## CloudFormation + Infrastructure Composer
 
-<!-- pdf-page: 658 -->
 
 Infrastructure Composer visualizes CloudFormation resources and dependencies; the template remains the deployment source.
 
@@ -8314,7 +8066,6 @@ Infrastructure Composer visualizes CloudFormation resources and dependencies; th
 
 ## SSM Parameter Store
 
-<!-- pdf-page: 659 -->
 
 An application retrieves authorized Parameter Store values; SecureString access also depends on KMS decrypt permissions.
 
@@ -8328,7 +8079,6 @@ An application retrieves authorized Parameter Store values; SecureString access 
 
 ## SSM Parameter Store Hierarchy
 
-<!-- pdf-page: 660 -->
 
 Hierarchical parameter names support environment/application organization; recursive path access must be scoped carefully.
 
@@ -8345,7 +8095,6 @@ Hierarchical parameter names support environment/application organization; recur
 
 ## Parameter Store tiers
 
-<!-- pdf-page: 661 -->
 
 Advanced parameters add policies and larger values, with charges; choose the tier for required capabilities.
 
@@ -8353,7 +8102,7 @@ Advanced parameters add policies and larger values, with charges; choose the tie
 - Only Advanced supports parameter policies in the comparison.
 - Storage and high-throughput/API charges are separate considerations; verify current pricing rather than memorizing the screenshot's dollar amount.
 
-| Capability | Standard (course snapshot) | Advanced (course snapshot) |
+| Capability | Standard (dated snapshot) | Advanced (dated snapshot) |
 | --- | --- | --- |
 | Parameter count | 10,000 | 100,000 |
 | Value size | 4 KB | 8 KB |
@@ -8362,7 +8111,6 @@ Advanced parameters add policies and larger values, with charges; choose the tie
 
 ## Parameters Policies (for advanced parameters)
 
-<!-- pdf-page: 662 -->
 
 Advanced-parameter policies can expire a value or notify about expiry and lack of change; notifications do not automatically rotate secrets.
 
@@ -8371,7 +8119,6 @@ Advanced-parameter policies can expire a value or notify about expiry and lack o
 
 ## Well Architected Framework General Guiding Principles
 
-<!-- pdf-page: 663 -->
 
 Well-Architected reviews start from operational requirements, favor measured decisions and revisit assumptions as the workload changes.
 
@@ -8386,18 +8133,16 @@ Well-Architected reviews start from operational requirements, favor measured dec
 
 ## Well-Architected: six pillars and explicit tradeoffs
 
-<!-- pdf-page: 664 -->
 
 Review operational excellence, security, reliability, performance efficiency, cost optimization and sustainability together.
 
 - The pillars interact; architecture decisions can require tradeoffs between them.
-- The PDF calls them a synergy without tradeoffs. Use the framework to document and evaluate actual tradeoffs instead.
+- Use the framework to document benefits and evaluate actual tradeoffs.
 
 **Current reference (checked 2026-10-13):** [AWS Well-Architected Framework](https://docs.aws.amazon.com/wellarchitected/latest/framework/welcome.html).
 
 ## AWS Well-Architected Tool
 
-<!-- pdf-page: 665 -->
 
 The Well-Architected Tool records workload reviews against the framework's pillars and tracks improvement items. A review is an ongoing engineering activity.
 
@@ -8409,7 +8154,6 @@ The Well-Architected Tool records workload reviews against the framework's pilla
 
 ## Amazon Managed Grafana
 
-<!-- pdf-page: 666 -->
 
 Managed Grafana provides dashboards and alerting over supported observability sources. It visualizes collected telemetry rather than collecting every signal itself.
 
@@ -8420,7 +8164,6 @@ Managed Grafana provides dashboards and alerting over supported observability so
 
 ## Amazon Managed Grafana
 
-<!-- pdf-page: 667 -->
 
 Each Grafana data source needs its own supported connection and authorization. Combine sources when they help explain one workload's behavior.
 
@@ -8433,7 +8176,6 @@ Each Grafana data source needs its own supported connection and authorization. C
 
 ## Amazon SageMaker AI
 
-<!-- pdf-page: 669 -->
 
 Training learns a model from labeled historical examples; inference applies the model to new feature values.
 
@@ -8443,7 +8185,6 @@ Training learns a model from labeled historical examples; inference applies the 
 
 ## SageMaker Feature Store
 
-<!-- pdf-page: 670 -->
 
 A feature is an input used by a model. Feature Store organizes reusable feature values for training and supported serving access patterns.
 
@@ -8453,25 +8194,21 @@ A feature is an input used by a model. Feature Store organizes reusable feature 
 
 ## Where the features come from is up to you.
 
-<!-- pdf-page: 671 -->
 
 A feature store organizes reusable features between data preparation and training/inference consumers.
 
 ## How SageMaker Feature Store Organizes Your Data
 
-<!-- pdf-page: 672 -->
 
 Feature groups define features and records identified by a record identifier and event time.
 
 ## Data Ingestion (streaming or batch)
 
-<!-- pdf-page: 673 -->
 
 Feature Store ingestion can populate an online store and an offline S3 store; their access patterns serve different workloads.
 
 ## SageMaker Feature Store Security
 
-<!-- pdf-page: 674 -->
 
 Feature data needs authorized access, encrypted storage and protected network transport, with controls matched to its online and offline paths.
 
@@ -8481,7 +8218,6 @@ Feature data needs authorized access, encrypted storage and protected network tr
 
 ## SageMaker ML Lineage Tracking
 
-<!-- pdf-page: 675 -->
 
 ML lineage connects input artifacts, processing actions, model artifacts and deployments for traceability.
 
@@ -8494,14 +8230,13 @@ ML lineage connects input artifacts, processing actions, model artifacts and dep
 
 ## Lineage Tracking Entities
 
-<!-- pdf-page: 676 -->
 
 Lineage entities describe artifacts, actions and execution components in an ML workflow. Relationships connect the data, processing and model outputs.
 
 - Trial (a model composed of trial components)
 - Experiment (a group of Trials for a given use case)
 - Context (logical grouping of entities)
-- Action (workflow step, model deployment
+- Action (workflow step, model deployment)
 - Artifact (Object or data, such as an S3 bucket or an image in ECR)
 - Association (connects entities together) – has optional AssociationType:
   - ContributedTo
@@ -8512,7 +8247,6 @@ Lineage entities describe artifacts, actions and execution components in an ML w
 
 ## Querying Lineage Entities
 
-<!-- pdf-page: 677 -->
 
 Lineage queries traverse recorded relationships to investigate dependencies and provenance. The available result depends on which entities and associations were captured.
 
@@ -8523,54 +8257,49 @@ Lineage queries traverse recorded relationships to investigate dependencies and 
 
 ## Ground Truth: availability and labeling concept
 
-<!-- pdf-page: 678 -->
 
 Ground Truth is closed to new customers; existing customers can continue using it.
 
 - AWS announced the maintenance availability change for July 30, 2026. That differs from a complete service shutdown.
 - Ground Truth Plus is a separate feature that reached end of support June 30, 2026.
-- Keep the human-labeling and active-learning concepts in study notes; do not infer current exam scope from the PDF's assertion.
+- Keep the human-labeling and active-learning concepts in study notes; check the current official exam guide before inferring exam scope.
 
 **Current reference (checked 2026-10-13):** [AWS service availability update](https://aws.amazon.com/about-aws/whats-new/2026/06/aws-service-availability/); [Ground Truth documentation](https://docs.aws.amazon.com/sagemaker/latest/dg/sms.html).
 
 ## What is Ground Truth?
 
-<!-- pdf-page: 679 -->
 
 Human labeling creates training targets when the raw dataset does not contain them. The labeling workflow defines tasks and checks the returned annotations.
 
-- Availability: see the Ground Truth status correction on page 678.
+- Availability: see the Ground Truth status note above.
 - Example: training an image classification model. Somebody needs to tag a bunch of images with what they are images of before training a neural network
 - Ground Truth manages humans who will label your data for training purposes
 
 ## But it’s more than that
 
-<!-- pdf-page: 680 -->
 
 Ground Truth's active-learning pattern sends uncertain examples to human labeling and uses labeled results to improve the model; availability is a separate service-status question.
 
-- Availability: see the Ground Truth status correction on page 678.
+- Availability: see the Ground Truth status note above.
 - Ground Truth creates its own model as images are labeled by people
 - As this model learns, only images the model isn’t sure about are sent to human labelers
 - This can reduce the cost of labeling jobs by 70%
 
 ## Who are these human labelers?
 
-<!-- pdf-page: 681 -->
 
 Labeling workers may come from managed public, private or vendor workforces in the historical workflow. Workforce selection affects privacy, quality and cost.
 
-- Availability: see the Ground Truth status correction on page 678.
+- Availability: see the Ground Truth status note above.
 - Your own internal team
 - Professional labeling companies
 
 ## Ground Truth Plus
 
-<!-- pdf-page: 682 -->
 
 Ground Truth Plus was a managed labeling arrangement distinct from Ground Truth. Its separate end-of-support status matters when interpreting this historical workflow.
 
-- Availability: see the Ground Truth status correction on page 678.
+- Availability: see the Ground Truth status note above.
 - “Our team of AWS Experts” manages the workflow and team of labelers
   - You fill out an intake form
   - They contact you and discuss pricing
@@ -8579,11 +8308,10 @@ Ground Truth Plus was a managed labeling arrangement distinct from Ground Truth.
 
 ## Other ways to generate training labels
 
-<!-- pdf-page: 683 -->
 
 Existing models can help generate candidate labels, with humans reviewing uncertain or unsuitable outputs. Automated labels still require quality assessment.
 
-- Availability: see the Ground Truth status correction on page 678.
+- Availability: see the Ground Truth status note above.
   - AWS service for image recognition
   - Automatically classify images
 - Comprehend
@@ -8593,11 +8321,10 @@ Existing models can help generate candidate labels, with humans reviewing uncert
 
 ## Amazon Mechanical Turk
 
-<!-- pdf-page: 684 -->
 
 Mechanical Turk matches requesters with workers for small human tasks. Treat task design and result validation as part of the labeling process.
 
-- Availability: see the Ground Truth status correction on page 678.
+- Availability: see the Ground Truth status note above.
 - Distributed virtual workforce
 - Example:
   - You have a dataset of 10,000,000 images and you want to labels these images
@@ -8608,19 +8335,17 @@ Mechanical Turk matches requesters with workers for small human tasks. Treat tas
 
 ## Amazon Mechanical Turk
 
-<!-- pdf-page: 685 -->
 
 A labeling job defines its dataset, labeling instructions and workforce, then collects annotations for review.
 
-- Availability: see the Ground Truth status correction on page 678.
+- Availability: see the Ground Truth status note above.
 
 ## SageMaker Canvas
 
-<!-- pdf-page: 686 -->
 
 Canvas offers a visual path for supported ML preparation and prediction tasks. Validate the dataset and model outcome even when little code is required.
 
-- Availability: see the Ground Truth status correction on page 678.
+- Availability: see the Ground Truth status note above.
 - Upload csv data (csv only for now), select a column to predict, build it, and make predictions
 - Can also join datasets
 - Classification or regression
@@ -8634,11 +8359,10 @@ Canvas offers a visual path for supported ML preparation and prediction tasks. V
 
 ## SageMaker Data Wrangler
 
-<!-- pdf-page: 687 -->
 
 Data Wrangler prepares ML datasets through visual analysis and transformations. The prepared flow still needs export, execution and appropriate data permissions.
 
-- Availability: see the Ground Truth status correction on page 678.
+- Availability: see the Ground Truth status note above.
 - Import data
 - Visualize data
 - Transform data (300+ transformations to choose from)
@@ -8647,49 +8371,41 @@ Data Wrangler prepares ML datasets through visual analysis and transformations. 
 
 ## Data Wrangler sources
 
-<!-- pdf-page: 688 -->
 
 Data Wrangler imports supported sources, explores and transforms data, then exports a reproducible preparation workflow.
 
 ## Data Wrangler: Import Data
 
-<!-- pdf-page: 689 -->
 
 The import screen chooses a source and dataset before previewing records.
 
 ## Data Wrangler: Preview Data
 
-<!-- pdf-page: 690 -->
 
 Preview helps validate types, missing values and sample records before adding transformations.
 
 ## Data Wrangler: Visualize Data
 
-<!-- pdf-page: 691 -->
 
 Visual analysis helps spot distributions and relationships; a sample plot is evidence to investigate rather than proof of causality.
 
 ## Data Wrangler: Transform Data
 
-<!-- pdf-page: 692 -->
 
 Transformations form a reproducible sequence rather than unrecorded edits to a spreadsheet.
 
 ## Data Wrangler: Quick Model
 
-<!-- pdf-page: 693 -->
 
 A quick model provides exploratory feature feedback, not a production-model quality guarantee.
 
 ## Data Wrangler: Export Data Flow
 
-<!-- pdf-page: 694 -->
 
 Export a validated flow to a supported job or pipeline destination for repeatable execution.
 
 ## Data Wrangler Troubleshooting
 
-<!-- pdf-page: 695 -->
 
 Troubleshoot preparation work from permissions, connectivity, supported formats and resource capacity before changing transformation logic.
 
@@ -8702,7 +8418,6 @@ Troubleshoot preparation work from permissions, connectivity, supported formats 
 
 ## Foundation Models
 
-<!-- pdf-page: 696 -->
 
 A foundation model is pretrained on broad data and can be adapted or prompted for new tasks. The adaptation method determines what changes inside the model.
 
@@ -8715,7 +8430,6 @@ A foundation model is pretrained on broad data and can be adapted or prompted fo
 
 ## AWS Foundation Models (Base Models)
 
-<!-- pdf-page: 697 -->
 
 The foundation-model names in this course are examples from its date; model access, capability and lifecycle vary.
 
@@ -8743,7 +8457,6 @@ The foundation-model names in this course are examples from its date; model acce
 
 ## Amazon Bedrock
 
-<!-- pdf-page: 698 -->
 
 Bedrock exposes supported foundation models through managed APIs. Model access, inference configuration and application authorization remain distinct concerns.
 
@@ -8757,7 +8470,6 @@ Bedrock exposes supported foundation models through managed APIs. Model access, 
 
 ## The Bedrock API Endpoints
 
-<!-- pdf-page: 699 -->
 
 Bedrock uses different endpoint families for management, inference and agent-related operations. Select the API for the operation rather than relying on one generic endpoint.
 
@@ -8769,7 +8481,6 @@ Bedrock uses different endpoint families for management, inference and agent-rel
 
 ## Bedrock authorization
 
-<!-- pdf-page: 700 -->
 
 Use an authorized IAM principal, including a workload role with temporary credentials; an IAM user is not mandatory.
 
@@ -8780,7 +8491,6 @@ Use an authorized IAM principal, including a workload role with temporary creden
 
 ## Amazon Bedrock: Model Access
 
-<!-- pdf-page: 701 -->
 
 Model access depends on the model/provider, account permissions and current Bedrock access workflow.
 
@@ -8790,7 +8500,6 @@ Model access depends on the model/provider, account permissions and current Bedr
 
 ## Let’s Play
 
-<!-- pdf-page: 702 -->
 
 Bedrock playgrounds let you explore supported model input/output and inference settings before building an application.
 
@@ -8804,7 +8513,6 @@ Bedrock playgrounds let you explore supported model input/output and inference s
 
 ## Fine-tuning
 
-<!-- pdf-page: 703 -->
 
 Fine-tuning adjusts an existing model using examples for a specific task or behavior. It differs from supplying reference information at inference time.
 
@@ -8820,7 +8528,6 @@ Fine-tuning adjusts an existing model using examples for a specific task or beha
 
 ## Fine-tuning in Bedrock: “Custom Models”
 
-<!-- pdf-page: 704 -->
 
 Custom-model support varies by provider and model. Choose supported training inputs and deployment options instead of assuming every catalog model can be tuned.
 
@@ -8835,7 +8542,6 @@ Custom-model support varies by provider and model. Choose supported training inp
 
 ## “Continued Pre-Training”
 
-<!-- pdf-page: 705 -->
 
 Continued pretraining adapts a model using additional unlabeled material. It has different data and objective requirements from supervised fine-tuning.
 
@@ -8847,7 +8553,6 @@ Continued pretraining adapts a model using additional unlabeled material. It has
 
 ## Low-Rank Adaptation (LoRA)
 
-<!-- pdf-page: 706 -->
 
 LoRA freezes base-model weights while training smaller low-rank adapter parameters that modify the output.
 
@@ -8860,7 +8565,6 @@ LoRA freezes base-model weights while training smaller low-rank adapter paramete
 
 ## Retrieval Augmented Generation (RAG)
 
-<!-- pdf-page: 707 -->
 
 RAG retrieves external evidence and places it in the prompt before generation; it does not retrain the model for every question.
 
@@ -8871,7 +8575,6 @@ RAG retrieves external evidence and places it in the prompt before generation; i
 
 ## RAG: Pros and Cons
 
-<!-- pdf-page: 708 -->
 
 RAG supplies retrieved reference material with a prompt, making knowledge easier to update without retraining the model. Retrieval quality becomes a critical dependency.
 
@@ -8888,13 +8591,11 @@ RAG supplies retrieved reference material with a prompt, making knowledge easier
 
 ## RAG: Example Approach (winning at Jeopardy!)
 
-<!-- pdf-page: 709 -->
 
 The research illustration encodes a question, retrieves relevant documents and conditions generation on that evidence.
 
 ## Choosing a Database (Knowledge Base Data Store) for RAG
 
-<!-- pdf-page: 710 -->
 
 Select a retrieval store from the required query pattern, data model and filtering needs. A vector store is one option rather than the only kind of knowledge source.
 
@@ -8905,7 +8606,6 @@ Select a retrieval store from the required query pattern, data model and filteri
 
 ## Embeddings
 
-<!-- pdf-page: 711 -->
 
 Embeddings place semantically similar content near each other; the slide's clusters are conceptual, not measured coordinates.
 
@@ -8916,7 +8616,6 @@ Embeddings place semantically similar content near each other; the slide's clust
 
 ## Embeddings are vectors, so store them in…
 
-<!-- pdf-page: 712 -->
 
 Vector search compares a query embedding with stored embeddings using the configured distance/similarity metric.
 
@@ -8937,13 +8636,11 @@ Vector search compares a query embedding with stored embeddings using the config
 
 ## RAG Example with a Vector Database: Making Data from Star Trek, by Cheating.
 
-<!-- pdf-page: 713 -->
 
 A retrieval-assisted persona example selects relevant source passages, then combines them with the question and instructions for generation.
 
 ## RAG in Bedrock: Knowledge Bases
 
-<!-- pdf-page: 714 -->
 
 A knowledge-base ingestion pipeline parses content, chunks it, embeds chunks and writes a searchable vector index.
 
@@ -8962,7 +8659,6 @@ A knowledge-base ingestion pipeline parses content, chunks it, embeds chunks and
 
 ## Using Knowledge Bases
 
-<!-- pdf-page: 715 -->
 
 A Bedrock RAG application retrieves relevant OpenSearch content and supplies that context with the question to a model.
 
@@ -8974,7 +8670,6 @@ A Bedrock RAG application retrieves relevant OpenSearch content and supplies tha
 
 ## Let’s Make a Knowledge Base
 
-<!-- pdf-page: 716 -->
 
 A knowledge-base workflow ingests documents, prepares chunks and embeddings, and stores them for later retrieval. Each stage influences what context reaches the model.
 
@@ -8982,7 +8677,6 @@ A knowledge-base workflow ingests documents, prepares chunks and embeddings, and
 
 ## Breaking up the R in RAG
 
-<!-- pdf-page: 717 -->
 
 RAG quality depends on indexing, query preparation, retrieval, post-retrieval processing and grounded generation.
 
@@ -8996,7 +8690,6 @@ RAG quality depends on indexing, query preparation, retrieval, post-retrieval pr
 
 ## Pre-Retrieval
 
-<!-- pdf-page: 718 -->
 
 Chunk size trades local precision against sufficient context; splitting a text too finely can lose its meaning.
 
@@ -9009,7 +8702,6 @@ Chunk size trades local precision against sufficient context; splitting a text t
 
 ## More on Chunking
 
-<!-- pdf-page: 719 -->
 
 Semantic chunking groups related sentences at meaningful boundaries rather than arbitrary character positions.
 
@@ -9024,7 +8716,6 @@ Semantic chunking groups related sentences at meaningful boundaries rather than 
 
 ## Chunking with Bedrock: Standard Chunking
 
-<!-- pdf-page: 720 -->
 
 Fixed-size chunks may overlap to retain boundary context; no chunking treats a supported document as one retrieval unit.
 
@@ -9038,7 +8729,6 @@ Fixed-size chunks may overlap to retain boundary context; no chunking treats a s
 
 ## Chunking with Bedrock: Hierarchical Chunking
 
-<!-- pdf-page: 721 -->
 
 Hierarchical retrieval indexes smaller child chunks but can return a larger parent to restore context.
 
@@ -9050,7 +8740,6 @@ Hierarchical retrieval indexes smaller child chunks but can return a larger pare
 
 ## Chunking with Bedrock: Semantic Chunking
 
-<!-- pdf-page: 722 -->
 
 Semantic chunking uses model-based similarity and a boundary threshold; these settings affect chunk size and ingestion cost.
 
@@ -9068,7 +8757,6 @@ Semantic chunking uses model-based similarity and a boundary threshold; these se
 
 ## Optimizing your Embeddings
 
-<!-- pdf-page: 723 -->
 
 Embedding size and storage choices affect cost, latency and retrieval quality. Evaluate the resulting search behavior before reducing representation size.
 
@@ -9082,7 +8770,6 @@ Embedding size and storage choices affect cost, latency and retrieval quality. E
 
 ## Sparse vs. Dense Embeddings
 
-<!-- pdf-page: 724 -->
 
 Sparse vectors emphasize token occurrence; dense vectors encode learned semantic features. Hybrid search combines complementary signals.
 
@@ -9102,7 +8789,6 @@ Sparse vectors emphasize token occurrence; dense vectors encode learned semantic
 
 ## Optimizing Retrieval with Metadata
 
-<!-- pdf-page: 725 -->
 
 Metadata filters constrain eligible documents alongside vector similarity, improving scope and access-aware retrieval.
 
@@ -9117,7 +8803,6 @@ Metadata filters constrain eligible documents alongside vector similarity, impro
 
 ## Keeping Your KB Up to Date
 
-<!-- pdf-page: 726 -->
 
 An S3-triggered ingestion function can update an embedding index; handle updates and deletes so retrieval does not become stale.
 
@@ -9128,7 +8813,6 @@ An S3-triggered ingestion function can update an embedding index; handle updates
 
 ## OpenSearch as a Vector Store
 
-<!-- pdf-page: 727 -->
 
 Hybrid search combines keyword and vector retrieval, then ranks the combined candidate set.
 
@@ -9148,7 +8832,6 @@ Hybrid search combines keyword and vector retrieval, then ranks the combined can
 
 ## OpenSearch Vector Engines
 
-<!-- pdf-page: 728 -->
 
 OpenSearch vector engines provide different indexing and search implementations. Engine, algorithm and supported parameters must be selected together.
 
@@ -9169,7 +8852,6 @@ OpenSearch vector engines provide different indexing and search implementations.
 
 ## OpenSearch as a Vector Store: Finer Points
 
-<!-- pdf-page: 729 -->
 
 Vector compression reduces the representation's storage or memory footprint. Evaluate the quality and latency effects on the actual retrieval task.
 
@@ -9186,7 +8868,6 @@ Vector compression reduces the representation's storage or memory footprint. Eva
 
 ## OpenSearch as a Vector Store: Finer Points
 
-<!-- pdf-page: 730 -->
 
 Vector-index shard layout affects memory use, parallelism and distribution of search work. Size it from the dataset and query workload.
 
@@ -9203,7 +8884,6 @@ Vector-index shard layout affects memory use, parallelism and distribution of se
 
 ## Amazon Aurora as a Vector Store
 
-<!-- pdf-page: 731 -->
 
 A PostgreSQL pgvector table stores vectors and metadata; the query chooses the distance operator and supported index strategy.
 
@@ -9218,9 +8898,8 @@ A PostgreSQL pgvector table stores vectors and metadata; the query chooses the d
 
 ## Amazon Quick
 
-<!-- pdf-page: 732 -->
 
-The course's Quick example connects authenticated employees with permitted enterprise content and application capabilities; names reflect the PDF's date.
+Amazon Quick can connect authenticated employees with permitted enterprise content and configured application capabilities.
 
 - Successor to Amazon Q Business
 - Agentic AI assistant for your employees: answer, research, analyze, act
@@ -9229,9 +8908,8 @@ The course's Quick example connects authenticated employees with permitted enter
 
 ## Amazon Quick – Capabilities
 
-<!-- pdf-page: 733 -->
 
-Quick's indexed knowledge supports research, flows and other workspace capabilities; the capability names are a course snapshot.
+Quick indexed knowledge can support research, flows and other workspace capabilities.
 
 - Quick Index – unified, searchable knowledge base of your company data (fully managed RAG)
   - Knowledge bases from S3, SharePoint, OneDrive, Google Drive, Confluence, web pages…
@@ -9243,7 +8921,6 @@ Quick's indexed knowledge supports research, flows and other workspace capabilit
 
 ## Amazon Quick + IAM Identity Center
 
-<!-- pdf-page: 734 -->
 
 Identity integration and source permissions determine which enterprise data an authenticated user can retrieve.
 
@@ -9254,7 +8931,6 @@ Identity integration and source permissions determine which enterprise data an a
 
 ## Amazon Quick – Integrations
 
-<!-- pdf-page: 735 -->
 
 Enterprise connectors index supported content; action connectors separately invoke permitted business operations.
 
@@ -9267,7 +8943,6 @@ Enterprise connectors index supported content; action connectors separately invo
 
 ## Apps in Amazon Quick
 
-<!-- pdf-page: 736 -->
 
 The application-building screen illustrates describing, previewing, refining and publishing an application.
 
@@ -9277,20 +8952,18 @@ The application-building screen illustrates describing, previewing, refining and
 
 ## Amazon Quick Example
 
-<!-- pdf-page: 737 -->
 
 A visual flow represents ordered business steps with explicit inputs, transformations and outputs.
 
 ## Amazon Kendra
 
-<!-- pdf-page: 738 -->
 
 Kendra indexes supported enterprise sources and serves search queries. Its 2026 maintenance-mode status must be considered separately from the retrieval concept.
 
 - Availability note: Kendra moved to maintenance and is no longer open to new customers from July 30, 2026; existing customers can continue. Retain the retrieval concept, but evaluate current alternatives for new systems.
 - NOTE! In maintenance mode as of July 30 2026
 - Fully managed document search service powered by Machine Learning
-- Extract answers from within a document (text, pdf, HTML, PowerPoint, MS Word, FAQs…)
+- Extract answers from documents and common file formats.
 - Natural language search capabilities
 - Learn from user interactions/feedback to promote preferred results (Incremental Learning)
 - Ability to manually fine-tune search results (importance of data, freshness, custom, …)
@@ -9301,7 +8974,6 @@ Kendra indexes supported enterprise sources and serves search queries. Its 2026 
 
 ## Console, CLI and SDK access
 
-<!-- pdf-page: 740 -->
 
 The console is interactive; the CLI and SDK call AWS APIs using a credential provider chain.
 
@@ -9313,9 +8985,8 @@ The console is interactive; the CLI and SDK call AWS APIs using a credential pro
 
 ## Access key identifiers and secrets
 
-<!-- pdf-page: 741 -->
 
-The PDF uses fake examples to distinguish an access key identifier from the secret used to sign requests.
+Example credentials are synthetic: the access key identifier names a credential, while its secret is used to sign requests.
 
 - Access key ID: identifies the credential; it does not authenticate a request by itself.
 - Secret access key: confidential signing material. Temporary credentials also require a session token.
@@ -9323,7 +8994,6 @@ The PDF uses fake examples to distinguish an access key identifier from the secr
 
 ## What’s the AWS CLI?
 
-<!-- pdf-page: 742 -->
 
 The AWS CLI invokes AWS service APIs from a shell with a configured credential provider and Region.
 
@@ -9335,7 +9005,6 @@ The AWS CLI invokes AWS service APIs from a shell with a configured credential p
 
 ## What’s the AWS SDK?
 
-<!-- pdf-page: 743 -->
 
 AWS SDKs expose service APIs through language libraries and credential providers.
 
@@ -9351,7 +9020,6 @@ AWS SDKs expose service APIs through language libraries and credential providers
 
 ## AWS Cloud Development Kit (CDK)
 
-<!-- pdf-page: 744 -->
 
 CDK expresses infrastructure as code and synthesizes a CloudFormation template; CloudFormation performs the deployment.
 
@@ -9365,13 +9033,11 @@ CDK expresses infrastructure as code and synthesizes a CloudFormation template; 
 
 ## CDK in a diagram
 
-<!-- pdf-page: 745 -->
 
 CDK language code becomes a cloud assembly/template before CloudFormation creates or updates the stack.
 
 ## CDK vs SAM
 
-<!-- pdf-page: 746 -->
 
 SAM focuses on serverless application resources; CDK models infrastructure with programming-language constructs.
 
@@ -9386,7 +9052,6 @@ SAM focuses on serverless application resources; CDK models infrastructure with 
 
 ## CDK + SAM
 
-<!-- pdf-page: 747 -->
 
 After CDK synthesis, SAM CLI can locally invoke supported Lambda resources from the generated template for development testing.
 
@@ -9395,13 +9060,11 @@ After CDK synthesis, SAM CLI can locally invoke supported Lambda resources from 
 
 ## CDK Hands-On
 
-<!-- pdf-page: 748 -->
 
 An object event invokes an image-analysis function, which calls Rekognition and stores extracted results in DynamoDB.
 
 ## AWS CodeDeploy
 
-<!-- pdf-page: 749 -->
 
 CodeDeploy coordinates installation of an application revision on supported compute targets using a deployment configuration.
 
@@ -9413,7 +9076,6 @@ CodeDeploy coordinates installation of an application revision on supported comp
 
 ## AWS CodeCommit
 
-<!-- pdf-page: 750 -->
 
 A source repository stores application history for collaboration and delivery pipelines. Access, branch policy and the chosen hosting service govern how changes are published.
 
@@ -9430,7 +9092,6 @@ A source repository stores application history for collaboration and delivery pi
 
 ## AWS CodeBuild
 
-<!-- pdf-page: 751 -->
 
 CodeBuild checks out source, runs configured build commands and publishes build artifacts and logs.
 
@@ -9444,7 +9105,6 @@ CodeBuild checks out source, runs configured build commands and publishes build 
 
 ## AWS CodePipeline
 
-<!-- pdf-page: 752 -->
 
 CodePipeline orchestrates source, build and deploy stages using configured providers; the pictured repository is one possible source.
 
@@ -9459,7 +9119,6 @@ CodePipeline orchestrates source, build and deploy stages using configured provi
 
 ## AWS Budgets
 
-<!-- pdf-page: 754 -->
 
 Budgets compares configured spending or usage against thresholds and sends notifications or supported actions. A budget alert is not automatically a hard spending cap.
 
@@ -9474,7 +9133,6 @@ Budgets compares configured spending or usage against thresholds and sends notif
 
 ## Cost Explorer
 
-<!-- pdf-page: 755 -->
 
 Cost Explorer analyzes usage and cost trends across chosen dimensions. Use filters and time ranges to investigate the source of a change.
 
@@ -9486,37 +9144,31 @@ Cost Explorer analyzes usage and cost trends across chosen dimensions. Use filte
 
 ## Cost Explorer – Monthly Cost by AWS Service
 
-<!-- pdf-page: 756 -->
 
 A cost breakdown groups spend by service and time period so the reader can identify contributors; no screenshot dollar amounts are reproduced.
 
 ## Cost Explorer– Hourly & Resource Level
 
-<!-- pdf-page: 757 -->
 
 Finer cost granularity exposes short-lived spending patterns at the expense of more detailed data.
 
 ## Cost Explorer – Savings Plan Alternative to Reserved Instances
 
-<!-- pdf-page: 758 -->
 
 Savings Plans recommendations use historical eligible usage and commitment assumptions; a recommendation is not a guaranteed saving.
 
 ## Cost Explorer – Forecast Usage
 
-<!-- pdf-page: 759 -->
 
 A cost forecast projects future spend with uncertainty; compare it with budgets and actual usage as conditions change.
 
 ## Example: Building a Serverless API
 
-<!-- pdf-page: 760 -->
 
 A REST API accepts a client request, invokes Lambda business logic and accesses DynamoDB with the function's permissions.
 
 ## AWS API Gateway
 
-<!-- pdf-page: 761 -->
 
 API Gateway exposes managed API endpoints with configurable integrations and access controls. It connects clients to application backends without making every backend serverless.
 
@@ -9532,7 +9184,6 @@ API Gateway exposes managed API endpoints with configurable integrations and acc
 
 ## API Gateway – Integrations High Level
 
-<!-- pdf-page: 762 -->
 
 API Gateway integrations can invoke Lambda, route HTTP requests or call supported AWS service APIs.
 
@@ -9550,13 +9201,11 @@ API Gateway integrations can invoke Lambda, route HTTP requests or call supporte
 
 ## API Gateway – AWS Service Integration Kinesis Data Streams example
 
-<!-- pdf-page: 763 -->
 
 An API Gateway service integration can put records into Kinesis without an intervening Lambda function; Firehose delivers onward to S3.
 
 ## API Gateway - Endpoint Types
 
-<!-- pdf-page: 764 -->
 
 API Gateway endpoint choices affect access and edge placement: edge-optimized, Regional and private endpoints have different network paths.
 
@@ -9572,7 +9221,6 @@ API Gateway endpoint choices affect access and edge placement: edge-optimized, R
 
 ## API Gateway – Security
 
-<!-- pdf-page: 765 -->
 
 API authentication and custom-domain TLS are separate controls; edge-optimized custom-domain certificates use us-east-1 and Regional certificates use the API Region.
 

@@ -1,4 +1,4 @@
-/* Interactive Markdown-backed study deck. Keeps docs/aws-data-eng-associate.md as the source of truth. */
+/* Interactive Markdown-backed personal study deck. */
 (function () {
   "use strict";
 
@@ -66,8 +66,6 @@
       }
       if (!current) return;
       if (!line.trim()) { flushParagraph(); table = null; return; }
-      const sourcePage = line.match(/^<!-- pdf-page: (\d+) -->$/);
-      if (sourcePage) { current.sourcePage = Number(sourcePage[1]); return; }
       const displayTitle = line.match(/^<!-- title: (.+) -->$/);
       if (displayTitle) { current.title = displayTitle[1]; return; }
       const originalNote = line.match(/^<!-- original-note: (\d+) -->$/);
@@ -92,6 +90,13 @@
       }
     });
     flushParagraph();
+    const occurrences = new Map();
+    slides.forEach(function (slide) {
+      const base = slide.section + "::" + slide.title;
+      const occurrence = (occurrences.get(base) || 0) + 1;
+      occurrences.set(base, occurrence);
+      slide.visualKey = "topic:" + base + (occurrence > 1 ? " [" + occurrence + "]" : "");
+    });
     return slides;
   }
 
@@ -148,7 +153,7 @@
   }
 
   function getVisual(slide) {
-    return slide.sourcePage ? visualsByTitle["pdf:" + slide.sourcePage] : visualsByTitle[slide.title];
+    return visualsByTitle[slide.visualKey] || visualsByTitle[slide.title];
   }
 
   function renderTables(tables) {
@@ -282,7 +287,7 @@
     elements.slide.classList.toggle("slide--split", Boolean(compactDiagram));
     void elements.slide.offsetWidth;
     elements.slide.innerHTML = "<div>"
-      + "<p class=\"slide-index\">" + (current.sourcePage ? "PDF page " + current.sourcePage : "Study notes") + "</p>"
+      + "<p class=\"slide-index\">" + "Study notes" + "</p>"
       + "<p class=\"slide-section\">" + escapeHtml(section) + "</p>"
       + "<h2>" + escapeHtml(current.title) + "</h2>"
       + (compactDiagram ? '<div class="slide-copy">' + introduction + notes + '</div>' + visual : introduction + (wideDiagram ? visual + notes : notes + visual)) + details
@@ -314,8 +319,7 @@
   }
 
   function matchesTopic(slide, query) {
-    return /^\d+$/.test(query) ? slide.sourcePage === Number(query)
-      : (slide.title + " " + slide.section).toLowerCase().includes(query.toLowerCase());
+    return (slide.title + " " + slide.section).toLowerCase().includes(query.toLowerCase());
   }
 
   function renderOverview() {
@@ -360,16 +364,14 @@
       if (matches) sections++;
       count += matches;
     });
-    elements.results.textContent = count ? count + " topics in " + sections + " sections" : "No matching topics. Try a service name or PDF page.";
+    elements.results.textContent = count ? count + " topics in " + sections + " sections" : "No matching topics. Try another service or topic.";
   }
 
   function showLocation(shouldFocus) {
-    const page = location.hash.match(/^#page-(\d+)$/);
     const topic = location.hash.match(/^#(?:course-)?topic-(\d+)$/);
     const original = location.hash.match(/^#note-(\d+)$/);
-    const target = page ? state.slides.findIndex(function (slide) { return slide.sourcePage === Number(page[1]); })
-      : original ? state.slides.findIndex(function (slide) { return slide.originalNote === Number(original[1]); })
-        : topic ? Number(topic[1]) : 0;
+    const target = original ? state.slides.findIndex(function (slide) { return slide.originalNote === Number(original[1]); })
+      : topic ? Number(topic[1]) : 0;
     state.index = Math.max(0, Math.min(target, state.slides.length - 1));
     elements.search.value = "";
     filterOverview();
@@ -398,7 +400,7 @@
     state.index = Math.max(0, Math.min(index, state.slides.length - 1));
     const slide = state.slides[state.index];
     if (!matchesTopic(slide, elements.search.value.trim())) { elements.search.value = ""; filterOverview(); }
-    history.replaceState(null, "", slide.sourcePage ? "#page-" + slide.sourcePage : slide.originalNote !== undefined ? "#note-" + slide.originalNote : "#topic-" + state.index);
+    history.replaceState(null, "", slide.originalNote !== undefined ? "#note-" + slide.originalNote : "#topic-" + state.index);
     renderSlide();
   }
 

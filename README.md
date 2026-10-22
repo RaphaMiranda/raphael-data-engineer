@@ -12,13 +12,13 @@ A static portfolio for Raphael Miranda Mata, with case studies and a focused AWS
 
 ## Study deck
 
-The AWS deck keeps the Markdown document as its source of truth. Personal notes and the supplied PDF through physical page 765 are merged into one paraphrased guide, with unfinished prompts retained. The deck starts with the substantive topics; the right-side menu groups title-only rows into expandable sections. Search by topic or source page, use Previous/Next or arrow keys, and show/hide topics with `O`. Slides show brief points with expandable full notes, tables and code. The notes are a personal study aid; validate exam-critical details against current AWS documentation. See the [coverage and writing review](docs/aws-study-review.md).
+The AWS deck keeps the Markdown document as its source of truth. It groups personal notes into expandable topic sections, with keyboard navigation, searchable topics, detailed notes, tables, code and diagrams. The notes are a personal study aid; validate exam-critical details against current AWS documentation.
 
 ### Visuals and diagrams
 
-`assets/js/aws-study-visuals.js` contains 329 course schematics keyed by `pdf:<physical page>` plus the two existing title-keyed personal-note visuals. Match a source topic with `<!-- pdf-page: 543 -->` in Markdown. Add an `image` entry with a root-relative path or a `diagram` with node/link data. Set structural links' `relation` flag to omit data-flow arrowheads. Diagrams include readable text and keyboard zoom/fit controls; their text remains available when the canvas library cannot load.
+`assets/js/aws-study-visuals.js` contains study diagrams keyed by section and topic. Add an `image` entry with a root-relative path or a `diagram` with node/link data. Set structural links' `relation` flag to omit data-flow arrowheads. Diagrams include readable text and keyboard zoom/fit controls; their text remains available when the canvas library cannot load.
 
-For an explicitly positioned vertical diagram, set `layout: "vertical"` and give each regular node a `loc: "x y"`. Define containers with `isGroup: true` and assign member nodes their container's key through `group`. A link's `bidirectional: true` adds a second arrowhead and a matching two-way text alternative. Page 595 demonstrates these options with a dashed AZ boundary; diagrams without them retain the standard horizontal layout.
+For an explicitly positioned vertical diagram, set `layout: "vertical"` and give each regular node a `loc: "x y"`. Define containers with `isGroup: true` and assign member nodes their container's key through `group`. A link's `bidirectional: true` adds a second arrowhead and a matching two-way text alternative. The Internet Gateway & NAT Gateways topic demonstrates these options.
 
 GoJS is loaded from a version-pinned CDN and is proprietary. Its current non-commercial terms allow personal learning use but retain a watermark; commercial or organisation use requires an appropriate GoJS licence. See the [GoJS deployment guidance](https://gojs.net/latest/learn/deployment).
 
