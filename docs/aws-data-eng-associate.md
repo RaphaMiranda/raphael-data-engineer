@@ -8123,14 +8123,14 @@ flowchart TB
 
 # Section Security, identity and compliance
 
+
 ## Least privilege
 
+**Grant only the actions and resource scope required by the workload.**
 
-Grant only the actions and resource scope required by the workload.
-
-- Use roles and temporary credentials for workloads; scope bucket listing separately from object reads.
-- IAM Access Analyzer can help generate policies from observed activity, followed by review and refinement.
-- Start broadly only as an isolated learning shortcut, not as a recommended production baseline.
+- Use roles and temporary credentials for workloads; scope bucket listing separately from object reads
+- IAM Access Analyzer can help generate policies from observed activity, followed by review and refinement
+- Start broadly only as an isolated learning shortcut, not as a recommended production baseline
 
 ```json
 {
@@ -8145,49 +8145,61 @@ Grant only the actions and resource scope required by the workload.
 }
 ```
 
-**Current reference (checked 2026-10-13):** [IAM security best practices](https://docs.aws.amazon.com/IAM/latest/UserGuide/best-practices.html).
+```mermaid
+flowchart LR
+  A[Principal] --> B[Minimum required actions]
+  B --> C[Specific resources]
+  C --> D[Conditions where appropriate]
+  D --> E[Review permissions]
+```
+
+<!-- Source reference: https://docs.aws.amazon.com/IAM/latest/UserGuide/best-practices.html -->
+
 
 ## Data Masking and Anonymization
 
+**Sensitive-data handling starts by identifying the fields and the permitted use. Masking, encryption and anonymization solve different disclosure problems.**
 
-Sensitive-data handling starts by identifying the fields and the permitted use. Masking, encryption and anonymization solve different disclosure problems.
+- **Masking obfuscates data:** For example, masking all but the last 4 digits of a credit card or social security number; Masking passwords; Supported in Glue DataBrew and Redshift
 
-- Masking obfuscates data
-  - For example, masking all but the last 4 digits of a credit card or social security number
-  - Masking passwords
-  - Supported in Glue DataBrew and Redshift
+```mermaid
+flowchart TB
+  A[Sensitive data] --> B[Mask / redact]
+  A --> C[Pseudonymize / tokenize]
+  A --> D[Anonymize with risk assessment]
+  B --> E[Reduced exposure]
+  C --> E
+  D --> E
+```
+
 
 ## Masking, pseudonymization and anonymization
 
+**These privacy controls differ in whether a person can be re-identified and how much information remains usable.**
 
-Reducing identifiability requires a threat model, not just changing the displayed value.
+- **Masking:** hide or replace visible fields for a specific use.
+- **Pseudonymization:** replace identifiers while keeping a separate re-identification mechanism.
+- **Anonymization:** reduce re-identification risk such that identifying individuals is not reasonably feasible.
+- **Security:** protect lookup tables and keys; avoid assuming a hash alone makes data anonymous.
 
-- The source lists replacement, shuffling, encryption, hashing and deletion as techniques.
-- Encryption is reversible with a key; a hash can still permit matching or guessing. Neither automatically makes a dataset anonymous.
-- Minimize collection, restrict access and assess re-identification risk across the retained fields.
 
 ## Password salts and hashing
 
+**A unique random salt prevents identical passwords from producing identical stored hashes and defeats reusable precomputed lookup tables.**
 
-A unique random salt prevents identical passwords from producing identical stored hashes and defeats reusable precomputed lookup tables.
+- Use a suitable password-hashing scheme with a cost factor; do not substitute a single fast general-purpose hash
+- Store the salt and scheme parameters with the derived hash. Salts are not passwords or encryption keys
+- Salt rotation is not a standalone password-storage recipe; use the selected scheme's supported password-change and rehash process
 
-- Use a suitable password-hashing scheme with a cost factor; do not substitute a single fast general-purpose hash.
-- Store the salt and scheme parameters with the derived hash. Salts are not passwords or encryption keys.
-- Salt rotation is not a standalone password-storage recipe; use the selected scheme's supported password-change and rehash process.
+<!-- Source reference: https://pages.nist.gov/800-63-4/sp800-63b.html -->
 
-**Current reference (checked 2026-10-13):** [NIST password storage guidance](https://pages.nist.gov/800-63-4/sp800-63b.html).
 
 ## Key Salting: Example
 
-
-A password-hashing illustration combines a salt with a password. A fast SHA-256 hash alone is not an appropriate production password-storage scheme.
-
-**Current reference (checked 2026-10-13):** [NIST password storage guidance](https://pages.nist.gov/800-63-4/sp800-63b.html).
-
+**A password-hashing illustration combines a salt with a password. A fast SHA-256 hash alone is not an appropriate production password-storage scheme.**
 
 ```mermaid
 flowchart LR
-  accTitle: Key Salting: Example
   n0["Password"]
   n1["Unique random salt"]
   n2["Password KDF<br/>Illustrative hashing step"]
@@ -8197,39 +8209,37 @@ flowchart LR
   n2 -->|"store derived value"| n3
 ```
 
-> A password-hashing illustration combines a salt with a password. A fast SHA-256 hash alone is not an appropriate production password-storage scheme.
-
-## Keeping Data Where it Belongs
+<!-- Source reference: https://pages.nist.gov/800-63-4/sp800-63b.html -->
 
 
-Data-residency requirements constrain where data may be stored, copied or processed. Apply the constraint to backups and supporting services as well as the primary dataset.
+## Data Residency — Regions
 
-- It’s all too easy for backups or replication to send data to a region where it is not allowed
-- AWS Organizations’ Service Control Policies are one way to enforce this
+**Data-residency requirements constrain where data may be stored, copied or processed. Apply the constraint to backups and supporting services as well as the primary dataset.**
+
+- It's all too easy for backups or replication to send data to a region where it is not allowed
+- AWS Organizations' Service Control Policies are one way to enforce this
 - Restrict IAM policies and S3 bucket policies to allowed regions
 - Take care when configuring backups & replication for RDS, Aurora, Redshift
 - Monitor and alarm with CloudTrail / CloudWatch
 
-## Keeping Data Where it Belongs
 
+## Data Residency — Access & Governance
 
-The policy example restricts specified RDS backup actions to selected Regions. Verify the action, resource and condition together rather than generalizing it to all data movement.
+**The policy example restricts specified RDS backup actions to selected Regions. Verify the action, resource and condition together rather than generalizing it to all data movement.**
+
 
 ## IAM: Users & Groups
 
-
-IAM users can belong to multiple groups; groups collect permissions and do not contain other groups.
+**IAM users can belong to multiple groups; groups collect permissions and do not contain other groups.**
 
 - IAM = Identity and Access Management, Global service
-- Root account created by default, shouldn’t be used or shared
+- Root account created by default, shouldn't be used or shared
 - Users are people within your organization, and can be grouped
 - Groups only contain users, not other groups
-- Users don’t have to belong to a group, and user can belong to multiple groups
-
+- Users don't have to belong to a group, and user can belong to multiple groups
 
 ```mermaid
 flowchart LR
-  accTitle: IAM: Users & Groups
   n0["User A"]
   n1["User B"]
   n2["Developers group"]
@@ -8242,25 +8252,21 @@ flowchart LR
   n4 ---|"attached policy"| n3
 ```
 
-> IAM users can belong to multiple groups; groups collect permissions and do not contain other groups.
 
 ## IAM: Permissions
 
-
-IAM policies grant actions on resources subject to conditions. Effective access depends on all applicable policies and explicit denies.
+**IAM policies grant actions on resources subject to conditions. Effective access depends on all applicable policies and explicit denies.**
 
 - These policies define the permissions of the users
-- In AWS you apply the least privilege principle: don’t give more permissions than a user needs
+- In AWS you apply the least privilege principle: don't give more permissions than a user needs
+
 
 ## IAM Policies inheritance
 
-
-Identity permissions may come from direct and group policies, but explicit denies, boundaries and organization controls constrain effective access.
-
+**Identity permissions may come from direct and group policies, but explicit denies, boundaries and organization controls constrain effective access.**
 
 ```mermaid
 flowchart LR
-  accTitle: IAM Policies inheritance
   n0["Direct / group allows"]
   n1["Resource policy"]
   n2["Boundary / SCP / explicit deny"]
@@ -8270,29 +8276,16 @@ flowchart LR
   n2 -->|"constraints / deny precedence"| n3
 ```
 
-> Identity permissions may come from direct and group policies, but explicit denies, boundaries and organization controls constrain effective access.
 
 ## IAM Policies Structure
 
+**A policy statement defines its effect, allowed or denied actions, resources and optional conditions; resource policies also identify principals.**
 
-A policy statement defines its effect, allowed or denied actions, resources and optional conditions; resource policies also identify principals.
-
-- Consists of
-  - Version: policy language version, always include “2012-10-17”
-  - Id: an identifier for the policy (optional)
-  - Statement: one or more individual statements (required)
-- Statements consists of
-  - Sid: an identifier for the statement (optional)
-  - Effect: whether the statement allows or denies access (Allow, Deny)
-  - Principal: account/user/role to which this policy applied to
-  - Action: list of actions this policy allows or denies
-  - Resource: list of resources to which the actions applied to
-  - Condition: conditions for when this policy is in effect (optional)
-
+- **Consists of:** Version: policy language version, always include "2012-10-17"; Id: an identifier for the policy (optional); Statement: one or more individual statements (required)
+- **Statements consists of:** Sid: an identifier for the statement (optional) · Effect: whether the statement allows or denies access (Allow, Deny) · Principal: account/user/role to which this policy applied to · Action: list of actions this…
 
 ```mermaid
 flowchart LR
-  accTitle: IAM Policies Structure
   n0["Policy statement"]
   n1["Effect"]
   n2["Action"]
@@ -8304,38 +8297,25 @@ flowchart LR
   n0 ---|"context / caller where applicable"| n4
 ```
 
-> A policy statement defines its effect, allowed or denied actions, resources and optional conditions; resource policies also identify principals.
 
 ## IAM – Password Policy
 
+**A password policy defines supported composition and lifecycle requirements for applicable IAM users. It complements federation and stronger authentication factors.**
 
-A password policy defines supported composition and lifecycle requirements for applicable IAM users. It complements federation and stronger authentication factors.
+- **In AWS, you can setup a password policy:** Set a minimum password length · Require specific character types: · including uppercase letters · lowercase letters · numbers · non-alphanumeric characters · …
 
-- In AWS, you can setup a password policy:
-  - Set a minimum password length
-  - Require specific character types:
-    - including uppercase letters
-    - lowercase letters
-    - numbers
-    - non-alphanumeric characters
-  - Allow all IAM users to change their own passwords
-  - Require users to change their password after some time (password expiration)
-  - Prevent password re-use
 
 ## Multi Factor Authentication - MFA
 
-
-MFA adds an independent authentication factor to the password sign-in path.
+**MFA adds an independent authentication factor to the password sign-in path.**
 
 - Users have access to your account and can possibly change configurations or delete resources in your AWS account
 - You want to protect your Root Accounts and IAM users
 - MFA = password you know + security device you own
 - Main benefit of MFA: if a password is stolen or hacked, the account is not compromised
 
-
 ```mermaid
 flowchart LR
-  accTitle: Multi Factor Authentication - MFA
   n0["Password"]
   n1["Authenticator factor"]
   n2["Sign-in verification"]
@@ -8345,40 +8325,33 @@ flowchart LR
   n2 -->|"successful verification"| n3
 ```
 
-> MFA adds an independent authentication factor to the password sign-in path.
 
 ## MFA: authenticator applications and security keys
 
+**Choose a supported independent authentication factor for the sign-in context.**
 
-Choose a supported independent authentication factor for the sign-in context.
+- Authenticator applications generate time-based codes; supported security keys/passkeys use a different mechanism
+- Check currently supported devices rather than treating example vendors as an exhaustive list
 
-- Authenticator applications generate time-based codes; supported security keys/passkeys use a different mechanism.
-- Check currently supported devices rather than treating example vendors as an exhaustive list.
 
 ## MFA: hardware devices
 
+**Hardware MFA devices are another supported factor option; availability differs by account environment.**
 
-Hardware MFA devices are another supported factor option; availability differs by account environment.
+- The course distinguishes ordinary commercial-account devices and GovCloud device options
+- Verify current supported hardware and enrollment requirements before purchasing
 
-- The course distinguishes ordinary commercial-account devices and GovCloud device options.
-- Verify current supported hardware and enrollment requirements before purchasing.
 
 ## IAM Roles for Services
 
-
-An EC2 instance profile exposes temporary role credentials to software on the instance; role permissions govern subsequent AWS calls.
+**An EC2 instance profile exposes temporary role credentials to software on the instance; role permissions govern subsequent AWS calls.**
 
 - Some AWS service will need to perform actions on your behalf
 - To do so, we will assign permissions to AWS services with IAM Roles
-- Common roles:
-  - EC2 Instance Roles
-  - Lambda Function Roles
-  - Roles for CloudFormation
-
+- **Common roles:** EC2 Instance Roles, Lambda Function Roles, Roles for CloudFormation
 
 ```mermaid
 flowchart LR
-  accTitle: IAM Roles for Services
   n0["EC2 application"]
   n1["Instance role"]
   n2["Temporary credentials"]
@@ -8388,21 +8361,17 @@ flowchart LR
   n2 -->|"signed permitted API call"| n3
 ```
 
-> An EC2 instance profile exposes temporary role credentials to software on the instance; role permissions govern subsequent AWS calls.
 
 ## Why encryption? Encryption in flight (TLS / SSL)
 
-
-TLS protects data while it crosses the network; it is separate from storage encryption.
+**TLS protects data while it crosses the network; it is separate from storage encryption.**
 
 - Data is encrypted before sending and decrypted after receiving
 - TLS certificates help with encryption (HTTPS)
 - Encryption in flight ensures no MITM (man in the middle attack) can happen
 
-
 ```mermaid
 flowchart LR
-  accTitle: Why encryption? Encryption in flight (TLS / SSL)
   n0["Client plaintext"]
   n1["TLS-protected channel"]
   n2["Server plaintext"]
@@ -8410,22 +8379,18 @@ flowchart LR
   n1 -->|"decrypt at endpoint"| n2
 ```
 
-> TLS protects data while it crosses the network; it is separate from storage encryption.
 
 ## Why encryption? Server-side encryption at rest
 
-
-With server-side encryption, the storage service receives data and encrypts it before persistence.
+**With server-side encryption, the storage service receives data and encrypts it before persistence.**
 
 - Data is encrypted after being received by the server
 - Data is decrypted before being sent
 - It is stored in an encrypted form thanks to a key (usually a data key)
 - The encryption / decryption keys must be managed somewhere, and the server must have access to it
 
-
 ```mermaid
 flowchart LR
-  accTitle: Why encryption? Server-side encryption at rest
   n0["Client"]
   n1["Storage service encryption"]
   n2["Ciphertext at rest"]
@@ -8435,22 +8400,18 @@ flowchart LR
   n2 -->|"service decrypts on permitted read"| n3
 ```
 
-> With server-side encryption, the storage service receives data and encrypts it before persistence.
 
 ## Why encryption? Client-side encryption
 
-
-With client-side encryption, the service stores ciphertext and the client controls decryption.
+**With client-side encryption, the service stores ciphertext and the client controls decryption.**
 
 - Data is encrypted by the client and never decrypted by the server
 - Data will be decrypted by a receiving client
 - The server should not be able to decrypt the data
 - Could leverage Envelope Encryption
 
-
 ```mermaid
 flowchart LR
-  accTitle: Why encryption? Client-side encryption
   n0["Client plaintext"]
   n1["Client key + encryption"]
   n2["Remote ciphertext"]
@@ -8460,58 +8421,59 @@ flowchart LR
   n2 -->|"download / decrypt"| n3
 ```
 
-> With client-side encryption, the service stores ciphertext and the client controls decryption.
 
-## AWS KMS (Key Management Service)
+## AWS KMS — Keys & Encryption
 
-
-KMS manages cryptographic keys and authorized operations used by many AWS integrations. Control of a key is distinct from permission to access encrypted data.
+**KMS manages cryptographic keys and authorized operations used by many AWS integrations. Control of a key is distinct from permission to access encrypted data.**
 
 - AWS manages encryption keys for us
 - Fully integrated with IAM for authorization
-- Easy way to control access to your data
 - Able to audit KMS Key usage using CloudTrail
 - Seamlessly integrated into most AWS services (EBS, S3, RDS, SSM…)
-- Never ever store your secrets in plaintext, especially in your code!
-  - KMS Key Encryption also available through API calls (SDK, CLI)
-
-## KMS key types and operations
-
-
-Key type and key usage determine which cryptographic operations a KMS key supports.
-
-- Symmetric encryption keys use the same secret key material for encryption and decryption; AWS integrations commonly use this model.
-- Asymmetric keys have a public/private pair. Supported RSA keys may encrypt/decrypt or sign/verify according to their configured usage; ECC keys are not generic RSA encryption replacements.
-- The public key can be downloaded for supported external operations; unencrypted private key material is not exported from KMS.
-- Use the current key-specification and key-usage documentation rather than applying every listed operation to every asymmetric key.
-
-**Current reference (checked 2026-10-13):** [KMS asymmetric key specifications](https://docs.aws.amazon.com/kms/latest/developerguide/symmetric-asymmetric.html).
-
-## AWS KMS (Key Management Service)
-
-
-Distinguish AWS-owned, AWS-managed and customer-managed keys, including control, rotation and billing.
-
-- Pricing figures are illustrative. Check current Region, usage and feature pricing before making a cost decision.
-- Types of KMS Keys:
-  - AWS Owned Keys (free): SSE-S3, SSE-SQS, SSE-DDB (default key)
-  - AWS Managed Key: free (aws/service-name, example: aws/rds or aws/ebs)
-  - Customer managed keys created in KMS: $1 / month
-  - Customer managed keys imported: $1 / month
-  - + pay for API call to KMS ($0.03 / 10000 calls)
-- Automatic Key rotation:
-  - AWS-managed KMS Key: automatic every 1 year
-  - Customer-managed KMS Key: (must be enabled) automatic & on- demand
-
-## Copying Snapshots across regions
-
-
-KMS keys are Regional. Copying an encrypted EBS snapshot to another Region uses an appropriate destination-Region key.
-
+- **Never ever store your secrets in plaintext, especially in your code!:** KMS Key Encryption also available through API calls (SDK, CLI)
 
 ```mermaid
 flowchart LR
-  accTitle: Copying Snapshots across regions
+  A[Authorized service] --> B[KMS key]
+  B --> C[Generate data key / decrypt]
+  C --> D[Encrypt data via envelope encryption]
+```
+
+
+## KMS key types and operations
+
+**Key type and key usage determine which cryptographic operations a KMS key supports.**
+
+- Symmetric encryption keys use the same secret key material for encryption and decryption; AWS integrations commonly use this model
+- Asymmetric keys have a public/private pair. Supported RSA keys may encrypt/decrypt or sign/verify according to their configured usage; ECC keys are not generic RSA encryption replacements
+- The public key can be downloaded for supported external operations; unencrypted private key material is not exported from KMS
+- Use the current key-specification and key-usage documentation rather than applying every listed operation to every asymmetric key
+
+<!-- Source reference: https://docs.aws.amazon.com/kms/latest/developerguide/symmetric-asymmetric.html -->
+
+
+## AWS KMS — Key Operations
+
+**Distinguish AWS-owned, AWS-managed and customer-managed keys, including control, rotation and billing.**
+
+- Pricing figures are illustrative. Check current Region, usage and feature pricing before making a cost decision
+- **Types of KMS Keys:** AWS Owned Keys (free): SSE-S3, SSE-SQS, SSE-DDB (default key) · AWS Managed Key: free (aws/service-name, example: aws/rds or aws/ebs) · Customer managed keys created in KMS: $1 / month · Customer managed keys imported: $1…
+- **Automatic Key rotation:** AWS-managed KMS Key: automatic every 1 year; Customer-managed KMS Key: (must be enabled) automatic & on- demand
+
+```mermaid
+flowchart LR
+  A[Authorized service] --> B[KMS key]
+  B --> C[Generate data key / decrypt]
+  C --> D[Encrypt data via envelope encryption]
+```
+
+
+## Copying Snapshots across regions
+
+**KMS keys are Regional. Copying an encrypted EBS snapshot to another Region uses an appropriate destination-Region key.**
+
+```mermaid
+flowchart LR
   n0["Source EBS snapshot"]
   n1["Source-Region key"]
   n2["Cross-Region copy"]
@@ -8523,27 +8485,18 @@ flowchart LR
   n2 -->|"new encrypted copy"| n4
 ```
 
-> KMS keys are Regional. Copying an encrypted EBS snapshot to another Region uses an appropriate destination-Region key.
 
 ## KMS Key Policies
 
+**KMS authorization combines key-policy rules and applicable identity permissions or grants; a key does not become usable merely because a caller knows its ID.**
 
-KMS authorization combines key-policy rules and applicable identity permissions or grants; a key does not become usable merely because a caller knows its ID.
-
-- Control access to KMS keys, “similar” to S3 bucket policies
+- Control access to KMS keys, "similar" to S3 bucket policies
 - Difference: you cannot control access without them
-- Default KMS Key Policy:
-  - Created if you don’t provide a specific KMS Key Policy
-  - Complete access to the key to the root user = entire AWS account
-- Custom KMS Key Policy:
-  - Define users, roles that can access the KMS key
-  - Define who can administer the key
-  - Useful for cross-account access of your KMS key
-
+- **Default KMS Key Policy:** Created if you don't provide a specific KMS Key Policy; Complete access to the key to the root user = entire AWS account
+- **Custom KMS Key Policy:** Define users, roles that can access the KMS key; Define who can administer the key; Useful for cross-account access of your KMS key
 
 ```mermaid
 flowchart LR
-  accTitle: KMS Key Policies
   n0["Caller"]
   n1["Key policy / grant"]
   n2["Applicable IAM policy"]
@@ -8553,17 +8506,13 @@ flowchart LR
   n2 -->|"identity authorization where required"| n3
 ```
 
-> KMS authorization combines key-policy rules and applicable identity permissions or grants; a key does not become usable merely because a caller knows its ID.
 
 ## Copying Snapshots across accounts
 
-
-Cross-account encrypted snapshot sharing requires snapshot permission and use of the source customer-managed key; the recipient can copy under its own key.
-
+**Cross-account encrypted snapshot sharing requires snapshot permission and use of the source customer-managed key; the recipient can copy under its own key.**
 
 ```mermaid
 flowchart LR
-  accTitle: Copying Snapshots across accounts
   n0["Source encrypted snapshot"]
   n1["Source key permissions"]
   n2["Recipient copy"]
@@ -8575,22 +8524,17 @@ flowchart LR
   n2 -->|"restore"| n4
 ```
 
-> Cross-account encrypted snapshot sharing requires snapshot permission and use of the source customer-managed key; the recipient can copy under its own key.
 
 ## AWS Macie
 
+**Amazon Macie is a security service that helps the institution discover, classify, and protect sensitive data, including PII.**
 
-Amazon Macie is a security service that helps the institution discover, classify, and protect sensitive data, including PII. 
-While it can help identify PII data, it does not directly obfuscate the data or control access to it during preprocessing.
-
-- Emits findings that EventBridge can route to response workflows.
-- Amazon Macie is a fully managed data security and data privacy service 
-- Uses machine learning and pattern matching to discover and protect your sensitive data in AWS.
-
+- Emits findings that EventBridge can route to response workflows
+- Amazon Macie is a fully managed data security and data privacy service
+- Uses machine learning and pattern matching to discover and protect your sensitive data in AWS
 
 ```mermaid
 flowchart LR
-  accTitle: AWS Macie
   n0["S3 objects"]
   n1["Macie classification"]
   n2["Findings"]
@@ -8600,12 +8544,10 @@ flowchart LR
   n2 -->|"route for action"| n3
 ```
 
-> Macie discovers sensitive S3 data and emits findings that EventBridge can route to response workflows.
 
 ## AWS Secrets Manager
 
-
-Secrets Manager stores application secrets and supports configured rotation workflows. Retrieving a secret and rotating the associated credential are separate operations.
+**Secrets Manager stores application secrets and supports configured rotation workflows. Retrieving a secret and rotating the associated credential are separate operations.**
 
 - Capability to force rotation of secrets every X days
 - Automate generation of secrets on rotation (uses Lambda)
@@ -8613,20 +8555,26 @@ Secrets Manager stores application secrets and supports configured rotation work
 - Secrets are encrypted using KMS
 - Mostly meant for RDS integration
 
+```mermaid
+flowchart LR
+  A[Application IAM role] --> B[Secrets Manager]
+  B --> C[Protected secret]
+  C --> D[Database / API connection]
+  E[Rotation] -.-> C
+```
+
+
 ## AWS Secrets Manager – Multi-Region Secrets
 
-
-Secrets Manager can replicate a secret into another Region; replication and rotation behavior must be planned for regional access.
+**Secrets Manager can replicate a secret into another Region; replication and rotation behavior must be planned for regional access.**
 
 - Replicate Secrets across multiple AWS Regions
 - Secrets Manager keeps read replicas in sync with the primary Secret
 - Ability to promote a read replica Secret to a standalone Secret
 - Use cases: multi-region apps, disaster recovery strategies, multi- region DB…
 
-
 ```mermaid
 flowchart LR
-  accTitle: AWS Secrets Manager – Multi-Region Secrets
   n0["Primary secret"]
   n1["Replica in Region B"]
   n2["Replica in Region C"]
@@ -8634,46 +8582,36 @@ flowchart LR
   n0 -->|"replicate"| n2
 ```
 
-> Secrets Manager can replicate a secret into another Region; replication and rotation behavior must be planned for regional access.
 
-## AWS WAF – Web Application Firewall
+## AWS WAF — Layer 7 Rules
 
-
-WAF evaluates application-layer HTTP(S) requests at supported attachment points.
+**WAF evaluates application-layer HTTP(S) requests at supported attachment points.**
 
 - Protects your web applications from common web exploits (Layer 7)
-- Layer 7 is HTTP (vs Layer 4 is TCP/UDP)
-- Deploy on
-  - Application Load Balancer
-  - API Gateway
-  - CloudFront
-  - AppSync GraphQL API
-  - Cognito User Pool
-
-## AWS WAF – Web Application Firewall
+- **Deploy on:** Application Load Balancer · API Gateway · CloudFront · AppSync GraphQL API · Cognito User Pool
 
 
-A web ACL evaluates HTTP(S) requests through configured WAF rules. Choose rules and attachment points from the application traffic that needs inspection.
+## AWS WAF — Requests & Actions
 
-  - IP Set: up to 10,000 IP addresses – use multiple Rules for more IPs
-  - HTTP headers, HTTP body, or URI strings Protects from common attack - SQL injection and Cross-Site Scripting (XSS)
-  - Size constraints, geo-match (block countries)
-  - Rate-based rules (to count occurrences of events) – for DDoS protection
+**A web ACL evaluates HTTP(S) requests through configured WAF rules. Choose rules and attachment points from the application traffic that needs inspection.**
+
+- IP Set: up to 10,000 IP addresses – use multiple Rules for more IPs
+- HTTP headers, HTTP body, or URI strings Protects from common attack - SQL injection and Cross-Site Scripting (XSS)
+- Size constraints, geo-match (block countries)
+- Rate-based rules (to count occurrences of events) – for DDoS protection
 - Web ACL are Regional except for CloudFront
 - A rule group is a reusable set of rules that you can add to a web ACL
 
+
 ## WAF – Fixed IP while using WAF with a Load Balancer
 
-
-Global Accelerator can expose static anycast addresses in front of an ALB protected by WAF; WAF attaches to supported application endpoints.
+**Global Accelerator can expose static anycast addresses in front of an ALB protected by WAF; WAF attaches to supported application endpoints.**
 
 - WAF does not support the Network Load Balancer (Layer 4)
 - We can use Global Accelerator for fixed IP and WAF on the ALB
 
-
 ```mermaid
 flowchart LR
-  accTitle: WAF – Fixed IP while using WAF with a Load Balancer
   n0["Client"]
   n1["Global Accelerator"]
   n2["ALB + WAF"]
@@ -8683,43 +8621,30 @@ flowchart LR
   n2 -->|"allowed request"| n3
 ```
 
-> Global Accelerator can expose static anycast addresses in front of an ALB protected by WAF; WAF attaches to supported application endpoints.
 
 ## AWS Shield: protect from DDoS attack
 
+**Shield addresses distributed-denial-of-service threats at supported AWS resources. Compare the protection and operational features of its service tiers.**
 
-Shield addresses distributed-denial-of-service threats at supported AWS resources. Compare the protection and operational features of its service tiers.
+- **AWS Shield Standard:** Free service that is activated for every AWS customer; Provides protection from attacks such as SYN/UDP Floods, Reflection attacks and other layer 3/layer 4 attacks
+- **AWS Shield Advanced:** Optional DDoS mitigation service ($3,000 per month per organization) · Protect against more sophisticated attack on Amazon EC2, Elastic Load Balancing (ELB), Amazon CloudFront, AWS Global Accelerator, and Route 53 ·…
 
-- AWS Shield Standard:
-  - Free service that is activated for every AWS customer
-  - Provides protection from attacks such as SYN/UDP Floods, Reflection attacks and other layer 3/layer 4 attacks
-- AWS Shield Advanced:
-  - Optional DDoS mitigation service ($3,000 per month per organization)
-  - Protect against more sophisticated attack on Amazon EC2, Elastic Load Balancing (ELB), Amazon CloudFront, AWS Global Accelerator, and Route 53
-  - 24/7 access to AWS DDoS response team (DRP)
-  - Protect against higher fees during usage spikes due to DDoS
-  - Shield Advanced automatic application layer DDoS mitigation automatically creates, evaluates and deploys AWS WAF rules to mitigate layer 7 attacks
 
 ## Security - Kinesis
 
+**Stream security combines permitted producers and consumers, encrypted transport, at-rest protection and optional private network paths.**
 
-Stream security combines permitted producers and consumers, encrypted transport, at-rest protection and optional private network paths.
+- SSL endpoints using the HTTPS protocol to do encryption in flight
+- AWS KMS provides server-side encryption [Encryption at rest]
+- For client side-encryption, you must use your own encryption libraries
+- KCL – must get read / write access to DynamoDB table
+- **Data Firehose:** Attach IAM roles so it can deliver to S3 / ES / Redshift / Splunk; Can encrypt the delivery stream with KMS [Server side encryption]
+- **Kinesis Data Analytics:** Attach IAM role so it can read from Kinesis Data Streams and reference sources and write to an output destination (example Data Firehose)
 
-  - SSL endpoints using the HTTPS protocol to do encryption in flight
-  - AWS KMS provides server-side encryption [Encryption at rest]
-  - For client side-encryption, you must use your own encryption libraries
-  - Supported Interface VPC Endpoints / Private Link – access privately
-  - KCL – must get read / write access to DynamoDB table
-- Data Firehose:
-  - Attach IAM roles so it can deliver to S3 / ES / Redshift / Splunk
-  - Can encrypt the delivery stream with KMS [Server side encryption]
-- Kinesis Data Analytics
-  - Attach IAM role so it can read from Kinesis Data Streams and reference sources and write to an output destination (example Data Firehose)
 
 ## Security - SQS
 
-
-Queue security must cover message publishers, receivers, encryption keys and resource policies used by service integrations.
+**Queue security must cover message publishers, receivers, encryption keys and resource policies used by service integrations.**
 
 - Server Side Encryption using KMS
 - IAM policy must allow usage of SQS
@@ -8727,67 +8652,56 @@ Queue security must cover message publishers, receivers, encryption keys and res
 - Client-side encryption must be implemented manually
 - VPC Endpoint is provided through an Interface
 
+
 ## Security – AWS IoT
 
+**IoT policies authorize device operations separately from IAM permissions used by other AWS principals. Secure both the device connection and its data destination.**
 
-IoT policies authorize device operations separately from IAM permissions used by other AWS principals. Secure both the device connection and its data destination.
-
-  - Attached to X.509 certificates or Cognito Identities
-  - Able to revoke any device at any time
-  - IoT Policies are JSON documents
-  - Can be attached to groups instead of individual Things.
-- IAM Policies:
-  - Attached to users, group or roles
-  - Used for controlling IoT AWS APIs
+- Attached to X.509 certificates or Cognito Identities
+- Able to revoke any device at any time
+- IoT Policies are JSON documents
+- Can be attached to groups instead of individual Things
+- **IAM Policies:** Attached to users, group or roles, Used for controlling IoT AWS APIs
 - Attach roles to Rules Engine so they can perform their actions
+
 
 ## Security – Amazon S3
 
-
-S3 protection combines access policies, public-access controls, encryption and appropriate network paths. Use each control for its own boundary.
+**S3 protection combines access policies, public-access controls, encryption and appropriate network paths. Use each control for its own boundary.**
 
 - S3 bucket policies
 - Access Control Lists (ACLs)
 - Encryption in flight using HTTPS
-- Encryption at rest
-  - Server-side encryption: SSE-S3, SSE-KMS, SSE-C
-  - Client-side encryption – such as Amazon S3 Encryption Client
+- **Encryption at rest:** Server-side encryption: SSE-S3, SSE-KMS, SSE-C; Client-side encryption – such as Amazon S3 Encryption Client
 - Versioning + MFA Delete
 - CORS for protecting websites
-- VPC Endpoint is provided through a Gateway
-- Glacier – vault lock policies to prevent deletes (WORM)
+
 
 ## Security – DynamoDB
 
+**DynamoDB protects requests and stored data through transport encryption, key management and IAM authorization, with optional private access paths.**
 
-DynamoDB protects requests and stored data through transport encryption, key management and IAM authorization, with optional private access paths.
-
-- DynamoDB tables are encrypted at rest
-  - KMS encryption for base tables and secondary indexes
-  - AWS owned key (default)
-  - AWS managed key (aws/dynamodb)
-  - AWS customer managed key (your own)
+- **DynamoDB tables are encrypted at rest:** KMS encryption for base tables and secondary indexes; AWS owned key (default); AWS managed key (aws/dynamodb); AWS customer managed key (your own)
 - Access to tables / API / DAX using IAM
 - DynamoDB Streams are encrypted
 - VPC Endpoint is provided through a Gateway
 
+
 ## Security - RDS
 
-
-RDS security separates VPC reachability, database authentication and encryption. Recovery copies and monitoring data also require protection.
+**RDS security separates VPC reachability, database authentication and encryption. Recovery copies and monitoring data also require protection.**
 
 - Security Groups control network access to DB Instances
 - KMS provides encryption at rest
 - SSL provides encryption in-flight
 - IAM policies provide protection for the RDS API
-- IAM authentication is supported by PostgreSQL, MySQL and MariaDB
 - Must manage user permissions within the database itself
 - MSSQL Server and Oracle support TDE (Transparent Data Encryption)
 
+
 ## Security - Aurora
 
-
-Aurora uses the same broad network, identity and encryption layers as RDS, with permissions and recovery behavior matched to its cluster model.
+**Aurora uses the same broad network, identity and encryption layers as RDS, with permissions and recovery behavior matched to its cluster model.**
 
 - VPC provides network isolation
 - Security Groups control network access to DB Instances
@@ -8796,10 +8710,10 @@ Aurora uses the same broad network, identity and encryption layers as RDS, with 
 - IAM authentication is supported by PostgreSQL and MySQL
 - Must manage user permissions within the database itself
 
+
 ## Security - Lambda
 
-
-A Lambda execution role authorizes the function's AWS calls. Permissions to invoke the function are a separate part of the request path.
+**A Lambda execution role authorizes the function's AWS calls. Permissions to invoke the function are a separate part of the request path.**
 
 - Sources
 - Targets
@@ -8808,59 +8722,39 @@ A Lambda execution role authorizes the function's AWS calls. Permissions to invo
 - CloudWatch Logs
 - Deploy in VPC to access private resources
 
+
 ## Security - Glue
 
-
-Glue needs permissions for job execution, source and destination data, catalog operations and encryption keys. Scope the execution role to the workflow.
+**Glue needs permissions for job execution, source and destination data, catalog operations and encryption keys. Scope the execution role to the workflow.**
 
 - Configure Glue to only access JDBC through SSL
 - Data Catalog: Encrypted by KMS
 - Connection passwords: Encrypted by KMS
-- Data written by AWS Glue – Security Configurations:
-  - S3 encryption mode: SSE-S3 or SSE-KMS
-  - CloudWatch encryption mode
-  - Job bookmark encryption mode
+- **Data written by AWS Glue – Security Configurations:** S3 encryption mode: SSE-S3 or SSE-KMS; CloudWatch encryption mode; Job bookmark encryption mode
+
 
 ## Security - EMR
 
+**EMR protection spans cluster access, instance identities, application permissions and encrypted storage or transport. Separate operator access from job access.**
 
-EMR protection spans cluster access, instance identities, application permissions and encrypted storage or transport. Separate operator access from job access.
-
-- Attach IAM roles to EC2 instances for:
-  - proper S3 access
-  - for EMRFS requests to S3
-  - DynamoDB scans through Hive
-- EC2 Security Groups
-  - One for master node
-  - Another one for cluster node (core node or task node)
+- **Attach IAM roles to EC2 instances for:** proper S3 access, for EMRFS requests to S3, DynamoDB scans through Hive
+- **EC2 Security Groups:** One for master node; Another one for cluster node (core node or task node)
 - Encrypts data at-rest: EBS encryption, Open Source HDFS Encryption, LUKS + EMRFS for S3
 - In-transit encryption: node to node communication, EMRFS, TLS
 - Data is encrypted before uploading to S3
-- Kerberos authentication (provide authentication from Active Directory)
 - Apache Ranger: Centralized Authorization (RBAC – Role Based Access) – setup on external EC2
-- https://aws.amazon.com/blogs/big-data/best-practices-for-securing-amazon-emr/
+
 
 ## Security – EMR Encryption (security config)
 
+**An EMR security configuration controls supported at-rest and in-transit encryption paths; data and local/HDFS storage require their own settings.**
 
-An EMR security configuration controls supported at-rest and in-transit encryption paths; data and local/HDFS storage require their own settings.
-
-- At-rest data encryption for EMRFS:
-  - Encryption in Amazon S3 (SSE-S3, SSE-KMS, Client-Side encryption)
-  - Enctyption in Local Disks
-- At-rest data encryption for local disks:
-  - Open-source HDFS encryption
-  - EC2 Instance Store encryption: NVMe encryption, or LUKS encryption
-  - EBS volumes: EBS encryption (KMS) – works with root volume LUKS encryption – does not work with root
-- In-transit encryption:
-  - Note to node communication
-  - For EMRFS traffic between S3 and cluster nodes
-  - TLS encryption
-
+- **At-rest data encryption for EMRFS:** Encryption in Amazon S3 (SSE-S3, SSE-KMS, Client-Side encryption); Enctyption in Local Disks
+- **At-rest data encryption for local disks:** Open-source HDFS encryption; EC2 Instance Store encryption: NVMe encryption, or LUKS encryption; EBS volumes: EBS encryption (KMS) – works with root volume LUKS encryption – does not work with root
+- **In-transit encryption:** Note to node communication; For EMRFS traffic between S3 and cluster nodes; TLS encryption
 
 ```mermaid
 flowchart LR
-  accTitle: Security – EMR Encryption (security config)
   n0["EMR security configuration"]
   n1["S3 encryption"]
   n2["Local / HDFS encryption"]
@@ -8870,12 +8764,10 @@ flowchart LR
   n0 ---|"in-transit policy"| n3
 ```
 
-> An EMR security configuration controls supported at-rest and in-transit encryption paths; data and local/HDFS storage require their own settings.
 
 ## Security – OpenSearch Service
 
-
-OpenSearch security layers network reachability with supported domain and fine-grained permissions. Encryption alone does not authorize a query.
+**OpenSearch security layers network reachability with supported domain and fine-grained permissions. Encryption alone does not authorize a query.**
 
 - OpenSearch policy to manage security further
 - Data security by encrypting data at-rest using KMS
@@ -8883,57 +8775,53 @@ OpenSearch security layers network reachability with supported domain and fine-g
 - IAM or Cognito based authentication
 - Amazon Cognito allow end-users to log-in to OpenSearch Dashboards through enterprise identity providers such as Microsoft Active Directory using SAML
 
+
 ## Security - Redshift
 
-
-Redshift access combines network rules, database permissions and encryption-key access. Audit settings determine which activity is retained for review.
+**Redshift access combines network rules, database permissions and encryption-key access. Audit settings determine which activity is retained for review.**
 
 - Cluster security groups
 - Encryption in flight using the JDBC driver enabled with SSL
 - Encryption at rest using KMS or an HSM device (establish a connection)
 - Supports S3 SSE using default managed key
 - Use IAM Roles for Redshift
-- To access other AWS Resources (example S3 or KMS)
 - Must be referenced in the COPY or UNLOAD command (alternatively paste access key and secret key creds)
+
 
 ## Security - Athena
 
-
-Athena authorization includes the query service, catalog, data locations and keys. Protect query results with the same care as source data.
+**Athena authorization includes the query service, catalog, data locations and keys. Protect query results with the same care as source data.**
 
 - Data is in S3: IAM policies, bucket policies & ACLs
 - Encryption of data according to S3 standards: SSE-S3, SSE- KMS, CSE-KMS
 - Encryption in transit using TLS between Athena and S3 and JDBC
 - Fine grained access using the AWS Glue Catalog
 
+
 ## Security - Quicksight
 
+**QuickSight security features vary by edition and connection model. Evaluate identity, dataset permissions and source connectivity together.**
 
-QuickSight security features vary by edition and connection model. Evaluate identity, dataset permissions and source connectivity together.
-
-  - IAM users
-  - Email based accounts
-- Enterprise edition:
-  - Active Directory
-  - Federated Login
-  - Supports MFA (Multi Factor Authentication)
-  - Encryption at rest and in SPICE
+- IAM users
+- Email based accounts
+- **Enterprise edition:** Active Directory; Federated Login; Supports MFA (Multi Factor Authentication); Encryption at rest and in SPICE
 - Row Level Security to control which users can see which rows
 - Column Level Security to restrict access to specific columns in dataset
 
+
+
 # Section Networking and delivery
+
 
 ## VPC & Subnets Primer
 
-
-A VPC is Regional; subnets each occupy one AZ, with route tables determining public or private routing.
+**A VPC is Regional; subnets each occupy one AZ, with route tables determining public or private routing.**
 
 - VPC: private network to deploy your resources (regional resource)
 - Subnets allow you to partition your network inside your VPC (Availability Zone resource)
 - A public subnet is a subnet that is accessible from the internet
 - A private subnet is a subnet that is not accessible from the internet
-- To define access to the internet and between subnets, we use Route Tables.
-
+- To define access to the internet and between subnets, we use Route Tables
 
 ```mermaid
 architecture-beta
@@ -8952,13 +8840,10 @@ architecture-beta
   %% Regional VPC -> AZ B private subnet: subnet
 ```
 
-> A VPC is Regional; subnets each occupy one AZ, with route tables determining public or private routing.
 
 ## VPC Diagram
 
-
-Subnet CIDRs divide a VPC address range into nonoverlapping ranges within individual AZs.
-
+**Subnet CIDRs divide a VPC address range into nonoverlapping ranges within individual AZs.**
 
 ```mermaid
 architecture-beta
@@ -8972,17 +8857,14 @@ architecture-beta
   %% VPC 10.0.0.0/16 -> AZ C subnet: address allocation
 ```
 
-> Subnet CIDRs divide a VPC address range into nonoverlapping ranges within individual AZs.
 
 ## Internet Gateway & NAT Gateways
 
-
-Private IPv4 workloads can initiate internet traffic through a NAT gateway in a public subnet and an internet gateway; unsolicited inbound access is not provided.
+**Private IPv4 workloads can initiate internet traffic through a NAT gateway in a public subnet and an internet gateway; unsolicited inbound access is not provided.**
 
 - Internet Gateways helps our VPC instances connect with the internet
-- Public Subnets have a route to the internet gateway.
+- Public Subnets have a route to the internet gateway
 - NAT Gateways (AWS-managed) & NAT Instances (self-managed) allow your instances in your Private Subnets to access the internet while remaining private
-
 
 ```mermaid
 architecture-beta
@@ -9002,27 +8884,16 @@ architecture-beta
   %% Private Subnet -> NAT: initiates outbound traffic
 ```
 
-> WWW and the IGW are outside the AZ; the public subnet, NAT and private subnet are inside. A public NAT gateway is deployed in a public subnet. Private workloads initiate outbound traffic through NAT; return traffic is supported, but unsolicited inbound access is not provided.
 
 ## Network ACL & Security Groups
 
+**NACLs act at subnet boundaries and security groups at network interfaces; both apply alongside route and application controls.**
 
-NACLs act at subnet boundaries and security groups at network interfaces; both apply alongside route and application controls.
-
-- NACL (Network ACL)
-  - A firewall which controls traffic from and to subnet
-  - Can have ALLOW and DENY rules
-  - Are attached at the Subnet level
-  - Rules only include IP addresses
-- Security Groups
-  - A firewall that controls traffic to and from an ENI / an EC2 Instance
-  - Can have only ALLOW rules
-  - Rules include IP addresses and other security groups
-
+- **NACL (Network ACL):** A firewall which controls traffic from and to subnet; Can have ALLOW and DENY rules; Are attached at the Subnet level; Rules only include IP addresses
+- **Security Groups:** A firewall that controls traffic to and from an ENI / an EC2 Instance; Can have only ALLOW rules; Rules include IP addresses and other security groups
 
 ```mermaid
 flowchart LR
-  accTitle: Network ACL & Security Groups
   n0["Network packet"]
   n1["Subnet NACL"]
   n2["ENI security group"]
@@ -9032,17 +8903,13 @@ flowchart LR
   n2 -->|"allowed traffic"| n3
 ```
 
-> NACLs act at subnet boundaries and security groups at network interfaces; both apply alongside route and application controls.
 
 ## Network ACLs vs Security Groups
 
-
-Security groups are stateful allow rules; NACLs are stateless ordered allow/deny rules requiring return-path allowances.
-
+**Security groups are stateful allow rules; NACLs are stateless ordered allow/deny rules requiring return-path allowances.**
 
 ```mermaid
 flowchart LR
-  accTitle: Network ACLs vs Security Groups
   n0["Security group"]
   n1["Stateful response tracking"]
   n2["NACL"]
@@ -9051,28 +8918,18 @@ flowchart LR
   n2 ---|"stateless evaluation"| n3
 ```
 
-> Security groups are stateful allow rules; NACLs are stateless ordered allow/deny rules requiring return-path allowances.
 
 ## VPC Flow Logs
 
+**VPC Flow Logs capture network-flow metadata, not packet payloads, and publish to a configured supported destination.**
 
-VPC Flow Logs capture network-flow metadata, not packet payloads, and publish to a configured supported destination.
-
-- Capture information about IP traffic going into your interfaces:
-  - VPC Flow Logs
-  - Subnet Flow Logs
-  - Elastic Network Interface Flow Logs
-- Helps to monitor & troubleshoot connectivity issues. Example:
-  - Subnets to internet
-  - Subnets to subnets
-  - Internet to subnets
+- **Capture information about IP traffic going into your interfaces:** VPC Flow Logs; Subnet Flow Logs; Elastic Network Interface Flow Logs
+- **Helps to monitor & troubleshoot connectivity issues. Example:** Subnets to internet, Subnets to subnets, Internet to subnets
 - Captures network information from AWS managed interfaces too: Elastic Load Balancers, ElastiCache, RDS, Aurora, etc…
 - VPC Flow logs data can go to S3, CloudWatch Logs, and Data Firehose
 
-
 ```mermaid
 flowchart LR
-  accTitle: VPC Flow Logs
   n0["VPC / subnet / ENI"]
   n1["Flow log records"]
   n2["CloudWatch Logs"]
@@ -9084,22 +8941,18 @@ flowchart LR
   n1 -->|"destination option"| n4
 ```
 
-> VPC Flow Logs capture network-flow metadata, not packet payloads, and publish to a configured supported destination.
 
 ## VPC Peering
 
+**VPC peering is nontransitive: A-to-B and B-to-C do not establish A-to-C connectivity.**
 
-VPC peering is nontransitive: A-to-B and B-to-C do not establish A-to-C connectivity.
-
-- Connect two VPC, privately using AWS’ network
+- Connect two VPC, privately using AWS' network
 - Make them behave as if they were in the same network
 - Must not have overlapping CIDR (IP address range)
 - VPC Peering connection is not transitive (must be established for each VPC that need to communicate with one another)
 
-
 ```mermaid
 flowchart LR
-  accTitle: VPC Peering
   n0["VPC A"]
   n1["VPC B"]
   n2["VPC C"]
@@ -9107,12 +8960,10 @@ flowchart LR
   n1 ---|"explicit peering"| n2
 ```
 
-> VPC peering is nontransitive: A-to-B and B-to-C do not establish A-to-C connectivity.
 
 ## VPC Endpoints
 
-
-Interface endpoints use private ENIs for supported services; gateway endpoints route S3 or DynamoDB traffic through route-table entries.
+**Interface endpoints use private ENIs for supported services; gateway endpoints route S3 or DynamoDB traffic through route-table entries.**
 
 - Endpoints allow you to connect to AWS Services using a private network instead of the public www network
 - This gives you enhanced security and lower latency to access AWS services
@@ -9120,10 +8971,8 @@ Interface endpoints use private ENIs for supported services; gateway endpoints r
 - VPC Endpoint Interface: most services (including S3 & DynamoDB)
 - Only used within your VPC
 
-
 ```mermaid
 flowchart LR
-  accTitle: VPC Endpoints
   n0["VPC workload"]
   n1["Interface endpoint ENI"]
   n2["Supported AWS service"]
@@ -9135,27 +8984,16 @@ flowchart LR
   n3 -->|"gateway endpoint"| n4
 ```
 
-> Interface endpoints use private ENIs for supported services; gateway endpoints route S3 or DynamoDB traffic through route-table entries.
 
 ## Site to Site VPN & Direct Connect
 
+**A site-to-site VPN encrypts over an IP path; Direct Connect provides dedicated connectivity but is not encrypted by default.**
 
-A site-to-site VPN encrypts over an IP path; Direct Connect provides dedicated connectivity but is not encrypted by default.
-
-- Site to Site VPN
-  - Connect an on-premises VPN to AWS
-  - The connection is automatically encrypted
-  - Goes over the public internet
-- Direct Connect (DX)
-  - Establish a physical connection between on-premises and AWS
-  - The connection is private, secure and fast
-  - Goes over a private network
-  - Takes at least a month to establish
-
+- **Site to Site VPN:** Connect an on-premises VPN to AWS; The connection is automatically encrypted; Goes over the public internet
+- **Direct Connect (DX):** Establish a physical connection between on-premises and AWS; The connection is private, secure and fast; Goes over a private network; Takes at least a month to establish
 
 ```mermaid
 flowchart LR
-  accTitle: Site to Site VPN & Direct Connect
   n0["On-premises network"]
   n1["VPN encrypted tunnel"]
   n2["Direct Connect connection"]
@@ -9166,12 +9004,10 @@ flowchart LR
   n2 -->|"configured routing"| n3
 ```
 
-> A site-to-site VPN encrypts over an IP path; Direct Connect provides dedicated connectivity but is not encrypted by default.
 
 ## VPC connectivity review
 
-
-VPC networking connects addressing, subnet routes, gateways and filtering controls. Trace the complete request and return path when explaining connectivity.
+**VPC networking connects addressing, subnet routes, gateways and filtering controls. Trace the complete request and return path when explaining connectivity.**
 
 - Subnets: Tied to an AZ, network partition of the VPC
 - Internet Gateway: at the VPC level, provide Internet Access
@@ -9179,24 +9015,18 @@ VPC networking connects addressing, subnet routes, gateways and filtering contro
 - NACL: Stateless, subnet rules for inbound and outbound
 - Security Groups: Stateful, operate at the EC2 instance level or ENI
 - VPC Peering: Connect two VPC with non overlapping IP ranges, non transitive
-- VPC Endpoints: Provide private access to AWS Services within VPC
-- VPC Flow Logs: network traffic logs
-- Site to Site VPN: VPN over public internet between on-premises DC and AWS
-- Direct Connect: direct private connection to a AWS
+
 
 ## AWS PrivateLink (VPC Endpoint Services)
 
+**PrivateLink exposes a provider service through an endpoint service and consumer interface endpoint, without broad VPC peering.**
 
-PrivateLink exposes a provider service through an endpoint service and consumer interface endpoint, without broad VPC peering.
-
-- Most secure & scalable way to expose a service to 1000s of VPCs
+- Most secure & scalable way to expose a service to thousands of VPCs
 - Does not require VPC peering, internet gateway, NAT, route tables…
 - Requires a network load balancer (Service VPC) and ENI (Customer VPC)
 
-
 ```mermaid
 flowchart LR
-  accTitle: AWS PrivateLink (VPC Endpoint Services)
   n0["Consumer application"]
   n1["Interface endpoint ENI"]
   n2["Provider endpoint service / NLB"]
@@ -9206,33 +9036,28 @@ flowchart LR
   n2 -->|"service traffic"| n3
 ```
 
-> PrivateLink exposes a provider service through an endpoint service and consumer interface endpoint, without broad VPC peering.
 
-## What is DNS?
+## DNS — Domain Name Resolution
 
-
-DNS resolves human-readable names to records used by clients to locate services. Caching and TTLs influence when a client observes changes.
+**DNS resolves human-readable names to records used by clients to locate services. Caching and TTLs influence when a client observes changes.**
 
 - www.google.com => 172.217.18.36
 - DNS is the backbone of the Internet
 - DNS uses hierarchical naming structure
 
+
 ## DNS Terminologies
 
+**DNS is the Internet's address book: it maps names people remember to records computers can use.**
 
-DNS is the Internet’s address book: it maps names people remember to records computers can use.
-
-- Name hierarchy — in `www.example.com`, `www` is a subdomain, `example.com` is the second-level domain, and `.com` is the top-level domain.
-- Domain registrar — the company where a domain is registered, such as Route 53 or GoDaddy.
-- DNS record — an instruction for what answer to return for a name.
-- DNS servers — authoritative servers give answers for their zone; recursive resolvers find and cache answers for clients.
-- Hosted zone — Route 53’s collection of records for a domain or subdomain.
-- Zone file — a text format for storing DNS records.
-
+- Name hierarchy — in `www.example.com`, `www` is a subdomain, `example.com` is the second-level domain, and `.com` is the top-level domain
+- Domain registrar — the company where a domain is registered, such as Route 53 or GoDaddy
+- DNS record — an instruction for what answer to return for a name
+- DNS servers — authoritative servers give answers for their zone; recursive resolvers find and cache answers for clients
+- Hosted zone — Route 53's collection of records for a domain or subdomain
 
 ```mermaid
 flowchart LR
-  accTitle: DNS Terminologies
   n0["Root ."]
   n1["Top-level domain"]
   n2["Domain"]
@@ -9242,19 +9067,17 @@ flowchart LR
   n2 ---|"name hierarchy"| n3
 ```
 
-> DNS names form a hierarchy from root to top-level domain to authoritative domain and subdomains.
 
 ## How DNS Works
 
+**Focus:** How DNS Works — understand the key capabilities, constraints, and trade-offs.
 
-- Your device asks a DNS resolver for the record behind a name such as `www.example.com`.
-- If the answer is not cached, the resolver follows referrals: root → `.com` → the domain’s authoritative name server.
-- That server returns the DNS answer; your browser then connects to the destination. DNS finds the destination, it does not deliver the web page.
-
+- Your device asks a DNS resolver for the record behind a name such as `www.example.com`
+- If the answer is not cached, the resolver follows referrals: root → `.com` → the domain's authoritative name server
+- That server returns the DNS answer; your browser then connects to the destination. DNS finds the destination, it does not deliver the web page
 
 ```mermaid
 flowchart TB
-  accTitle: How DNS Works
   n0["Browser"]
   n1["Recursive resolver"]
   n2["Root"]
@@ -9269,20 +9092,16 @@ flowchart TB
   n0 -->|"HTTP(S) to resolved address"| n5
 ```
 
-> A recursive resolver follows delegations when its cache has no answer, then returns an address that the client uses separately for HTTP.
 
 ## Amazon Route 53
 
+**Route 53 is AWS's managed authoritative DNS service: it stores domain records and answers queries for them.**
 
-Route 53 is AWS’s managed authoritative DNS service: it stores domain records and answers queries for them.
-
-- Register a domain with Route 53, or keep another registrar and use Route 53 for DNS.
-- Health checks monitor configured endpoints; failover policies can prefer a healthy alternative.
-
+- Register a domain with Route 53, or keep another registrar and use Route 53 for DNS
+- Health checks monitor configured endpoints; failover policies can prefer a healthy alternative
 
 ```mermaid
 flowchart LR
-  accTitle: Amazon Route 53
   n0["Client resolver"]
   n1["Route 53 hosted zone"]
   n2["EC2 / application endpoint"]
@@ -9290,49 +9109,47 @@ flowchart LR
   n0 -->|"connect to returned endpoint"| n2
 ```
 
-> Route 53 answers DNS queries from hosted-zone records; the client's application traffic then goes to the resolved endpoint.
 
 ## Route 53 – Records
 
+**A DNS record tells Route 53 what answer to return for a name and how long resolvers can reuse it.**
 
-A DNS record tells Route 53 what answer to return for a name and how long resolvers can reuse it.
+- Name + type — which DNS question this record answers, such as an A record for `www.example.com`
+- Value — the answer, such as an IP address or another hostname
+- Routing policy — how Route 53 chooses an answer when multiple targets are configured
+- TTL (seconds) — how long resolvers keep the answer in cache before asking Route 53 again
 
-- Name + type — which DNS question this record answers, such as an A record for `www.example.com`.
-- Value — the answer, such as an IP address or another hostname.
-- Routing policy — how Route 53 chooses an answer when multiple targets are configured.
-- TTL (seconds) — how long resolvers keep the answer in cache before asking Route 53 again.
 
 ## Route 53 – Record Types
 
+**Choose a record type by the kind of answer DNS should return.**
 
-Choose a record type by the kind of answer DNS should return.
+- A returns an IPv4 address; AAAA returns an IPv6 address
+- CNAME points one hostname to another. DNS looks up the target; this does not redirect a browser request
+- NS lists a zone's authoritative name servers and tells DNS where to ask for its records
+- CNAME cannot be used at the zone apex (`example.com`). A Route 53 Alias can point the apex to supported AWS resources
+- Other types (advanced, beyond this exam's focus): CAA, DS, MX, NAPTR, PTR, SOA, TXT, SPF and SRV
 
-- A returns an IPv4 address; AAAA returns an IPv6 address.
-- CNAME points one hostname to another. DNS looks up the target; this does not redirect a browser request.
-- NS lists a zone’s authoritative name servers and tells DNS where to ask for its records.
-- CNAME cannot be used at the zone apex (`example.com`). A Route 53 Alias can point the apex to supported AWS resources.
-- Other types (advanced, beyond this exam’s focus): CAA, DS, MX, NAPTR, PTR, SOA, TXT, SPF and SRV.
 
 ## Route 53 – Hosted Zones
 
+**A hosted zone is Route 53's container for the DNS records of a domain or subdomain.**
 
-A hosted zone is Route 53’s container for the DNS records of a domain or subdomain.
+- Its name server (NS) records identify which servers answer for the zone
+- For a public domain, set the registrar's name servers to the zone's NS records so DNS reaches Route 53
 
-- Its name server (NS) records identify which servers answer for the zone.
-- For a public domain, set the registrar’s name servers to the zone’s NS records so DNS reaches Route 53.
 
 ## Route 53 – Public vs. Private Hosted Zones
 
+**Focus:** Route 53 – Public vs. Private Hosted Zones — understand the key capabilities, constraints, and trade-offs.
 
-- Public zone — public DNS resolvers return its records to Internet clients.
-- Private zone — the VPC resolver returns its records to clients inside associated VPCs.
-- The same domain can have both: internal clients can get a private answer while public clients get a public answer (split-view DNS).
-- DNS supplies a record; network rules still decide whether a client can reach the destination.
-
+- Public zone — public DNS resolvers return its records to Internet clients
+- Private zone — the VPC resolver returns its records to clients inside associated VPCs
+- The same domain can have both: internal clients can get a private answer while public clients get a public answer (split-view DNS)
+- DNS supplies a record; network rules still decide whether a client can reach the destination
 
 ```mermaid
 flowchart LR
-  accTitle: Route 53 – Public vs. Private Hosted Zones
   n0["Internet resolver"]
   n1["Public hosted zone"]
   n2["Associated VPC resolver"]
@@ -9341,12 +9158,10 @@ flowchart LR
   n2 -->|"private query"| n3
 ```
 
-> Public hosted zones answer public DNS; private hosted zones answer through associated VPC resolver contexts.
 
 ## Amazon CloudFront
 
-
-A CDN serves geographically distributed clients from nearby edge caches while retaining an origin for uncached content.
+**A CDN serves geographically distributed clients from nearby edge caches while retaining an origin for uncached content.**
 
 - Content Delivery Network (CDN)
 - Improves read performance, content is cached at the edge
@@ -9354,10 +9169,8 @@ A CDN serves geographically distributed clients from nearby edge caches while re
 - Hundreds of Points of Presence globally (edge locations, caches)
 - DDoS protection (because worldwide), integration with Shield, AWS Web Application Firewall
 
-
 ```mermaid
 flowchart LR
-  accTitle: Amazon CloudFront
   n0["Origin"]
   n1["Edge region A"]
   n2["Edge region B"]
@@ -9369,32 +9182,24 @@ flowchart LR
   n2 -->|"nearby delivery"| n4
 ```
 
-> A CDN serves geographically distributed clients from nearby edge caches while retaining an origin for uncached content.
 
 ## CloudFront – Origins
 
+**A CloudFront origin supplies content that the distribution caches or forwards. S3 and HTTP origins require different access and request configurations.**
 
-A CloudFront origin supplies content that the distribution caches or forwards. S3 and HTTP origins require different access and request configurations.
+- For distributing files and caching them at the edge
+- For uploading files to S3 through CloudFront
+- Secured using Origin Access Control (OAC)
+- **VPC Origin:** For applications hosted in VPC private subnets; Private Application Load Balancer / Network Load Balancer / EC2 Instances
+- **Custom Origin (HTTP):** S3 website (must first enable the bucket as a static S3 website); Any public HTTP backend you want (example: Public ALB)
 
-  - For distributing files and caching them at the edge
-  - For uploading files to S3 through CloudFront
-  - Secured using Origin Access Control (OAC)
-- VPC Origin
-  - For applications hosted in VPC private subnets
-  - Private Application Load Balancer / Network Load Balancer / EC2 Instances
-- Custom Origin (HTTP)
-  - S3 website (must first enable the bucket as a static S3 website)
-  - Any public HTTP backend you want (example: Public ALB)
 
 ## CloudFront at a high level
 
-
-CloudFront serves cache hits at the edge and fetches cache misses from the origin according to its cache behavior.
-
+**CloudFront serves cache hits at the edge and fetches cache misses from the origin according to its cache behavior.**
 
 ```mermaid
 flowchart LR
-  accTitle: CloudFront at a high level
   n0["Viewer"]
   n1["CloudFront edge"]
   n2["Cached response"]
@@ -9405,17 +9210,13 @@ flowchart LR
   n3 -->|"origin response"| n1
 ```
 
-> CloudFront serves cache hits at the edge and fetches cache misses from the origin according to its cache behavior.
 
 ## CloudFront – S3 as an Origin
 
-
-Origin Access Control authorizes CloudFront access to a private S3 origin while viewers use the distribution endpoint.
-
+**Origin Access Control authorizes CloudFront access to a private S3 origin while viewers use the distribution endpoint.**
 
 ```mermaid
 flowchart LR
-  accTitle: CloudFront – S3 as an Origin
   n0["Viewers"]
   n1["CloudFront"]
   n2["Origin Access Control"]
@@ -9425,37 +9226,26 @@ flowchart LR
   n2 -->|"bucket-policy-authorized access"| n3
 ```
 
-> Origin Access Control authorizes CloudFront access to a private S3 origin while viewers use the distribution endpoint.
 
 ## CloudFront vs S3 Cross Region Replication
 
+**CloudFront caches content at edge locations for delivery; cross-Region replication creates separate S3 copies. These solve different access and recovery requirements.**
 
-CloudFront caches content at edge locations for delivery; cross-Region replication creates separate S3 copies. These solve different access and recovery requirements.
+- Global Edge network
+- Files are cached for a TTL (maybe a day)
+- Great for static content that must be available everywhere
+- **S3 Cross Region Replication:** Must be setup for each region you want replication to happen; Files are updated in near real-time; Read only; Great for dynamic content that needs to be available at low- latency in few regions
 
-  - Global Edge network
-  - Files are cached for a TTL (maybe a day)
-  - Great for static content that must be available everywhere
-- S3 Cross Region Replication:
-  - Must be setup for each region you want replication to happen
-  - Files are updated in near real-time
-  - Read only
-  - Great for dynamic content that needs to be available at low- latency in few regions
 
 ## CloudFront – ALB or EC2 as an origin Using VPC Origins
 
-
-A supported CloudFront VPC origin reaches a private ALB, NLB or EC2 origin through managed connectivity.
+**A supported CloudFront VPC origin reaches a private ALB, NLB or EC2 origin through managed connectivity.**
 
 - Allows you to deliver content from your applications hosted in your VPC private subnets (no need to expose them on the Internet)
-- Deliver traffic to private:
-  - Application Load Balancer
-  - Network Load Balancer
-  - EC2 Instances
-
+- **Deliver traffic to private:** Application Load Balancer, Network Load Balancer, EC2 Instances
 
 ```mermaid
 flowchart LR
-  accTitle: CloudFront – ALB or EC2 as an origin Using VPC Origins
   n0["Viewer"]
   n1["CloudFront"]
   n2["VPC origin"]
@@ -9465,17 +9255,13 @@ flowchart LR
   n2 -->|"private connectivity"| n3
 ```
 
-> A supported CloudFront VPC origin reaches a private ALB, NLB or EC2 origin through managed connectivity.
 
 ## CloudFront – ALB or EC2 as an origin Using Public Network
 
-
-For a public custom origin, security-group restrictions can limit origin ingress to CloudFront origin-facing addresses; application authorization remains separate.
-
+**For a public custom origin, security-group restrictions can limit origin ingress to CloudFront origin-facing addresses; application authorization remains separate.**
 
 ```mermaid
 flowchart LR
-  accTitle: CloudFront – ALB or EC2 as an origin Using Public Network
   n0["Viewer"]
   n1["CloudFront"]
   n2["Origin security group"]
@@ -9485,21 +9271,17 @@ flowchart LR
   n2 -->|"allowed origin access"| n3
 ```
 
-> For a public custom origin, security-group restrictions can limit origin ingress to CloudFront origin-facing addresses; application authorization remains separate.
 
 ## CloudFront – Cache Invalidations
 
+**Updating the origin does not instantly replace cached objects. Invalidation requests remove selected cached paths before their normal expiry.**
 
-Updating the origin does not instantly replace cached objects. Invalidation requests remove selected cached paths before their normal expiry.
-
-- In case you update the back-end origin, CloudFront doesn’t know about it and will only get the refreshed content after the TTL has expired
+- In case you update the back-end origin, CloudFront doesn't know about it and will only get the refreshed content after the TTL has expired
 - However, you can force an entire or partial cache refresh (thus bypassing the TTL) by performing a CloudFront Invalidation
 - You can invalidate all files (*) or a special path (/images/*)
 
-
 ```mermaid
 flowchart LR
-  accTitle: CloudFront – Cache Invalidations
   n0["Updated origin object"]
   n1["Invalidation request"]
   n2["CloudFront cache"]
@@ -9509,37 +9291,32 @@ flowchart LR
   n0 -->|"retrieve updated object"| n3
 ```
 
-> Updating the origin does not instantly replace cached objects. Invalidation requests remove selected cached paths before their normal expiry.
+
 
 # Section Management and governance
 
+
 ## Amazon CloudWatch Metrics
 
-
-A metric is a time series identified by its namespace, name and dimensions. Select statistics and intervals that answer the operational question.
+**A metric is a time series identified by its namespace, name and dimensions. Select statistics and intervals that answer the operational question.**
 
 - Metric is a variable to monitor (CPUUtilization, NetworkIn…)
 - Metrics belong to namespaces
-- Dimension is an attribute of a metric (instance id, environment, etc…).
-- Up to 30 dimensions per metric
+- Dimension is an attribute of a metric (instance id, environment, etc…)
 - Metrics have timestamps
 - Can create CloudWatch dashboards of metrics
 - Can create CloudWatch Custom Metrics (for the RAM for example)
 
+
 ## CloudWatch Metric Streams
 
+**CloudWatch Metric Streams continuously deliver selected metric updates through Firehose to supported analysis destinations.**
 
-CloudWatch Metric Streams continuously deliver selected metric updates through Firehose to supported analysis destinations.
-
-- Continually stream CloudWatch metrics to a destination of your choice, with near-real-time delivery and low latency.
-  - Amazon Data Firehose (and then its destinations)
-  - 3rd party service provider: Datadog, Dynatrace, New Relic, Splunk, Sumo Logic…
+- **Continually stream CloudWatch metrics to a destination of your choice, with near-real-time delivery and low latency.:** Amazon Data Firehose (and then its destinations); 3rd party service provider: Datadog, Dynatrace, New Relic, Splunk, Sumo Logic…
 - Option to filter metrics to only stream a subset of them
-
 
 ```mermaid
 flowchart LR
-  accTitle: CloudWatch Metric Streams
   n0["CloudWatch metrics"]
   n1["Metric Stream"]
   n2["Data Firehose"]
@@ -9549,46 +9326,36 @@ flowchart LR
   n2 -->|"configured delivery"| n3
 ```
 
-> CloudWatch Metric Streams continuously deliver selected metric updates through Firehose to supported analysis destinations.
 
 ## CloudWatch Logs
 
-
-Log groups organize streams and their retention or access settings. Plan collection, storage and querying as separate steps.
+**Log groups organize streams and their retention or access settings. Plan collection, storage and querying as separate steps.**
 
 - Log stream: instances within application / log files / containers
 - Can define log expiration policies (never expire, 1 day to 10 years…)
-- CloudWatch Logs can send logs to:
-  - Amazon S3 (exports)
-  - Kinesis Data Streams
-  - Data Firehose
-  - AWS Lambda
-  - OpenSearch
+- **CloudWatch Logs can send logs to:** Amazon S3 (exports) · Kinesis Data Streams · Data Firehose · AWS Lambda · OpenSearch
 - Logs are encrypted by default
 - Can setup KMS-based encryption with your own keys
 
+
 ## CloudWatch Logs - Sources
 
-
-Logs reach CloudWatch from agents, SDKs and supported service integrations. The collection path determines what context and permissions are required.
+**Logs reach CloudWatch from agents, SDKs and supported service integrations. The collection path determines what context and permissions are required.**
 
 - Elastic Beanstalk: collection of logs from application
 - ECS: collection from containers
 - AWS Lambda: collection from function logs
 - VPC Flow Logs: VPC specific logs
 - API Gateway
-- CloudTrail based on filter
 - Route53: Log DNS queries
 
-## CloudWatch Logs Insights
 
+## CloudWatch Logs Insights — Querying
 
-Logs Insights queries selected log groups and a time range; results help diagnose events rather than mutate the source logs.
-
+**Logs Insights queries selected log groups and a time range; results help diagnose events rather than mutate the source logs.**
 
 ```mermaid
 flowchart LR
-  accTitle: CloudWatch Logs Insights
   n0["Log groups + time range"]
   n1["Insights query"]
   n2["Filtered / aggregated results"]
@@ -9598,34 +9365,27 @@ flowchart LR
   n2 -->|"interpret"| n3
 ```
 
-> Logs Insights queries selected log groups and a time range; results help diagnose events rather than mutate the source logs.
 
-## CloudWatch Logs Insights
+## CloudWatch Logs Insights — Examples
 
+**Logs Insights queries collected log data to find events, patterns and aggregates. Scope the time range and log groups to the investigation.**
 
-Logs Insights queries collected log data to find events, patterns and aggregates. Scope the time range and log groups to the investigation.
-
-- Example: find a specific IP inside a log, count occurrences of “ERROR” in your logs…
-- Provides a purpose-built query language
-  - Automatically discovers fields from AWS services and JSON log events
-  - Fetch desired event fields, filter based on conditions, calculate aggregate statistics, sort events, limit number of events…
-  - Can save queries and add them to CloudWatch Dashboards
+- Example: find a specific IP inside a log, count occurrences of "ERROR" in your logs…
+- **Provides a purpose-built query language:** Automatically discovers fields from AWS services and JSON log events; Fetch desired event fields, filter based on conditions, calculate aggregate statistics, sort events, limit number of events…; Can…
 - Can query multiple Log Groups in different AWS accounts
-- It’s a query engine, not a real-time engine
+- It's a query engine, not a real-time engine
+
 
 ## CloudWatch Logs – S3 Export
 
-
-CreateExportTask exports CloudWatch Logs to S3 asynchronously; it is not a low-latency streaming delivery mechanism.
+**CreateExportTask exports CloudWatch Logs to S3 asynchronously; it is not a low-latency streaming delivery mechanism.**
 
 - Log data can take up to 12 hours to become available for export
 - The API call is CreateExportTask
 - Not near-real time or real-time… use Logs Subscriptions instead
 
-
 ```mermaid
 flowchart LR
-  accTitle: CloudWatch Logs – S3 Export
   n0["CloudWatch Logs"]
   n1["Export task"]
   n2["S3 objects"]
@@ -9633,21 +9393,17 @@ flowchart LR
   n1 -->|"asynchronous export"| n2
 ```
 
-> CreateExportTask exports CloudWatch Logs to S3 asynchronously; it is not a low-latency streaming delivery mechanism.
 
-## CloudWatch Logs Subscriptions
+## CloudWatch Log Subscriptions — Delivery
 
-
-Subscription filters route matching log events to supported stream, delivery or function destinations.
+**Subscription filters route matching log events to supported stream, delivery or function destinations.**
 
 - Get a real-time log events from CloudWatch Logs for processing and analysis
 - Send to Kinesis Data Streams, Data Firehose, or Lambda
 - Subscription Filter – filter which logs are events delivered to your destination
 
-
 ```mermaid
 flowchart LR
-  accTitle: CloudWatch Logs Subscriptions
   n0["Log group"]
   n1["Subscription filter"]
   n2["Kinesis consumer path"]
@@ -9659,17 +9415,13 @@ flowchart LR
   n1 -->|"custom processing"| n4
 ```
 
-> Subscription filters route matching log events to supported stream, delivery or function destinations.
 
 ## CloudWatch Logs Aggregation Multi-Account & Multi Region
 
-
-A centralized logging design forwards account/Region log groups into a configured aggregation path and archival storage.
-
+**A centralized logging design forwards account/Region log groups into a configured aggregation path and archival storage.**
 
 ```mermaid
 flowchart LR
-  accTitle: CloudWatch Logs Aggregation Multi-Account & Multi Region
   n0["Account / Region log groups"]
   n1["Subscription filters"]
   n2["Central Kinesis stream"]
@@ -9681,19 +9433,15 @@ flowchart LR
   n3 -->|"archive"| n4
 ```
 
-> A centralized logging design forwards account/Region log groups into a configured aggregation path and archival storage.
 
-## CloudWatch Logs Subscriptions
+## CloudWatch Log Subscriptions — Destinations
 
-
-Cross-account log subscriptions use a destination resource policy and appropriate roles to permit forwarding to the destination stream.
+**Cross-account log subscriptions use a destination resource policy and appropriate roles to permit forwarding to the destination stream.**
 
 - Cross-Account Subscription – send log events to resources in a different AWS account (KDS, KDF)
 
-
 ```mermaid
 flowchart LR
-  accTitle: CloudWatch Logs Subscriptions
   n0["Source account log group"]
   n1["Destination policy / role"]
   n2["CloudWatch Logs destination"]
@@ -9703,22 +9451,18 @@ flowchart LR
   n2 -->|"stream delivery"| n3
 ```
 
-> Cross-account log subscriptions use a destination resource policy and appropriate roles to permit forwarding to the destination stream.
 
 ## CloudWatch Logs for EC2
 
-
-The CloudWatch agent collects configured host metrics and logs from EC2 or on-premises hosts.
+**The CloudWatch agent collects configured host metrics and logs from EC2 or on-premises hosts.**
 
 - By default, no logs from your EC2 machine will go to CloudWatch
 - You need to run a CloudWatch agent on EC2 to push the log files you want
 - Make sure IAM permissions are correct
 - The CloudWatch log agent can be setup on-premises too
 
-
 ```mermaid
 flowchart LR
-  accTitle: CloudWatch Logs for EC2
   n0["EC2 / on-premises host"]
   n1["CloudWatch agent"]
   n2["CloudWatch metrics"]
@@ -9728,70 +9472,55 @@ flowchart LR
   n1 -->|"log events"| n3
 ```
 
-> The CloudWatch agent collects configured host metrics and logs from EC2 or on-premises hosts.
 
 ## CloudWatch Logs Agent & Unified Agent
 
+**The unified agent collects supported host metrics and logs beyond basic instance monitoring. Configure what to collect and where to publish it.**
 
-The unified agent collects supported host metrics and logs beyond basic instance monitoring. Configure what to collect and where to publish it.
+- **CloudWatch Logs Agent:** Old version of the agent, Can only send to CloudWatch Logs
+- **CloudWatch Unified Agent:** Collect additional system-level metrics such as RAM, processes, etc…; Collect logs to send to CloudWatch Logs; Centralized configuration using SSM Parameter Store
 
-- CloudWatch Logs Agent
-  - Old version of the agent
-  - Can only send to CloudWatch Logs
-- CloudWatch Unified Agent
-  - Collect additional system-level metrics such as RAM, processes, etc…
-  - Collect logs to send to CloudWatch Logs
-  - Centralized configuration using SSM Parameter Store
 
 ## CloudWatch Unified Agent – Metrics
 
-
-Host-level telemetry can reveal memory, disk, network and process behavior that is not captured by every default service metric.
+**Host-level telemetry can reveal memory, disk, network and process behavior that is not captured by every default service metric.**
 
 - CPU (active, guest, idle, system, user, steal)
 - Disk metrics (free, used, total), Disk IO (writes, reads, bytes, iops)
 - RAM (free, inactive, used, total, cached)
 - Netstat (number of TCP and UDP connections, net packets, bytes)
 - Processes (total, dead, bloqued, idle, running, sleep)
-- Swap Space (free, used, used %)
 - Reminder: out-of-the box metrics for EC2 – disk, CPU, network (high level)
+
 
 ## CloudWatch Alarms
 
-
-An alarm evaluates a metric over configured periods and changes state when its conditions are met. Missing-data treatment is part of the rule.
+**An alarm evaluates a metric over configured periods and changes state when its conditions are met. Missing-data treatment is part of the rule.**
 
 - Various options (sampling, %, max, min, etc…)
-- Alarm States:
-  - OK
-  - INSUFFICIENT_DATA
-  - ALARM
-- Period:
-  - Length of time in seconds to evaluate the metric
-  - High resolution custom metrics: 10 sec, 30 sec or multiples of 60 sec
+- **Alarm States:** OK, INSUFFICIENT_DATA, ALARM
+- **Period:** Length of time in seconds to evaluate the metric; High resolution custom metrics: 10 sec, 30 sec or multiples of 60 sec
+
 
 ## CloudWatch Alarm Targets
 
-
-Alarm actions can notify operators or invoke supported recovery and scaling behavior. Match the action to the resource and failure being observed.
+**Alarm actions can notify operators or invoke supported recovery and scaling behavior. Match the action to the resource and failure being observed.**
 
 - Trigger Auto Scaling Action
 - Send notification to SNS (from which you can do pretty much anything)
 
+
 ## CloudWatch Alarms – Composite Alarms
 
-
-A composite alarm evaluates the states of other alarms, such as CPU and IOPS, before notifying.
+**A composite alarm evaluates the states of other alarms, such as CPU and IOPS, before notifying.**
 
 - CloudWatch Alarms are on a single metric
 - Composite Alarms are monitoring the states of multiple other alarms
 - AND and OR conditions
-- Helpful to reduce “alarm noise” by creating complex composite alarms
-
+- Helpful to reduce "alarm noise" by creating complex composite alarms
 
 ```mermaid
 flowchart LR
-  accTitle: CloudWatch Alarms – Composite Alarms
   n0["CPU alarm"]
   n1["IOPS alarm"]
   n2["Composite alarm rule"]
@@ -9801,23 +9530,16 @@ flowchart LR
   n2 -->|"combined condition"| n3
 ```
 
-> A composite alarm evaluates the states of other alarms, such as CPU and IOPS, before notifying.
 
 ## EC2 Instance Recovery
 
+**A supported EC2 status-check alarm can request instance recovery and separately send a notification.**
 
-A supported EC2 status-check alarm can request instance recovery and separately send a notification.
-
-- Status Check:
-  - Instance status = check the EC2 VM
-  - System status = check the underlying hardware
-  - Attached EBS status = check attached EBS volumes
+- **Status Check:** Instance status = check the EC2 VM; System status = check the underlying hardware; Attached EBS status = check attached EBS volumes
 - Recovery: Same Private, Public, Elastic IP, metadata, placement group
-
 
 ```mermaid
 flowchart LR
-  accTitle: EC2 Instance Recovery
   n0["EC2 system status metric"]
   n1["CloudWatch alarm"]
   n2["EC2 recovery action"]
@@ -9827,20 +9549,16 @@ flowchart LR
   n1 -->|"notify"| n3
 ```
 
-> A supported EC2 status-check alarm can request instance recovery and separately send a notification.
 
-## CloudWatch Alarm: good to know
+## CloudWatch Alarms — Additional Behavior
 
-
-A metric filter turns matching log patterns into numeric metrics; an alarm evaluates the metric and invokes configured actions.
+**A metric filter turns matching log patterns into numeric metrics; an alarm evaluates the metric and invokes configured actions.**
 
 - Alarms can be created based on CloudWatch Logs Metrics Filters
 - To test alarms and notifications, set the alarm state to Alarm using CLI aws cloudwatch set-alarm-state --alarm-name "myalarm" -- state-value ALARM --state-reason "testing purposes"
 
-
 ```mermaid
 flowchart LR
-  accTitle: CloudWatch Alarm: good to know
   n0["CloudWatch Logs"]
   n1["Metric filter"]
   n2["Custom metric"]
@@ -9852,32 +9570,31 @@ flowchart LR
   n3 -->|"notify"| n4
 ```
 
-> A metric filter turns matching log patterns into numeric metrics; an alarm evaluates the metric and invokes configured actions.
 
 ## AWS CloudTrail
 
-
-CloudTrail records supported AWS API activity for investigation and governance. Event type, collection scope and retention determine the available evidence.
+**CloudTrail records supported AWS API activity for investigation and governance. Event type, collection scope and retention determine the available evidence.**
 
 - CloudTrail is enabled by default!
-- Get an history of events / API calls made within your AWS Account by:
-  - Console
-  - SDK
-  - CLI
-  - AWS Services
+- **Get an history of events / API calls made within your AWS Account by:** Console, SDK, CLI, AWS Services
 - Can put logs from CloudTrail into CloudWatch Logs or S3
-- A trail can be applied to All Regions (default) or a single Region.
+- A trail can be applied to All Regions (default) or a single Region
 - If a resource is deleted in AWS, investigate CloudTrail first!
-
-## CloudTrail Diagram
-
-
-CloudTrail records supported account activity across console, CLI and SDK calls and can deliver trails to S3 and CloudWatch Logs.
-
 
 ```mermaid
 flowchart LR
-  accTitle: CloudTrail Diagram
+  A[AWS API activities] --> B[CloudTrail event history / trail]
+  B --> C[S3 / CloudTrail Lake]
+  C --> D[Security investigations]
+```
+
+
+## CloudTrail Diagram
+
+**CloudTrail records supported account activity across console, CLI and SDK calls and can deliver trails to S3 and CloudWatch Logs.**
+
+```mermaid
+flowchart LR
   n0["Console / CLI / SDK"]
   n1["AWS API activity"]
   n2["CloudTrail"]
@@ -9889,47 +9606,29 @@ flowchart LR
   n2 -->|"configured integration"| n4
 ```
 
-> CloudTrail records supported account activity across console, CLI and SDK calls and can deliver trails to S3 and CloudWatch Logs.
 
 ## CloudTrail Events
 
+**Management events describe control-plane activity; data events cover supported resource-level operations. Enable the event categories needed for the audit question.**
 
-Management events describe control-plane activity; data events cover supported resource-level operations. Enable the event categories needed for the audit question.
+- Operations that are performed on resources in your AWS account
+- **Examples:** Configuring security (IAM AttachRolePolicy); Configuring rules for routing data (Amazon EC2 CreateSubnet); Setting up logging (AWS CloudTrail CreateTrail)
+- By default, trails are configured to log management events
+- Can separate Read Events (that don't modify resources) from Write Events (that may modify resources)
+- **Data Events:** By default, data events are not logged (because high volume operations); Amazon S3 object-level activity (ex: GetObject, DeleteObject, PutObject): can separate Read and Write Events; AWS Lambda function execution activity (the…
+- **CloudTrail Insights Events:** See next slide ☺
 
-  - Operations that are performed on resources in your AWS account
-  - Examples:
-    - Configuring security (IAM AttachRolePolicy)
-    - Configuring rules for routing data (Amazon EC2 CreateSubnet)
-    - Setting up logging (AWS CloudTrail CreateTrail)
-  - By default, trails are configured to log management events.
-  - Can separate Read Events (that don’t modify resources) from Write Events (that may modify resources)
-- Data Events:
-  - By default, data events are not logged (because high volume operations)
-  - Amazon S3 object-level activity (ex: GetObject, DeleteObject, PutObject): can separate Read and Write Events
-  - AWS Lambda function execution activity (the Invoke API)
-- CloudTrail Insights Events:
-  - See next slide ☺
 
 ## CloudTrail Insights
 
+**CloudTrail Insights compares supported activity against a baseline and emits unusual-activity events when enabled.**
 
-CloudTrail Insights compares supported activity against a baseline and emits unusual-activity events when enabled.
-
-- Enable CloudTrail Insights to detect unusual activity in your account:
-  - inaccurate resource provisioning
-  - hitting service limits
-  - Bursts of AWS IAM actions
-  - Gaps in periodic maintenance activity
+- **Enable CloudTrail Insights to detect unusual activity in your account:** inaccurate resource provisioning; hitting service limits; Bursts of AWS IAM actions; Gaps in periodic maintenance activity
 - CloudTrail Insights analyzes normal management events to create a baseline
-- And then continuously analyzes write events to detect unusual patterns
-  - Anomalies appear in the CloudTrail console
-  - Event is sent to Amazon S3
-  - An EventBridge event is generated (for automation needs)
-
+- **And then continuously analyzes write events to detect unusual patterns:** Anomalies appear in the CloudTrail console; Event is sent to Amazon S3; An EventBridge event is generated (for automation needs)
 
 ```mermaid
 flowchart LR
-  accTitle: CloudTrail Insights
   n0["Management activity"]
   n1["Baseline analysis"]
   n2["Insights event"]
@@ -9939,20 +9638,16 @@ flowchart LR
   n2 -->|"configured delivery / response"| n3
 ```
 
-> CloudTrail Insights compares supported activity against a baseline and emits unusual-activity events when enabled.
 
 ## CloudTrail Events Retention
 
-
-Event history provides a limited management-event window; trails in S3 support longer retention and Athena analysis.
+**Event history provides a limited management-event window; trails in S3 support longer retention and Athena analysis.**
 
 - Events are stored for 90 days in CloudTrail
 - To keep events beyond this period, log them to S3 and use Athena
 
-
 ```mermaid
 flowchart LR
-  accTitle: CloudTrail Events Retention
   n0["CloudTrail activity"]
   n1["Event history<br/>Recent management events"]
   n2["Trail in S3<br/>Chosen retention"]
@@ -9962,40 +9657,34 @@ flowchart LR
   n2 -->|"query archived events"| n3
 ```
 
-> Event history provides a limited management-event window; trails in S3 support longer retention and Athena analysis.
 
-## AWS CloudTrail Lake
+## CloudTrail Lake — Event Store
 
-
-CloudTrail Lake stores selected activity in queryable event data stores. The source labels this offering as maintenance-mode material, so availability needs a dated check.
+**CloudTrail Lake stores selected activity in queryable event data stores. The source labels this offering as maintenance-mode material, so availability needs a dated check.**
 
 - Managed data lake for CloudTrail events
-- Integrates collection, storage, preparation, and optimization for analysis & query
-  - Events are converted to ORC format
+- **Integrates collection, storage, preparation, and optimization for analysis & query:** Events are converted to ORC format
 - Enables querying CloudTrail data with SQL
-- Enable it with the “Create event data store” menu choice in the console
-
-## AWS CloudTrail Lake
+- Enable it with the "Create event data store" menu choice in the console
 
 
-Event data store settings select which activity is collected and retained. Query access and collection configuration are separate controls.
+## CloudTrail Lake — Querying & Governance
+
+**Event data store settings select which activity is collected and retained. Query access and collection configuration are separate controls.**
 
 - Note KMS events add up fast and can make your costs blow up
 - Basic event selectors can be selected in the UI
-- Finer grained selection may be achieved with advanced event selectors
-  - This can help control your ingestion and storage costs
-- You can create “channels” to integrate with events outside of AWS
-  - Built-in support for Okta, LaunchDarkly, Clumio, and other CloudTrail partners
-  - Or custom integrations
+- **Finer grained selection may be achieved with advanced event selectors:** This can help control your ingestion and storage costs
+- **You can create "channels" to integrate with events outside of AWS:** Built-in support for Okta, LaunchDarkly, Clumio, and other CloudTrail partners; Or custom integrations
+
 
 ## CloudTrail advanced event selector example
 
+**Advanced selectors choose event categories, resource types, event names and resource ARN prefixes.**
 
-Advanced selectors choose event categories, resource types, event names and resource ARN prefixes.
-
-- The example keeps management events and only PutObject/DeleteObject data events under two S3 prefixes.
-- A resource ARN prefix must match the intended scope; a broad prefix can include more objects than expected.
-- Applying selectors changes trail collection and can affect data-event costs; review in a test configuration first.
+- The example keeps management events and only PutObject/DeleteObject data events under two S3 prefixes
+- A resource ARN prefix must match the intended scope; a broad prefix can include more objects than expected
+- Applying selectors changes trail collection and can affect data-event costs; review in a test configuration first
 
 ```json
 [
@@ -10014,57 +9703,54 @@ Advanced selectors choose event categories, resource types, event names and reso
 ]
 ```
 
+
 ## Querying CloudTrail Lake
 
-
-CloudTrail Lake SQL and dashboards analyze stored events. Results reflect the event types, retention and permissions configured for the store.
+**CloudTrail Lake SQL and dashboards analyze stored events. Results reflect the event types, retention and permissions configured for the store.**
 
 - Roll your own SQL queries
 - Start from sample queries in the CloudTrail Lake Editor
-- Remember to bound your queries by eventTime to constrain costs
+
 
 ## AWS Config
 
-
-Config records resource configuration and evaluates compliance against rules. It answers different questions from application monitoring or an API activity log.
+**Config records resource configuration and evaluates compliance against rules. It answers different questions from application monitoring or an API activity log.**
 
 - Helps record configurations and changes over time
-- Questions that can be solved by AWS Config:
-  - Is there unrestricted SSH access to my security groups?
-  - Do my buckets have any public access?
-  - How has my ALB configuration changed over time?
+- **Questions that can be solved by AWS Config:** Is there unrestricted SSH access to my security groups?; Do my buckets have any public access?; How has my ALB configuration changed over time?
 - You can receive alerts (SNS notifications) for any changes
 - AWS Config is a per-region service
-- Can be aggregated across regions and accounts
 - Possibility of storing the configuration data into S3 (analyzed by Athena)
+
+```mermaid
+flowchart LR
+  A[AWS resources] --> B[Config recorder]
+  B --> C[Configuration history]
+  C --> D[Rules / compliance]
+  D --> E[Remediation]
+```
+
 
 ## Config Rules
 
+**Config rules evaluate recorded resources with managed or custom logic. A noncompliant result identifies a condition; remediation is another action.**
 
-Config rules evaluate recorded resources with managed or custom logic. A noncompliant result identifies a condition; remediation is another action.
-
-- Can make custom config rules (must be defined in AWS Lambda)
-  - Ex: evaluate if each EBS disk is of type gp2
-  - Ex: evaluate if each EC2 instance is t2.micro
-- Rules can be evaluated / triggered:
-  - For each config change
-  - And / or: at regular time intervals
+- **Can make custom config rules (must be defined in AWS Lambda):** Ex: evaluate if each EBS disk is of type gp2; Ex: evaluate if each EC2 instance is t2.micro
+- **Rules can be evaluated / triggered:** For each config change; And / or: at regular time intervals
 - AWS Config Rules does not prevent actions from happening (no deny)
 - Pricing: no free tier, $0.003 per configuration item recorded per region, $0.001 per config rule evaluation per region
 
+
 ## AWS Config Resource
 
-
-Config associates resource configuration history with compliance evaluations; CloudTrail supplies a separate API-activity history.
+**Config associates resource configuration history with compliance evaluations; CloudTrail supplies a separate API-activity history.**
 
 - View compliance of a resource over time
 - View configuration of a resource over time
 - View CloudTrail API calls of a resource over time
 
-
 ```mermaid
 flowchart LR
-  accTitle: AWS Config Resource
   n0["Resource configuration"]
   n1["Config timeline"]
   n2["Config rule evaluation"]
@@ -10074,22 +9760,17 @@ flowchart LR
   n2 -->|"compliant / noncompliant"| n3
 ```
 
-> Config associates resource configuration history with compliance evaluations; CloudTrail supplies a separate API-activity history.
 
 ## Config Rules – Remediations
 
-
-A Config remediation can invoke a Systems Manager Automation document; role permissions and retry limits control the corrective action.
+**A Config remediation can invoke a Systems Manager Automation document; role permissions and retry limits control the corrective action.**
 
 - Automate remediation of non-compliant resources using SSM Automation Documents
-- Use AWS-Managed Automation Documents or create custom Automation Documents
-  - Tip: you can create custom Automation Documents that invokes Lambda function
+- **Use AWS-Managed Automation Documents or create custom Automation Documents:** Tip: you can create custom Automation Documents that invokes Lambda function
 - You can set Remediation Retries if the resource is still non-compliant after auto-remediation
-
 
 ```mermaid
 flowchart LR
-  accTitle: Config Rules – Remediations
   n0["Config noncompliance"]
   n1["Remediation configuration"]
   n2["SSM Automation"]
@@ -10099,20 +9780,16 @@ flowchart LR
   n2 -->|"remediate / bounded retry"| n3
 ```
 
-> A Config remediation can invoke a Systems Manager Automation document; role permissions and retry limits control the corrective action.
 
 ## Config Rules – Notifications
 
-
-Config changes and compliance events can route through EventBridge; SNS delivery is another configured notification path.
+**Config changes and compliance events can route through EventBridge; SNS delivery is another configured notification path.**
 
 - Use EventBridge to trigger notifications when AWS resources are non-compliant
 - Ability to send configuration changes and compliance state notifications to SNS (all events – use SNS Filtering or filter at client-side)
 
-
 ```mermaid
 flowchart LR
-  accTitle: Config Rules – Notifications
   n0["AWS Config"]
   n1["EventBridge"]
   n2["Lambda / SQS / SNS"]
@@ -10122,92 +9799,80 @@ flowchart LR
   n0 -->|"configured topic"| n3
 ```
 
-> Config changes and compliance events can route through EventBridge; SNS delivery is another configured notification path.
 
 ## CloudWatch vs CloudTrail vs Config
 
+**Use CloudWatch for operational telemetry, CloudTrail for API activity and Config for configuration history and compliance. Combine their evidence when investigating a change.**
 
-Use CloudWatch for operational telemetry, CloudTrail for API activity and Config for configuration history and compliance. Combine their evidence when investigating a change.
+- Performance monitoring (metrics, CPU, network, etc…) & dashboards
+- Events & Alerting
+- Log Aggregation & Analysis
+- **CloudTrail:** Record API calls made within your Account by everyone; Can define trails for specific resources; Global Service
+- **Config:** Record configuration changes; Evaluate resources against compliance rules; Get timeline of changes and compliance
 
-  - Performance monitoring (metrics, CPU, network, etc…) & dashboards
-  - Events & Alerting
-  - Log Aggregation & Analysis
-- CloudTrail
-  - Record API calls made within your Account by everyone
-  - Can define trails for specific resources
-  - Global Service
-- Config
-  - Record configuration changes
-  - Evaluate resources against compliance rules
-  - Get timeline of changes and compliance
+```mermaid
+flowchart TB
+  A[AWS environment] --> B[CloudWatch: telemetry and alerts]
+  A --> C[CloudTrail: API activity]
+  A --> D[Config: resource state and compliance]
+```
+
 
 ## For an Elastic Load Balancer
 
+**For a load balancer, monitor traffic and errors with CloudWatch, investigate API changes with CloudTrail and evaluate configuration with Config.**
 
-For a load balancer, monitor traffic and errors with CloudWatch, investigate API changes with CloudTrail and evaluate configuration with Config.
-
-  - Monitoring Incoming connections metric
-  - Visualize error codes as % over time
-  - Make a dashboard to get an idea of your load balancer performance
-- Config:
-  - Track security group rules for the Load Balancer
-  - Track configuration changes for the Load Balancer
-  - Ensure an SSL certificate is always assigned to the Load Balancer (compliance)
-- CloudTrail:
-  - Track who made any changes to the Load Balancer with API calls
-
-## What is CloudFormation
+- Monitoring Incoming connections metric
+- Visualize error codes as % over time
+- Make a dashboard to get an idea of your load balancer performance
+- **Config:** Track security group rules for the Load Balancer; Track configuration changes for the Load Balancer; Ensure an SSL certificate is always assigned to the Load Balancer (compliance)
+- **CloudTrail:** Track who made any changes to the Load Balancer with API calls
 
 
-CloudFormation declares infrastructure in templates and manages it as stacks. Review the proposed resources and dependencies before applying a change.
+## AWS CloudFormation — Infrastructure as Code
 
-- For example, within a CloudFormation template, you say:
-  - I want a security group
-  - I want two EC2 instances using this security group
-  - I want an S3 bucket
-  - I want a load balancer (ELB) in front of these machines
+**CloudFormation declares infrastructure in templates and manages it as stacks. Review the proposed resources and dependencies before applying a change.**
+
+- **For example, within a CloudFormation template, you say:** I want a security group; I want two EC2 instances using this security group; I want an S3 bucket; I want a load balancer (ELB) in front of these machines
 - Then CloudFormation creates those for you, in the right order, with the exact configuration that you specify
-
-## Benefits of AWS CloudFormation (1/2)
-
-
-Infrastructure templates make resource definitions repeatable and reviewable. Stack metadata also helps associate deployed resources with an application and its costs.
-
-  - No resources are manually created, which is excellent for control
-  - Changes to the infrastructure are reviewed through code
-- Cost
-  - Each resources within the stack is tagged with an identifier so you can easily see how much a stack costs you
-  - You can estimate the costs of your resources using the CloudFormation template
-  - Savings strategy: In Dev, you could automation deletion of templates at 5 PM and recreated at 8 AM, safely
-
-## Benefits of AWS CloudFormation (2/2)
-
-
-Reusable templates and change sets support consistent deployment. Automation still requires deliberate permissions, dependency handling and review of destructive changes.
-
-  - Ability to destroy and re-create an infrastructure on the cloud on the fly
-  - Automated generation of Diagram for your templates!
-  - Declarative programming (no need to figure out ordering and orchestration)
-- Don’t re-invent the wheel
-  - Leverage existing templates on the web!
-  - Leverage the documentation
-- Supports (almost) all AWS resources:
-  - Everything we’ll see in this course is supported
-  - You can use “custom resources” for resources that are not supported
-
-## CloudFormation + Infrastructure Composer
-
-
-Infrastructure Composer visualizes CloudFormation resources and dependencies; the template remains the deployment source.
-
-- Example: WordPress CloudFormation Stack
-- We can see all the resources
-- We can see the relations between the components
-
 
 ```mermaid
 flowchart LR
-  accTitle: CloudFormation + Infrastructure Composer
+  A[YAML / JSON template] --> B[CloudFormation stack]
+  B --> C[Create / update resources]
+  C --> D[Detect drift / manage changes]
+```
+
+
+## Benefits of AWS CloudFormation (1/2)
+
+**Infrastructure templates make resource definitions repeatable and reviewable. Stack metadata also helps associate deployed resources with an application and its costs.**
+
+- No resources are manually created, which is excellent for control
+- Changes to the infrastructure are reviewed through code
+- **Cost:** Each resources within the stack is tagged with an identifier so you can easily see how much a stack costs you; You can estimate the costs of your resources using the CloudFormation template; Savings strategy: In Dev, you could…
+
+
+## Benefits of AWS CloudFormation (2/2)
+
+**Reusable templates and change sets support consistent deployment. Automation still requires deliberate permissions, dependency handling and review of destructive changes.**
+
+- Ability to destroy and re-create an infrastructure on the cloud on the fly
+- Automated generation of Diagram for your templates!
+- Declarative programming (no need to figure out ordering and orchestration)
+- **Don't re-invent the wheel:** Leverage existing templates on the web!; Leverage the documentation
+- **Supports (almost) all AWS resources:** Everything we'll see in this course is supported; You can use "custom resources" for resources that are not supported
+
+
+## CloudFormation + Infrastructure Composer
+
+**Infrastructure Composer visualizes CloudFormation resources and dependencies; the template remains the deployment source.**
+
+- Example: WordPress CloudFormation Stack
+- We can see the relations between the components
+
+```mermaid
+flowchart LR
   n0["CloudFormation template"]
   n1["Composer resource graph"]
   n2["Networking / compute / database"]
@@ -10217,25 +9882,19 @@ flowchart LR
   n0 -->|"deploy"| n3
 ```
 
-> Infrastructure Composer visualizes CloudFormation resources and dependencies; the template remains the deployment source.
 
 ## SSM Parameter Store
 
-
-An application retrieves authorized Parameter Store values; SecureString access also depends on KMS decrypt permissions.
+**An application retrieves authorized Parameter Store values; SecureString access also depends on KMS decrypt permissions.**
 
 - Secure storage for configuration and secrets
 - Optional Seamless Encryption using KMS
 - Serverless, scalable, durable, easy SDK
 - Version tracking of configurations / secrets
 - Security through IAM
-- Notifications with Amazon EventBridge
-- Integration with CloudFormation
-
 
 ```mermaid
 flowchart LR
-  accTitle: SSM Parameter Store
   n0["Application role"]
   n1["Parameter Store"]
   n2["KMS key"]
@@ -10245,28 +9904,18 @@ flowchart LR
   n1 -->|"return permitted value"| n3
 ```
 
-> An application retrieves authorized Parameter Store values; SecureString access also depends on KMS decrypt permissions.
 
 ## SSM Parameter Store Hierarchy
 
+**Hierarchical parameter names support environment/application organization; recursive path access must be scoped carefully.**
 
-Hierarchical parameter names support environment/application organization; recursive path access must be scoped carefully.
-
-- /my-department/
-  - my-app/
-    - dev/
-      - db-url
-      - db-password
-    - prod/
-  - other-app/
+- **/my-department/:** my-app/ · dev/ · db-url · db-password · prod/ · other-app/
 - /other-department/
 - /aws/reference/secretsmanager/secret_ID_in_Secrets_Manager
 - /aws/service/ami-amazon-linux-latest/amzn2-ami-hvm-x86_64-gp2 (public)
 
-
 ```mermaid
 flowchart LR
-  accTitle: SSM Parameter Store Hierarchy
   n0["Parameter root"]
   n1["/dev/app"]
   n2["/prod/app"]
@@ -10277,16 +9926,10 @@ flowchart LR
   n2 ---|"prod values"| n3
 ```
 
-> Hierarchical parameter names support environment/application organization; recursive path access must be scoped carefully.
 
 ## Parameter Store tiers
 
-
-Advanced parameters add policies and larger values, with charges; choose the tier for required capabilities.
-
-- Course quota snapshot per account/Region: Standard 10,000 parameters and 4 KB values; Advanced 100,000 and 8 KB.
-- Only Advanced supports parameter policies in the comparison.
-- Storage and high-throughput/API charges are separate considerations; verify current pricing rather than memorizing the screenshot's dollar amount.
+**Advanced parameters add policies and larger values, with charges; choose the tier for required capabilities.**
 
 | Capability | Standard (dated snapshot) | Advanced (dated snapshot) |
 | --- | --- | --- |
@@ -10295,18 +9938,20 @@ Advanced parameters add policies and larger values, with charges; choose the tie
 | Parameter policies | No | Yes |
 | Billing | Check throughput charges | Storage plus applicable throughput charges |
 
+- Course quota snapshot per account/Region: Standard 10,000 parameters and 4 KB values; Advanced 100,000 and 8 KB
+- Only Advanced supports parameter policies in the comparison
+- Storage and high-throughput/API charges are separate considerations; verify current pricing rather than memorizing the screenshot's dollar amount
+
+
 ## Parameters Policies (for advanced parameters)
 
-
-Advanced-parameter policies can expire a value or notify about expiry and lack of change; notifications do not automatically rotate secrets.
+**Advanced-parameter policies can expire a value or notify about expiry and lack of change; notifications do not automatically rotate secrets.**
 
 - Allow to assign a TTL to a parameter (expiration date) to force updating or deleting sensitive data such as passwords
 - Can assign multiple policies at a time
 
-
 ```mermaid
 flowchart LR
-  accTitle: Parameters Policies (for advanced parameters)
   n0["Advanced parameter"]
   n1["Expiration policy"]
   n2["Expiration notification"]
@@ -10319,78 +9964,80 @@ flowchart LR
   n3 -->|"policy event"| n4
 ```
 
-> Advanced-parameter policies can expire a value or notify about expiry and lack of change; notifications do not automatically rotate secrets.
 
 ## Well Architected Framework General Guiding Principles
 
-
-Well-Architected reviews start from operational requirements, favor measured decisions and revisit assumptions as the workload changes.
+**Well-Architected reviews start from operational requirements, favor measured decisions and revisit assumptions as the workload changes.**
 
 - Stop guessing your capacity needs
 - Test systems at production scale
 - Automate to make architectural experimentation easier
-- Allow for evolutionary architectures
-  - Design based on changing requirements
+- **Allow for evolutionary architectures:** Design based on changing requirements
 - Drive architectures using data
-- Improve through game days
-  - Simulate applications for flash sale days
+- **Improve through game days:** Simulate applications for flash sale days
+
 
 ## Well-Architected: six pillars and explicit tradeoffs
 
+**Review operational excellence, security, reliability, performance efficiency, cost optimization and sustainability together.**
 
-Review operational excellence, security, reliability, performance efficiency, cost optimization and sustainability together.
+- The pillars interact; architecture decisions can require tradeoffs between them
+- Use the framework to document benefits and evaluate actual tradeoffs
 
-- The pillars interact; architecture decisions can require tradeoffs between them.
-- Use the framework to document benefits and evaluate actual tradeoffs.
+```mermaid
+flowchart TB
+  A[AWS Well-Architected] --> B[Operational excellence]
+  A --> C[Security]
+  A --> D[Reliability]
+  A --> E[Performance efficiency]
+  A --> F[Cost optimization]
+  A --> G[Sustainability]
+```
 
-**Current reference (checked 2026-10-13):** [AWS Well-Architected Framework](https://docs.aws.amazon.com/wellarchitected/latest/framework/welcome.html).
+<!-- Source reference: https://docs.aws.amazon.com/wellarchitected/latest/framework/welcome.html -->
+
 
 ## AWS Well-Architected Tool
 
+**The Well-Architected Tool records workload reviews against the framework's pillars and tracks improvement items. A review is an ongoing engineering activity.**
 
-The Well-Architected Tool records workload reviews against the framework's pillars and tracks improvement items. A review is an ongoing engineering activity.
-
-- How does it work?
-  - Select your workload and answer questions
-  - Review your answers against the 6 pillars
-  - Obtain advice: get videos and documentations, generate a report, see the results in a dashboard
-- Let’s have a look: https://console.aws.amazon.com/wellarchitected
-
-## Amazon Managed Grafana
+- **How does it work?:** Select your workload and answer questions; Review your answers against the 6 pillars; Obtain advice: get videos and documentations, generate a report, see the results in a dashboard
+- Let's have a look: https://console.aws.amazon.com/wellarchitected
 
 
-Managed Grafana provides dashboards and alerting over supported observability sources. It visualizes collected telemetry rather than collecting every signal itself.
+## Amazon Managed Grafana — Dashboards
+
+**Managed Grafana provides dashboards and alerting over supported observability sources. It visualizes collected telemetry rather than collecting every signal itself.**
 
 - Integrated with IAM Identity Center (formerly AWS SSO) and/or SAML for user management and permissions
 - Compatible with Grafana plugins and alerts
 - Fully managed, scales automatically
-- Encrypted at rest and in transit, can use KMS.
-
-## Amazon Managed Grafana
+- Encrypted at rest and in transit, can use KMS
 
 
-Each Grafana data source needs its own supported connection and authorization. Combine sources when they help explain one workload's behavior.
+## Amazon Managed Grafana — Integrations
 
-  - CloudWatch, OpenSearch, Timestream, Athena, Redshift, X-Ray
-  - Amazon Managed Service for Prometheus (AMP)
-- Also with everything else Grafana integrates with
-  - GitHub, Google, Azure, MySQL, Redis, JSON, OpenTelemetry, much more.
+**Each Grafana data source needs its own supported connection and authorization. Combine sources when they help explain one workload's behavior.**
+
+- CloudWatch, OpenSearch, Timestream, Athena, Redshift, X-Ray
+- Amazon Managed Service for Prometheus (AMP)
+- **Also with everything else Grafana integrates with:** GitHub, Google, Azure, MySQL, Redis, JSON, OpenTelemetry, much more
+
+
 
 # Section Machine learning
 
+
 ## Amazon SageMaker AI
 
-
-Training learns a model from labeled historical examples; inference applies the model to new feature values.
+**Training learns a model from labeled historical examples; inference applies the model to new feature values.**
 
 - Fully managed service for developers / data scientists to build ML models
 - Typically, difficult to do all the processes in one place + provision servers
 - Machine learning process (simplified): predicting your exam score
 
-
 ```mermaid
 flowchart LR
-  accTitle: Amazon SageMaker AI
   n0["Labeled historical data"]
   n1["Training / tuning"]
   n2["Model"]
@@ -10402,26 +10049,22 @@ flowchart LR
   n3 -->|"new features"| n4
 ```
 
-> Training learns a model from labeled historical examples; inference applies the model to new feature values.
 
 ## SageMaker Feature Store
 
+**A feature is an input used by a model. Feature Store organizes reusable feature values for training and supported serving access patterns.**
 
-A feature is an input used by a model. Feature Store organizes reusable feature values for training and supported serving access patterns.
+- Like, you might predict someone's political party based on "features" such as their address, income, age, etc
+- Machine learning models require fast, secure access to feature data for training
+- It's also a challenge to keep it organized and share features across different models
 
-  - Like, you might predict someone’s political party based on “features” such as their address, income, age, etc.
-- Machine learning models require fast, secure access to feature data for training.
-- It’s also a challenge to keep it organized and share features across different models.
 
 ## Where the features come from is up to you.
 
-
-A feature store organizes reusable features between data preparation and training/inference consumers.
-
+**A feature store organizes reusable features between data preparation and training/inference consumers.**
 
 ```mermaid
 flowchart LR
-  accTitle: Where the features come from is up to you.
   n0["Batch / streaming sources"]
   n1["Feature preparation"]
   n2["Feature Store"]
@@ -10433,17 +10076,13 @@ flowchart LR
   n2 -->|"low-latency features"| n4
 ```
 
-> A feature store organizes reusable features between data preparation and training/inference consumers.
 
 ## How SageMaker Feature Store Organizes Your Data
 
-
-Feature groups define features and records identified by a record identifier and event time.
-
+**Feature groups define features and records identified by a record identifier and event time.**
 
 ```mermaid
 flowchart LR
-  accTitle: How SageMaker Feature Store Organizes Your Data
   n0["Feature Store"]
   n1["Feature group"]
   n2["Record identifier"]
@@ -10455,17 +10094,13 @@ flowchart LR
   n1 ---|"named features"| n4
 ```
 
-> Feature groups define features and records identified by a record identifier and event time.
 
 ## Data Ingestion (streaming or batch)
 
-
-Feature Store ingestion can populate an online store and an offline S3 store; their access patterns serve different workloads.
-
+**Feature Store ingestion can populate an online store and an offline S3 store; their access patterns serve different workloads.**
 
 ```mermaid
 flowchart TB
-  accTitle: Data Ingestion (streaming or batch)
   n0["Streaming / batch ingestion"]
   n1["Feature Store"]
   n2["Online store"]
@@ -10479,33 +10114,28 @@ flowchart TB
   n3 -->|"batch query"| n5
 ```
 
-> Feature Store ingestion can populate an online store and an offline S3 store; their access patterns serve different workloads.
 
 ## SageMaker Feature Store Security
 
-
-Feature data needs authorized access, encrypted storage and protected network transport, with controls matched to its online and offline paths.
+**Feature data needs authorized access, encrypted storage and protected network transport, with controls matched to its online and offline paths.**
 
 - Works with KMS customer master keys
 - Fine-grained access control with IAM
 - May also be secured with AWS PrivateLink
 
+
 ## SageMaker ML Lineage Tracking
 
-
-ML lineage connects input artifacts, processing actions, model artifacts and deployments for traceability.
+**ML lineage connects input artifacts, processing actions, model artifacts and deployments for traceability.**
 
 - Creates & stores your ML workflow (MLOps)
 - Keep a running history of your models
 - Tracking for auditing and compliance
 - Automatically or manually-created tracking entities
 - Integrates with AWS Resource Access Manager for cross-account lineage
-- Sample SageMaker-created lineage graph:
-
 
 ```mermaid
 flowchart LR
-  accTitle: SageMaker ML Lineage Tracking
   n0["Dataset artifact"]
   n1["Processing / training action"]
   n2["Model artifact"]
@@ -10517,69 +10147,59 @@ flowchart LR
   n3 -->|"serving artifact"| n4
 ```
 
-> ML lineage connects input artifacts, processing actions, model artifacts and deployments for traceability.
 
 ## Lineage Tracking Entities
 
-
-Lineage entities describe artifacts, actions and execution components in an ML workflow. Relationships connect the data, processing and model outputs.
+**Lineage entities describe artifacts, actions and execution components in an ML workflow. Relationships connect the data, processing and model outputs.**
 
 - Trial (a model composed of trial components)
 - Experiment (a group of Trials for a given use case)
 - Context (logical grouping of entities)
 - Action (workflow step, model deployment)
 - Artifact (Object or data, such as an S3 bucket or an image in ECR)
-- Association (connects entities together) – has optional AssociationType:
-  - ContributedTo
-  - AssociatedWith
-  - DerivedFrom
-  - Produced
-  - SameAs
+- **Association (connects entities together) – has optional AssociationType:** ContributedTo · AssociatedWith · DerivedFrom · Produced · SameAs
+
 
 ## Querying Lineage Entities
 
+**Lineage queries traverse recorded relationships to investigate dependencies and provenance. The available result depends on which entities and associations were captured.**
 
-Lineage queries traverse recorded relationships to investigate dependencies and provenance. The available result depends on which entities and associations were captured.
-
-  - Part of the Amazon SageMaker SDK for Python
+- Part of the Amazon SageMaker SDK for Python
 - Do things like find all models / endpoints / etc. that use a given artifact
-- Produce a visualization
-  - Requires external Visualizer helper class
+- **Produce a visualization:** Requires external Visualizer helper class
+
 
 ## Ground Truth: availability and labeling concept
 
+**Ground Truth is closed to new customers; existing customers can continue using it.**
 
-Ground Truth is closed to new customers; existing customers can continue using it.
+- AWS announced the maintenance availability change for July 30, 2026. That differs from a complete service shutdown
+- Ground Truth Plus is a separate feature that reached end of support June 30, 2026
+- Keep the human-labeling and active-learning concepts in study notes; check the current official exam guide before inferring exam scope
 
-- AWS announced the maintenance availability change for July 30, 2026. That differs from a complete service shutdown.
-- Ground Truth Plus is a separate feature that reached end of support June 30, 2026.
-- Keep the human-labeling and active-learning concepts in study notes; check the current official exam guide before inferring exam scope.
+<!-- Source reference: https://aws.amazon.com/about-aws/whats-new/2026/06/aws-service-availability/ | https://docs.aws.amazon.com/sagemaker/latest/dg/sms.html -->
 
-**Current reference (checked 2026-10-13):** [AWS service availability update](https://aws.amazon.com/about-aws/whats-new/2026/06/aws-service-availability/); [Ground Truth documentation](https://docs.aws.amazon.com/sagemaker/latest/dg/sms.html).
 
 ## What is Ground Truth?
 
+**Human labeling creates training targets when the raw dataset does not contain them. The labeling workflow defines tasks and checks the returned annotations.**
 
-Human labeling creates training targets when the raw dataset does not contain them. The labeling workflow defines tasks and checks the returned annotations.
-
-- Availability: see the Ground Truth status note above.
+- Availability: see the Ground Truth status note above
 - Example: training an image classification model. Somebody needs to tag a bunch of images with what they are images of before training a neural network
 - Ground Truth manages humans who will label your data for training purposes
 
+
 ## But it’s more than that
 
+**Ground Truth's active-learning pattern sends uncertain examples to human labeling and uses labeled results to improve the model; availability is a separate service-status question.**
 
-Ground Truth's active-learning pattern sends uncertain examples to human labeling and uses labeled results to improve the model; availability is a separate service-status question.
-
-- Availability: see the Ground Truth status note above.
+- Availability: see the Ground Truth status note above
 - Ground Truth creates its own model as images are labeled by people
-- As this model learns, only images the model isn’t sure about are sent to human labelers
+- As this model learns, only images the model isn't sure about are sent to human labelers
 - This can reduce the cost of labeling jobs by 70%
-
 
 ```mermaid
 flowchart LR
-  accTitle: But it’s more than that
   n0["Unlabeled data"]
   n1["Model / confidence selection"]
   n2["Human labeling"]
@@ -10592,67 +10212,54 @@ flowchart LR
   n4 -->|"next iteration"| n1
 ```
 
-> Ground Truth's active-learning pattern sends uncertain examples to human labeling and uses labeled results to improve the model; availability is a separate service-status question.
 
 ## Who are these human labelers?
 
+**Labeling workers may come from managed public, private or vendor workforces in the historical workflow. Workforce selection affects privacy, quality and cost.**
 
-Labeling workers may come from managed public, private or vendor workforces in the historical workflow. Workforce selection affects privacy, quality and cost.
-
-- Availability: see the Ground Truth status note above.
+- Availability: see the Ground Truth status note above
 - Your own internal team
 - Professional labeling companies
 
+
 ## Ground Truth Plus
 
+**Ground Truth Plus was a managed labeling arrangement distinct from Ground Truth. Its separate end-of-support status matters when interpreting this historical workflow.**
 
-Ground Truth Plus was a managed labeling arrangement distinct from Ground Truth. Its separate end-of-support status matters when interpreting this historical workflow.
-
-- Availability: see the Ground Truth status note above.
-- “Our team of AWS Experts” manages the workflow and team of labelers
-  - You fill out an intake form
-  - They contact you and discuss pricing
+- Availability: see the Ground Truth status note above
+- **"Our team of AWS Experts" manages the workflow and team of labelers:** You fill out an intake form; They contact you and discuss pricing
 - You track progress via the Ground Truth Plus Project Portal
 - Get labeled data from S3 when done
 
+
 ## Other ways to generate training labels
 
+**Existing models can help generate candidate labels, with humans reviewing uncertain or unsuitable outputs. Automated labels still require quality assessment.**
 
-Existing models can help generate candidate labels, with humans reviewing uncertain or unsuitable outputs. Automated labels still require quality assessment.
-
-- Availability: see the Ground Truth status note above.
-  - AWS service for image recognition
-  - Automatically classify images
-- Comprehend
-  - AWS service for text analysis and topic modeling
-  - Automatically classify text by topics, sentiment
+- **Availability: see the Ground Truth status note above.:** AWS service for image recognition, Automatically classify images
+- **Comprehend:** AWS service for text analysis and topic modeling; Automatically classify text by topics, sentiment
 - Any pre-trained model or unsupervised technique that may be helpful
 
-## Amazon Mechanical Turk
 
+## Mechanical Turk — Human Tasks
 
-Mechanical Turk matches requesters with workers for small human tasks. Treat task design and result validation as part of the labeling process.
+**Mechanical Turk matches requesters with workers for small human tasks. Treat task design and result validation as part of the labeling process.**
 
-- Availability: see the Ground Truth status note above.
+- Availability: see the Ground Truth status note above
 - Distributed virtual workforce
-- Example:
-  - You have a dataset of 10,000,000 images and you want to labels these images
-  - You distribute the task on Mechanical Turk and humans will tag those images
-  - You set the reward per image (for example $0.10 per image)
+- **Example:** You have a dataset of 10,000,000 images and you want to labels these images; You distribute the task on Mechanical Turk and humans will tag those images; You set the reward per image (for example $0.10 per image)
 - Use cases: image classification, data collection, business processing
 - Integrates with Amazon A2I, SageMaker Ground Truth…
 
-## Amazon Mechanical Turk
 
+## Mechanical Turk — Workflow
 
-A labeling job defines its dataset, labeling instructions and workforce, then collects annotations for review.
+**A labeling job defines its dataset, labeling instructions and workforce, then collects annotations for review.**
 
-- Availability: see the Ground Truth status note above.
-
+- Availability: see the Ground Truth status note above
 
 ```mermaid
 flowchart LR
-  accTitle: Amazon Mechanical Turk
   n0["Input dataset"]
   n1["Labeling instructions + workforce"]
   n2["Annotation tasks"]
@@ -10662,46 +10269,36 @@ flowchart LR
   n2 -->|"results"| n3
 ```
 
-> A labeling job defines its dataset, labeling instructions and workforce, then collects annotations for review.
 
 ## SageMaker Canvas
 
+**Canvas offers a visual path for supported ML preparation and prediction tasks. Validate the dataset and model outcome even when little code is required.**
 
-Canvas offers a visual path for supported ML preparation and prediction tasks. Validate the dataset and model outcome even when little code is required.
-
-- Availability: see the Ground Truth status note above.
+- Availability: see the Ground Truth status note above
 - Upload csv data (csv only for now), select a column to predict, build it, and make predictions
 - Can also join datasets
 - Classification or regression
-- Automatic data cleaning
-  - Missing values
-  - Outliers
-  - Duplicates
+- **Automatic data cleaning:** Missing values, Outliers, Duplicates
 - Share models & datasets with SageMaker Studio
-- Also has generative AI support via Bedrock or JumpStart foundation models
-  - Many are fine-tunable within Canvas
+
 
 ## SageMaker Data Wrangler
 
+**Data Wrangler prepares ML datasets through visual analysis and transformations. The prepared flow still needs export, execution and appropriate data permissions.**
 
-Data Wrangler prepares ML datasets through visual analysis and transformations. The prepared flow still needs export, execution and appropriate data permissions.
-
-- Availability: see the Ground Truth status note above.
+- Availability: see the Ground Truth status note above
 - Import data
 - Visualize data
-- Transform data (300+ transformations to choose from)
-  - Or integrate your own custom xforms with pandas, PySpark, PySpark SQL
-- “Quick Model” to train your model with your data and measure its results
+- **Transform data (300+ transformations to choose from):** Or integrate your own custom xforms with pandas, PySpark, PySpark SQL
+- "Quick Model" to train your model with your data and measure its results
+
 
 ## Data Wrangler sources
 
-
-Data Wrangler imports supported sources, explores and transforms data, then exports a reproducible preparation workflow.
-
+**Data Wrangler imports supported sources, explores and transforms data, then exports a reproducible preparation workflow.**
 
 ```mermaid
 flowchart LR
-  accTitle: Data Wrangler sources
   n0["S3 / Athena / Redshift / other source"]
   n1["Data Wrangler flow"]
   n2["Processing / Pipeline"]
@@ -10711,17 +10308,13 @@ flowchart LR
   n2 -->|"prepared features"| n3
 ```
 
-> Data Wrangler imports supported sources, explores and transforms data, then exports a reproducible preparation workflow.
 
 ## Data Wrangler: Import Data
 
-
-The import screen chooses a source and dataset before previewing records.
-
+**The import screen chooses a source and dataset before previewing records.**
 
 ```mermaid
 flowchart LR
-  accTitle: Data Wrangler: Import Data
   n0["Choose source"]
   n1["Select dataset"]
   n2["Preview"]
@@ -10731,17 +10324,13 @@ flowchart LR
   n2 -->|"confirm schema"| n3
 ```
 
-> The import screen chooses a source and dataset before previewing records.
 
 ## Data Wrangler: Preview Data
 
-
-Preview helps validate types, missing values and sample records before adding transformations.
-
+**Preview helps validate types, missing values and sample records before adding transformations.**
 
 ```mermaid
 flowchart LR
-  accTitle: Data Wrangler: Preview Data
   n0["Imported dataset"]
   n1["Schema / sample preview"]
   n2["Quality observations"]
@@ -10751,17 +10340,13 @@ flowchart LR
   n2 -->|"choose transformations"| n3
 ```
 
-> Preview helps validate types, missing values and sample records before adding transformations.
 
 ## Data Wrangler: Visualize Data
 
-
-Visual analysis helps spot distributions and relationships; a sample plot is evidence to investigate rather than proof of causality.
-
+**Visual analysis helps spot distributions and relationships; a sample plot is evidence to investigate rather than proof of causality.**
 
 ```mermaid
 flowchart LR
-  accTitle: Data Wrangler: Visualize Data
   n0["Dataset"]
   n1["Visualization"]
   n2["Distribution / relationship"]
@@ -10771,17 +10356,13 @@ flowchart LR
   n2 -->|"evaluate"| n3
 ```
 
-> Visual analysis helps spot distributions and relationships; a sample plot is evidence to investigate rather than proof of causality.
 
 ## Data Wrangler: Transform Data
 
-
-Transformations form a reproducible sequence rather than unrecorded edits to a spreadsheet.
-
+**Transformations form a reproducible sequence rather than unrecorded edits to a spreadsheet.**
 
 ```mermaid
 flowchart LR
-  accTitle: Data Wrangler: Transform Data
   n0["Input"]
   n1["Clean / encode / derive"]
   n2["Preview transformed data"]
@@ -10791,17 +10372,13 @@ flowchart LR
   n2 -->|"retain recipe"| n3
 ```
 
-> Transformations form a reproducible sequence rather than unrecorded edits to a spreadsheet.
 
 ## Data Wrangler: Quick Model
 
-
-A quick model provides exploratory feature feedback, not a production-model quality guarantee.
-
+**A quick model provides exploratory feature feedback, not a production-model quality guarantee.**
 
 ```mermaid
 flowchart LR
-  accTitle: Data Wrangler: Quick Model
   n0["Prepared sample"]
   n1["Quick model"]
   n2["Feature / prediction feedback"]
@@ -10811,17 +10388,13 @@ flowchart LR
   n2 -->|"iterate"| n3
 ```
 
-> A quick model provides exploratory feature feedback, not a production-model quality guarantee.
 
 ## Data Wrangler: Export Data Flow
 
-
-Export a validated flow to a supported job or pipeline destination for repeatable execution.
-
+**Export a validated flow to a supported job or pipeline destination for repeatable execution.**
 
 ```mermaid
 flowchart LR
-  accTitle: Data Wrangler: Export Data Flow
   n0["Validated flow"]
   n1["Export configuration"]
   n2["Processing job / pipeline"]
@@ -10831,171 +10404,143 @@ flowchart LR
   n2 -->|"output"| n3
 ```
 
-> Export a validated flow to a supported job or pipeline destination for repeatable execution.
 
 ## Data Wrangler Troubleshooting
 
+**Troubleshoot preparation work from permissions, connectivity, supported formats and resource capacity before changing transformation logic.**
 
-Troubleshoot preparation work from permissions, connectivity, supported formats and resource capacity before changing transformation logic.
+- **Make sure permissions on your data sources allow Data Wrangler access:** Add AmazonSageMakerFullAccess policy
+- **EC2 instance limit:** If you get "The following instance type is not available…" errors; May need to request a quota increase; Service Quotas / Amazon SageMaker / Studio KernelGateway Apps running on ml.m5.4xlarge instance
 
-- Make sure permissions on your data sources allow Data Wrangler access
-  - Add AmazonSageMakerFullAccess policy
-- EC2 instance limit
-  - If you get “The following instance type is not available…” errors
-  - May need to request a quota increase
-  - Service Quotas / Amazon SageMaker / Studio KernelGateway Apps running on ml.m5.4xlarge instance
 
 ## Foundation Models
 
-
-A foundation model is pretrained on broad data and can be adapted or prompted for new tasks. The adaptation method determines what changes inside the model.
+**A foundation model is pretrained on broad data and can be adapted or prompted for new tasks. The adaptation method determines what changes inside the model.**
 
 - GPT-n (OpenAI)
 - Claude (Anthropic)
 - DALL-E (OpenAI, Microsoft)
 - LLaMa (Meta)
 - DeepSeek
-- Nova
-
-## AWS Foundation Models (Base Models)
-
-
-The foundation-model names in this course are examples from its date; model access, capability and lifecycle vary.
-
-- Jurassic-2 (AI21labs)
-  - Multilingual LLMs for text generation
-  - Spanish, French, German, Portuguese, Italian, Dutch
-- Claude (Anthropic)
-  - LLM’s for conversations
-  - Question answering
-  - Workflow automation
-- Stable Diffusion (stability.ai)
-  - Image, art, logo, design generation
-- Llama (Meta)
-  - LLM
-- Amazon Titan
-  - Text summarization
-  - Text generation
-  - Q&A
-  - Embeddings
-    - Personalization
-    - Search
-- Amazon Nova Pro (LLM portfolio of models)
-- Amazon Nova Reels
-  - Video
-
-## Amazon Bedrock
-
-
-Bedrock exposes supported foundation models through managed APIs. Model access, inference configuration and application authorization remain distinct concerns.
-
-  - Invoke chat, text, or image models
-  - Pre-built, your own fine-tuned models, or your own models
-  - Third-party models bill you through AWS via their own pricing
-  - Support for RAG (Retrieval-Augmented Generation… we’ll get there)
-  - Support for LLM agents
-- Serverless
-- Can integrate with SageMaker Canvas
-
-## The Bedrock API Endpoints
-
-
-Bedrock uses different endpoint families for management, inference and agent-related operations. Select the API for the operation rather than relying on one generic endpoint.
-
-- bedrock-runtime: Perform inference (execute prompts, generate embeddings) against these models
-  - Converse, ConverseStream, InvokeModel, InvokeModelWithResponseStream
-- bedrock-agent: Manage, deploy, train LLM agents and knowledge bases
-- bedrock-agent-runtime: Perform inference against agents and knowledge bases
-  - InvokeAgent, Retrieve, RetrieveAndGenerate
-
-## Bedrock authorization
-
-
-Use an authorized IAM principal, including a workload role with temporary credentials; an IAM user is not mandatory.
-
-- Grant the model and API permissions required by the application. Broad AWS-managed policies are examples, not the least-privilege end state.
-- Avoid root credentials for routine model invocation and development.
-
-**Current reference (checked 2026-10-13):** [Bedrock identity and access management](https://docs.aws.amazon.com/bedrock/latest/userguide/security-iam.html).
-
-## Amazon Bedrock: Model Access
-
-
-Model access depends on the model/provider, account permissions and current Bedrock access workflow.
-
-- Amazon is phasing out the need to request access to specific models
-- Be sure to check pricing
-  - aws.amazon.com/bedrock/pricing
-
-## Let’s Play
-
-
-Bedrock playgrounds let you explore supported model input/output and inference settings before building an application.
-
-- Bedrock provides “playground” environments
-  - Chat
-  - Text
-  - Images
-- Must have model access first (you probably do)
-- Also useful for evaluating your own custom or imported models
-- Let’s go hands-on and get a feel for it.
-
-## Fine-tuning
-
-
-Fine-tuning adjusts an existing model using examples for a specific task or behavior. It differs from supplying reference information at inference time.
-
-- Additional training using your own data – potentially lots of it
-  - Eliminates need to build up a big conversation to get the results you want (“prompt engineering” / “prompt design”)
-  - Saves on tokens in the long run
-- Your fine-tuned model can be used like any other
-- You can fine-tune a fine-tuned model, making it “smarter” over time
-- Applications:
-  - Chatbot with a certain personality or style, or with a certain objective (i.e., customer support, writing ads)
-  - Training with data more recent than what the LLM had
-  - Training with proprietary data (i.e., your past emails or messages, customer support transcripts)
-
-## Fine-tuning in Bedrock: “Custom Models”
-
-
-Custom-model support varies by provider and model. Choose supported training inputs and deployment options instead of assuming every catalog model can be tuned.
-
-- Text models: provide labeled training pairs of prompts and completions
-  - Can be questions and answers
-  - Upload training data into S3
-- Image models: provide pairs of image S3 paths to image descriptions (prompts)
-  - Used for text-to-image or image-to- embedding models
-- Use a VPC and PrivateLink for sensitive training data
-- This can get expensive
-- Your resulting “custom model” may then be used like any other.
-
-## “Continued Pre-Training”
-
-
-Continued pretraining adapts a model using additional unlabeled material. It has different data and objective requirements from supervised fine-tuning.
-
-- Just feed it text to familiarize the model with
-  - Your own business documents
-  - Whatever
-- Basically including extra data into the model itself
-  - So you don’t need to include it in the prompts
-
-## Low-Rank Adaptation (LoRA)
-
-
-LoRA freezes base-model weights while training smaller low-rank adapter parameters that modify the output.
-
-- We don’t update the entire model, just slap on some “low-rank matrices” to the attention weights (usually), and train those.
-  - “Low-rank” refers to the complexity of the underlying matrices in the model, but you don’t need that level of understanding for this exam.
-- At inference, these fine-tuned weights get added into the base model
-- Base model remains unchanged
-- Very efficient for storage, training, and inference
-- This is different from an “adapter layer” added to the top of a model
-
 
 ```mermaid
 flowchart LR
-  accTitle: Low-Rank Adaptation (LoRA)
+  A[Pre-training on broad data] --> B[Foundation model]
+  B --> C[Prompting]
+  B --> D[Fine-tuning]
+  B --> E[RAG / external knowledge]
+```
+
+
+## AWS Foundation Models (Base Models)
+
+**The foundation-model names in this course are examples from its date; model access, capability and lifecycle vary.**
+
+- **Jurassic-2 (AI21labs):** Multilingual LLMs for text generation; Spanish, French, German, Portuguese, Italian, Dutch
+- **Claude (Anthropic):** LLM's for conversations, Question answering, Workflow automation
+- **Stable Diffusion (stability.ai):** Image, art, logo, design generation
+- **Llama (Meta):** LLM
+- **Amazon Titan:** Text summarization · Text generation · Q&A · Embeddings · Personalization · Search
+- **Amazon Nova Reels:** Video
+
+
+## Amazon Bedrock
+
+**Bedrock exposes supported foundation models through managed APIs. Model access, inference configuration and application authorization remain distinct concerns.**
+
+- Invoke chat, text, or image models
+- Pre-built, your own fine-tuned models, or your own models
+- Third-party models bill you through AWS via their own pricing
+- Support for RAG (Retrieval-Augmented Generation… we'll get there)
+- Support for LLM agents
+
+```mermaid
+flowchart LR
+  A[Application] --> B[Bedrock API]
+  B --> C[Foundation models]
+  D[Knowledge Bases] -.-> B
+  E[Guardrails] -.-> B
+```
+
+
+## Amazon Bedrock — API Endpoints
+
+**Bedrock uses different endpoint families for management, inference and agent-related operations. Select the API for the operation rather than relying on one generic endpoint.**
+
+- **bedrock-runtime: Perform inference (execute prompts, generate embeddings) against these models:** Converse, ConverseStream, InvokeModel, InvokeModelWithResponseStream
+- bedrock-agent: Manage, deploy, train LLM agents and knowledge bases
+- **bedrock-agent-runtime: Perform inference against agents and knowledge bases:** InvokeAgent, Retrieve, RetrieveAndGenerate
+
+
+## Bedrock authorization
+
+**Use an authorized IAM principal, including a workload role with temporary credentials; an IAM user is not mandatory.**
+
+- Grant the model and API permissions required by the application. Broad AWS-managed policies are examples, not the least-privilege end state
+- Avoid root credentials for routine model invocation and development
+
+<!-- Source reference: https://docs.aws.amazon.com/bedrock/latest/userguide/security-iam.html -->
+
+
+## Amazon Bedrock: Model Access
+
+**Model access depends on the model/provider, account permissions and current Bedrock access workflow.**
+
+- Amazon is phasing out the need to request access to specific models
+- **Be sure to check pricing:** aws.amazon.com/bedrock/pricing
+
+
+## Let’s Play
+
+**Bedrock playgrounds let you explore supported model input/output and inference settings before building an application.**
+
+- **Bedrock provides "playground" environments:** Chat, Text, Images
+- Must have model access first (you probably do)
+- Also useful for evaluating your own custom or imported models
+- Let's go hands-on and get a feel for it
+
+
+## Fine-tuning
+
+**Fine-tuning adjusts an existing model using examples for a specific task or behavior. It differs from supplying reference information at inference time.**
+
+- **Additional training using your own data – potentially lots of it:** Eliminates need to build up a big conversation to get the results you want ("prompt engineering" / "prompt design"); Saves on tokens in the long run
+- Your fine-tuned model can be used like any other
+- You can fine-tune a fine-tuned model, making it "smarter" over time
+- **Applications:** Chatbot with a certain personality or style, or with a certain objective (i.e., customer support, writing ads); Training with data more recent than what the LLM had; Training with proprietary data (i.e., your past emails or…
+
+
+## Fine-tuning in Bedrock: “Custom Models”
+
+**Custom-model support varies by provider and model. Choose supported training inputs and deployment options instead of assuming every catalog model can be tuned.**
+
+- **Text models: provide labeled training pairs of prompts and completions:** Can be questions and answers, Upload training data into S3
+- **Image models: provide pairs of image S3 paths to image descriptions (prompts):** Used for text-to-image or image-to- embedding models
+- Use a VPC and PrivateLink for sensitive training data
+- This can get expensive
+- Your resulting "custom model" may then be used like any other
+
+
+## “Continued Pre-Training”
+
+**Continued pretraining adapts a model using additional unlabeled material. It has different data and objective requirements from supervised fine-tuning.**
+
+- **Just feed it text to familiarize the model with:** Your own business documents, Whatever
+- **Basically including extra data into the model itself:** So you don't need to include it in the prompts
+
+
+## Low-Rank Adaptation (LoRA)
+
+**LoRA freezes base-model weights while training smaller low-rank adapter parameters that modify the output.**
+
+- **We don't update the entire model, just slap on some "low-rank matrices" to the attention weights (usually), and train those.:** "Low-rank" refers to the complexity of the underlying matrices in the model, but you don't need that level of…
+- At inference, these fine-tuned weights get added into the base model
+- Base model remains unchanged
+- Very efficient for storage, training, and inference
+- This is different from an "adapter layer" added to the top of a model
+
+```mermaid
+flowchart LR
   n0["Input"]
   n1["Frozen base weights"]
   n2["Trainable low-rank adapter"]
@@ -11006,22 +10551,17 @@ flowchart LR
   n2 -->|"learned adjustment"| n3
 ```
 
-> LoRA freezes base-model weights while training smaller low-rank adapter parameters that modify the output.
 
 ## Retrieval Augmented Generation (RAG)
 
+**RAG retrieves external evidence and places it in the prompt before generation; it does not retrain the model for every question.**
 
-RAG retrieves external evidence and places it in the prompt before generation; it does not retrain the model for every question.
-
-- Like an open-book exam for LLM’s
+- Like an open-book exam for LLM's
 - You query some external database for the answers instead of relying on the LLM
-- Then, work those answers into the prompt for the LLM to work with
-  - Or, use tools and functions to incorporate the search into the LLM in a slightly more principled way
-
+- **Then, work those answers into the prompt for the LLM to work with:** Or, use tools and functions to incorporate the search into the LLM in a slightly more principled way
 
 ```mermaid
 flowchart LR
-  accTitle: Retrieval Augmented Generation (RAG)
   n0["Question"]
   n1["Retriever + knowledge source"]
   n2["Evidence + question prompt"]
@@ -11034,33 +10574,24 @@ flowchart LR
   n3 -->|"generate with evidence"| n4
 ```
 
-> RAG retrieves external evidence and places it in the prompt before generation; it does not retrain the model for every question.
 
 ## RAG: Pros and Cons
 
-
-RAG supplies retrieved reference material with a prompt, making knowledge easier to update without retraining the model. Retrieval quality becomes a critical dependency.
+**RAG supplies retrieved reference material with a prompt, making knowledge easier to update without retraining the model. Retrieval quality becomes a critical dependency.**
 
 - Updating info is just a matter of updating a database
-- Can leverage “semantic search” via vector stores
-- Can prevent “hallucinations” when you ask the model about something it wasn’t trained on
-- If your boss wants “AI search”, this is an easy way to deliver it.
-- Technically you aren’t “training” a model with this data
-                        - You have made the world’s most overcomplicated search engine
-                        - Very sensitive to the prompt templates you use to incorporate your data
-                        - Non-deterministic
-                        - It can still hallucinate
-                        - Very sensitive to the relevancy of the information you retrieve
+- Can leverage "semantic search" via vector stores
+- Can prevent "hallucinations" when you ask the model about something it wasn't trained on
+- If your boss wants "AI search", this is an easy way to deliver it
+- **Technically you aren't "training" a model with this data:** You have made the world's most overcomplicated search engine · Very sensitive to the prompt templates you use to incorporate your data · Non-deterministic · It can still hallucinate…
+
 
 ## RAG: Example Approach (winning at Jeopardy!)
 
-
-The research illustration encodes a question, retrieves relevant documents and conditions generation on that evidence.
-
+**The research illustration encodes a question, retrieves relevant documents and conditions generation on that evidence.**
 
 ```mermaid
 flowchart LR
-  accTitle: RAG: Example Approach (winning at Jeopardy!)
   n0["Question encoder"]
   n1["Document index"]
   n2["Retrieved passages"]
@@ -11072,32 +10603,28 @@ flowchart LR
   n3 -->|"answer"| n4
 ```
 
-> The research illustration encodes a question, retrieves relevant documents and conditions generation on that evidence.
 
 ## Choosing a Database (Knowledge Base Data Store) for RAG
 
-
-Select a retrieval store from the required query pattern, data model and filtering needs. A vector store is one option rather than the only kind of knowledge source.
+**Select a retrieval store from the required query pattern, data model and filtering needs. A vector store is one option rather than the only kind of knowledge source.**
 
 - Graph database (i.e., Neo4j) for retrieving product recommendations or relationships between items
 - OpenSearch or something for traditional text search (TF/IDF)
 - But almost every example you find of RAG uses a Vector database
 - Note Elasticsearch / OpenSearch can function as a vector DB
 
+
 ## Embeddings
 
-
-Embeddings place semantically similar content near each other; the slide's clusters are conceptual, not measured coordinates.
+**Embeddings place semantically similar content near each other; the slide's clusters are conceptual, not measured coordinates.**
 
 - An embedding is just a big vector associated with your data
-- Think of it as a point in multi- dimensional space (typically 100’s or thousands of dimensions)
+- Think of it as a point in multi- dimensional space (typically 100's or thousands of dimensions)
 - Embeddings are computed such that items that are similar to each other are close to each other in that space
 - We can use embedding base models (like Titan) to compute them en masse
 
-
 ```mermaid
 flowchart LR
-  accTitle: Embeddings
   n0["Related terms A"]
   n1["Embedding model"]
   n2["Semantic neighborhood A"]
@@ -11109,32 +10636,19 @@ flowchart LR
   n1 -->|"different neighborhood"| n4
 ```
 
-> Embeddings place semantically similar content near each other; the slide's clusters are conceptual, not measured coordinates.
 
 ## Embeddings are vectors, so store them in…
 
-
-Vector search compares a query embedding with stored embeddings using the configured distance/similarity metric.
+**Vector search compares a query embedding with stored embeddings using the configured distance/similarity metric.**
 
 - …a vector database!
 - It just stores your data alongside their computed embedding vectors
 - Leverages the embeddings you might already have for ML
-- Retrieval looks like this:
-  - Compute an embedding vector for the thing you want to search for
-  - Query the vector database for the top items close to that vector
-  - You get back the top-N most similar things (K-Nearest Neighbor)
-  - “Vector search”
-- Examples of vector databases
-  - Coercing existing databases to do vector search
-    - OpenSearch / Elasticsearch, SQL, Neptune, Redis, MongoDB, Cassandra
-  - Purpose-built vector DB’s
-    - Pinecone, Weaviate (commercial)
-    - Chroma, Marqo, Vespa, Qdrant, LanceDB, Milvus, vectordb (open source)
-
+- **Retrieval looks like this:** Compute an embedding vector for the thing you want to search for; Query the vector database for the top items close to that vector; You get back the top-N most similar things (K-Nearest Neighbor); "Vector search"
+- **Examples of vector databases:** Coercing existing databases to do vector search · OpenSearch / Elasticsearch, SQL, Neptune, Redis, MongoDB, Cassandra · Purpose-built vector DB's · Pinecone, Weaviate (commercial) · Chroma, Marqo, Vespa…
 
 ```mermaid
 flowchart LR
-  accTitle: Embeddings are vectors, so store them in…
   n0["Query"]
   n1["Embedding"]
   n2["Vector index"]
@@ -11144,17 +10658,13 @@ flowchart LR
   n2 -->|"top-k results"| n3
 ```
 
-> Vector search compares a query embedding with stored embeddings using the configured distance/similarity metric.
 
 ## RAG Example with a Vector Database: Making Data from Star Trek, by Cheating.
 
-
-A retrieval-assisted persona example selects relevant source passages, then combines them with the question and instructions for generation.
-
+**A retrieval-assisted persona example selects relevant source passages, then combines them with the question and instructions for generation.**
 
 ```mermaid
 flowchart LR
-  accTitle: RAG Example with a Vector Database: Making Data from Star Trek, by Cheating.
   n0["Question"]
   n1["Embedding model"]
   n2["Source-text vector store"]
@@ -11167,30 +10677,17 @@ flowchart LR
   n3 -->|"generate"| n4
 ```
 
-> A retrieval-assisted persona example selects relevant source passages, then combines them with the question and instructions for generation.
 
 ## RAG in Bedrock: Knowledge Bases
 
+**A knowledge-base ingestion pipeline parses content, chunks it, embeds chunks and writes a searchable vector index.**
 
-A knowledge-base ingestion pipeline parses content, chunks it, embeds chunks and writes a searchable vector index.
-
-- You can upload your own documents or structured data (via S3, maybe with a JSON schema) into Bedrock “Knowledge Bases”
-  - Other sources: web crawler, Confluence, Salesforce, SharePoint
-- Must use an embedding model
-  - For which you must have obtained model access
-  - Currently Cohere or Amazon Titan
-  - You can control the vector dimension
-- And a vector store of some sort
-  - For development, a serverless OpenSearch instance may be used by default
-  - MemoryDB now has vector capabilties
-  - Or Aurora, MongoDB Atlas, Pinecone, Redis Enterprise Cloud
-  - You can control the “chunking” of your data
-    - How many tokens are represented by each vector
-
+- **You can upload your own documents or structured data (via S3, maybe with a JSON schema) into Bedrock "Knowledge Bases":** Other sources: web crawler, Confluence, Salesforce, SharePoint
+- **Must use an embedding model:** For which you must have obtained model access; Currently Cohere or Amazon Titan; You can control the vector dimension
+- **And a vector store of some sort:** For development, a serverless OpenSearch instance may be used by default · MemoryDB now has vector capabilties · Or Aurora, MongoDB Atlas, Pinecone, Redis Enterprise Cloud · You can control the "chunking" of…
 
 ```mermaid
 flowchart LR
-  accTitle: RAG in Bedrock: Knowledge Bases
   n0["Source documents"]
   n1["Parse / chunk"]
   n2["Embedding model"]
@@ -11202,23 +10699,17 @@ flowchart LR
   n3 -->|"searchable corpus"| n4
 ```
 
-> A knowledge-base ingestion pipeline parses content, chunks it, embeds chunks and writes a searchable vector index.
 
 ## Using Knowledge Bases
 
+**A Bedrock RAG application retrieves relevant OpenSearch content and supplies that context with the question to a model.**
 
-A Bedrock RAG application retrieves relevant OpenSearch content and supplies that context with the question to a model.
-
-- “Chat with your document”
-  - Basically, automatic RAG
+- **"Chat with your document":** Basically, automatic RAG
 - Integrate it into an application directly
-- Incorporate it into an agent
-  - “Agentic RAG”
-
+- **Incorporate it into an agent:** "Agentic RAG"
 
 ```mermaid
 flowchart LR
-  accTitle: Using Knowledge Bases
   n0["User query"]
   n1["OpenSearch retrieval"]
   n2["Context + query"]
@@ -11231,32 +10722,24 @@ flowchart LR
   n3 -->|"generate"| n4
 ```
 
-> A Bedrock RAG application retrieves relevant OpenSearch content and supplies that context with the question to a model.
 
 ## Let’s Make a Knowledge Base
 
+**A knowledge-base workflow ingests documents, prepares chunks and embeddings, and stores them for later retrieval. Each stage influences what context reaches the model.**
 
-A knowledge-base workflow ingests documents, prepares chunks and embeddings, and stores them for later retrieval. Each stage influences what context reaches the model.
+- Hands-on; let's use the text of a book I wrote
 
-- Hands-on; let’s use the text of a book I wrote.
 
 ## Breaking up the R in RAG
 
+**RAG quality depends on indexing, query preparation, retrieval, post-retrieval processing and grounded generation.**
 
-RAG quality depends on indexing, query preparation, retrieval, post-retrieval processing and grounded generation.
-
-- Pre-Retrieval
-  - Indexing
-    - Granularity / chunking
-    - Data extraction
-  - Query Rewriting
+- **Pre-Retrieval:** Indexing, Granularity / chunking, Data extraction, Query Rewriting
 - Retrieval
 - Post-Retrieval
 
-
 ```mermaid
 flowchart TB
-  accTitle: Breaking up the R in RAG
   n0["Prepare / index"]
   n1["Prepare query"]
   n2["Retrieve"]
@@ -11270,24 +10753,18 @@ flowchart TB
   n4 -->|"generation"| n5
 ```
 
-> RAG quality depends on indexing, query preparation, retrieval, post-retrieval processing and grounded generation.
 
 ## Pre-Retrieval
 
-
-Chunk size trades local precision against sufficient context; splitting a text too finely can lose its meaning.
+**Chunk size trades local precision against sufficient context; splitting a text too finely can lose its meaning.**
 
 - What should you be storing in your database?
 - Data granularity matters
-- Example: Every set of lines Data had, or individual sentences? Or blocks of text of a fixed length? Why just Data’s lines?
-  - Or maybe summaries of those lines?
-  - You can use an LLM for this too…
-- The process of splitting up your data prior to storage is referred to as CHUNKING.
-
+- **Example: Every set of lines Data had, or individual sentences? Or blocks of text of a fixed length? Why just Data's lines?:** Or maybe summaries of those lines?, You can use an LLM for this too…
+- The process of splitting up your data prior to storage is referred to as CHUNKING
 
 ```mermaid
 flowchart LR
-  accTitle: Pre-Retrieval
   n0["Document"]
   n1["Very small chunks"]
   n2["Larger contextual chunks"]
@@ -11298,26 +10775,17 @@ flowchart LR
   n2 -->|"context / extra noise"| n3
 ```
 
-> Chunk size trades local precision against sufficient context; splitting a text too finely can lose its meaning.
 
 ## More on Chunking
 
+**Semantic chunking groups related sentences at meaningful boundaries rather than arbitrary character positions.**
 
-Semantic chunking groups related sentences at meaningful boundaries rather than arbitrary character positions.
-
-- Make sure we don’t end up feeding more info into the LLM than it can handle
-- Stay within the limit of how many tokens can be used within a context
-  - This limit is becoming larger and larger though.
-- Semantic Chunking
-  - Ensure each chunk contains semantically independent information
-  - Embedding-based (LlamaIndex / Langchain)
-  - Model-based (BERT)
-  - LLM-based (Basically tell it to do semantic chunking)
-
+- Make sure we don't end up feeding more info into the LLM than it can handle
+- **Stay within the limit of how many tokens can be used within a context:** This limit is becoming larger and larger though
+- **Semantic Chunking:** Ensure each chunk contains semantically independent information; Embedding-based (LlamaIndex / Langchain); Model-based (BERT); LLM-based (Basically tell it to do semantic chunking)
 
 ```mermaid
 flowchart LR
-  accTitle: More on Chunking
   n0["Sentences"]
   n1["Semantic boundary detection"]
   n2["Self-contained chunks"]
@@ -11327,25 +10795,17 @@ flowchart LR
   n2 -->|"index"| n3
 ```
 
-> Semantic chunking groups related sentences at meaningful boundaries rather than arbitrary character positions.
 
 ## Chunking with Bedrock: Standard Chunking
 
+**Fixed-size chunks may overlap to retain boundary context; no chunking treats a supported document as one retrieval unit.**
 
-Fixed-size chunks may overlap to retain boundary context; no chunking treats a supported document as one retrieval unit.
-
-- Fixed Size
-  - You specify tokens per chunk and overlap percentage
-- Default
-  - 300 tokens per chunk, while honoring sentence boundaries (complete sentences preserved within each chunk)
-- No chunking
-  - Every document is a chunk
-  - You could pre-process your own data to “chunk” it however you want per document
-
+- **Fixed Size:** You specify tokens per chunk and overlap percentage
+- **Default:** 300 tokens per chunk, while honoring sentence boundaries (complete sentences preserved within each chunk)
+- **No chunking:** Every document is a chunk; You could pre-process your own data to "chunk" it however you want per document
 
 ```mermaid
 flowchart LR
-  accTitle: Chunking with Bedrock: Standard Chunking
   n0["Document"]
   n1["Fixed token windows"]
   n2["Overlapping boundary text"]
@@ -11355,23 +10815,17 @@ flowchart LR
   n2 -->|"embed chunks"| n3
 ```
 
-> Fixed-size chunks may overlap to retain boundary context; no chunking treats a supported document as one retrieval unit.
 
 ## Chunking with Bedrock: Hierarchical Chunking
 
-
-Hierarchical retrieval indexes smaller child chunks but can return a larger parent to restore context.
+**Hierarchical retrieval indexes smaller child chunks but can return a larger parent to restore context.**
 
 - Nested parent/child chunks
-- Initial search hits the child chunks
-  - But then replaces them with parent chunks to get more context when appropriate
-- The idea is to get better precision in retrieval from the smaller embeddings
-  - But then reclaim comprehensiveness from the parents
-
+- **Initial search hits the child chunks:** But then replaces them with parent chunks to get more context when appropriate
+- **The idea is to get better precision in retrieval from the smaller embeddings:** But then reclaim comprehensiveness from the parents
 
 ```mermaid
 flowchart LR
-  accTitle: Chunking with Bedrock: Hierarchical Chunking
   n0["Document"]
   n1["Parent chunk"]
   n2["Child chunks"]
@@ -11383,29 +10837,17 @@ flowchart LR
   n3 -->|"expand matched context"| n4
 ```
 
-> Hierarchical retrieval indexes smaller child chunks but can return a larger parent to restore context.
 
 ## Chunking with Bedrock: Semantic Chunking
 
+**Semantic chunking uses model-based similarity and a boundary threshold; these settings affect chunk size and ingestion cost.**
 
-Semantic chunking uses model-based similarity and a boundary threshold; these settings affect chunk size and ingestion cost.
-
-- Hits a foundation model to break up chunks based on “semantic content” and not just things like sentences or a fixed chunk size
-- You specify:
-  - Maximum tokens (while honoring sentence boundaries)
-  - Buffer size
-    - Number of surrounding sentences per sentence to consider when embeddings
-    - i.e., buffer size of 1 results in 3 sentences
-    - Too large = introducing noise; too small = missing important context (but more precise)
-  - Breakpoint percentile threshold
-    - How “semantically similar” a chunk must be
-    - Higher = more distinguishable chunks, less of them, larger chunks.
-- This costs money; you’re charged for the underlying FM used for this
-
+- Hits a foundation model to break up chunks based on "semantic content" and not just things like sentences or a fixed chunk size
+- **You specify:** Maximum tokens (while honoring sentence boundaries) · Buffer size · Number of surrounding sentences per sentence to consider when embeddings · i.e., buffer size of 1 results in 3 sentences · Too large = introducing noise; too…
+- This costs money; you're charged for the underlying FM used for this
 
 ```mermaid
 flowchart LR
-  accTitle: Chunking with Bedrock: Semantic Chunking
   n0["Text sentences"]
   n1["Embedding / similarity"]
   n2["Boundary threshold"]
@@ -11415,44 +10857,28 @@ flowchart LR
   n2 -->|"split"| n3
 ```
 
-> Semantic chunking uses model-based similarity and a boundary threshold; these settings affect chunk size and ingestion cost.
 
 ## Optimizing your Embeddings
 
+**Embedding size and storage choices affect cost, latency and retrieval quality. Evaluate the resulting search behavior before reducing representation size.**
 
-Embedding size and storage choices affect cost, latency and retrieval quality. Evaluate the resulting search behavior before reducing representation size.
+- I'm talking vector size here, not chunk size
+- Smaller vectors = fewer dimensions per chunk = less cost
+- However there is a tradeoff with your retrieval performance
+- **Amazon Titan has a default of 1024+ dimensions:** This might be more than you need!; Balance dimensionality with domain fit; Are the semantic concepts you are searching for really that complex?
 
-  - I’m talking vector size here, not chunk size
-  - Smaller vectors = fewer dimensions per chunk = less cost
-  - However there is a tradeoff with your retrieval performance
-- Amazon Titan has a default of 1024+ dimensions
-  - This might be more than you need!
-  - Balance dimensionality with domain fit
-    - Are the semantic concepts you are searching for really that complex?
 
 ## Sparse vs. Dense Embeddings
 
+**Sparse vectors emphasize token occurrence; dense vectors encode learned semantic features. Hybrid search combines complementary signals.**
 
-Sparse vectors emphasize token occurrence; dense vectors encode learned semantic features. Hybrid search combines complementary signals.
-
-- Sparse = large vectors that are mostly empty
-  - Ie. One-hot encoding
-- Dense = smaller vectors that contain more semantic information
-  - This is what you generally use
-- There is a tradeoff
-  - Sparse vectors give greater similarity factors
-  - Dense vectors are more efficient (in memory, and in general)
-  - Classical AI systems have ways to compress sparse vectors
-- Wait, what’s a similarity factor
-  - Some measure of how close two vectors are
-  - A common one is cosine similarity
-  - Remember your trig? Cosine is related to the angle between two vectors.
-    - And it has a nice smoothness to it
-
+- **Sparse = large vectors that are mostly empty:** Ie. One-hot encoding
+- **Dense = smaller vectors that contain more semantic information:** This is what you generally use
+- **There is a tradeoff:** Sparse vectors give greater similarity factors; Dense vectors are more efficient (in memory, and in general); Classical AI systems have ways to compress sparse vectors
+- **Wait, what's a similarity factor:** Some measure of how close two vectors are; A common one is cosine similarity; And it has a nice smoothness to it
 
 ```mermaid
 flowchart LR
-  accTitle: Sparse vs. Dense Embeddings
   n0["Text"]
   n1["Sparse token representation"]
   n2["Dense embedding"]
@@ -11463,26 +10889,17 @@ flowchart LR
   n2 -->|"semantic signal"| n3
 ```
 
-> Sparse vectors emphasize token occurrence; dense vectors encode learned semantic features. Hybrid search combines complementary signals.
 
 ## Optimizing Retrieval with Metadata
 
+**Metadata filters constrain eligible documents alongside vector similarity, improving scope and access-aware retrieval.**
 
-Metadata filters constrain eligible documents alongside vector similarity, improving scope and access-aware retrieval.
-
-- Your vector DB can store more than just vectors and the raw text of the chunk
-  - Bedrock Knowledge Bases can treat certain columns as content vs. metadata
-  - Pass in a metadata.json file to specify what’s what
-  - This makes sure you aren’t chunking up metadata (like creation date) but can still retrieve it
-- If you add metadata tags for things like topics, what section of the document we’re in, etc… you can use this for better retrieval too.
-  - Relevance scoring against metadata can be used for ranking
-- Other examples of metadata
-  - Document ID, category, access control, data lineage, additional context }
-
+- **Your vector DB can store more than just vectors and the raw text of the chunk:** Bedrock Knowledge Bases can treat certain columns as content vs. metadata; Pass in a metadata.json file to specify what's what; This makes sure you aren't…
+- **If you add metadata tags for things like topics, what section of the document we're in, etc… you can use this for better retrieval too.:** Relevance scoring against metadata can be used for ranking
+- **Other examples of metadata:** Document ID, category, access control, data lineage, additional context }
 
 ```mermaid
 flowchart LR
-  accTitle: Optimizing Retrieval with Metadata
   n0["Query + metadata constraint"]
   n1["Eligible document subset"]
   n2["Vector similarity"]
@@ -11492,22 +10909,17 @@ flowchart LR
   n2 -->|"rank results"| n3
 ```
 
-> Metadata filters constrain eligible documents alongside vector similarity, improving scope and access-aware retrieval.
 
-## Keeping Your KB Up to Date
+## Bedrock Knowledge Bases — Refresh & Sync
 
-
-An S3-triggered ingestion function can update an embedding index; handle updates and deletes so retrieval does not become stale.
+**An S3-triggered ingestion function can update an embedding index; handle updates and deletes so retrieval does not become stale.**
 
 - New or changed content can trigger a Lambda function
 - This Lambda function can then generate new embeddings
-- Batch-generate them for greater efficiency
-  - Instead of syncing on every change, maybe you can do so on a schedule
-
+- **Batch-generate them for greater efficiency:** Instead of syncing on every change, maybe you can do so on a schedule
 
 ```mermaid
 flowchart LR
-  accTitle: Keeping Your KB Up to Date
   n0["S3 content event"]
   n1["Lambda ingestion"]
   n2["Bedrock embedding model"]
@@ -11517,31 +10929,17 @@ flowchart LR
   n2 -->|"upsert vectors + metadata"| n3
 ```
 
-> An S3-triggered ingestion function can update an embedding index; handle updates and deletes so retrieval does not become stale.
 
 ## OpenSearch as a Vector Store
 
+**Hybrid search combines keyword and vector retrieval, then ranks the combined candidate set.**
 
-Hybrid search combines keyword and vector retrieval, then ranks the combined candidate set.
-
-- Serverless vector stores
-  - Note “serverless” does not mean “scales to zero”
-    - Remember to shut down your serverless OpenSearch instances if you’re not using them – or you’ll keep getting billed
-  - The exam treats OpenSearch as the primary implementation for backing Bedrock Knowledge Bases
-    - But I think this might get subsumed by the newer S3 vectors feature
-- Not limited to Bedrock Knowledge Bases
-  - Can also integrate with SageMaker AI and HuggingFace or custom models for RAG
-- SEMANTIC vs. HYBRID search
-  - Semantic refers to vector search
-    - As we’ve seen relevancy can be elusive and dependent on your chunking strategy
-  - Hybrid combines vector and keyword search
-    - Requires indexing filterable keyword fields for metadata
-  - This is important
-
+- **Serverless vector stores:** Note "serverless" does not mean "scales to zero"; The exam treats OpenSearch as the primary implementation for backing Bedrock Knowledge Bases; But I think this might get subsumed by the newer S3 vectors feature
+- **Not limited to Bedrock Knowledge Bases:** Can also integrate with SageMaker AI and HuggingFace or custom models for RAG
+- **SEMANTIC vs. HYBRID search:** Semantic refers to vector search · As we've seen relevancy can be elusive and dependent on your chunking strategy · Hybrid combines vector and keyword search · Requires indexing filterable keyword fields for…
 
 ```mermaid
 flowchart LR
-  accTitle: OpenSearch as a Vector Store
   n0["Query"]
   n1["Keyword search"]
   n2["Vector search"]
@@ -11554,78 +10952,47 @@ flowchart LR
   n3 -->|"ranking"| n4
 ```
 
-> Hybrid search combines keyword and vector retrieval, then ranks the combined candidate set.
 
 ## OpenSearch Vector Engines
 
+**OpenSearch vector engines provide different indexing and search implementations. Engine, algorithm and supported parameters must be selected together.**
 
-OpenSearch vector engines provide different indexing and search implementations. Engine, algorithm and supported parameters must be selected together.
-
-- Exact Nearest Neighbor search
-  - This is slow
-- Approximate Nearest Neighbor (ANN) search
-  - Heirarchical Navigable Small World ()
-    - Fast, high-quality, simple – but uses lots of RAM
-  - Inverted File (IVF)
-    - Better for really huge datasets, can trade recall for speed & memory
-- Tuning
-  - M = How many edges per node
-    - Higher M -> denser graph, higher recall, but more memory
-  - ef_construction = Size of dynamic list used for KNN graph
-    - Higher -> more accurate graph, slower indexing speed
-  - ef_search = How thoroughly the graph is explored
-    - Higher -> higher recall, but slower search performance
-
-## OpenSearch as a Vector Store: Finer Points
+- **Exact Nearest Neighbor search:** This is slow
+- **Approximate Nearest Neighbor (ANN) search:** Heirarchical Navigable Small World (); Fast, high-quality, simple – but uses lots of RAM; Inverted File (IVF); Better for really huge datasets, can trade recall for speed & memory
+- **Tuning:** M = How many edges per node · Higher M -> denser graph, higher recall, but more memory · ef_construction = Size of dynamic list used for KNN graph · Higher -> more accurate graph, slower indexing speed · ef_search = How thoroughly…
 
 
-Vector compression reduces the representation's storage or memory footprint. Evaluate the quality and latency effects on the actual retrieval task.
+## OpenSearch Vector Store — Storage & Querying
 
-  - Different ANN methods have their own techniques (, IVF)
-  - Dense embeddings add up fast
-- Binary vectors
-  - Bit sequences (stored as bytes)
-  - Not embeddings, but used for fast distance search
-  - 32x compression compared to float32
-- FP16
-  - A form of scalar quantization
-  - Store embedding dimensions as 16-bit values instead of 32-bit
-  - What does
+**Vector compression reduces the representation's storage or memory footprint. Evaluate the quality and latency effects on the actual retrieval task.**
 
-## OpenSearch as a Vector Store: Finer Points
+- Different ANN methods have their own techniques (, IVF)
+- Dense embeddings add up fast
+- **Binary vectors:** Bit sequences (stored as bytes); Not embeddings, but used for fast distance search; 32x compression compared to float32
+- **FP16:** A form of scalar quantization; Store embedding dimensions as 16-bit values instead of 32-bit; What does
 
 
-Vector-index shard layout affects memory use, parallelism and distribution of search work. Size it from the dataset and query workload.
+## OpenSearch Vector Store — Operational Trade-offs
 
-  - Balance shard size and CPU ratio
-  - Larger shards for semantic search (30-50 GB)
-    - Vector search benefits from fewer, larger shards because there is less cross-shard coordination.
-  - Smaller for hybrid (10-30 GB)
-  - On OpenSearch Serverless, this is automatic
-- Multi-index approaches
-  - Different document types belong in their own index
-  - This way you can tune performance for each corpus
-  - You might want different embedding models for different types of data
-  - You’ll need some sort of query routing to pull this off.
+**Vector-index shard layout affects memory use, parallelism and distribution of search work. Size it from the dataset and query workload.**
 
-## Amazon Aurora as a Vector Store
+- Balance shard size and CPU ratio
+- **Larger shards for semantic search (30-50 GB):** Vector search benefits from fewer, larger shards because there is less cross-shard coordination
+- Smaller for hybrid (10-30 GB)
+- On OpenSearch Serverless, this is automatic
+- **Multi-index approaches:** Different document types belong in their own index; This way you can tune performance for each corpus; You might want different embedding models for different types of data; You'll need some sort of query routing to…
 
 
-A PostgreSQL pgvector table stores vectors and metadata; the query chooses the distance operator and supported index strategy.
+## Aurora PostgreSQL — Vector Search
 
-- pgvector extension
-  - Creates a new “vector” column type
-  - Can compute cosine, L2, or inner product distances
-  - The source mentions IVF similarity search but leaves the alternative after "or" unfinished.
-  - Also adds vector operators for SQL
-    - This gives it an advantage over OpenSearch if you need complex filtering logic and stuff.
+**A PostgreSQL pgvector table stores vectors and metadata; the query chooses the distance operator and supported index strategy.**
+
+- **pgvector extension:** Creates a new "vector" column type; Can compute cosine, L2, or inner product distances; Also adds vector operators for SQL; This gives it an advantage over OpenSearch if you need complex filtering logic and stuff
 - Allows you to store structured and vector data in the same place
 - Can be appropriate for small / medium RAG systems with mostly structured data
 
-
 ```mermaid
 flowchart LR
-  accTitle: Amazon Aurora as a Vector Store
   n0["Embeddings + metadata"]
   n1["pgvector table"]
   n2["Distance query / index"]
@@ -11635,22 +11002,17 @@ flowchart LR
   n2 -->|"rank by distance"| n3
 ```
 
-> A PostgreSQL pgvector table stores vectors and metadata; the query chooses the distance operator and supported index strategy.
 
 ## Amazon Quick
 
-
-Amazon Quick can connect authenticated employees with permitted enterprise content and configured application capabilities.
+**Amazon Quick can connect authenticated employees with permitted enterprise content and configured application capabilities.**
 
 - Successor to Amazon Q Business
-- Agentic AI assistant for your employees: answer, research, analyze, act
-  - Connects to your company’s documents, apps, databases and the Internet
+- **Agentic AI assistant for your employees: answer, research, analyze, act:** Connects to your company's documents, apps, databases and the Internet
 - Built on Amazon Bedrock, your data is never used to train models
-
 
 ```mermaid
 flowchart LR
-  accTitle: Amazon Quick
   n0["Employee"]
   n1["Quick workspace"]
   n2["Enterprise content"]
@@ -11660,25 +11022,19 @@ flowchart LR
   n1 -->|"configured action"| n3
 ```
 
-> Amazon Quick can connect authenticated employees with permitted enterprise content and configured application capabilities.
 
 ## Amazon Quick – Capabilities
 
+**Quick indexed knowledge can support research, flows and other workspace capabilities.**
 
-Quick indexed knowledge can support research, flows and other workspace capabilities.
-
-- Quick Index – unified, searchable knowledge base of your company data (fully managed RAG)
-  - Knowledge bases from S3, SharePoint, OneDrive, Google Drive, Confluence, web pages…
+- **Quick Index – unified, searchable knowledge base of your company data (fully managed RAG):** Knowledge bases from S3, SharePoint, OneDrive, Google Drive, Confluence, web pages…
 - Quick Research – deep research agent, combines internal data and the Internet, cited reports
 - Quick Flows – simple automations built with natural language (e.g., weekly report email)
 - Quick Automate – multi-step agentic workflows across systems, with human approvals
 - Quick Sight – AI-powered BI dashboards, ask questions about your data (formerly QuickSight)
-- Spaces – shared workspace of documents, dashboards and agents for a team
-
 
 ```mermaid
 flowchart LR
-  accTitle: Amazon Quick – Capabilities
   n0["Enterprise index"]
   n1["Research"]
   n2["Flows / automation"]
@@ -11688,22 +11044,17 @@ flowchart LR
   n0 ---|"workspace capabilities"| n3
 ```
 
-> Quick's indexed knowledge can support research, flows and other workspace capabilities.
 
 ## Amazon Quick + IAM Identity Center
 
-
-Identity integration and source permissions determine which enterprise data an authenticated user can retrieve.
+**Identity integration and source permissions determine which enterprise data an authenticated user can retrieve.**
 
 - Users can be authenticated through IAM Identity Center
 - Users receive responses generated only from the documents they have access to
-- IAM Identity Center can be configured with external Identity Providers
-  - IdP: Google Login, Microsoft Active Directory…
-
+- **IAM Identity Center can be configured with external Identity Providers:** IdP: Google Login, Microsoft Active Directory…
 
 ```mermaid
 flowchart LR
-  accTitle: Amazon Quick + IAM Identity Center
   n0["Identity provider"]
   n1["IAM Identity Center"]
   n2["Authenticated employee"]
@@ -11715,24 +11066,16 @@ flowchart LR
   n3 -->|"authorized retrieval"| n4
 ```
 
-> Identity integration and source permissions determine which enterprise data an authenticated user can retrieve.
 
 ## Amazon Quick – Integrations
 
+**Enterprise connectors index supported content; action connectors separately invoke permitted business operations.**
 
-Enterprise connectors index supported content; action connectors separately invoke permitted business operations.
-
-- Knowledge Bases (fully managed RAG) – index your company data into Quick Index
-  - Amazon S3, Google Drive, OneDrive, SharePoint, Confluence, Web Crawler…
-  - 30+ structured data sources for Quick Sight: Redshift, Athena, RDS, Snowflake…
-- Actions – allows agents to perform tasks in 3rd party services
-  - Jira, ServiceNow, Zendesk, Salesforce, Slack, Outlook… (100+ pre-built connectors)
-  - MCP & OpenAPI – connects to your own
-
+- **Knowledge Bases (fully managed RAG) – index your company data into Quick Index:** Amazon S3, Google Drive, OneDrive, SharePoint, Confluence, Web Crawler…; 30+ structured data sources for Quick Sight: Redshift, Athena, RDS, Snowflake…
+- **Actions – allows agents to perform tasks in 3rd party services:** Jira, ServiceNow, Zendesk, Salesforce, Slack, Outlook… (100+ pre-built connectors); MCP & OpenAPI – connects to your own
 
 ```mermaid
 flowchart LR
-  accTitle: Amazon Quick – Integrations
   n0["S3 / databases / SaaS content"]
   n1["Enterprise index"]
   n2["Quick"]
@@ -11742,21 +11085,17 @@ flowchart LR
   n2 -->|"authorized action"| n3
 ```
 
-> Enterprise connectors index supported content; action connectors separately invoke permitted business operations.
 
 ## Apps in Amazon Quick
 
-
-The application-building screen illustrates describing, previewing, refining and publishing an application.
+**The application-building screen illustrates describing, previewing, refining and publishing an application.**
 
 - Build and publish web applications without coding by describing them in natural language
 - Example: project tracker, customer dashboard, training portal, data entry form…
 - Apps can embed Quick Sight visuals, use Actions (Salesforce, Jira…), Spaces as knowledge base, and call an FM for summaries or classification
 
-
 ```mermaid
 flowchart LR
-  accTitle: Apps in Amazon Quick
   n0["Describe need"]
   n1["Generate draft"]
   n2["Preview"]
@@ -11769,17 +11108,13 @@ flowchart LR
   n3 -->|"ready"| n4
 ```
 
-> The application-building screen illustrates describing, previewing, refining and publishing an application.
 
 ## Amazon Quick Example
 
-
-A visual flow represents ordered business steps with explicit inputs, transformations and outputs.
-
+**A visual flow represents ordered business steps with explicit inputs, transformations and outputs.**
 
 ```mermaid
 flowchart LR
-  accTitle: Amazon Quick Example
   n0["Flow input"]
   n1["Configured business steps"]
   n2["Review / approval where configured"]
@@ -11789,27 +11124,19 @@ flowchart LR
   n2 -->|"complete"| n3
 ```
 
-> A visual flow represents ordered business steps with explicit inputs, transformations and outputs.
 
 ## Amazon Kendra
 
+**Kendra indexes supported enterprise sources and serves search queries. Its 2026 maintenance-mode status must be considered separately from the retrieval concept.**
 
-Kendra indexes supported enterprise sources and serves search queries. Its 2026 maintenance-mode status must be considered separately from the retrieval concept.
-
-- Availability note: Kendra moved to maintenance and is no longer open to new customers from July 30, 2026; existing customers can continue. Retain the retrieval concept, but evaluate current alternatives for new systems.
+- Availability note: Kendra moved to maintenance and is no longer open to new customers from July 30, 2026; existing customers can continue. Retain the retrieval concept, but evaluate current alternatives for new systems
 - NOTE! In maintenance mode as of July 30 2026
 - Fully managed document search service powered by Machine Learning
-- Extract answers from documents and common file formats.
+- Extract answers from documents and common file formats
 - Natural language search capabilities
-- Learn from user interactions/feedback to promote preferred results (Incremental Learning)
-- Ability to manually fine-tune search results (importance of data, freshness, custom, …)
-
-**Current reference (checked 2026-10-13):** [Kendra availability](https://docs.aws.amazon.com/kendra/latest/dg/kendra-availability-change.html).
-
 
 ```mermaid
 flowchart LR
-  accTitle: Amazon Kendra
   n0["S3 / RDS / documents / SaaS"]
   n1["Kendra index"]
   n2["Natural-language query"]
@@ -11819,73 +11146,67 @@ flowchart LR
   n1 -->|"retrieval"| n3
 ```
 
-> Kendra indexes supported enterprise sources and serves search queries. Its 2026 maintenance-mode status must be considered separately from the retrieval concept.
+<!-- Source reference: https://docs.aws.amazon.com/kendra/latest/dg/kendra-availability-change.html -->
+
+
 
 # Section Developer tools
 
+
 ## Console, CLI and SDK access
 
+**The console is interactive; the CLI and SDK call AWS APIs using a credential provider chain.**
 
-The console is interactive; the CLI and SDK call AWS APIs using a credential provider chain.
+- Prefer federation, IAM Identity Center or assumed workload roles with temporary credentials where appropriate
+- Long-lived access keys are one credential option, not a requirement for every CLI or SDK user
+- Keep secret keys and session tokens out of code, shared notes and logs. An access key ID is an identifier, not a password
 
-- Prefer federation, IAM Identity Center or assumed workload roles with temporary credentials where appropriate.
-- Long-lived access keys are one credential option, not a requirement for every CLI or SDK user.
-- Keep secret keys and session tokens out of code, shared notes and logs. An access key ID is an identifier, not a password.
+<!-- Source reference: https://docs.aws.amazon.com/sdkref/latest/guide/standardized-credentials.html -->
 
-**Current reference (checked 2026-10-13):** [AWS SDK credentials and providers](https://docs.aws.amazon.com/sdkref/latest/guide/standardized-credentials.html).
 
 ## Access key identifiers and secrets
 
+**Example credentials are synthetic: the access key identifier names a credential, while its secret is used to sign requests.**
 
-Example credentials are synthetic: the access key identifier names a credential, while its secret is used to sign requests.
+- Access key ID: identifies the credential; it does not authenticate a request by itself
+- Secret access key: confidential signing material. Temporary credentials also require a session token
+- The literal fake strings add no study value and are intentionally replaced by these descriptions
 
-- Access key ID: identifies the credential; it does not authenticate a request by itself.
-- Secret access key: confidential signing material. Temporary credentials also require a session token.
-- The literal fake strings add no study value and are intentionally replaced by these descriptions.
 
 ## What’s the AWS CLI?
 
-
-The AWS CLI invokes AWS service APIs from a shell with a configured credential provider and Region.
+**The AWS CLI invokes AWS service APIs from a shell with a configured credential provider and Region.**
 
 - A tool that enables you to interact with AWS services using commands in your command-line shell
 - Direct access to the public APIs of AWS services
 - You can develop scripts to manage your resources
-- It’s open-source https://github.com/aws/aws-cli
+- It's open-source https://github.com/aws/aws-cli
 - Alternative to using AWS Management Console
+
 
 ## What’s the AWS SDK?
 
-
-AWS SDKs expose service APIs through language libraries and credential providers.
+**AWS SDKs expose service APIs through language libraries and credential providers.**
 
 - AWS Software Development Kit (AWS SDK)
 - Language-specific APIs (set of libraries)
 - Enables you to access and manage AWS services programmatically
 - Embedded within your application
-- Supports
-  - SDKs (JavaScript, Python, PHP, .NET, Ruby, Java, Go, Node.js, C++)
-  - Mobile SDKs (Android, iOS, …)
-  - IoT Device SDKs (Embedded C, Arduino, …)
+- **Supports:** SDKs (JavaScript, Python, PHP, .NET, Ruby, Java, Go, Node.js, C++); Mobile SDKs (Android, iOS, …); IoT Device SDKs (Embedded C, Arduino, …)
 - Example: AWS CLI is built on AWS SDK for Python
+
 
 ## AWS Cloud Development Kit (CDK)
 
+**CDK expresses infrastructure as code and synthesizes a CloudFormation template; CloudFormation performs the deployment.**
 
-CDK expresses infrastructure as code and synthesizes a CloudFormation template; CloudFormation performs the deployment.
-
-- Define your cloud infrastructure using a familiar language:
-  - JavaScript/TypeScript, Python, Java, and .NET
+- **Define your cloud infrastructure using a familiar language:** JavaScript/TypeScript, Python, Java, and .NET
 - Contains high level components called constructs
-- The code is “compiled” into a CloudFormation template (JSON/YAML)
-- You can therefore deploy infrastructure and application runtime code together
-  - Great for Lambda functions
-  - Great for Docker containers in ECS / EKS
-
+- The code is "compiled" into a CloudFormation template (JSON/YAML)
+- **You can therefore deploy infrastructure and application runtime code together:** Great for Lambda functions; Great for Docker containers in ECS / EKS
 
 ```mermaid
 flowchart LR
-  accTitle: AWS Cloud Development Kit (CDK)
   n0["CDK constructs"]
   n1["Synthesized template"]
   n2["CloudFormation"]
@@ -11895,17 +11216,13 @@ flowchart LR
   n2 -->|"provision"| n3
 ```
 
-> CDK expresses infrastructure as code and synthesizes a CloudFormation template; CloudFormation performs the deployment.
 
 ## CDK in a diagram
 
-
-CDK language code becomes a cloud assembly/template before CloudFormation creates or updates the stack.
-
+**CDK language code becomes a cloud assembly/template before CloudFormation creates or updates the stack.**
 
 ```mermaid
 flowchart LR
-  accTitle: CDK in a diagram
   n0["Application code"]
   n1["CDK synthesis"]
   n2["Cloud assembly"]
@@ -11915,34 +11232,24 @@ flowchart LR
   n2 -->|"deploy"| n3
 ```
 
-> CDK language code becomes a cloud assembly/template before CloudFormation creates or updates the stack.
 
 ## CDK vs SAM
 
+**SAM focuses on serverless application resources; CDK models infrastructure with programming-language constructs.**
 
-SAM focuses on serverless application resources; CDK models infrastructure with programming-language constructs.
+- **SAM:** Serverless focused; Write your template declaratively in JSON or YAML; Great for quickly getting started with Lambda; Leverages CloudFormation
+- **CDK:** All AWS services; Write infra in a programming language JavaScript/TypeScript, Python, Java, and .NET
 
-- SAM:
-  - Serverless focused
-  - Write your template declaratively in JSON or YAML
-  - Great for quickly getting started with Lambda
-  - Leverages CloudFormation
-- CDK:
-  - All AWS services
-  - Write infra in a programming language JavaScript/TypeScript, Python, Java, and .NET
 
 ## CDK + SAM
 
-
-After CDK synthesis, SAM CLI can locally invoke supported Lambda resources from the generated template for development testing.
+**After CDK synthesis, SAM CLI can locally invoke supported Lambda resources from the generated template for development testing.**
 
 - You can use SAM CLI to locally test your CDK apps
 - You must first run cdk synth
 
-
 ```mermaid
 flowchart LR
-  accTitle: CDK + SAM
   n0["CDK code"]
   n1["cdk synth"]
   n2["Generated template"]
@@ -11952,17 +11259,13 @@ flowchart LR
   n2 -->|"local Lambda test"| n3
 ```
 
-> After CDK synthesis, SAM CLI can locally invoke supported Lambda resources from the generated template for development testing.
 
 ## CDK Hands-On
 
-
-An object event invokes an image-analysis function, which calls Rekognition and stores extracted results in DynamoDB.
-
+**An object event invokes an image-analysis function, which calls Rekognition and stores extracted results in DynamoDB.**
 
 ```mermaid
 flowchart LR
-  accTitle: CDK Hands-On
   n0["S3 upload"]
   n1["Lambda"]
   n2["Rekognition"]
@@ -11973,12 +11276,10 @@ flowchart LR
   n1 -->|"store result"| n3
 ```
 
-> An object event invokes an image-analysis function, which calls Rekognition and stores extracted results in DynamoDB.
 
 ## AWS CodeDeploy
 
-
-CodeDeploy coordinates installation of an application revision on supported compute targets using a deployment configuration.
+**CodeDeploy coordinates installation of an application revision on supported compute targets using a deployment configuration.**
 
 - We want to deploy our application automatically
 - Works with EC2 Instances
@@ -11986,10 +11287,8 @@ CodeDeploy coordinates installation of an application revision on supported comp
 - Hybrid service
 - Servers / Instances must be provisioned and configured ahead of time with the CodeDeploy Agent
 
-
 ```mermaid
 flowchart LR
-  accTitle: AWS CodeDeploy
   n0["Revision artifact"]
   n1["CodeDeploy deployment"]
   n2["EC2 / on-premises targets"]
@@ -11999,41 +11298,27 @@ flowchart LR
   n2 -->|"new version"| n3
 ```
 
-> CodeDeploy coordinates installation of an application revision on supported compute targets using a deployment configuration.
 
 ## AWS CodeCommit
 
-
-A source repository stores application history for collaboration and delivery pipelines. Access, branch policy and the chosen hosting service govern how changes are published.
+**A source repository stores application history for collaboration and delivery pipelines. Access, branch policy and the chosen hosting service govern how changes are published.**
 
 - Developers usually store code in a repository, using the Git technology
-- A famous public offering is GitHub, AWS’ competing product is CodeCommit
-- CodeCommit:
-  - Source-control service that hosts Git-based repositories
-  - Makes it easy to collaborate with others on code
-  - The code changes are automatically versioned
-- Benefits:
-  - Fully managed
-  - Scalable & highly available
-  - Private, Secured, Integrated with AWS
+- A famous public offering is GitHub, AWS' competing product is CodeCommit
+- **CodeCommit:** Source-control service that hosts Git-based repositories; Makes it easy to collaborate with others on code; The code changes are automatically versioned
+- **Benefits:** Fully managed; Scalable & highly available; Private, Secured, Integrated with AWS
+
 
 ## AWS CodeBuild
 
-
-CodeBuild checks out source, runs configured build commands and publishes build artifacts and logs.
+**CodeBuild checks out source, runs configured build commands and publishes build artifacts and logs.**
 
 - Code building service in the cloud (name is obvious)
 - Compiles source code, run tests, and produces packages that are ready to be deployed (by CodeDeploy for example)
-- Benefits:
-  - Fully managed, serverless
-  - Continuously scalable & highly available
-  - Secure
-  - Pay-as-you-go pricing – only pay for the build time
-
+- **Benefits:** Fully managed, serverless; Continuously scalable & highly available; Secure; Pay-as-you-go pricing – only pay for the build time
 
 ```mermaid
 flowchart LR
-  accTitle: AWS CodeBuild
   n0["Source repository"]
   n1["CodeBuild"]
   n2["Build artifact"]
@@ -12043,24 +11328,16 @@ flowchart LR
   n1 -->|"execution logs"| n3
 ```
 
-> CodeBuild checks out source, runs configured build commands and publishes build artifacts and logs.
 
 ## AWS CodePipeline
 
+**CodePipeline orchestrates source, build and deploy stages using configured providers; the pictured repository is one possible source.**
 
-CodePipeline orchestrates source, build and deploy stages using configured providers; the pictured repository is one possible source.
-
-- Orchestrate the different steps to have the code automatically pushed to production
-  - Code => Build => Test => Provision => Deploy
-  - Basis for CICD (Continuous Integration & Continuous Delivery)
-- Benefits:
-  - Fully managed, compatible with CodeCommit, CodeBuild, CodeDeploy, Elastic Beanstalk, CloudFormation, GitHub, 3rd-party services (GitHub…) & custom plugins…
-  - Fast delivery & rapid updates
-
+- **Orchestrate the different steps to have the code automatically pushed to production:** Code => Build => Test => Provision => Deploy; Basis for CICD (Continuous Integration & Continuous Delivery)
+- **Benefits:** Fully managed, compatible with CodeCommit, CodeBuild, CodeDeploy, Elastic Beanstalk, CloudFormation, GitHub, 3rd-party services (GitHub…) & custom plugins…; Fast delivery & rapid updates
 
 ```mermaid
 flowchart LR
-  accTitle: AWS CodePipeline
   n0["Source provider"]
   n1["CodeBuild"]
   n2["Deployment stage"]
@@ -12070,44 +11347,47 @@ flowchart LR
   n2 -->|"release"| n3
 ```
 
-> CodePipeline orchestrates source, build and deploy stages using configured providers; the pictured repository is one possible source.
+
 
 # Section Cost management and API Gateway
 
+
 ## AWS Budgets
 
-
-Budgets compares configured spending or usage against thresholds and sends notifications or supported actions. A budget alert is not automatically a hard spending cap.
+**Budgets compares configured spending or usage against thresholds and sends notifications or supported actions. A budget alert is not automatically a hard spending cap.**
 
 - 4 types of budgets: Usage, Cost, Reservation, Savings Plans
-- For Reserved Instances (RI)
-  - Track utilization
-  - Supports EC2, ElastiCache, RDS, Redshift
-- Up to 5 SNS notifications per budget
+- **For Reserved Instances (RI):** Track utilization; Supports EC2, ElastiCache, RDS, Redshift
 - Can filter by: Service, Linked Account, Tag, Purchase Option, Instance Type, Region, Availability Zone, API Operation, etc…
 - Same options as AWS Cost Explorer!
 - 2 budgets are free, then $0.02/day/budget
 
+```mermaid
+flowchart LR
+  A[Budget threshold] --> B[Compare actual / forecast spend]
+  B --> C{Threshold exceeded?}
+  C -->|Yes| D[Alert / supported budget action]
+  C -->|No| E[Continue monitoring]
+```
+
+
 ## Cost Explorer
 
+**Cost Explorer analyzes usage and cost trends across chosen dimensions. Use filters and time ranges to investigate the source of a change.**
 
-Cost Explorer analyzes usage and cost trends across chosen dimensions. Use filters and time ranges to investigate the source of a change.
-
-- Create custom reports that analyze cost and usage data.
+- Create custom reports that analyze cost and usage data
 - Analyze your data at a high level: total costs and usage across all accounts
 - Or Monthly, hourly, resource level granularity
 - Choose an optimal Savings Plan (to lower prices on your bill)
 - Forecast usage up to 18 months based on previous usage
 
+
 ## Cost Explorer – Monthly Cost by AWS Service
 
-
-A cost breakdown groups spend by service and time period so the reader can identify contributors; no screenshot dollar amounts are reproduced.
-
+**A cost breakdown groups spend by service and time period so the reader can identify contributors; no screenshot dollar amounts are reproduced.**
 
 ```mermaid
 flowchart LR
-  accTitle: Cost Explorer – Monthly Cost by AWS Service
   n0["Billing usage"]
   n1["Group by service + time"]
   n2["Cost breakdown"]
@@ -12117,17 +11397,13 @@ flowchart LR
   n2 -->|"review"| n3
 ```
 
-> A cost breakdown groups spend by service and time period so the reader can identify contributors; no screenshot dollar amounts are reproduced.
 
 ## Cost Explorer– Hourly & Resource Level
 
-
-Finer cost granularity exposes short-lived spending patterns at the expense of more detailed data.
-
+**Finer cost granularity exposes short-lived spending patterns at the expense of more detailed data.**
 
 ```mermaid
 flowchart LR
-  accTitle: Cost Explorer– Hourly & Resource Level
   n0["Usage records"]
   n1["Chosen time granularity"]
   n2["Hourly / daily view"]
@@ -12137,17 +11413,13 @@ flowchart LR
   n2 -->|"identify changes"| n3
 ```
 
-> Finer cost granularity exposes short-lived spending patterns at the expense of more detailed data.
 
 ## Cost Explorer – Savings Plan Alternative to Reserved Instances
 
-
-Savings Plans recommendations use historical eligible usage and commitment assumptions; a recommendation is not a guaranteed saving.
-
+**Savings Plans recommendations use historical eligible usage and commitment assumptions; a recommendation is not a guaranteed saving.**
 
 ```mermaid
 flowchart LR
-  accTitle: Cost Explorer – Savings Plan Alternative to Reserved Instances
   n0["Eligible usage history"]
   n1["Commitment assumptions"]
   n2["Recommendation"]
@@ -12157,17 +11429,13 @@ flowchart LR
   n2 -->|"evaluate"| n3
 ```
 
-> Savings Plans recommendations use historical eligible usage and commitment assumptions; a recommendation is not a guaranteed saving.
 
 ## Cost Explorer – Forecast Usage
 
-
-A cost forecast projects future spend with uncertainty; compare it with budgets and actual usage as conditions change.
-
+**A cost forecast projects future spend with uncertainty; compare it with budgets and actual usage as conditions change.**
 
 ```mermaid
 flowchart LR
-  accTitle: Cost Explorer – Forecast Usage
   n0["Historical spend"]
   n1["Forecast model"]
   n2["Projected cost + interval"]
@@ -12177,17 +11445,13 @@ flowchart LR
   n2 -->|"plan with uncertainty"| n3
 ```
 
-> A cost forecast projects future spend with uncertainty; compare it with budgets and actual usage as conditions change.
 
 ## Example: Building a Serverless API
 
-
-A REST API accepts a client request, invokes Lambda business logic and accesses DynamoDB with the function's permissions.
-
+**A REST API accepts a client request, invokes Lambda business logic and accesses DynamoDB with the function's permissions.**
 
 ```mermaid
 flowchart LR
-  accTitle: Example: Building a Serverless API
   n0["Client"]
   n1["API Gateway"]
   n2["Lambda"]
@@ -12197,49 +11461,40 @@ flowchart LR
   n2 -->|"CRUD"| n3
 ```
 
-> A REST API accepts a client request, invokes Lambda business logic and accesses DynamoDB with the function's permissions.
 
 ## AWS API Gateway
 
+**API Gateway exposes managed API endpoints with configurable integrations and access controls. It connects clients to application backends without making every backend serverless.**
 
-API Gateway exposes managed API endpoints with configurable integrations and access controls. It connects clients to application backends without making every backend serverless.
-
-- Support for the WebSocket Protocol
 - Handle API versioning (v1, v2…)
-- Handle different environments (dev, test, prod…)
 - Handle security (Authentication and Authorization)
 - Create API keys, handle request throttling
 - Swagger / Open API import to quickly define APIs
-- Transform and validate requests and responses
 - Generate SDK and API specifications
-- Cache API responses
-
-## API Gateway – Integrations High Level
-
-
-API Gateway integrations can invoke Lambda, route HTTP requests or call supported AWS service APIs.
-
-- Lambda Function
-  - Invoke Lambda function
-  - Easy way to expose REST API backed by AWS Lambda
-- HTTP
-  - Expose HTTP endpoints in the backend
-  - Example: internal HTTP API on premise, Application Load Balancer…
-  - Why? Add rate limiting, caching, user authentications, API keys, etc…
-- AWS Service
-  - Expose any AWS API through the API Gateway
-  - Example: start an AWS Step Function workflow, post a message to SQS
-  - Why? Add authentication, deploy publicly, rate control…
-
-## API Gateway – AWS Service Integration Kinesis Data Streams example
-
-
-An API Gateway service integration can put records into Kinesis without an intervening Lambda function; Firehose delivers onward to S3.
-
 
 ```mermaid
 flowchart LR
-  accTitle: API Gateway – AWS Service Integration Kinesis Data Streams example
+  A[Client HTTPS] --> B[API Gateway]
+  B --> C[Auth / throttling / routing]
+  C --> D[Lambda / AWS service / HTTP backend]
+```
+
+
+## API Gateway – Integrations High Level
+
+**API Gateway integrations can invoke Lambda, route HTTP requests or call supported AWS service APIs.**
+
+- **Lambda Function:** Invoke Lambda function; Easy way to expose REST API backed by AWS Lambda
+- **HTTP:** Expose HTTP endpoints in the backend; Example: internal HTTP API on premise, Application Load Balancer…; Why? Add rate limiting, caching, user authentications, API keys, etc…
+- **AWS Service:** Expose any AWS API through the API Gateway; Example: start an AWS Step Function workflow, post a message to SQS; Why? Add authentication, deploy publicly, rate control…
+
+
+## API Gateway – AWS Service Integration Kinesis Data Streams example
+
+**An API Gateway service integration can put records into Kinesis without an intervening Lambda function; Firehose delivers onward to S3.**
+
+```mermaid
+flowchart LR
   n0["Client"]
   n1["API Gateway"]
   n2["Kinesis Data Streams"]
@@ -12251,27 +11506,17 @@ flowchart LR
   n3 -->|"buffered delivery"| n4
 ```
 
-> An API Gateway service integration can put records into Kinesis without an intervening Lambda function; Firehose delivers onward to S3.
 
 ## API Gateway - Endpoint Types
 
+**API Gateway endpoint choices affect access and edge placement: edge-optimized, Regional and private endpoints have different network paths.**
 
-API Gateway endpoint choices affect access and edge placement: edge-optimized, Regional and private endpoints have different network paths.
-
-- Edge-Optimized (default): For global clients
-  - Requests are routed through the CloudFront Edge locations (improves latency)
-  - The API Gateway still lives in only one region
-- Regional:
-  - For clients within the same region
-  - Could manually combine with CloudFront (more control over the caching strategies and the distribution)
-- Private:
-  - Can only be accessed from your VPC using an interface VPC endpoint (ENI)
-  - Use a resource policy to define access
-
+- **Edge-Optimized (default): For global clients:** Requests are routed through the CloudFront Edge locations (improves latency); The API Gateway still lives in only one region
+- **Regional:** For clients within the same region; Could manually combine with CloudFront (more control over the caching strategies and the distribution)
+- **Private:** Can only be accessed from your VPC using an interface VPC endpoint (ENI); Use a resource policy to define access
 
 ```mermaid
 flowchart LR
-  accTitle: API Gateway - Endpoint Types
   n0["Public client"]
   n1["Edge-optimized API"]
   n2["Regional API"]
@@ -12282,25 +11527,16 @@ flowchart LR
   n3 -->|"interface-endpoint access"| n4
 ```
 
-> API Gateway endpoint choices affect access and edge placement: edge-optimized, Regional and private endpoints have different network paths.
 
 ## API Gateway – Security
 
+**API authentication and custom-domain TLS are separate controls; edge-optimized custom-domain certificates use us-east-1 and Regional certificates use the API Region.**
 
-API authentication and custom-domain TLS are separate controls; edge-optimized custom-domain certificates use us-east-1 and Regional certificates use the API Region.
-
-- User Authentication through
-  - IAM Roles (useful for internal applications)
-  - Cognito (identity for external users – example mobile users)
-  - Custom Authorizer (your own logic)
-- Custom Domain Name HTTPS security through integration with AWS Certificate Manager (ACM)
-  - If using Edge-Optimized endpoint, then the certificate must be in us- east-1
-  - If using Regional endpoint, the certificate must be in the API Gateway region
-  - Must setup CNAME or A-alias record in Route 53
+- **User Authentication through:** IAM Roles (useful for internal applications); Cognito (identity for external users – example mobile users); Custom Authorizer (your own logic)
+- **Custom Domain Name HTTPS security through integration with AWS Certificate Manager (ACM):** If using Edge-Optimized endpoint, then the certificate must be in us- east-1; If using Regional endpoint, the certificate must be in the API Gateway…
 
 ```mermaid
 flowchart LR
-  accTitle: API Gateway – Security
   n0["API caller"]
   n1["IAM / Cognito / Lambda authorizer"]
   n2["API Gateway"]
@@ -12311,5 +11547,3 @@ flowchart LR
   n3 -->|"TLS domain binding"| n2
   n2 -->|"invoke"| n4
 ```
-
-> API authentication and custom-domain TLS are separate controls; edge-optimized custom-domain certificates use us-east-1 and Regional certificates use the API Region.
