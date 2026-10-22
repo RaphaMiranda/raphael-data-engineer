@@ -1,5 +1,14 @@
 # AI session log
 
+## 2026-10-22 - Render all Markdown content outside Detailed notes
+
+- **Branch:** `feat/from-gojs-to-mermaid`.
+- **Goal:** Keep only explicitly nested Detailed notes collapsed; display the rest of each topic's Markdown.
+- **Changed files:** `assets/js/aws-study-guide.js`, `tests/aws-study-guide.test.js`, `ai-session.md`.
+- **Changes:** Render every top-level paragraph and list item, plus ordinary fenced code blocks. Standalone blockquotes now become visible paragraph text while Mermaid captions remain attached to their diagrams. Removed the four-item list summary. Nested Detailed notes still use the collapsed renderer.
+- **Verification:** All 8 Node tests passed. Browser checks confirmed all three Ingestion vs Integration paragraphs and its example render at desktop and mobile, and a top-level SQL code block renders on mobile; no page horizontal overflow. Four local resources returned HTTP 200; JavaScript syntax and `git diff --check` passed. The full browser suite was not rerun because its fixed navigation assumptions predate the user's Markdown edits.
+- **Commit:** `4cead3c` (`fix: render all non-detailed study content`).
+
 ## 2026-10-22 - Suppress empty prompt when a topic has a table
 
 - **Branch:** `feat/from-gojs-to-mermaid`.
