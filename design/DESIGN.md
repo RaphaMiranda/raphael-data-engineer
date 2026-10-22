@@ -25,7 +25,7 @@ Implementation ownership:
 | Explorer entry | `assets/css/aws-explorer-landing.css` |
 | Map and notebook | `assets/css/aws-service-explorer.css` |
 
-Keep equivalent page-level CSS variables aligned with shared token values. Use root-relative asset paths. Study content belongs in `docs/aws-data-eng-associate.md`; schematics belong in `assets/js/aws-study-visuals.js`.
+Keep equivalent page-level CSS variables aligned with shared token values. Use root-relative asset paths. Study content, fenced Mermaid schematics, image references and captions belong in `docs/aws-data-eng-associate.md`. The study page applies the shared palette through Mermaid's theme configuration.
 
 ## 2. Color Palette & Roles
 
@@ -85,7 +85,7 @@ Do not truncate study topics to make them look short. Preserve original headings
 
 **Article code.** Code retains its whitespace inside a keyboard-focusable `pre` with horizontal scrolling. Grid/flex children use `min-width: 0`; the panel stays within the page. Prose can wrap long tokens. Keep the focus ring visible when readers use arrow keys to inspect long lines.
 
-**Study slide.** Use one quiet, 1rem-radius surface with a subtle bevel. Order the content as source metadata, section, title and concise explanation. Key points are plain bullets rather than individual glowing cards. Full notes, code and tables remain in a native disclosure. Small diagrams can sit beside the explanation on wide screens; complex diagrams remain full width directly after it. Diagram controls, captions and a readable text equivalent accompany the canvas.
+**Study slide.** Use one quiet, 1rem-radius surface with a subtle bevel. Order the content as section, title and concise explanation. Key points are plain bullets rather than individual glowing cards. Extra notes, code and tables appear in a native disclosure only under an explicit nested `Detailed notes` heading. Mermaid diagrams follow the explanation at full width, with zoom/fit controls, a focusable scroll region, accessible SVG labels and captions. Use architecture diagrams for deployment topology and flowcharts for labeled relationships and sequences.
 
 **Topic sections.** Use native `details`/`summary` for each section, with a nested list of title-only topic buttons. Summary targets are at least 48px and topic targets at least 44px. Show the active section and topic; keep secondary descriptions and repeated page prefixes out of the list. Search opens matching groups and restores previous expansion choices when cleared.
 
@@ -116,8 +116,7 @@ Workspace boundaries:
 | Below 1100px | Shared navigation becomes a mobile menu |
 | At/below 860px | Study slide and topics stack; the document can scroll naturally |
 | At/below 720px | Study controls compact and the sidebar arrow gets its own top space |
-| At/above 1360px | Diagrams with at most three nodes may share a row with grouped explanation and bullets |
-| Above three nodes | Diagram remains full width at every viewport |
+| Every viewport | Diagrams use the full slide width; large diagrams scroll within their focusable region |
 | At/above 1050px | Explorer notebook uses `clamp(480px, 42vw, 720px)` |
 | 761–1049px | Explorer notebook uses a 360px reading track |
 | At/below 760px | Map and notebook stack; service tiles use two columns |
@@ -137,7 +136,7 @@ Do not animate the study grid's track widths or its progress-bar width. Sidebar 
 
 Respect `prefers-reduced-motion`: stop animations, remove transitions and use immediate scrolling; show the complete final content. Under `prefers-reduced-transparency`, shared glass panels and the notebook use opaque navy surfaces with no backdrop blur.
 
-Preserve native keyboard behavior for links, buttons, selects and disclosures. Study shortcuts operate outside text entry and interactive controls. Search, topic navigation, zoom/fit, map selection, notebook disclosures and mobile navigation must work without pointer-only gestures. Diagram text alternatives remain usable if the library fails.
+Preserve native keyboard behavior for links, buttons, selects and disclosures. Study shortcuts operate outside text entry and interactive controls. Search, topic navigation, zoom/fit, map selection, notebook disclosures and mobile navigation must work without pointer-only gestures. Diagram captions and a visible error message remain usable if the library fails.
 
 ## 7. Anti-Patterns (Banned)
 

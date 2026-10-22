@@ -3,8 +3,7 @@
   "use strict";
 
   const sourcePath = "/docs/aws-data-eng-associate.md";
-  const state = { slides: [], index: 0, expandedSections: new Set(), diagram: null, diagramObserver: null };
-  const visualsByTitle = window.studyVisuals || {};
+  const state = { slides: [], index: 0, expandedSections: new Set(), diagramVersion: 0, diagramId: 0 };
   const elements = {
     slide: document.getElementById("slide"), previous: document.getElementById("previous"),
     next: document.getElementById("next"), count: document.getElementById("slide-count"),
@@ -40,6 +39,7 @@
     let codeLanguage = "";
     let codeLines = [];
     let paragraphLines = [];
+    let lastVisual = null;
 
     function contentTarget() { return inDetailedNotes ? detailOwner.detailedNotes : current; }
 
@@ -53,13 +53,16 @@
       if (line.trim().startsWith("```")) {
         flushParagraph();
         if (!inCodeBlock) {
+          lastVisual = null;
           inCodeBlock = true;
           codeLanguage = line.trim().slice(3).trim().toLowerCase();
         } else {
           inCodeBlock = false;
           if (current && codeLines.length) {
-            if (codeLanguage === "mermaid" && !inDetailedNotes) current.mermaid = codeLines.join("\n");
-            else contentTarget().code.push(codeLines.join("\n"));
+            if (codeLanguage === "mermaid") {
+              lastVisual = { type: "mermaid", source: codeLines.join("\n"), caption: "" };
+              contentTarget().visuals.push(lastVisual);
+            } else contentTarget().code.push(codeLines.join("\n"));
           }
           codeLanguage = "";
           codeLines = [];
@@ -74,23 +77,38 @@
         const rawTitle = (heading[2] || "").trim();
         const title = cleanTitle(rawTitle) || "Unexpanded topic";
         if (current && title.toLowerCase() === "detailed notes" && heading[1].length > current.level) {
-          if (!current.detailedNotes) current.detailedNotes = { listItems: [], paragraphs: [], code: [], tables: [] };
+          if (!current.detailedNotes) current.detailedNotes = { title: current.title, listItems: [], paragraphs: [], code: [], tables: [], visuals: [] };
           detailOwner = current;
           inDetailedNotes = true;
           table = null;
+          lastVisual = null;
           return;
         }
         detailOwner = null;
         inDetailedNotes = false;
         const isSection = /^Section\s+/i.test(rawTitle);
         if (isSection) currentSection = title;
-        current = { level: heading[1].length, title: title, section: currentSection, isSection: isSection, unexpanded: !rawTitle, listItems: [], paragraphs: [], code: [], tables: [] };
+        current = { level: heading[1].length, title: title, section: currentSection, isSection: isSection, unexpanded: !rawTitle, listItems: [], paragraphs: [], code: [], tables: [], visuals: [] };
         table = null;
+        lastVisual = null;
         slides.push(current);
         return;
       }
       if (!current) return;
       if (!line.trim()) { flushParagraph(); table = null; return; }
+      const caption = line.match(/^>\s?(.*)$/);
+      if (caption && lastVisual) {
+        lastVisual.caption += (lastVisual.caption ? " " : "") + caption[1];
+        return;
+      }
+      lastVisual = null;
+      const image = line.trim().match(/^!\[([^\]]*)\]\((https:\/\/[^\s)]+|\/(?!\/)[^\s)]+)\)$/);
+      if (image) {
+        flushParagraph();
+        lastVisual = { type: "image", src: image[2], alt: image[1], caption: "" };
+        contentTarget().visuals.push(lastVisual);
+        return;
+      }
       const displayTitle = line.match(/^<!-- title: (.+) -->$/);
       if (displayTitle) { current.title = displayTitle[1]; return; }
       const originalNote = line.match(/^<!-- original-note: (\d+) -->$/);
@@ -116,13 +134,6 @@
       }
     });
     flushParagraph();
-    const occurrences = new Map();
-    slides.forEach(function (slide) {
-      const base = slide.section + "::" + slide.title;
-      const occurrence = (occurrences.get(base) || 0) + 1;
-      occurrences.set(base, occurrence);
-      slide.visualKey = "topic:" + base + (occurrence > 1 ? " [" + occurrence + "]" : "");
-    });
     return slides;
   }
 
@@ -158,20 +169,14 @@
   }
 
   function renderVisual(slide) {
-    if (slide.mermaid) return '<figure class="slide-visual"><pre class="mermaid study-mermaid" data-study-mermaid>' + escapeHtml(slide.mermaid) + '</pre><figcaption>' + escapeHtml(slide.title + " diagram") + '</figcaption></figure>';
-    const visual = getVisual(slide);
-    if (!visual) return "";
-    if (visual.type === "image") {
-      return "<figure class=\"slide-visual\"><img src=\"" + escapeHtml(visual.src) + "\" alt=\"" + escapeHtml(visual.alt) + "\" width=\"1200\" height=\"675\" loading=\"lazy\"><figcaption>" + escapeHtml(visual.caption) + "</figcaption></figure>";
-    }
-    if (visual.type === "diagram") {
-      return "<figure class=\"slide-visual\"><div class=\"visual-toolbar\"><p class=\"visual-label\">" + (visual.kind === "structure" ? "Structure" : "Flow") + " diagram</p><div class=\"diagram-controls\"><button class=\"diagram-button\" type=\"button\" data-diagram-zoom=\"out\" aria-label=\"Zoom diagram out\">&minus;</button><button class=\"diagram-button\" type=\"button\" data-diagram-fit=\"" + escapeHtml(visual.id) + "\">Fit diagram</button><button class=\"diagram-button\" type=\"button\" data-diagram-zoom=\"in\" aria-label=\"Zoom diagram in\">+</button></div></div><div class=\"study-diagram\" id=\"" + escapeHtml(visual.id) + "\" role=\"img\" aria-label=\"" + escapeHtml(visual.caption) + "\"></div><p class=\"diagram-fallback\" data-diagram-fallback hidden>Diagram canvas unavailable.</p><figcaption>" + escapeHtml(visual.caption) + "</figcaption></figure>";
-    }
-    return "";
-  }
-
-  function getVisual(slide) {
-    return visualsByTitle[slide.visualKey] || visualsByTitle[slide.title];
+    return (slide.visuals || []).map(function (visual) {
+      const caption = escapeHtml(visual.caption || visual.alt || slide.title + " diagram");
+      if (visual.type === "image") {
+        return '<figure class="slide-visual"><img src="' + escapeHtml(visual.src) + '" alt="' + escapeHtml(visual.alt) + '" width="1200" height="675" loading="lazy"><figcaption>' + caption + '</figcaption></figure>';
+      }
+      const label = /architecture-beta/.test(visual.source) ? "Architecture" : "Flow";
+      return '<figure class="slide-visual"><div class="visual-toolbar"><p class="visual-label">' + label + ' diagram</p><div class="diagram-controls"><button class="diagram-button" type="button" data-diagram-zoom="out" aria-label="Zoom diagram out" disabled>&minus;</button><button class="diagram-button" type="button" data-diagram-fit disabled>Fit diagram</button><button class="diagram-button" type="button" data-diagram-zoom="in" aria-label="Zoom diagram in" disabled>+</button></div></div><div class="study-diagram" tabindex="0" role="region" aria-label="' + escapeHtml(slide.title + ' diagram') + '" aria-busy="true"><pre data-study-mermaid hidden>' + escapeHtml(visual.source) + '</pre><p class="diagram-status" role="status">Loading diagram…</p></div><figcaption>' + caption + '</figcaption></figure>';
+    }).join("");
   }
 
   function renderTables(tables) {
@@ -198,99 +203,53 @@
     });
   }
 
-  function disposeDiagram() {
-    if (state.diagramObserver) { state.diagramObserver.disconnect(); state.diagramObserver = null; }
-    if (state.diagram) { state.diagram.div = null; state.diagram = null; }
-  }
-
-  function initializeDiagram(slide) {
-    const mermaidHost = elements.slide.querySelector("[data-study-mermaid]");
-    if (slide.mermaid && mermaidHost && window.mermaid) {
-      window.mermaid.run({ nodes: [mermaidHost] }).catch(function () {});
-      return;
-    }
-    const visual = getVisual(slide);
-    if (!visual || visual.type !== "diagram") return;
-    const host = document.getElementById(visual.id);
-    const fallback = elements.slide.querySelector("[data-diagram-fallback]");
-    if (!host) return;
-    host.classList.toggle("study-diagram--vertical", visual.layout === "vertical");
-    host.classList.toggle("study-diagram--circular", visual.layout === "circular");
-    if (!window.go) {
-      host.hidden = true;
-      if (fallback) fallback.hidden = false;
-      elements.slide.querySelectorAll(".diagram-controls button").forEach(function (button) { button.disabled = true; });
-      return;
-    }
-
-    const $ = go.GraphObject.make;
-    const reduceMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
-    const circularLayout = visual.layout === "circular";
-    const diagram = $(go.Diagram, host, {
-      layout: circularLayout
-        ? $(go.CircularLayout, { radius: 155, arrangement: go.CircularArrangement.ConstantDistance, sorting: go.CircularSorting.Forwards })
-        : visual.layout === "vertical" ? $(go.Layout) : $(go.LayeredDigraphLayout, { direction: 0, layerSpacing: 48, columnSpacing: 28 }),
-      initialAutoScale: go.AutoScale.Uniform,
-      contentAlignment: go.Spot.Center,
-      isReadOnly: true,
-      allowSelect: false,
-      allowMove: false,
-      allowCopy: false,
-      allowDelete: false,
-      allowInsert: false,
-      allowLink: false,
-      allowRelink: false,
-      "animationManager.isEnabled": !reduceMotion,
-      "toolManager.mouseWheelBehavior": go.WheelMode.Zoom
-    });
-    // Keep the vertical diagram below the library attribution on narrow screens.
-    if (visual.layout === "vertical") diagram.padding = new go.Margin(80, 8, 8, 8);
-
-    diagram.nodeTemplate = circularLayout
-      ? $(go.Node, "Auto", { selectable: false, cursor: "default", locationSpot: go.Spot.Center },
-        $(go.Shape, "Circle", { desiredSize: new go.Size(128, 128), stroke: "#5de6ff", strokeWidth: 2 }, new go.Binding("fill", "fill")),
-        $(go.TextBlock, { margin: 14, font: "600 13px 'Space Grotesk', sans-serif", stroke: "#dae2fd", textAlign: "center", maxSize: new go.Size(110, 80), wrap: go.Wrap.Fit }, new go.Binding("text", "text"))
-      )
-      : $(go.Node, "Auto", { selectable: false, cursor: "default", locationSpot: visual.layout === "vertical" ? go.Spot.Center : go.Spot.TopLeft },
-        new go.Binding("location", "loc", go.Point.parse),
-        $(go.Shape, "RoundedRectangle", { parameter1: 12, stroke: "#464554", strokeWidth: 1.3 }, new go.Binding("fill", "fill")),
-        $(go.Panel, "Vertical", { margin: 12, defaultAlignment: go.Spot.Left },
-          $(go.TextBlock, { font: "600 13px 'Space Grotesk', sans-serif", stroke: "#dae2fd", maxSize: new go.Size(150, NaN), wrap: go.Wrap.Fit }, new go.Binding("text", "text")),
-          $(go.TextBlock, { margin: new go.Margin(5, 0, 0, 0), font: "10px 'JetBrains Mono', monospace", stroke: "#c7c4d7", maxSize: new go.Size(150, NaN), wrap: go.Wrap.Fit }, new go.Binding("text", "detail"))
-        )
-      );
-    diagram.groupTemplate = $(go.Group, "Auto", { selectable: false, avoidable: false },
-      $(go.Shape, "RoundedRectangle", { fill: "rgba(19, 27, 46, .4)", stroke: "#aebad3", strokeWidth: 1.5, strokeDashArray: [8, 6] }),
-      $(go.Panel, "Vertical",
-        $(go.TextBlock, { alignment: go.Spot.Left, margin: new go.Margin(12, 16, 0, 16), font: "600 13px 'Space Grotesk', sans-serif", stroke: "#c0c1ff" }, new go.Binding("text", "text")),
-        $(go.Placeholder, { padding: 18 })
-      )
-    );
-    diagram.linkTemplate = $(go.Link, { routing: go.Routing.AvoidsNodes, corner: 10, selectable: false },
-      new go.Binding("fromSpot", "fromSpot", go.Spot.parse),
-      new go.Binding("toSpot", "toSpot", go.Spot.parse),
-      $(go.Shape, { stroke: "#5de6ff", strokeWidth: 2 }),
-      $(go.Shape, { toArrow: "Standard", fill: "#5de6ff", stroke: null, scale: .8 }, new go.Binding("toArrow", "relation", function (relation) { return relation ? "" : "Standard"; })),
-      $(go.Shape, { fromArrow: "", fill: "#5de6ff", stroke: null, scale: .8 }, new go.Binding("fromArrow", "bidirectional", function (bidirectional) { return bidirectional ? "Backward" : ""; })),
-      $(go.TextBlock, { segmentOffset: new go.Point(0, -12), font: "10px 'JetBrains Mono', monospace", stroke: "#c7c4d7" }, new go.Binding("text", "label", function (label) { return visual.hideLinkLabels ? "" : label; }))
-    );
-    diagram.addDiagramListener("InitialLayoutCompleted", function () { diagram.commandHandler.zoomToFit(); });
-    diagram.model = new go.GraphLinksModel(visual.nodes.map(function (node) { return Object.assign({}, node); }), visual.links.map(function (link) { return Object.assign({}, link); }));
-    host.tabIndex = -1;
-    host.querySelectorAll("canvas").forEach(function (canvas) { canvas.tabIndex = -1; });
-    state.diagram = diagram;
-
-    const fitButton = elements.slide.querySelector("[data-diagram-fit]");
-    if (fitButton) fitButton.addEventListener("click", function () { diagram.commandHandler.zoomToFit(); });
-    elements.slide.querySelectorAll("[data-diagram-zoom]").forEach(function (button) {
-      button.addEventListener("click", function () { diagram.scale *= button.dataset.diagramZoom === "in" ? 1.2 : 1 / 1.2; });
-    });
-    if (window.ResizeObserver) {
-      state.diagramObserver = new ResizeObserver(function () {
-        diagram.requestUpdate();
-        if (circularLayout) diagram.commandHandler.zoomToFit();
-      });
-      state.diagramObserver.observe(host);
+  async function initializeDiagrams() {
+    const version = ++state.diagramVersion;
+    const sources = elements.slide.querySelectorAll("[data-study-mermaid]");
+    for (const source of sources) {
+      const host = source.parentElement;
+      const figure = host.closest("figure");
+      const status = host.querySelector(".diagram-status");
+      if (!window.mermaid) {
+        if (window.studyMermaidError) {
+          status.textContent = "Diagram library could not be loaded. Reload the page to try again.";
+          host.setAttribute("aria-busy", "false");
+        }
+        continue;
+      }
+      try {
+        const result = await window.mermaid.render("study-mermaid-" + state.diagramId++, source.textContent);
+        if (version !== state.diagramVersion || !host.isConnected) return;
+        host.innerHTML = result.svg;
+        host.setAttribute("aria-busy", "false");
+        const svg = host.querySelector("svg");
+        svg.setAttribute("role", "img");
+        svg.setAttribute("aria-label", host.getAttribute("aria-label") + ". " + figure.querySelector("figcaption").textContent);
+        const bounds = svg.viewBox.baseVal;
+        host.style.height = Math.min(480, Math.max(180, bounds.height)) + "px";
+        const fitScale = function () { return Math.min((host.clientWidth || 600) / bounds.width, (host.clientHeight || 400) / bounds.height, 1); };
+        let scale;
+        function zoom(value) {
+          scale = Math.min(4, Math.max(Math.min(.2, fitScale()), value));
+          svg.style.maxWidth = "none";
+          svg.style.width = bounds.width * scale + "px";
+          svg.style.height = bounds.height * scale + "px";
+        }
+        // Keep labels readable; large diagrams can scroll inside their focused region.
+        zoom(Math.max(fitScale(), .75));
+        figure.querySelectorAll(".diagram-controls button").forEach(function (button) {
+          button.disabled = false;
+          button.addEventListener("click", function () {
+            zoom(button.hasAttribute("data-diagram-fit") ? fitScale() : scale * (button.dataset.diagramZoom === "in" ? 1.2 : 1 / 1.2));
+          });
+        });
+        if (result.bindFunctions) result.bindFunctions(host);
+      } catch (error) {
+        if (version !== state.diagramVersion || !host.isConnected) return;
+        host.textContent = "Diagram could not be rendered.";
+        host.setAttribute("aria-busy", "false");
+        console.warn("Study diagram rendering failed:", error);
+      }
     }
   }
 
@@ -299,27 +258,22 @@
     const section = current.section;
     const notes = renderList(summaryPoints(current.listItems, 4));
     const visual = renderVisual(current);
-    const visualData = getVisual(current);
-    const wideDiagram = visualData && visualData.type === "diagram" && visualData.nodes.length > 3;
-    const compactDiagram = visualData && visualData.type === "diagram" && !wideDiagram;
     const introduction = current.paragraphs[0] ? "<p class=\"slide-lede\">" + formatText(current.paragraphs[0]) + "</p>" : "";
     const references = current.paragraphs.filter(function (paragraph) { return paragraph.startsWith("**Current reference"); });
     const detailed = current.detailedNotes;
     const detailedCode = detailed ? detailed.code.map(function (snippet) { return "<pre class=\"code-block\"><code>" + escapeHtml(snippet) + "</code></pre>"; }).join("") : "";
-    const detail = detailed ? renderList(detailed.listItems) + detailed.paragraphs.map(function (paragraph) { return '<p class="detail-note">' + formatText(paragraph) + '</p>'; }).join("") + renderTables(detailed.tables) + detailedCode : "";
+    const detail = detailed ? renderList(detailed.listItems) + detailed.paragraphs.map(function (paragraph) { return '<p class="detail-note">' + formatText(paragraph) + '</p>'; }).join("") + renderTables(detailed.tables) + detailedCode + renderVisual(detailed) : "";
     const details = detail ? '<details class="notes-details"><summary>Detailed notes</summary>' + detail + '</details>' : '';
-    const empty = current.unexpanded || !notes && !current.paragraphs.length && !detail
+    const empty = current.unexpanded || !notes && !current.paragraphs.length && !detail && !visual
       ? "<p class=\"empty-note\">This topic is marked in the source notes but has not been expanded yet. Use it as a prompt for deeper study.</p>" : "";
 
-    disposeDiagram();
     elements.slide.classList.remove("entering");
-    elements.slide.classList.toggle("slide--split", Boolean(compactDiagram));
     void elements.slide.offsetWidth;
     elements.slide.innerHTML = "<div>"
       + "<p class=\"slide-index\">" + "Study notes" + "</p>"
       + "<p class=\"slide-section\">" + escapeHtml(section) + "</p>"
       + "<h2>" + escapeHtml(current.title) + "</h2>"
-      + (compactDiagram ? '<div class="slide-copy">' + introduction + notes + '</div>' + visual : introduction + (wideDiagram ? visual + notes : notes + visual)) + details
+      + introduction + notes + visual + details
       + references.map(function (reference) { return '<p class="source-reference">' + formatText(reference) + '</p>'; }).join("")
       + empty + "</div>";
     elements.slide.classList.add("entering");
@@ -332,16 +286,17 @@
     elements.next.setAttribute("aria-disabled", String(elements.next.disabled));
     elements.next.textContent = state.index === state.slides.length - 1 ? "Complete" : "Next";
     updateOverviewSelection();
-    initializeDiagram(current);
+    initializeDiagrams();
     elements.slide.scrollTop = 0;
     if (window.matchMedia("(max-width: 860px)").matches) window.scrollTo({ top: 0, left: 0, behavior: "instant" });
     if (shouldFocus !== false) elements.slide.focus({ preventScroll: true });
   }
 
   window.addEventListener("study-mermaid-ready", function () {
-    const current = state.slides[state.index];
-    if (current && current.mermaid) initializeDiagram(current);
+    initializeDiagrams();
   });
+
+  window.addEventListener("study-mermaid-error", initializeDiagrams);
 
   function groupTopics(slides) {
     const groups = new Map();
@@ -464,7 +419,7 @@
     });
   }
 
-  fetch(sourcePath)
+  fetch(sourcePath, { cache: "no-store" })
     .then(function (response) { if (!response.ok) throw new Error("Study notes could not be loaded."); return response.text(); })
     .then(function (markdown) {
       state.slides = parseMarkdown(markdown).filter(function (topic) { return !topic.isSection; });

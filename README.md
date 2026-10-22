@@ -16,11 +16,11 @@ The AWS deck keeps the Markdown document as its source of truth. It groups perso
 
 ### Visuals and diagrams
 
-Study diagrams are keyed in `assets/js/aws-study-visuals.js` and use GoJS. The Key Concepts lifecycle uses a circular layout so its five equally sized stages form a clear cycle.
+All study content, diagrams, image references and captions live in `docs/aws-data-eng-associate.md`. Add a fenced `mermaid` block beneath its topic heading, followed by a Markdown blockquote (`> Caption`) for its caption. The webpage renders these diagrams with its navy, cyan and periwinkle theme. Key Concepts uses a simple flowchart; VPC and gateway topologies use `architecture-beta` groups and services.
 
-For an explicitly positioned vertical diagram, set `layout: "vertical"` and give each regular node a `loc: "x y"`. Define containers with `isGroup: true` and assign member nodes their container's key through `group`. A link's `bidirectional: true` adds a second arrowhead and a matching two-way text alternative. The Internet Gateway & NAT Gateways topic demonstrates these options.
+Use [flowcharts](https://mermaid.js.org/syntax/flowchart.html) when edge labels explain a sequence or relationship, and [architecture diagrams](https://mermaid.js.org/syntax/architecture.html) when service placement and containment are the main idea. Ordinary Markdown images (`![description](/assets/images/example.png)`) use the same caption convention. Keep extra notes under an explicit nested `Detailed notes` heading.
 
-GoJS is loaded from a version-pinned CDN and is proprietary. Its current non-commercial terms allow personal learning use but retain a watermark; commercial or organisation use requires an appropriate GoJS licence. See the [GoJS deployment guidance](https://gojs.net/latest/learn/deployment).
+Mermaid is loaded from a version-pinned CDN. Diagrams have keyboard-accessible zoom and fit buttons, a focusable scroll region and a visible loading/error state. Large diagrams retain readable labels and can be scrolled inside the slide.
 
 ## Local preview
 
