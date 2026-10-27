@@ -1,5 +1,15 @@
 # AI session log
 
+## 2026-10-27 - UCLA integrated research warehouse demo
+
+- **Branch:** feature/ucla-research-warehouse-demo.
+- **Goal:** Present the locally modeled UCLA LA5c dataset as a static aggregate snapshot.
+- **Changed files:** index.html, case-studies/ucla-warehouse.html, assets/css/ucla-warehouse.css, assets/js/ucla-warehouse.js, assets/data/ucla-warehouse.json, ai-session.md.
+- **Changes:** Added a case-study link and self-contained interactive demo with study-group filtering, phenotype completeness/search, scan coverage, source-score summaries, a dimensional-model explanation and explicit dataset/local-file scope. The warehouse build and PostgreSQL export remain in the UCLA_Neuropsychiatric_data workspace; the website receives aggregate data only.
+- **Verification:** Four warehouse fixture tests passed. Full-source reconciliation matched all 539,376 phenotype cells and three selected source metrics. Browser checks at 1440px and 375px passed group totals, search/reset, weighted means, keyboard selection, local asset requests and mobile overflow checks. The integrated portfolio homepage link, demo assets, desktop/mobile layouts and mobile filtering passed; all 13 existing homepage mobile-navigation checks passed. JavaScript syntax and scoped diff checks passed.
+- **Commit:** HEAD, feat: add UCLA warehouse snapshot demo.
+
+
 ## 2026-10-22 - Add ingestion vs integration architecture example
 
 - **Branch:** `feat/from-gojs-to-mermaid`.

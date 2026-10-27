@@ -1,0 +1,119 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="A local dimensional warehouse integrating UCLA LA5c participant, phenotype, scan inventory and task-event data.">
+  <title>UCLA Research Warehouse | Raphael Miranda Mata</title>
+  <link rel="icon" href="data:,">
+  <link rel="stylesheet" href="/assets/css/ucla-warehouse.css">
+  <script src="/assets/js/ucla-warehouse.js" defer></script>
+</head>
+<body>
+  <a class="skip-link" href="#main">Skip to content</a>
+  <header class="site-header">
+    <a href="https://raphael-dataengineer.vercel.app/" class="brand">Raphael Miranda Mata<span> / Data engineering</span></a>
+    <a href="#model">Explore the model <span aria-hidden="true">↘</span></a>
+  </header>
+  <main id="main">
+    <section class="intro" aria-labelledby="page-title">
+      <p class="eyebrow">OPEN DATA / UCLA LA5c / ds000030</p>
+      <h1 id="page-title">From research files<br>to connected data.</h1>
+      <p class="lede">An integrated warehouse for participant characteristics, phenotype responses, scan coverage and behavioral events.</p>
+      <div class="intro-bottom">
+        <p class="run-label"><span class="dot" aria-hidden="true"></span> Local DuckDB build · Aggregate snapshot</p>
+        <a href="#explorer" class="button">Explore the data <span aria-hidden="true">↓</span></a>
+      </div>
+    </section>
+
+    <div id="load-status" role="status" class="notice">Loading the warehouse snapshot…</div>
+    <noscript><p class="notice">Enable JavaScript to explore the data. The model and scope are described below.</p></noscript>
+    <div id="dashboard" hidden>
+      <section id="explorer" aria-labelledby="explorer-title">
+        <div class="section-heading">
+          <div><p class="eyebrow">01 / DATA EXPLORER</p><h2 id="explorer-title">One cohort. Several perspectives.</h2></div>
+          <div class="filter"><label for="diagnosis">Study group</label><select id="diagnosis"><option value="">All groups</option></select></div>
+        </div>
+        <p class="muted">Filter cohort, scan, completeness and score summaries by study group. These are descriptive research data, with no clinical interpretation.</p>
+        <div class="stats" aria-live="polite" aria-atomic="true" id="stats"></div>
+        <div class="analysis-grid">
+          <article class="panel">
+            <p class="eyebrow">PARTICIPANT MIX</p><h3>Cohort composition</h3>
+            <div id="cohort-chart" class="bars"></div>
+            <p id="cohort-note" class="caption"></p>
+          </article>
+          <article class="panel">
+            <p class="eyebrow">DATASET INVENTORY</p><h3>Scan coverage</h3>
+            <p class="caption">Listed scans divided by participants in the selected group. “n/a” means unlisted in the inventory.</p>
+            <div id="scan-chart" class="bars compact"></div>
+            <p id="local-note" class="caption"></p>
+          </article>
+        </div>
+      </section>
+
+      <section aria-labelledby="assessment-title">
+        <div class="section-heading">
+          <div><p class="eyebrow">02 / COMPLETENESS</p><h2 id="assessment-title">What is actually populated?</h2></div>
+          <div class="filter"><label for="instrument-search">Find a source table</label><input id="instrument-search" type="search" placeholder="e.g. ASRS or memory"></div>
+        </div>
+        <p class="muted">Observed cells / expected cells, including all variables in each source table. Having any data does not establish a completed assessment.</p>
+        <div class="table-wrap" tabindex="0" role="region" aria-label="Phenotype coverage, scroll horizontally if needed">
+          <table><caption class="sr-only">Phenotype coverage by source table</caption>
+            <thead><tr><th scope="col">Source / instrument</th><th scope="col">Variables</th><th scope="col">People with any data</th><th scope="col">Observed cells</th><th scope="col">Coverage</th></tr></thead>
+            <tbody id="assessment-rows"></tbody>
+          </table>
+        </div>
+        <p id="assessment-status" class="caption" role="status"></p>
+      </section>
+
+      <section aria-labelledby="metric-title">
+        <p class="eyebrow">03 / ANALYTICAL MART</p><h2 id="metric-title">Source scores, with their denominators.</h2>
+        <p class="muted">Three documented, source-derived measures. Means use observed numeric values only; missing responses contribute no score.</p>
+        <div class="table-wrap" tabindex="0" role="region" aria-label="Score summaries, scroll horizontally if needed">
+          <table><caption class="sr-only">Descriptive score summaries</caption>
+            <thead><tr><th scope="col">Measure</th><th scope="col">Observed n</th><th scope="col">Mean</th><th scope="col">Observed range</th></tr></thead>
+            <tbody id="metric-rows"></tbody>
+          </table>
+        </div>
+      </section>
+      <section class="scope-note" aria-labelledby="scope-title">
+        <p class="eyebrow">04 / BUILD QUALITY & SCOPE</p><h2 id="scope-title">A complete join is not complete data.</h2>
+        <p id="quality-note"></p>
+        <p id="event-note"></p>
+        <p>Participant IDs and response-level records stay outside this public snapshot. Small study groups and selected recruitment criteria limit generalization.</p>
+      </section>
+    </div>
+
+    <section id="model" aria-labelledby="model-title">
+      <p class="eyebrow">05 / WAREHOUSE DESIGN</p><h2 id="model-title">Three grains. Shared dimensions.</h2>
+      <p class="muted">Separate fact tables preserve each source's meaning and prevent participants from multiplying when measures, scans and events are combined.</p>
+      <ol class="pipeline">
+        <li><span>01 / SOURCE</span><strong>BIDS research files</strong><p>TSV tables, JSON dictionaries and local scan paths.</p></li>
+        <li><span>02 / RAW</span><strong>Traceable landing</strong><p>Original values, source rows and small-file SHA-256 hashes.</p></li>
+        <li><span>03 / CORE</span><strong>Conformed dimensions</strong><p>Participant, instrument, measure, scan task, scanner and dataset.</p></li>
+        <li><span>04 / MARTS</span><strong>Public summaries</strong><p>SQL aggregates exported as a versioned website snapshot.</p></li>
+      </ol>
+      <div class="table-wrap" tabindex="0" role="region" aria-label="Fact table grains">
+        <table><caption class="sr-only">Dimensional model fact grains</caption>
+          <thead><tr><th scope="col">Fact</th><th scope="col">One row represents</th><th scope="col">Shared dimensions</th></tr></thead>
+          <tbody>
+            <tr><th scope="row"><code>fact_phenotype_response</code></th><td>One participant × one source variable</td><td>Participant, measure → instrument</td></tr>
+            <tr><th scope="row"><code>fact_scan_availability</code></th><td>One participant × one scan type</td><td>Participant, task, scanner</td></tr>
+            <tr><th scope="row"><code>fact_task_event</code></th><td>One event row within one source file</td><td>Participant, task</td></tr>
+          </tbody>
+        </table>
+      </div>
+      <details><summary>Example warehouse query</summary><pre><code>SELECT diagnosis, task_code, participants,
+       dataset_listed, local_files, listed_percent
+FROM ucla_mart.scan_coverage
+ORDER BY diagnosis, task_code;</code></pre></details>
+      <p class="muted">Local engine: DuckDB. The generated PostgreSQL import carries the same tables and SQL marts to a fresh Neon database. Brain-image binaries stay in file storage.</p>
+    </section>
+    <footer>
+      <p>Data: UCLA Consortium for Neuropsychiatric Phenomics LA5c Study · CC0</p>
+      <p><a href="https://openneuro.org/datasets/ds000030/versions/1.0.0">OpenNeuro dataset</a> · <a href="https://www.nature.com/articles/sdata2016110">Dataset publication</a></p>
+      <p id="build-date" class="caption"></p>
+    </footer>
+  </main>
+</body>
+</html>
