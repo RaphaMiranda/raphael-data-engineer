@@ -11,7 +11,7 @@ const { createHash, randomBytes } = require("node:crypto");
 const root = path.resolve(__dirname, "..");
 const hash = (bytes) => createHash("sha256").update(bytes).digest("hex");
 
-async function importWarehouse(handoff) {
+async function importWarehouse(handoff, readerEnv = path.join(root, "build/ucla/reader.env")) {
   handoff = path.resolve(handoff);
   const manifest = JSON.parse(await fs.readFile(path.join(handoff, "manifest.json"), "utf8"));
   const profile = JSON.parse(await fs.readFile(path.join(handoff, "profile.json"), "utf8"));
@@ -29,7 +29,7 @@ async function importWarehouse(handoff) {
       throw new Error("CSV checksum differs for " + table.name);
     }
   }
-  const readerEnv = path.join(root, "build/ucla/reader.env");
+  readerEnv = path.resolve(readerEnv);
   try { await fs.access(readerEnv); throw new Error("Reader env already exists; preserve it and use a fresh setup"); }
   catch (error) { if (error.code !== "ENOENT") throw error; }
   if (!process.env.UCLA_ADMIN_DATABASE_URL) throw new Error("Set UCLA_ADMIN_DATABASE_URL privately before importing");
@@ -68,19 +68,19 @@ async function importWarehouse(handoff) {
   readerUrl.username = "ucla_reader";
   readerUrl.password = password;
   await fs.mkdir(path.dirname(readerEnv), { recursive: true });
-  await fs.writeFile(readerEnv, "UCLA_DATABASE_URL=" + readerUrl.href + "\n", { flag: "wx" });
+  await fs.writeFile(readerEnv, "DATABASE_URL=" + readerUrl.href + "\n", { flag: "wx" });
   const catalog = { format_version: 1, generated_at: manifest.generated_at, dataset: manifest.dataset,
     counts: manifest.counts, quality: manifest.quality, live: false,
     relations: manifest.relations.map(({ file, sha256, ...relation }) => relation) };
   const snapshot = Object.fromEntries(["generated_at", "dataset", "counts", "quality", "marts"].map((key) => [key, profile[key]]));
   await fs.writeFile(path.join(root, "assets/data/ucla-catalog.json"), JSON.stringify(catalog) + "\n");
   await fs.writeFile(path.join(root, "assets/data/ucla-warehouse.json"), JSON.stringify(snapshot) + "\n");
-  console.log("Import reconciled. A private reader connection was written to build/ucla/reader.env.");
+  console.log("Import reconciled. The private reader connection was written to the selected output file.");
 }
 
 if (require.main === module) {
   const handoff = process.argv[2];
-  if (!handoff) { console.error("Usage: npm run ucla:import -- <handoff-folder>"); process.exitCode = 1; }
-  else importWarehouse(handoff).catch((error) => { console.error(error.message); process.exitCode = 1; });
+  if (!handoff) { console.error("Usage: npm run ucla:import -- <handoff-folder> [reader-env-output]"); process.exitCode = 1; }
+  else importWarehouse(handoff, process.argv[3]).catch((error) => { console.error(error.message); process.exitCode = 1; });
 }
 module.exports = { importWarehouse };

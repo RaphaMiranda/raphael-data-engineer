@@ -1,5 +1,15 @@
 # AI session log
 
+## 2026-10-28 - Validate hosted Neon and support DATABASE_URL
+
+- **Branch:** feature/ucla-postgres-playground.
+- **Goal:** Use the user's private Neon configuration for deployment with a genuinely read-only reader.
+- **Changed files:** server/ucla.cjs, scripts/ucla-import.cjs, tests/ucla-query.test.cjs, .env.example, README.md, docs/ucla/README.md, docs/ucla/verification.md, refreshed UCLA catalog/dashboard snapshots, ai-session.md.
+- **Changes:** Added DATABASE_URL fallback while preserving the explicit UCLA_DATABASE_URL override. Added a separate reader-output path to the initial importer so local and Neon configurations coexist. Used the explicitly supplied owner connection to initialize the fresh Neon warehouse, created a restricted ucla_reader, and updated the private DATABASE_URL entry after successful validation. Existing read-only permission checks were retained.
+- **Verification:** Seven backend tests passed against local PostgreSQL, including configuration precedence. Hosted Neon schema/data reconciled all 12 tables and five views; reader queries verified 272 participants, 539,376 responses and 15,219 raw records. Hosted owner access was rejected by the API. Neon-backed desktop/mobile browser queries passed at 1440px and 375px without overflow. Secret files and generated reader credentials are ignored by Git. Vercel settings and deployment were not changed.
+- **Commit:** HEAD, fix: configure and verify the Neon read-only connection.
+
+
 ## 2026-10-28 - Separate UCLA data project and PostgreSQL playground
 
 - **Branch:** feature/ucla-postgres-playground.

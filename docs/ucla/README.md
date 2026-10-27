@@ -54,7 +54,7 @@ A generated reader password and URL are written privately to build/ucla/reader.e
 
 ## Vercel / Neon
 
-Import into the selected Neon database using this project's schema and importer. Set **UCLA_DATABASE_URL** in Vercel to the SELECT-only ucla_reader connection. A Neon pooled connection is suitable for serverless use. Do not configure the owner connection as the public reader.
+Import into the selected Neon database using this project's schema and importer. Set **DATABASE_URL** in Vercel to the SELECT-only ucla_reader connection. The project-specific UCLA_DATABASE_URL override is also supported and takes precedence; remove a stale override when using DATABASE_URL. A Neon pooled connection is suitable for serverless use. Do not configure the owner connection as the public reader.
 
 The API uses real PostgreSQL results and introspection. It refuses an owner/superuser or a reader with write/schema-create privileges. Missing configuration produces an unavailable state; the schema snapshot remains browsable and the page never fabricates query results. No hosted database or Vercel deployment is created automatically.
 
@@ -89,3 +89,21 @@ npm run ucla:dev
 ~~~
 
 Do not rerun the initial importer against the already-loaded database. Use the existing reader configuration for the local preview.
+
+
+## Separate Neon configuration
+
+Keep the one-time owner connection in the ignored .env.neon.local as UCLA_ADMIN_DATABASE_URL. Its DATABASE_URL entry is the restricted reader connection for deployment. Only the reader variable belongs in Vercel; the owner and Docker variables stay local.
+
+For a fresh Neon database, use a separate reader output so an existing local setup is preserved:
+
+~~~powershell
+node --env-file=.env.neon.local scripts/ucla-import.cjs ../UCLA_Neuropsychiatric_data/build/warehouse/handoff build/ucla/neon-reader.env
+~~~
+
+The importer generates the restricted reader URL in build/ucla/neon-reader.env. Copy its DATABASE_URL value into Vercel's Production and Preview environments. Set the variable before deploying or trigger a redeploy afterward. The initial importer refuses existing schemas, roles or reader-output files.
+
+To preview the Neon connection locally, use node --env-file=.env.neon.local scripts/ucla-dev.cjs without loading the local-only build/ucla/reader.env file.
+
+
+The current Neon warehouse has already been imported and verified. Do not rerun its initial import. Use the updated DATABASE_URL from .env.neon.local (or build/ucla/neon-reader.env) as the Vercel Secret for Production and Preview. Copy only that reader value; the private file also contains owner/local setup variables that do not belong in the public app's runtime configuration.

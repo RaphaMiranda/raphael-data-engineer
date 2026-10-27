@@ -1,6 +1,7 @@
 const test = require("node:test");
 const assert = require("node:assert/strict");
 const { validateSql, runQuery, liveCatalog } = require("../server/ucla.cjs");
+const readerUrl = process.env.UCLA_DATABASE_URL || process.env.DATABASE_URL;
 
 test("accepts published data joins, aggregations, literals, CTEs and unions", () => {
   for (const sql of [
@@ -31,7 +32,7 @@ test("rejects writes, multiple statements, writable CTEs, side-effect functions 
 });
 
 test("live database queries reconcile counts, enforce row limits and refuse an owner account",
-  { skip: !process.env.UCLA_DATABASE_URL }, async () => {
+  { skip: !readerUrl }, async () => {
     const result = await runQuery("SELECT COUNT(*) AS people FROM ucla_core.dim_participant");
     assert.equal(result.rows[0][0], "272");
     const raw = await runQuery("SELECT * FROM ucla_raw.source_file");
@@ -52,9 +53,9 @@ test("live database queries reconcile counts, enforce row limits and refuse an o
   });
 
 test("PostgreSQL itself denies writes with the public credentials",
-  { skip: !process.env.UCLA_DATABASE_URL }, async () => {
+  { skip: !readerUrl }, async () => {
     const { Client } = require("pg");
-    const client = new Client({ connectionString: process.env.UCLA_DATABASE_URL });
+    const client = new Client({ connectionString: readerUrl });
     await client.connect();
     try {
       await client.query("SET default_transaction_read_only = off");
@@ -84,9 +85,33 @@ test("API rejects unsupported methods and oversized requests, and enforces its r
 });
 
 test("an expensive public SELECT is canceled by PostgreSQL and reported as a timeout",
-  { skip: !process.env.UCLA_DATABASE_URL }, async () => {
+  { skip: !readerUrl }, async () => {
     const result = await apiRequest("POST", { sql: "SELECT COUNT(*) FROM ucla_core.fact_phenotype_response a CROSS JOIN ucla_core.fact_phenotype_response b" });
     assert.equal(result.status, 408);
     assert.equal(result.body.code, "QUERY_TIMEOUT");
     assert.equal((await runQuery("SELECT COUNT(*) FROM ucla_core.dim_participant")).rows[0][0], "272");
   });
+
+
+test("accepts DATABASE_URL and preserves the explicit UCLA connection override", async (t) => {
+  const { Client } = require("pg");
+  const previous = { UCLA_DATABASE_URL: process.env.UCLA_DATABASE_URL, DATABASE_URL: process.env.DATABASE_URL };
+  let user;
+  const sentinel = new Error("No network connection in configuration test");
+  t.mock.method(Client.prototype, "connect", async function () { user = this.connectionParameters.user; throw sentinel; });
+  t.mock.method(Client.prototype, "end", async () => {});
+  try {
+    delete process.env.UCLA_DATABASE_URL;
+    process.env.DATABASE_URL = "postgresql://standard_reader@localhost/test";
+    await assert.rejects(runQuery("SELECT 1"), (error) => error === sentinel);
+    assert.equal(user, "standard_reader");
+    process.env.UCLA_DATABASE_URL = "postgresql://explicit_reader@localhost/test";
+    await assert.rejects(runQuery("SELECT 1"), (error) => error === sentinel);
+    assert.equal(user, "explicit_reader");
+  } finally {
+    for (const [key, value] of Object.entries(previous)) {
+      if (value === undefined) delete process.env[key];
+      else process.env[key] = value;
+    }
+  }
+});

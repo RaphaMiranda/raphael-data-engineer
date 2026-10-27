@@ -45,7 +45,7 @@ Explorer checks use Node's built-in runner: `node --test tests/aws-explorer.test
 
 ## Deployment
 
-`vercel.json` serves the frontend as static files and `api/ucla.js` as a Node function. Install the locked dependencies with npm; no frontend build command is required. Configure the read-only `UCLA_DATABASE_URL` privately in Vercel. See [the UCLA setup guide](docs/ucla/README.md).
+`vercel.json` serves the frontend as static files and `api/ucla.js` as a Node function. Install the locked dependencies with npm; no frontend build command is required. Configure the read-only `DATABASE_URL` privately in Vercel (or use the explicit `UCLA_DATABASE_URL` override). See [the UCLA setup guide](docs/ucla/README.md).
 
 ## UCLA open-data SQL playground
 
