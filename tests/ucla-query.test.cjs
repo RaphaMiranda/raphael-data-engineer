@@ -1,7 +1,7 @@
 const test = require("node:test");
 const assert = require("node:assert/strict");
 const { validateSql, runQuery, liveCatalog } = require("../server/ucla.cjs");
-const readerUrl = process.env.UCLA_DATABASE_URL || process.env.DATABASE_URL;
+const readerUrl = process.env.DATABASE_READER_URL || process.env.UCLA_DATABASE_URL || process.env.DATABASE_URL;
 
 test("accepts published data joins, aggregations, literals, CTEs and unions", () => {
   for (const sql of [
@@ -93,14 +93,15 @@ test("an expensive public SELECT is canceled by PostgreSQL and reported as a tim
   });
 
 
-test("accepts DATABASE_URL and preserves the explicit UCLA connection override", async (t) => {
+test("prefers DATABASE_READER_URL and preserves legacy connection fallbacks", async (t) => {
   const { Client } = require("pg");
-  const previous = { UCLA_DATABASE_URL: process.env.UCLA_DATABASE_URL, DATABASE_URL: process.env.DATABASE_URL };
+  const previous = { DATABASE_READER_URL: process.env.DATABASE_READER_URL, UCLA_DATABASE_URL: process.env.UCLA_DATABASE_URL, DATABASE_URL: process.env.DATABASE_URL };
   let user;
   const sentinel = new Error("No network connection in configuration test");
   t.mock.method(Client.prototype, "connect", async function () { user = this.connectionParameters.user; throw sentinel; });
   t.mock.method(Client.prototype, "end", async () => {});
   try {
+    delete process.env.DATABASE_READER_URL;
     delete process.env.UCLA_DATABASE_URL;
     process.env.DATABASE_URL = "postgresql://standard_reader@localhost/test";
     await assert.rejects(runQuery("SELECT 1"), (error) => error === sentinel);
@@ -108,6 +109,14 @@ test("accepts DATABASE_URL and preserves the explicit UCLA connection override",
     process.env.UCLA_DATABASE_URL = "postgresql://explicit_reader@localhost/test";
     await assert.rejects(runQuery("SELECT 1"), (error) => error === sentinel);
     assert.equal(user, "explicit_reader");
+    process.env.DATABASE_READER_URL = "postgresql://dedicated_reader@localhost/test";
+    await assert.rejects(runQuery("SELECT 1"), (error) => error === sentinel);
+    assert.equal(user, "dedicated_reader");
+    delete process.env.UCLA_DATABASE_URL;
+    delete process.env.DATABASE_URL;
+    await assert.rejects(runQuery("SELECT 1"), (error) => error === sentinel);
+    assert.equal(user, "dedicated_reader");
+
   } finally {
     for (const [key, value] of Object.entries(previous)) {
       if (value === undefined) delete process.env[key];

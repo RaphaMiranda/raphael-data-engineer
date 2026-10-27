@@ -89,7 +89,7 @@ function validateSql(sql) {
   return toSql.statement(statements[0]);
 }
 
-async function withReader(callback, connectionString = process.env.UCLA_DATABASE_URL || process.env.DATABASE_URL) {
+async function withReader(callback, connectionString = process.env.DATABASE_READER_URL || process.env.UCLA_DATABASE_URL || process.env.DATABASE_URL) {
   if (!connectionString) throw new QueryError("Live queries are not connected yet.", 503, "DATABASE_NOT_CONFIGURED");
   const client = new Client({
     connectionString, connectionTimeoutMillis: 4000, query_timeout: 5000,

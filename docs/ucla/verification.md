@@ -46,6 +46,17 @@ No remote push or Vercel deployment was performed. The user-provided Neon projec
 - Hosted queries returned 272 participants, 539,376 phenotype responses and 15,219 source records. All 17 relations were introspected successfully.
 - The hosted owner connection was rejected by the public API.
 - The private .env.neon.local DATABASE_URL entry was updated to the restricted reader. Original private settings were backed up under ignored build/ucla; no secret values were printed or committed.
-- The app accepts DATABASE_URL, with UCLA_DATABASE_URL retaining precedence as an explicit override. A regression test covers both paths.
+- The app now prefers DATABASE_READER_URL, followed by the legacy UCLA_DATABASE_URL and DATABASE_URL fallbacks. A regression test covers all three paths.
 - All seven backend tests passed against the local PostgreSQL fixture. Separate hosted-reader queries and browser checks passed against Neon at 1440px and 375px.
-- The Neon-backed local preview is available on port 8003. Vercel still needs its DATABASE_URL Secret set for Production/Preview and a new deployment.
+- The Neon-backed local preview is available on port 8003. Vercel uses its DATABASE_READER_URL Secret set for Production/Preview and a new deployment.
+
+
+## Reader setting rename: 2026-10-28
+
+- DATABASE_READER_URL is the preferred runtime and exported-reader setting.
+- Precedence is DATABASE_READER_URL, then UCLA_DATABASE_URL, then DATABASE_URL.
+- The regression test verifies both legacy fallbacks, all three variables together, and the preferred variable alone.
+- All seven backend tests passed. A separate hosted check using only DATABASE_READER_URL returned all 17 relations and 272 participants.
+- Ignored local Neon reader files were aligned to the new key without changing credential values.
+- Neon-backed desktop/mobile browser queries passed at 1440px and 375px.
+- The user's Vercel setting was not read or changed; the committed code requires a new deployment to use it.

@@ -1,5 +1,15 @@
 # AI session log
 
+## 2026-10-28 - Prefer DATABASE_READER_URL
+
+- **Branch:** feature/ucla-postgres-playground.
+- **Goal:** Match the user's Vercel secret name without allowing legacy database variables to shadow the reader connection.
+- **Changed files:** server/ucla.cjs, scripts/ucla-import.cjs, tests/ucla-query.test.cjs, .env.example, README.md, docs/ucla/README.md, docs/ucla/verification.md, ai-session.md.
+- **Changes:** Prefer DATABASE_READER_URL, retain UCLA_DATABASE_URL and DATABASE_URL as ordered compatibility fallbacks, update generated reader files and setup docs, and align the ignored local Neon reader files without changing their values.
+- **Verification:** All seven backend tests passed, including new-variable precedence and standalone configuration. Hosted Neon queries using only DATABASE_READER_URL verified all 17 relations and 272 participants. Desktop/mobile browser queries passed at 1440px and 375px with no overflow. Private credentials remain ignored and were not printed.
+- **Commit:** HEAD, fix: prefer DATABASE_READER_URL for public queries.
+
+
 ## 2026-10-28 - Validate hosted Neon and support DATABASE_URL
 
 - **Branch:** feature/ucla-postgres-playground.

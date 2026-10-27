@@ -68,7 +68,7 @@ async function importWarehouse(handoff, readerEnv = path.join(root, "build/ucla/
   readerUrl.username = "ucla_reader";
   readerUrl.password = password;
   await fs.mkdir(path.dirname(readerEnv), { recursive: true });
-  await fs.writeFile(readerEnv, "DATABASE_URL=" + readerUrl.href + "\n", { flag: "wx" });
+  await fs.writeFile(readerEnv, "DATABASE_READER_URL=" + readerUrl.href + "\n", { flag: "wx" });
   const catalog = { format_version: 1, generated_at: manifest.generated_at, dataset: manifest.dataset,
     counts: manifest.counts, quality: manifest.quality, live: false,
     relations: manifest.relations.map(({ file, sha256, ...relation }) => relation) };
