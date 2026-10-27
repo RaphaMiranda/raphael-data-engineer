@@ -149,6 +149,7 @@ async function sqlLoad() {
     sqlCatalog = await response.json();
     sqlById("catalog-count").textContent = sqlCatalog.relations.length + " tables and views";
     sqlById("catalog-date").textContent = "Data handoff built " + new Date(sqlCatalog.generated_at).toLocaleString("en-AU", { timeZone: "Australia/Sydney", timeZoneName: "short" }) + ".";
+    sqlWarehouseOverview(sqlCatalog);
     sqlSelectTable("ucla_core.dim_participant");
     sqlById("connection-status").textContent = "Schema snapshot · Connecting to PostgreSQL…";
     try {

@@ -10,6 +10,7 @@ The sibling UCLA_Neuropsychiatric_data project owns the dataset, local dimension
 | --- | --- |
 | Query interface | case-studies/ucla-playground.html |
 | Page behavior and styling | assets/js/ucla-playground.js, assets/css/ucla-playground.css |
+| Catalog-driven ER diagram | assets/js/ucla-warehouse-model.js |
 | Existing data-story dashboard | case-studies/ucla-warehouse.html |
 | Public API | api/ucla.js, server/ucla.cjs |
 | Final PostgreSQL tables | projects/ucla/postgres/schema.sql |
@@ -20,6 +21,18 @@ The sibling UCLA_Neuropsychiatric_data project owns the dataset, local dimension
 | Catalog and dashboard snapshots | assets/data/ucla-catalog.json, assets/data/ucla-warehouse.json |
 
 The frontend remains HTML, CSS and vanilla JavaScript. Node dependencies are limited to pg, pg-copy-streams and pgsql-ast-parser for the requested backend.
+
+## Interview walkthrough
+
+Open /case-studies/ucla-playground.html#warehouse-flow and follow the numbered links:
+
+1. **Data flow:** ucla_raw preserves source records and hashes; ucla_core organizes dimensions and facts; five ucla_mart views summarize core tables.
+2. **ER model:** start with one fact and its dimensions, then select the complete core model or raw source lineage. PK/FK attributes and cardinalities come from the shipped schema catalog. Fit, 100% and zoom controls support inspection; the relationship table remains available if Mermaid cannot load.
+3. **SQL explorer:** run a cohort query, then inspect the tables and keys behind it.
+
+The four orchestration steps describe the actual manual CLI process: local DuckDB build/validation, checksummed CSV handoff, one-time transactional PostgreSQL import and SELECT-only API queries. Raw and core are built from the same ingested files; the current pipeline does not transform core by querying raw tables. The importer does not perform incremental refreshes.
+
+The overview and relationship table use the static catalog, so they remain available when the database is disconnected. The visual diagram reuses the site's pinned Mermaid CDN version.
 
 ## Local setup
 
