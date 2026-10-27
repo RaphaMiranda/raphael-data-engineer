@@ -12,6 +12,7 @@
   <link rel="stylesheet" href="/assets/css/styles.css">
   <link rel="stylesheet" href="/assets/css/ucla-playground.css">
   <script src="/assets/js/main.js" defer></script>
+  <script src="/assets/js/ucla-warehouse-model.js" defer></script>
   <script src="/assets/js/ucla-playground.js" defer></script>
 </head>
 <body class="ucla-playground">
@@ -52,6 +53,69 @@
       </div>
       <a class="sql-link" href="/case-studies/ucla-warehouse.html">View the data story ↗</a>
     </header>
+    <nav class="sql-walkthrough-nav" aria-label="Warehouse walkthrough">
+      <a href="#warehouse-flow">01 / Data flow</a>
+      <a href="#warehouse-model">02 / ER model</a>
+      <a href="#sql-explorer">03 / SQL explorer</a>
+    </nav>
+    <section id="warehouse-flow" class="sql-overview" aria-labelledby="flow-heading">
+      <p class="sql-eyebrow">01 / DATA FLOW</p>
+      <h2 id="flow-heading">From research files to queryable data.</h2>
+      <p class="sql-overview-lede">BIDS TSV and JSON files supply the data. Three schemas preserve its origin, integrate its meaning and prepare it for analysis.</p>
+      <ol class="sql-schema-flow">
+        <li><span>1 / PRESERVE</span><h3>ucla_raw</h3><p>Original records, JSON dictionaries and file hashes keep every value traceable.</p></li>
+        <li><span>2 / CONFORM</span><h3>ucla_core</h3><p>The same source records become shared dimensions and facts with explicit keys and grains.</p></li>
+        <li><span>3 / SUMMARIZE</span><h3>ucla_mart</h3><p>Five SQL views aggregate the core model for cohort, coverage and score analysis.</p></li>
+      </ol>
+      <details class="sql-orchestration" open>
+        <summary>How I orchestrate it</summary>
+        <p class="sql-muted">Manual CLI run: repeatable local builds, followed by a one-time PostgreSQL initialization.</p>
+        <ol>
+          <li><strong>Build locally.</strong> Python creates raw/core data in DuckDB and validates identities, keys and counts.</li>
+          <li><strong>Export a contract.</strong> CSV files and a manifest carry column definitions, row counts and SHA-256 checksums.</li>
+          <li><strong>Load Neon.</strong> The Node importer verifies the handoff, loads raw/core and creates mart views in one PostgreSQL transaction.</li>
+          <li><strong>Explore.</strong> The Vercel API connects with a SELECT-only reader; this page queries all three schemas.</li>
+        </ol>
+      </details>
+      <p class="sql-muted">Raw and core are built from the same ingested files. Mart views read core tables. MRI binaries remain in file storage.</p>
+    </section>
+    <section id="warehouse-model" class="sql-overview" aria-labelledby="model-heading">
+      <div class="sql-section-heading">
+        <div><p class="sql-eyebrow">02 / ER MODEL</p><h2 id="model-heading">Shared dimensions. Separate fact grains.</h2></div>
+        <div class="sql-model-picker"><label for="er-schema">ER view</label>
+          <select id="er-schema">
+            <option value="fact_phenotype_response" selected>Core / phenotype responses</option>
+            <option value="fact_scan_availability">Core / scan availability</option>
+            <option value="fact_task_event">Core / task events</option>
+            <option value="ucla_core">Core / complete model</option>
+            <option value="ucla_raw">Raw / source lineage</option>
+          </select>
+        </div>
+      </div>
+      <p class="sql-overview-lede">Six dimensions connect three facts. Choose a fact to follow its joins, or switch to the complete model.</p>
+      <div class="sql-er-actions" role="group" aria-label="ER diagram controls">
+        <button id="er-fit" class="sql-secondary" type="button" disabled>Fit</button>
+        <button id="er-actual" class="sql-secondary" type="button" disabled>100%</button>
+        <button id="er-out" class="sql-secondary" type="button" aria-label="Zoom out ER diagram" disabled>−</button>
+        <button id="er-in" class="sql-secondary" type="button" aria-label="Zoom in ER diagram" disabled>+</button>
+        <span id="er-status" class="sql-muted" role="status">Loading the declared relationships…</span>
+      </div>
+      <figure class="sql-er-figure">
+        <div id="er-canvas" class="sql-er-canvas" tabindex="0" role="region" aria-label="Entity relationship diagram; use zoom controls and arrow keys to inspect"></div>
+        <figcaption class="sql-muted">PK = primary key · FK = foreign key. Lines follow declared foreign keys. The diagram shows keys and selected business attributes; the table inspector lists every column.</figcaption>
+      </figure>
+      <dl class="sql-fact-grains">
+        <div><dt>Phenotype response</dt><dd>One participant × one variable.</dd></div>
+        <div><dt>Scan availability</dt><dd>One participant × one scan type.</dd></div>
+        <div><dt>Task event</dt><dd>One event row in one source file.</dd></div>
+      </dl>
+      <p class="sql-muted">Aggregate each fact to a common grain before joining facts. Mart views are derived queries, so they have no declared foreign keys.</p>
+      <details class="sql-er-fallback"><summary>Read the relationships as a table</summary>
+        <div class="sql-table-scroll" tabindex="0" role="region" aria-label="ER relationships">
+          <table><caption class="sql-sr-only">Declared foreign-key relationships</caption><thead><tr><th scope="col">Child table / foreign key</th><th scope="col">Parent table / key</th></tr></thead><tbody id="er-relationship-rows"></tbody></table>
+        </div>
+      </details>
+    </section>
     <div class="sql-toolbar">
       <p id="connection-status" role="status">Loading the schema…</p>
       <span>SELECT only · 200 rows · 2.5 seconds</span>
@@ -69,9 +133,9 @@
         <p id="table-search-status" class="sql-muted" role="status"></p>
       </aside>
       <div class="sql-workspace">
-        <section class="sql-editor-panel" aria-labelledby="editor-heading">
+        <section class="sql-editor-panel" id="sql-explorer" aria-labelledby="editor-heading">
           <div class="sql-section-heading">
-            <div><p class="sql-eyebrow">01 / QUERY</p><h2 id="editor-heading">Write a SELECT.</h2></div>
+            <div><p class="sql-eyebrow">03 / SQL EXPLORER</p><h2 id="editor-heading">Write a SELECT.</h2></div>
             <div class="sql-example-control"><label for="query-example">Start with an example</label>
               <select id="query-example">
                 <option value="cohort">Count participants by group</option>
@@ -99,7 +163,7 @@
         </section>
         <section class="sql-table-panel" aria-labelledby="selected-table">
           <div class="sql-section-heading">
-            <div><p class="sql-eyebrow">02 / TABLE INSPECTOR</p><h2 id="selected-table">Choose a table</h2><p id="selected-table-note" class="sql-muted"></p></div>
+            <div><p class="sql-eyebrow">04 / TABLE INSPECTOR</p><h2 id="selected-table">Choose a table</h2><p id="selected-table-note" class="sql-muted"></p></div>
             <button id="preview-table" class="sql-secondary" type="button" disabled>Preview 50 rows</button>
           </div>
           <div class="sql-table-scroll" role="region" aria-label="Table columns, scroll horizontally if needed" tabindex="0">

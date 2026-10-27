@@ -1,5 +1,16 @@
 # AI session log
 
+## 2026-10-28 - Explain UCLA warehouse flow and ER model
+
+- **Branch:** feature/ucla-postgres-playground.
+- **Goal:** Provide a brief, sequential interview walkthrough inside the SQL playground, showing schema flow, real orchestration and the warehouse ER model.
+- **Changed files:** case-studies/ucla-playground.html, assets/css/ucla-playground.css, assets/js/ucla-playground.js, assets/js/ucla-warehouse-model.js, tests/ucla-model.test.cjs, docs/ucla/README.md, docs/ucla/verification.md, ai-session.md.
+- **Changes:** Added numbered flow/model/explorer navigation, three schema explanations and four manual orchestration steps. Added catalog-driven Mermaid ER views for each fact, complete core and raw lineage, key/grain explanations, zoom/fit controls and an accessible relationship-table fallback. Reused the existing pinned Mermaid version without adding a dependency.
+- **Verification:** All 10 UCLA tests passed, including PostgreSQL permission/timeout checks and three model tests. Desktop 1440px/mobile 375px checks passed all five ER views, zoom/fit, keyboard interactions, disclosures, jump links and real Neon queries. Simulated CDN/API failure preserved the explanation/catalog/table fallback. Screenshots inspected; five assets returned 200; IDs unique; no normal runtime errors or page overflow. JavaScript syntax and scoped diff checks passed.
+- **Preserved work:** The separate user edit in index.html remains untouched and excluded from this commit. No schema or credential changes.
+- **Commit:** HEAD, feat: explain UCLA warehouse flow and ER model.
+
+
 ## 2026-10-28 - Prefer DATABASE_READER_URL
 
 - **Branch:** feature/ucla-postgres-playground.

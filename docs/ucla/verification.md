@@ -60,3 +60,17 @@ No remote push or Vercel deployment was performed. The user-provided Neon projec
 - Ignored local Neon reader files were aligned to the new key without changing credential values.
 - Neon-backed desktop/mobile browser queries passed at 1440px and 375px.
 - The user's Vercel setting was not read or changed; the committed code requires a new deployment to use it.
+
+
+## Interview walkthrough verification: 2026-10-28
+
+- All 10 UCLA tests passed with none skipped: three new ER-model tests and seven existing PostgreSQL/API tests.
+- ER tests cover all nine core tables and nine declared relationships, nullable scanner references, composite PK/FK attributes, raw one-to-one/one-to-many lineage and focused fact ancestry.
+- Desktop 1440 x 1000 and mobile 375 x 812 rendered all five views. Focused phenotype/scan/event views expose 4/4/3 relationships; complete core and raw expose 9/2.
+- Fit, 100%, zoom, keyboard view selection, keyboard canvas scrolling, the relationship disclosure and numbered jump links passed. No page-level horizontal overflow.
+- Sequential flow cards stack on mobile. Desktop/mobile screenshots were inspected, including diagram text contrast.
+- Real Neon cohort queries returned four rows on desktop and mobile after navigating from the walkthrough.
+- Simulated Mermaid and API failure opened the relationship-table fallback, retained all 17 catalog relations and the explanation, and disabled query execution.
+- Five page/asset routes returned HTTP 200; IDs were unique; normal rendering reported no runtime JavaScript errors. The simulated failures produced the expected blocked-request errors.
+- Changed JavaScript syntax and scoped Git whitespace checks passed. No schema, import, credential or database changes were needed.
+- No remote push or Vercel deployment was performed. The separate user edit in index.html was preserved and excluded from the feature commit.
