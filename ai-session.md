@@ -1,5 +1,15 @@
 # AI session log
 
+## 2026-10-28 - Separate UCLA data project and PostgreSQL playground
+
+- **Branch:** feature/ucla-postgres-playground.
+- **Goal:** Move all website and deployed PostgreSQL responsibilities into this repository while leaving the sibling project focused on its dataset, local warehouse model and data engineering pipeline.
+- **Changed files:** UCLA playground HTML/CSS/JS and catalog; api/ucla.js; server/ucla.cjs; projects/ucla/postgres/{schema,marts,reader}.sql; projects/ucla/compose.yaml; scripts/ucla-{dev,import}.cjs; tests/ucla-query.test.cjs; package manifests; ignore/environment configuration; Vercel configuration; homepage/dashboard links; README and docs/ucla; this session log.
+- **Changes:** Added live PostgreSQL schema/table inspection, relationship links, example/custom SELECTs, joins/CTEs, preview rows and a result grid. The API uses a non-owner SELECT-only account, read-only transactions, parsed SQL validation, query/result limits and a documented per-instance request quota. The importer verifies the sibling CSV handoff and loads this repository's final schema transactionally. All old website/legacy SQL artifacts were copied with SHA-256 verification into ignored build/ucla/migrated before removal from the data project.
+- **Verification:** All six backend tests passed against native PostgreSQL 17, including direct write denial, owner-account rejection, typed FK introspection, request limits and a real database statement timeout. All four independent warehouse tests passed and the full data build succeeded after removing website sources. All 142 original dataset/metadata file hashes were preserved. Desktop 1440px/mobile 375px browser checks passed real queries, joins/CTEs, raw-data access, previews, schema search, relationships, keyboard selection, error recovery, literal rendering, disconnected fallback and overflow. All 13 shared mobile-navigation checks passed. Private dev paths returned 404. No hosted service was provisioned or deployed.
+- **Commit:** HEAD, feat: add UCLA PostgreSQL playground and split repository ownership.
+
+
 ## 2026-10-27 - UCLA integrated research warehouse demo
 
 - **Branch:** feature/ucla-research-warehouse-demo.

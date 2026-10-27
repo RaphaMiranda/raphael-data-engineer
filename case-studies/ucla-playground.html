@@ -1,0 +1,125 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="Explore the UCLA LA5c open-data warehouse: inspect PostgreSQL tables and relationships, and run read-only SQL.">
+  <title>UCLA SQL Playground | Raphael Miranda Mata</title>
+  <link rel="icon" href="data:,">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="/assets/css/styles.css">
+  <link rel="stylesheet" href="/assets/css/ucla-playground.css">
+  <script src="/assets/js/main.js" defer></script>
+  <script src="/assets/js/ucla-playground.js" defer></script>
+</head>
+<body class="ucla-playground">
+  <a class="sql-skip" href="#main">Skip to SQL playground</a>
+  <header class="site-header site-header--fixed">
+    <nav class="site-nav" aria-label="Primary navigation">
+      <a class="site-brand" href="/">Raphael Miranda Mata</a>
+      <div class="site-links">
+        <a data-nav href="/">Home</a>
+        <a data-nav href="/#timeline">Timeline</a>
+        <a data-nav href="/#skills">Skills</a>
+        <a data-nav href="/#case-studies" aria-current="location">Case Studies</a>
+        <a data-nav href="/aws-study-guide.html">AWS DE-01 Guide</a>
+        <a data-nav href="/aws-study-guide/explorer.html">Service Explorer</a>
+        <a class="site-contact" href="/#contact">Get in Touch</a>
+      </div>
+      <button class="site-menu-toggle" id="menu-toggle" type="button" aria-label="Open navigation menu" aria-expanded="false" aria-controls="mobile-menu">
+        <svg id="menu-icon-open" viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="M4 6h16M4 12h16M4 18h16" /></svg>
+        <svg id="menu-icon-close" viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true" hidden><path d="m6 6 12 12M6 18 18 6" /></svg>
+      </button>
+    </nav>
+    <nav id="mobile-menu" class="site-mobile" aria-label="Mobile navigation" hidden>
+        <a data-nav href="/">Home</a>
+        <a data-nav href="/#timeline">Timeline</a>
+        <a data-nav href="/#skills">Skills</a>
+        <a data-nav href="/#case-studies" aria-current="location">Case Studies</a>
+        <a data-nav href="/aws-study-guide.html">AWS DE-01 Guide</a>
+        <a data-nav href="/aws-study-guide/explorer.html">Service Explorer</a>
+      <a class="site-contact" href="/#contact">Get in Touch</a>
+    </nav>
+  </header>
+  <main id="main" class="sql-main">
+    <header class="sql-intro">
+      <div>
+        <p class="sql-eyebrow">UCLA LA5c / OPEN DATA / SQL PLAYGROUND</p>
+        <h1>Explore the warehouse.</h1>
+        <p>Inspect the schema, follow relationships and query the published research data.</p>
+      </div>
+      <a class="sql-link" href="/case-studies/ucla-warehouse.html">View the data story ↗</a>
+    </header>
+    <div class="sql-toolbar">
+      <p id="connection-status" role="status">Loading the schema…</p>
+      <span>SELECT only · 200 rows · 2.5 seconds</span>
+    </div>
+    <noscript><p>Enable JavaScript to browse the schema and use the query editor.</p></noscript>
+    <div class="sql-layout">
+      <aside class="sql-sidebar" aria-labelledby="schema-heading">
+        <div class="sql-sidebar-head">
+          <h2 id="schema-heading">Database schema</h2>
+          <p id="catalog-count" class="sql-muted"></p>
+          <label for="table-search">Find a table or view</label>
+          <input id="table-search" type="search" placeholder="e.g. participant" autocomplete="off">
+        </div>
+        <div id="schema-tables"></div>
+        <p id="table-search-status" class="sql-muted" role="status"></p>
+      </aside>
+      <div class="sql-workspace">
+        <section class="sql-editor-panel" aria-labelledby="editor-heading">
+          <div class="sql-section-heading">
+            <div><p class="sql-eyebrow">01 / QUERY</p><h2 id="editor-heading">Write a SELECT.</h2></div>
+            <div class="sql-example-control"><label for="query-example">Start with an example</label>
+              <select id="query-example">
+                <option value="cohort">Count participants by group</option>
+                <option value="join">Join dimensions and facts</option>
+                <option value="raw">Inspect source lineage</option>
+                <option value="cte">Use a common table expression</option>
+              </select>
+            </div>
+          </div>
+          <label for="sql-editor" class="sql-editor-label">SQL query</label>
+          <textarea id="sql-editor" spellcheck="false" autocapitalize="off" autocomplete="off" aria-describedby="editor-help"></textarea>
+          <div class="sql-editor-actions">
+            <p id="editor-help" class="sql-muted">Use schema-qualified names. Ctrl / ⌘ + Enter runs the query.</p>
+            <button id="run-query" class="sql-primary" type="button" disabled>Run query <span aria-hidden="true">↵</span></button>
+          </div>
+          <p id="query-error" class="sql-error" role="alert" hidden></p>
+        </section>
+        <section class="sql-results-panel" aria-labelledby="results-heading">
+          <div class="sql-section-heading">
+            <h2 id="results-heading">Query results</h2><p id="result-status" class="sql-muted" role="status">Run a query to see its result.</p>
+          </div>
+          <div id="results-scroll" class="sql-table-scroll" role="region" aria-label="SQL results, scroll horizontally if needed" tabindex="0" hidden>
+            <table id="query-results"><caption class="sql-sr-only">SQL query results</caption><thead></thead><tbody></tbody></table>
+          </div>
+        </section>
+        <section class="sql-table-panel" aria-labelledby="selected-table">
+          <div class="sql-section-heading">
+            <div><p class="sql-eyebrow">02 / TABLE INSPECTOR</p><h2 id="selected-table">Choose a table</h2><p id="selected-table-note" class="sql-muted"></p></div>
+            <button id="preview-table" class="sql-secondary" type="button" disabled>Preview 50 rows</button>
+          </div>
+          <div class="sql-table-scroll" role="region" aria-label="Table columns, scroll horizontally if needed" tabindex="0">
+            <table><caption class="sql-sr-only">Selected table columns</caption>
+              <thead><tr><th scope="col">Column</th><th scope="col">PostgreSQL type</th><th scope="col">Key</th><th scope="col">Nullable</th></tr></thead>
+              <tbody id="column-rows"></tbody>
+            </table>
+          </div>
+          <h3 class="sql-relationship-title">Relationships</h3>
+          <p class="sql-muted">Follow a reference to inspect the connected table. Views summarize the fact tables through their SQL definitions.</p>
+          <div id="relationships" class="sql-relationships"></div>
+        </section>
+      </div>
+    </div>
+    <footer class="sql-footer">
+      <p>Educational demo · UCLA Consortium for Neuropsychiatric Phenomics LA5c · CC0</p>
+      <p>Raw source records, conformed dimensions, fact tables and analytical views are available for learning. Brain-image binaries stay outside PostgreSQL.</p>
+      <p><a href="https://openneuro.org/datasets/ds000030/versions/1.0.0">OpenNeuro dataset</a> · <a href="https://www.nature.com/articles/sdata2016110">Dataset publication</a></p>
+      <p id="catalog-date" class="sql-muted"></p>
+    </footer>
+  </main>
+</body>
+</html>

@@ -1,1 +1,9 @@
 .tmp-aws-*/
+
+node_modules/
+build/
+.env
+.env.*
+!.env.example
+.playwright-mcp/
+.tmp/

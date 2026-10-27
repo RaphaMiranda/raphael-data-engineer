@@ -1,6 +1,6 @@
 # Raphael Miranda Mata — Data Engineer portfolio
 
-A static portfolio for Raphael Miranda Mata, with case studies and a focused AWS Certified Data Engineer – Associate study deck.
+A portfolio for Raphael Miranda Mata, with a read-only PostgreSQL playground, case studies and a focused AWS Certified Data Engineer – Associate study deck.
 
 ## Pages
 
@@ -24,10 +24,11 @@ Mermaid is loaded from a version-pinned CDN. Diagrams have keyboard-accessible z
 
 ## Local preview
 
-This repository has no build step. Open the folder in VS Code with Live Server, or serve it from the repository root:
+The frontend has no build step. Use the local server for static pages and the UCLA query API:
 
 ```powershell
-npx serve .
+npm ci
+npm run ucla:dev
 ```
 
 Then open the local address printed by the server. Serving the folder is needed for the study deck to load its Markdown source.
@@ -36,7 +37,7 @@ Then open the local address printed by the server. Serving the folder is needed 
 
 Explorer checks use Node's built-in runner: `node --test tests/aws-explorer.test.js`. Browser interaction checks and official-source verification are documented in [the explorer guide](docs/aws-service-explorer.md).
 
-- Plain HTML, CSS, and vanilla JavaScript only.
+- Plain HTML, CSS, and vanilla JavaScript frontend; the UCLA API uses Node/PostgreSQL.
 - Shared styles belong in `assets/css/styles.css`; shared behaviour belongs in `assets/js/main.js`.
 - Page-specific code uses descriptive sibling files in `assets/css` and `assets/js`.
 - Design guidance lives in [design/DESIGN.md](design/DESIGN.md); contributor guidance is in [AGENTS.md](AGENTS.md).
@@ -44,4 +45,10 @@ Explorer checks use Node's built-in runner: `node --test tests/aws-explorer.test
 
 ## Deployment
 
-`vercel.json` configures clean static URLs for Vercel. Deploy the repository as a static site; no dependency installation or build command is required.
+`vercel.json` serves the frontend as static files and `api/ucla.js` as a Node function. Install the locked dependencies with npm; no frontend build command is required. Configure the read-only `UCLA_DATABASE_URL` privately in Vercel. See [the UCLA setup guide](docs/ucla/README.md).
+
+## UCLA open-data SQL playground
+
+Browse /case-studies/ucla-playground.html to inspect the schema and run bounded, read-only PostgreSQL queries. The existing data story remains at /case-studies/ucla-warehouse.html.
+
+This repository owns the final PostgreSQL schema, importer, API and website. The sibling UCLA_Neuropsychiatric_data project owns the dataset, local dimensional model and portable CSV handoff. See [setup and ownership](docs/ucla/README.md) and [verification](docs/ucla/verification.md).
