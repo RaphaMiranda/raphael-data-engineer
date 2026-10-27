@@ -1,0 +1,17 @@
+{
+  "name": "raphael-data-engineer-portfolio",
+  "private": true,
+  "engines": {
+    "node": ">=22"
+  },
+  "scripts": {
+    "test:ucla": "node --env-file-if-exists=.env.local --env-file-if-exists=build/ucla/admin.env --env-file-if-exists=build/ucla/reader.env --test tests/ucla-*.test.cjs",
+    "ucla:dev": "node --env-file-if-exists=.env.local --env-file-if-exists=build/ucla/reader.env scripts/ucla-dev.cjs",
+    "ucla:import": "node --env-file-if-exists=.env.local --env-file-if-exists=build/ucla/admin.env scripts/ucla-import.cjs"
+  },
+  "dependencies": {
+    "pg": "8.23.1",
+    "pg-copy-streams": "7.0.0",
+    "pgsql-ast-parser": "12.0.2"
+  }
+}

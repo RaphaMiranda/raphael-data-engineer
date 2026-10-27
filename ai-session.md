@@ -1,5 +1,45 @@
 # AI session log
 
+## 2026-10-28 - Prefer DATABASE_READER_URL
+
+- **Branch:** feature/ucla-postgres-playground.
+- **Goal:** Match the user's Vercel secret name without allowing legacy database variables to shadow the reader connection.
+- **Changed files:** server/ucla.cjs, scripts/ucla-import.cjs, tests/ucla-query.test.cjs, .env.example, README.md, docs/ucla/README.md, docs/ucla/verification.md, ai-session.md.
+- **Changes:** Prefer DATABASE_READER_URL, retain UCLA_DATABASE_URL and DATABASE_URL as ordered compatibility fallbacks, update generated reader files and setup docs, and align the ignored local Neon reader files without changing their values.
+- **Verification:** All seven backend tests passed, including new-variable precedence and standalone configuration. Hosted Neon queries using only DATABASE_READER_URL verified all 17 relations and 272 participants. Desktop/mobile browser queries passed at 1440px and 375px with no overflow. Private credentials remain ignored and were not printed.
+- **Commit:** HEAD, fix: prefer DATABASE_READER_URL for public queries.
+
+
+## 2026-10-28 - Validate hosted Neon and support DATABASE_URL
+
+- **Branch:** feature/ucla-postgres-playground.
+- **Goal:** Use the user's private Neon configuration for deployment with a genuinely read-only reader.
+- **Changed files:** server/ucla.cjs, scripts/ucla-import.cjs, tests/ucla-query.test.cjs, .env.example, README.md, docs/ucla/README.md, docs/ucla/verification.md, refreshed UCLA catalog/dashboard snapshots, ai-session.md.
+- **Changes:** Added DATABASE_URL fallback while preserving the explicit UCLA_DATABASE_URL override. Added a separate reader-output path to the initial importer so local and Neon configurations coexist. Used the explicitly supplied owner connection to initialize the fresh Neon warehouse, created a restricted ucla_reader, and updated the private DATABASE_URL entry after successful validation. Existing read-only permission checks were retained.
+- **Verification:** Seven backend tests passed against local PostgreSQL, including configuration precedence. Hosted Neon schema/data reconciled all 12 tables and five views; reader queries verified 272 participants, 539,376 responses and 15,219 raw records. Hosted owner access was rejected by the API. Neon-backed desktop/mobile browser queries passed at 1440px and 375px without overflow. Secret files and generated reader credentials are ignored by Git. Vercel settings and deployment were not changed.
+- **Commit:** HEAD, fix: configure and verify the Neon read-only connection.
+
+
+## 2026-10-28 - Separate UCLA data project and PostgreSQL playground
+
+- **Branch:** feature/ucla-postgres-playground.
+- **Goal:** Move all website and deployed PostgreSQL responsibilities into this repository while leaving the sibling project focused on its dataset, local warehouse model and data engineering pipeline.
+- **Changed files:** UCLA playground HTML/CSS/JS and catalog; api/ucla.js; server/ucla.cjs; projects/ucla/postgres/{schema,marts,reader}.sql; projects/ucla/compose.yaml; scripts/ucla-{dev,import}.cjs; tests/ucla-query.test.cjs; package manifests; ignore/environment configuration; Vercel configuration; homepage/dashboard links; README and docs/ucla; this session log.
+- **Changes:** Added live PostgreSQL schema/table inspection, relationship links, example/custom SELECTs, joins/CTEs, preview rows and a result grid. The API uses a non-owner SELECT-only account, read-only transactions, parsed SQL validation, query/result limits and a documented per-instance request quota. The importer verifies the sibling CSV handoff and loads this repository's final schema transactionally. All old website/legacy SQL artifacts were copied with SHA-256 verification into ignored build/ucla/migrated before removal from the data project.
+- **Verification:** All six backend tests passed against native PostgreSQL 17, including direct write denial, owner-account rejection, typed FK introspection, request limits and a real database statement timeout. All four independent warehouse tests passed and the full data build succeeded after removing website sources. All 142 original dataset/metadata file hashes were preserved. Desktop 1440px/mobile 375px browser checks passed real queries, joins/CTEs, raw-data access, previews, schema search, relationships, keyboard selection, error recovery, literal rendering, disconnected fallback and overflow. All 13 shared mobile-navigation checks passed. Private dev paths returned 404. No hosted service was provisioned or deployed.
+- **Commit:** HEAD, feat: add UCLA PostgreSQL playground and split repository ownership.
+
+
+## 2026-10-27 - UCLA integrated research warehouse demo
+
+- **Branch:** feature/ucla-research-warehouse-demo.
+- **Goal:** Present the locally modeled UCLA LA5c dataset as a static aggregate snapshot.
+- **Changed files:** index.html, case-studies/ucla-warehouse.html, assets/css/ucla-warehouse.css, assets/js/ucla-warehouse.js, assets/data/ucla-warehouse.json, ai-session.md.
+- **Changes:** Added a case-study link and self-contained interactive demo with study-group filtering, phenotype completeness/search, scan coverage, source-score summaries, a dimensional-model explanation and explicit dataset/local-file scope. The warehouse build and PostgreSQL export remain in the UCLA_Neuropsychiatric_data workspace; the website receives aggregate data only.
+- **Verification:** Four warehouse fixture tests passed. Full-source reconciliation matched all 539,376 phenotype cells and three selected source metrics. Browser checks at 1440px and 375px passed group totals, search/reset, weighted means, keyboard selection, local asset requests and mobile overflow checks. The integrated portfolio homepage link, demo assets, desktop/mobile layouts and mobile filtering passed; all 13 existing homepage mobile-navigation checks passed. JavaScript syntax and scoped diff checks passed.
+- **Commit:** HEAD, feat: add UCLA warehouse snapshot demo.
+
+
 ## 2026-10-22 - Add ingestion vs integration architecture example
 
 - **Branch:** `feat/from-gojs-to-mermaid`.
